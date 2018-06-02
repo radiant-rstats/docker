@@ -33,6 +33,10 @@ To jump straight in and run the full application clone this repo and run the com
 docker-compose -f ./rsm-msba/docker-compose.yml up
 ```
 
+For more information about running the `radiant` application see [radiant/README.md](./radiant/README.md)
+
+For more information about running the `rsm-msba` application see [rsm-msba/README.md](./rsm-msba/README.md)
+
 ## r-bionic
 
 You probably don't want to _run_ this image by itself. It is used in the radiant and rsm-msba application (see below).
