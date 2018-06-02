@@ -1,0 +1,21 @@
+version: '3.1'
+services:
+  rsm-msba:
+    image: "vnijs/rsm-msba"
+    ports:
+      - 80:80
+      - 8787:8787
+      - 8888:8888
+    volumes:
+      - ~/Desktop:/home/rstudio/Desktop
+      - ~/Dropbox:/home/rstudio/Dropbox
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
