@@ -18,10 +18,16 @@ Docker version 18.03.1-ce, build 9ee9f40
 
 ## Run from the Docker Hub image
 
-To start all applications in a temporary container use the command below. To map local drives to Rstudio use the `-v` option. For example, the command below would map your desktop and Dropbox folder to `Desktop` and `Dropbox` in Rstudio
+To start all applications in a temporary container use the command below. To map local drives to Rstudio use the `-v` option. For example, the command below would map your home directory the home directory used for Rstudio
 
 ```bash
-docker run --rm -p 80:80 -p 8787:8787 -p 8888:8888 -v ~/Desktop:/home/rstudio/Desktop -v ~/Dropbox:/home/rstudio/Dropbox vnijs/rsm-msba
+docker run --rm -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba
+```
+
+An alternative approach is to use `docker-compose` and the command below after cloning this repo:
+
+```bash
+docker-compose -f ./rsm-msba/docker-rsm-msba.yml up
 ```
 
 The radiant app will be available at <a href="http://127.0.0.1" target="_blank">http://127.0.0.1</a>,  Rstudio will be available at <a href="http://127.0.0.1:8787" target="_blank">http://127.0.0.1:8787</a>, and JupyterLab will be available at 
@@ -32,13 +38,13 @@ The user id and password for Rstudio is `rstudio`. For JupyterLab use `jupyter`.
 To stop a running container use `CTRL+C`. In a real deployment scenario, you will probably want to run the container in detached mode (`-d`):
 
 ```bash
-docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ~/Desktop:/home/rstudio/Desktop -v ~/Dropbox:/home/rstudio/Dropbox vnijs/rsm-msba
+docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba
 ```
 
 The rsm-msba directory also contains a docker-compose file that pulls in a postgres image and database admin tool adminer. To run the full application use the command below. 
 
 ```sh
-docker-compose up
+docker-compose -f ./rsm-msba/docker-rsm-msba-pg.yml up
 ```
 
 ## Customize the rsm-msba container

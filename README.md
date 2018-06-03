@@ -27,10 +27,16 @@ docker-compose version 1.21.1, build 5a3f1a3
 
 ## TL;DR
 
-To jump straight in and run the full application clone this repo and run the command below:
+To jump straight in and run the main application run the command below:
 
-```sh
-docker-compose -f ./rsm-msba/docker-compose.yml up
+```bash
+docker run --rm -p 80:80 -p 8787:8787 -p 8888:8888 -v ~/Desktop:/home/rstudio/Desktop -v ~/Dropbox:/home/rstudio/Dropbox vnijs/rsm-msba
+```
+
+An alternative approach is to use `docker-compose` and the command below after cloning the repo:
+
+```bash
+docker-compose -f ./rsm-msba/docker-rsm-msba.yml up
 ```
 
 For more information about running the `radiant` application see [radiant/README.md](./radiant/README.md)

@@ -1,0 +1,10 @@
+version: '3.1'
+services:
+  rsm-msba:
+    image: "vnijs/rsm-msba"
+    ports:
+      - 80:80
+      - 8787:8787
+      - 8888:8888
+    volumes:
+      - ~:/home/rstudio
