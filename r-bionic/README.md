@@ -18,18 +18,18 @@ Docker version 18.03.1-ce, build 9ee9f40
 
 ## Building on this container
 
-To build a new container based on `docker-bionic` add the following at the top of your Dockerfil
+To build a new container based on `r-bionic` add the following at the top of your Dockerfile
 
 ```sh
-FROM vnijs:docker-bionic
+FROM vnijs:r-bionic
 ```
 
 ## Building the container
 
-Use the terminal to change the working directory to the location where you cloned the repo. Then build the docker image using:
+Use the terminal to change the working directory to the location where you cloned the repo and change the working directory to `r-bionic`. Then build the docker image using:
 
 ```sh
-docker build -t $USER/docker-bionic .
+docker build -t $USER/r-bionic .
 ```
 
 ## General docker related commands
@@ -48,7 +48,7 @@ On mac you can use the commands below to push your custom image to docker hub:
 
 ```bash
 sudo docker login 
-docker push $USER/bionic
+docker push $USER/r-bionic
 ```
 
 ## Trademarks

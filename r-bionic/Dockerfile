@@ -69,9 +69,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   && apt-get clean
 
 ## R-Studio Preview
-RUN DEBIAN_FRONTEND=noninteractive wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-1.2.637-amd64.deb
-RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-1.2.637-amd64.deb
-RUN rm rstudio-server-1.2.637-amd64.deb
+RUN DEBIAN_FRONTEND=noninteractive wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-1.2.679-amd64.deb
+RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-1.2.679-amd64.deb
+RUN rm rstudio-server-1.2.679-amd64.deb
 
 ## Set the locale so RStudio doesn't complain about UTF-8
 RUN locale-gen en_US en_US.UTF-8

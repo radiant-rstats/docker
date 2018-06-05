@@ -26,7 +26,7 @@ docker run --rm -p 80:80 -p 8787:8787 vnijs/radiant
 
 The radiant app will be available at <a href="http://127.0.0.1" target="_blank">http://127.0.0.1</a> and Rstudio will be available at <a href="http://127.0.0.1:8787" target="_blank">http://127.0.0.1:8787</a>. The userid and password to Rstudio is `rstudio`
 
-To map local drives to Rstudio use the `-v` option. For example, the command below would map your home directory the home directory used for Rstudio
+To map local drives to Rstudio use the `-v` option. For example, the command below would map your home directory to the home directory used for Rstudio
 
 ```bash
 docker run --rm -p 80:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
@@ -55,7 +55,8 @@ options(radiant.report = TRUE)        ## allow R-code to be evaluated in Report 
 
 ## Building the container
 
-Use the terminal to change the working directory to the location where you cloned the repo. Then build the docker image using:
+Use the terminal to change the working directory to the location where you cloned the repo and change the working directory to `radiant`. Then build the docker image using:
+
 
 ```sh
 docker build -t $USER/radiant .
