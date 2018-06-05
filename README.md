@@ -30,7 +30,7 @@ docker-compose version 1.21.1, build 5a3f1a3
 To jump straight in and run the main application run the command below:
 
 ```bash
-docker run --rm -p 80:80 -p 8787:8787 -p 8888:8888 -v ~/Desktop:/home/rstudio/Desktop -v ~/Dropbox:/home/rstudio/Dropbox vnijs/rsm-msba
+docker run --rm -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba
 ```
 
 An alternative approach is to use `docker-compose` and the command below after cloning the repo:
@@ -114,7 +114,7 @@ docker push $USER/rsm-msba
 The rsm-msba directory also contains a docker-compose file that pulls in a postgres image and database admin tool adminer. To run the full application use the command below. 
 
 ```sh
-docker-compose -f ./rsm-msba/docker-compose.yml up
+docker-compose -f ./rsm-msba/docker-rsm-msba.yml up
 ```
 
 ## Trouble shooting 
