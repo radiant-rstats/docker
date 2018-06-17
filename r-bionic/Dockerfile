@@ -15,7 +15,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     wget \
     ca-certificates \
   && add-apt-repository --enable-source --yes "ppa:marutter/rrutter3.5" \
-  && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5"
+  && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
+  && add-apt-repository --enable-source --yes "ppa:ubuntu-toolchain-r/test"
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
   apt-transport-https \
@@ -29,9 +30,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
   libssl-dev \
   libxml2 \
   libxml2-dev \
+  unixodbc-dev \
   r-base \
   r-base-dev \
-  r-cran-rcpp
+  r-cran-rcpp \
+  r-cran-pbdzmq \
+  r-cran-r6
 
 ## OpenBLAS for faster linear algebra: http://brettklamer.com/diversions/statistical/faster-blas-in-r/
 RUN DEBIAN_FRONTEND=noninteractive apt-get install  -y \
@@ -56,7 +60,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get  install -y \
   python3-pip \
   python3-setuptools \
   python3-tk \
-  supervisor
+  supervisor \
+  libc6 \
+  libzmq5
 
 ## TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \

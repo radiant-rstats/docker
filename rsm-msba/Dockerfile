@@ -27,7 +27,26 @@ RUN pip3 install -U jupyter \
   xlrd \
   tensorflow \
   keras \
-  rpy2
+  rpy2 \
+  plotly \
+  dash \
+  dash-renderer \
+  dash-html-components \
+  dash-core-components
+
+RUN DEBIAN_FRONTEND=noninteractive \
+  apt-get -y install --no-install-recommends\
+    libzmq3-dev
+    # gpg-agent
+
+# ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
+# RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+# RUN apt-get install -y nodejs
+# RUN npm install -g npm
+# RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+RUN R -e 'install.packages(c("repr", "IRdisplay", "crayon", "pbdZMQ", "uuid"))' -e 'devtools::install_github("IRkernel/IRkernel")'
+RUN R -e 'IRkernel::installspec()'
 
 ## copy reticulate and python examples to home directory
 COPY python/ /home/rstudio/python
