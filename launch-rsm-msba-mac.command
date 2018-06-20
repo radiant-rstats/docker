@@ -11,7 +11,7 @@
 ## use CTRL + C to stop the container
 clear
 has_docker=$(which docker)
-if [ "${has_docker}" == "" ]; then
+if ["${has_docker}" == ""]; then
   echo "--------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
   echo "https://download.docker.com/mac/stable/Docker.dmg"
@@ -21,7 +21,7 @@ else
 
   ## kill running containers
   running=$(docker ps -q)
-  if [ "${running}" != "" ]; then
+  if ["${running}" != ""]; then
     docker kill ${running}
   fi
 

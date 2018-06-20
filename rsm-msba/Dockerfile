@@ -32,18 +32,24 @@ RUN pip3 install -U jupyter \
   dash \
   dash-renderer \
   dash-html-components \
-  dash-core-components
+  dash-core-components \
+  pystan
 
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get -y install --no-install-recommends\
-    libzmq3-dev
-    # gpg-agent
+    libzmq3-dev \
+    gpg-agent
 
-# ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
+ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
+
+## don't use nodejs 10 until this issue is resolved
+## https://github.com/jupyter-widgets/ipywidgets/issues/2061
 # RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
-# RUN apt-get install -y nodejs
-# RUN npm install -g npm
-# RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash
+# RUN apt-get install -y nodejs-legacy
+RUN apt-get install -y nodejs
+RUN npm install -g npm
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 RUN R -e 'install.packages(c("repr", "IRdisplay", "crayon", "pbdZMQ", "uuid"))' -e 'devtools::install_github("IRkernel/IRkernel")'
 RUN R -e 'IRkernel::installspec()'

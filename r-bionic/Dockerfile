@@ -14,15 +14,15 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     locales \
     wget \
     ca-certificates \
+    build-essential \
+    clang \
   && add-apt-repository --enable-source --yes "ppa:marutter/rrutter3.5" \
-  && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
-  && add-apt-repository --enable-source --yes "ppa:ubuntu-toolchain-r/test"
+  && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5"
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
   apt-transport-https \
   gdebi-core \
   libapparmor1 \
-  build-essential \
   libcurl4-openssl-dev \
   libopenmpi-dev \
   libpq-dev \
@@ -35,7 +35,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
   r-base-dev \
   r-cran-rcpp \
   r-cran-pbdzmq \
-  r-cran-r6
+  r-cran-r6 \
+  r-cran-catools \
+  r-cran-bitops
 
 ## OpenBLAS for faster linear algebra: http://brettklamer.com/diversions/statistical/faster-blas-in-r/
 RUN DEBIAN_FRONTEND=noninteractive apt-get install  -y \
@@ -62,7 +64,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get  install -y \
   python3-tk \
   supervisor \
   libc6 \
-  libzmq5
+  libzmq5 \
+  # libmagick++-dev \
+  libmagickwand-dev
 
 ## TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
