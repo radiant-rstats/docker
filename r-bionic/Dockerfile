@@ -65,8 +65,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get  install -y \
   supervisor \
   libc6 \
   libzmq5 \
-  # libmagick++-dev \
-  libmagickwand-dev
+  libmagick++-dev
 
 ## TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -79,9 +78,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   && apt-get clean
 
 ## R-Studio Preview
-RUN DEBIAN_FRONTEND=noninteractive wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-1.2.679-amd64.deb
-RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-1.2.679-amd64.deb
-RUN rm rstudio-server-1.2.679-amd64.deb
+RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-1.2.747-amd64.deb
+RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-1.2.747-amd64.deb
+RUN rm rstudio-server-1.2.747-amd64.deb
 
 ## Set the locale so RStudio doesn't complain about UTF-8
 RUN locale-gen en_US en_US.UTF-8

@@ -64,7 +64,7 @@ docker build -t $USER/rsm-msba .
 Note that creating the container may take some time if it has to pull an updated version of vnijs/rsm-msba. If the build fails for some reason you can access the container through the bash shell using to investigate what went wrong:
 
 ```sh
-docker run -t -i $USER/docker-rsm /bin/bash
+docker run -t -i $USER/rsm-msba /bin/bash
 ```
 
 ## Trademarks
