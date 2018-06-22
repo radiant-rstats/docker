@@ -5,7 +5,7 @@
 ## command below from a terminal should work
 ## then double-click to start the container
 
-## chmod 755 ~/Desktop/launch-rsm-msba-mac.command
+## chmod 755 ~/Desktop/launch-mac.command
 
 ## start Radiant, Rstudio, and JupyterLab
 ## use CTRL + C to stop the container
@@ -29,8 +29,9 @@ else
   echo "Starting rsm-msba computing container"
   echo "--------------------------------------------------------------------"
 
-  open http://localhost
-  open http://localhost:8787
+  ## (un)comment lines below to open services in a browser
+  # open http://localhost
+  # open http://localhost:8787
   open http://localhost:8888/lab
 
   ## open only rsm-msba

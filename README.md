@@ -25,6 +25,10 @@ docker-compose --version
 docker-compose version 1.21.1, build 5a3f1a3
 ```
 
+On windows please install Git Bash:
+
+http://www.techoism.com/how-to-install-git-bash-on-windows/
+
 ## TL;DR
 
 To jump straight in and run the main application run the command below:
@@ -32,6 +36,8 @@ To jump straight in and run the main application run the command below:
 ```bash
 docker run --rm -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba
 ```
+
+You can start the `rsm-msba` container on macOS using `launch-mac.command` and on Windows using `launch-windows.sh`. On Windows you will need Git Bash installed as referenced above.
 
 An alternative approach is to use `docker-compose` and the command below after cloning the repo:
 
