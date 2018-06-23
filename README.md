@@ -96,6 +96,18 @@ sudo docker login
 docker push $USER/radiant
 ```
 
+Add the following to .Rprofile in your home directory
+
+```r
+options(radiant.ace_vim.keys = FALSE)
+options(radiant.maxRequestSize = -1)
+# options(radiant.maxRequestSize = 10 * 1024^2)
+options(radiant.report = TRUE)
+# options(radiant.ace_theme = "cobalt")
+options(radiant.ace_theme = "tomorrow")
+# options(radiant.ace_showInvisibles = TRUE)
+```
+
 ## rsm-msba
 
 The third image builds on the radiant image and adds python and Jupyter. To build a new container based on `rsm-msba` add the following at the top of your Dockerfile
@@ -167,6 +179,19 @@ On mac you can use the commands below to push your custom image to docker hub:
 sudo docker login 
 docker push $USER/rsm-msba
 ```
+
+Add the following to .Rprofile in your home directory
+
+```r
+options(radiant.ace_vim.keys = FALSE)
+options(radiant.maxRequestSize = -1)
+# options(radiant.maxRequestSize = 10 * 1024^2)
+options(radiant.report = TRUE)
+# options(radiant.ace_theme = "cobalt")
+options(radiant.ace_theme = "tomorrow")
+# options(radiant.ace_showInvisibles = TRUE)
+```
+
 
 ## Trademarks
 
