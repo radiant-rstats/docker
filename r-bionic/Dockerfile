@@ -78,9 +78,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   && apt-get clean
 
 ## R-Studio Preview
-RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-1.2.747-amd64.deb
-RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-1.2.747-amd64.deb
-RUN rm rstudio-server-1.2.747-amd64.deb
+ENV rstudio_version 1.2.771
+
+RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${rstudio_version}-amd64.deb
+RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-${rstudio_version}-amd64.deb
+RUN rm rstudio-server-${rstudio_version}-amd64.deb
 
 ## Set the locale so RStudio doesn't complain about UTF-8
 RUN locale-gen en_US en_US.UTF-8
@@ -93,9 +95,12 @@ RUN useradd rstudio \
   && addgroup rstudio staff
 
 ## Shiny
-RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-1.5.7.907-amd64.deb
-RUN DEBIAN_FRONTEND=noninteractive gdebi -n shiny-server-1.5.7.907-amd64.deb
-RUN rm shiny-server-1.5.7.907-amd64.deb
+
+ENV shiny_version 1.5.7.907
+
+RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${shiny_version}-amd64.deb
+RUN DEBIAN_FRONTEND=noninteractive gdebi -n shiny-server-${shiny_version}-amd64.deb
+RUN rm shiny-server-${shiny_version}-amd64.deb
 
 WORKDIR /home/rstudio
 
