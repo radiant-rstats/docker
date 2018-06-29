@@ -37,11 +37,11 @@ else
   echo "--------------------------------------------------------------------"
   echo "Press (1) to show Radiant, followed by [ENTER]:"
   echo "Press (2) to show Rstudio, followed by [ENTER]:"
-  echo "Press (4) to update the radiant container, followed by [ENTER]:"
+  echo "Press (3) to update the radiant container, followed by [ENTER]:"
   echo "--------------------------------------------------------------------"
   read startup
 
-  if [ "${startup}" == "4" ]; then
+  if [ "${startup}" == "3" ]; then
     running=$(docker ps -q)
     echo "--------------------------------------------------------------------"
     echo "Updating the radiant computing container"
