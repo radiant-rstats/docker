@@ -44,11 +44,28 @@ else
   docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba
 
   echo "--------------------------------------------------------------------"
-  echo "Press (1) to show radiant, followed by [ENTER]:"
+  echo "Press (1) to show Radiant, followed by [ENTER]:"
   echo "Press (2) to show Rstudio, followed by [ENTER]:"
   echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
+  echo "Press (4) to update the rsm-msba container, followed by [ENTER]:"
   echo "--------------------------------------------------------------------"
   read startup
+
+  if [ "${startup}" == "4" ]; then
+    running=$(docker ps -q)
+    echo "--------------------------------------------------------------------"
+    echo "Updating the rsm-msba computing container"
+    docker kill ${running}
+    docker pull vnijs/rsm-msba
+    echo "--------------------------------------------------------------------"
+    docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba
+    echo "--------------------------------------------------------------------"
+    echo "Press (1) to show Radiant, followed by [ENTER]:"
+    echo "Press (2) to show Rstudio, followed by [ENTER]:"
+    echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
+    echo "--------------------------------------------------------------------"
+    read startup
+  fi
 
   echo "--------------------------------------------------------------------"
   if [ "${startup}" == "1" ]; then
@@ -79,5 +96,4 @@ else
     echo "--------------------------------------------------------------------"
     read
   fi
-  read
 fi
