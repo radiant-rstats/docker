@@ -60,6 +60,19 @@ else
 
   echo "--------------------------------------------------------------------"
   if [ "${startup}" == "1" ]; then
+
+    touch c:/Users/$USERNAME/.Rprofile
+    if ! grep -q 'radiant.maxRequestSize' c:/Users/$USERNAME/.Rprofile; then
+      echo "Your setup does not allow report generation in Report > Rmd"
+      echo "or Report > R. Would you like to add relevant code to .Rprofile?"
+      echo "Press y or n, followed by [ENTER]:"
+      echo
+      read allow_report
+
+      if [ "${allow_report}" == "y" ]; then
+        printf '\noptions(radiant.maxRequestSize = -1)\noptions(radiant.report = TRUE)' >> c:/Users/$USERNAME/.Rprofile
+      fi
+    fi
     echo "Starting Radiant in the default browser"
     start http://localhost
   elif [ "${startup}" == "2" ]; then

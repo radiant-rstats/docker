@@ -31,19 +31,28 @@ http://www.techoism.com/how-to-install-git-bash-on-windows/
 
 ## TL;DR
 
-To jump straight in and run the main application run the command below:
+To jump straight in and run the main application run the command below on macOS:
 
 ```bash
 docker run --rm -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba
 ```
 
-You can start the `rsm-msba` container on macOS using `launch-mac.command` and on Windows using `launch-windows.sh`. On Windows you will need Git Bash installed as referenced above.
+For Windows run the command below:
 
-An alternative approach is to use `docker-compose` and the command below after cloning the repo:
+```bash
+docker run --rm -p 80:80 -p 8787:8787 -p 8888:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
+```
+
+Perhaps even easier, you can start the `rsm-msba` container on macOS using `launch-mac.command` and on Windows using `launch-windows.sh`. To get these files download the repo https://github.com/radiant-rstats/docker or clone the repo using `git clone https://github.com/radiant-rstats/docker.git` is you have git installed. To run the script on Windows you will need [Git Bash installed](https://github.com/git-for-windows/git/releases/download/v2.18.0.windows.1/Git-2.18.0-64-bit.exe)
+ as referenced above.
+
+Another alternative approach is to use `docker-compose` and the command below after cloning the repo:
 
 ```bash
 docker-compose -f ./rsm-msba/docker-rsm-msba.yml up
 ```
+
+Note: For Windows you may need to change the path in the `volumes:` section to `c:/Users/$USERNAME`
 
 For more information about running the `radiant` application see [radiant/README.md](./radiant/README.md)
 
@@ -51,9 +60,7 @@ For more information about running the `rsm-msba` application see [rsm-msba/READ
 
 ## r-bionic
 
-You probably don't want to _run_ this image by itself. It is used in the radiant and rsm-msba application (see below).
-
-The first image contains R, Rstudio-sever, and Shiny-server. To build a new container based on `r-bionic` add the following at the top of your Dockerfile
+You probably don't want to _run_ this image by itself. It is used in the `radiant` and `rsm-msba` application (see below). To build a new container based on `r-bionic` add the following at the top of your Dockerfile
 
 ```
 FROM vnijs:docker-bionic
@@ -74,10 +81,7 @@ docker push $USER/r-bionic
 
 ## radiant
 
-The second image builds on r-bionic and adds [radiant](https://github.com/radiant-rstats/radiant) and required R-packages. 
-
-
-To build a new container based on `radiant` add the following at the top of your Dockerfile
+The second image builds on `r-bionic` and adds [radiant](https://github.com/radiant-rstats/radiant) and required R-packages. To build a new container based on `radiant` add the following at the top of your Dockerfile
 
 ```
 FROM vnijs:radiant
@@ -191,7 +195,6 @@ options(radiant.report = TRUE)
 options(radiant.ace_theme = "tomorrow")
 # options(radiant.ace_showInvisibles = TRUE)
 ```
-
 
 ## Trademarks
 
