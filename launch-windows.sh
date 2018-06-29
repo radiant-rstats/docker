@@ -1,7 +1,6 @@
 #!/bin/bash
 
-## start Radiant, Rstudio, and JupyterLab
-## use CTRL + C to stop the container
+## script to start Radiant, Rstudio, and JupyterLab
 clear
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+## script to start Radiant, Rstudio, and JupyterLab
 ## script requires correct permissions to execute
 ## if you put the script on your Desktop, running the
 ## command below from a terminal should work
@@ -7,8 +8,6 @@
 
 ## chmod 755 ~/Desktop/launch-mac.command
 
-## start Radiant, Rstudio, and JupyterLab
-## use CTRL + C to stop the container
 clear
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then
