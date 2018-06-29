@@ -58,8 +58,9 @@ else
 
   echo "--------------------------------------------------------------------"
   if [ "${startup}" == "1" ]; then
-    touch c:/Users/$USERNAME/.Rprofile
-    if ! grep -q 'radiant.maxRequestSize' c:/Users/$USERNAME/.Rprofile; then
+    RPROF=c:/Users/$USERNAME/.Rprofile
+    touch ${RPROF}
+    if ! grep -q 'radiant.maxRequestSize' ${RPROF}; then
       echo "Your setup does not allow report generation in Report > Rmd"
       echo "or Report > R. Would you like to add relevant code to .Rprofile?"
       echo "Press y or n, followed by [ENTER]:"
@@ -68,10 +69,7 @@ else
 
       if [ "${allow_report}" == "y" ]; then
         ## Windows does not repliably profile newlines with printf
-        RPROF=c:/Users/$USERNAME/.Rprofile
-        echo '' >> ${RPROF}
         echo 'options(radiant.maxRequestSize = -1)' >> ${RPROF}
-        echo '' >> ${RPROF}
         echo 'options(radiant.report = TRUE)' >> ${RPROF}
       fi
     fi
