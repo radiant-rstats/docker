@@ -60,7 +60,7 @@ else
   if [ "${startup}" == "1" ]; then
     RPROF=c:/Users/$USERNAME/.Rprofile
     touch ${RPROF}
-    if ! grep -q 'radiant.maxRequestSize' ${RPROF}; then
+    if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
       echo "Your setup does not allow report generation in Report > Rmd"
       echo "or Report > R. Would you like to add relevant code to .Rprofile?"
       echo "Press y or n, followed by [ENTER]:"
