@@ -67,7 +67,12 @@ else
       read allow_report
 
       if [ "${allow_report}" == "y" ]; then
-        printf '\noptions(radiant.maxRequestSize = -1)\noptions(radiant.report = TRUE)' >> c:/Users/$USERNAME/.Rprofile
+        ## Windows does not repliably profile newlines with printf
+        RPROF=c:/Users/$USERNAME/.Rprofile
+        echo '' >> ${RPROF}
+        echo 'options(radiant.maxRequestSize = -1)' >> ${RPROF}
+        echo '' >> ${RPROF}
+        echo 'options(radiant.report = TRUE)' >> ${RPROF}
       fi
     fi
     echo "Starting Radiant in the default browser"
