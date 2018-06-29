@@ -50,7 +50,7 @@ else
     docker kill ${running}
     docker pull vnijs/rsm-msba
     echo "--------------------------------------------------------------------"
-    docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba
+    docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
     echo "--------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
