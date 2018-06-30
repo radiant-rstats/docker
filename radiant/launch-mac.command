@@ -41,6 +41,10 @@ else
 
   docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/radiant
 
+  ## make sure abend is set correctly
+  ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
+  find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i '' -e 's/abend="1"/abend="0"/'
+
   echo "--------------------------------------------------------------------"
   echo "Press (1) to show Radiant, followed by [ENTER]:"
   echo "Press (2) to show Rstudio, followed by [ENTER]:"
