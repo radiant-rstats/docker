@@ -31,6 +31,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
   libxml2 \
   libxml2-dev \
   unixodbc-dev \
+  libicu-dev \
   r-base \
   r-base-dev \
   r-cran-rcpp \
