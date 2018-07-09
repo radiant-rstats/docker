@@ -11,6 +11,18 @@ if [ "${has_docker}" == "" ]; then
   read
 else
 
+  ## check docker is running at all
+  ## based on https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash
+  {
+    docker ps -q
+  } || {
+    echo "--------------------------------------------------------------------"
+    echo "Docker is not running. Please start docker on your computer"
+    echo "When docker has finished starting up press [ENTER} to continue"
+    echo "--------------------------------------------------------------------"
+    read
+  }
+
   ## kill running containers
   running=$(docker ps -q)
   if [ "${running}" != "" ]; then

@@ -16,7 +16,6 @@ else
   {
     docker ps -q
   } || {
-    open /Applications/Docker.app
     echo "--------------------------------------------------------------------"
     echo "Docker is not running. Please start docker on your computer"
     echo "When docker has finished starting up press [ENTER} to continue"
