@@ -18,19 +18,18 @@ if [ "${has_docker}" == "" ]; then
   read
 else
 
-  ## from https://gist.github.com/peterver/ca2d60abc015d334e1054302265b27d9
-  rep=$(curl -s --unix-socket /var/run/docker.sock http://ping > /dev/null)
-  status=$?
-
-  if [ "$status" == "7" ]; then
-    ## from https://stackoverflow.com/a/48843074/1974918
+  ## check docker is running at all
+  ## based on https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash
+  {
+    docker ps -q
+  } || {
     open /Applications/Docker.app
     echo "--------------------------------------------------------------------"
     echo "Waiting for docker to start ..."
     echo "When docker has finished starting up press [ENTER} to continue"
     echo "--------------------------------------------------------------------"
     read
-  fi
+  }
 
   ## kill running containers
   running=$(docker ps -q)
