@@ -57,7 +57,9 @@ else
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
-  find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i '' -e 's/abend="1"/abend="0"/'
+  if [ -d ~/.rstudio ]; then
+    find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i '' -e 's/abend="1"/abend="0"/'
+  fi
 
   echo "--------------------------------------------------------------------"
   echo "Press (1) to show Radiant, followed by [ENTER]:"
