@@ -79,7 +79,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   && apt-get clean
 
 ## R-Studio Preview
-ENV rstudio_version 1.2.747
+ENV rstudio_version 1.2.792
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${rstudio_version}-amd64.deb
 RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-${rstudio_version}-amd64.deb
