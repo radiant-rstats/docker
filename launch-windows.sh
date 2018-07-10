@@ -94,13 +94,13 @@ else
         echo 'rm(home)' >> ${RPROF}
       fi
       echo "Starting Radiant in the default browser"
-      open http://localhost
+      start http://localhost
     elif [ ${startup} == 2 ]; then
       echo "Starting Rstudio in the default browser"
-      open http://localhost:8787
+      start http://localhost:8787
     elif [ ${startup} == 3 ]; then
       echo "Starting Jupyter Lab in the default browser"
-      open http://localhost:8888/lab
+      start http://localhost:8888/lab
     elif [ "${startup}" == "q" ]; then
       running=$(docker ps -q)
       docker kill ${running}
