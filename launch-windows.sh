@@ -61,12 +61,14 @@ else
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "--------------------------------------------------------------------"
     read startup
-  
+
     if [ ${startup} == 4 ]; then
       running=$(docker ps -q)
       echo "--------------------------------------------------------------------"
       echo "Updating the rsm-msba computing container"
       docker kill ${running}
+      docker pull vnijs/r-bionic
+      docker pull vnijs/radiant
       docker pull vnijs/rsm-msba
       echo "--------------------------------------------------------------------"
       docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
@@ -122,4 +124,4 @@ else
     show_service
     ret=$?
   done
-fi 
+fi

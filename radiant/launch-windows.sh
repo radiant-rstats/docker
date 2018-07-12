@@ -37,6 +37,7 @@ else
     echo "--------------------------------------------------------------------"
     echo "Downloading the radiant computing container"
     echo "--------------------------------------------------------------------"
+    docker pull vnijs/r-bionic
     docker pull vnijs/radiant
   fi
 
@@ -60,7 +61,7 @@ else
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "--------------------------------------------------------------------"
     read startup
-  
+
     if [ ${startup} == 3 ]; then
       running=$(docker ps -q)
       echo "--------------------------------------------------------------------"
@@ -118,4 +119,4 @@ else
     show_service
     ret=$?
   done
-fi 
+fi
