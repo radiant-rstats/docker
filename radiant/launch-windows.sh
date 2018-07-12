@@ -99,8 +99,27 @@ else
       echo "Starting Rstudio in the default browser"
       start http://localhost:8787
     elif [ "${startup}" == "q" ]; then
+      echo "--------------------------------------------------------------------"
+      echo "Stopping radiant computing container and cleaning up as needed"
+      echo "--------------------------------------------------------------------"
+
       running=$(docker ps -q)
-      docker stop ${running}
+      if [ "${running}" != "" ]; then
+        echo "Stopping running containers ..."
+        docker stop ${running}
+      fi
+
+      imgs=$(docker images | awk '/<none>/ { print $3 }')
+      if [ "${imgs}" != "" ]; then
+        echo "Removing unused containers ..."
+        docker rmi -f ${imgs}
+      fi
+
+      procs=$(docker ps -a -q --no-trunc)
+      if [ "${procs}" != "" ]; then
+        echo "Removing errand docker processes ..."
+        docker rm ${procs}
+      fi
     fi
 
     if [ "${startup}" == "q" ]; then
