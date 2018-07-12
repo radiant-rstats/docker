@@ -78,16 +78,24 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   && apt-get -y autoremove \
   && apt-get clean
 
+## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+	&& locale-gen en_US.utf8 \
+	&& /usr/sbin/update-locale LANG=en_US.UTF-8
+
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+
+## Set the locale so RStudio doesn't complain about UTF-8
+# RUN locale-gen en_US en_US.UTF-8
+# RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
+
 ## R-Studio Preview
 ENV rstudio_version 1.2.792
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${rstudio_version}-amd64.deb
 RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-${rstudio_version}-amd64.deb
 RUN rm rstudio-server-${rstudio_version}-amd64.deb
-
-## Set the locale so RStudio doesn't complain about UTF-8
-RUN locale-gen en_US en_US.UTF-8
-RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
 RUN useradd rstudio \
   && echo "rstudio:rstudio" | chpasswd \
