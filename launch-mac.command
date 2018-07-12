@@ -37,7 +37,7 @@ else
     echo "--------------------------------------------------------------------"
     echo "Stopping running containers"
     echo "--------------------------------------------------------------------"
-    docker kill ${running}
+    docker stop ${running}
   fi
 
   available=$(docker images -q vnijs/rsm-msba)
@@ -74,7 +74,7 @@ else
       running=$(docker ps -q)
       echo "--------------------------------------------------------------------"
       echo "Updating the rsm-msba computing container"
-      docker kill ${running}
+      docker stop ${running}
       docker pull vnijs/r-bionic
       docker pull vnijs/radiant
       docker pull vnijs/rsm-msba
@@ -110,7 +110,7 @@ else
       open http://localhost:8888/lab
     elif [ "${startup}" == "q" ]; then
       running=$(docker ps -q)
-      docker kill ${running}
+      docker stop ${running}
     fi
 
     if [ "${startup}" == "q" ]; then

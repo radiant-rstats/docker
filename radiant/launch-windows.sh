@@ -29,7 +29,7 @@ else
     echo "--------------------------------------------------------------------"
     echo "Stopping running containers"
     echo "--------------------------------------------------------------------"
-    docker kill ${running}
+    docker stop ${running}
   fi
 
   available=$(docker images -q vnijs/radiant)
@@ -66,7 +66,7 @@ else
       running=$(docker ps -q)
       echo "--------------------------------------------------------------------"
       echo "Updating the radiant computing container"
-      docker kill ${running}
+      docker stop ${running}
       docker pull vnijs/radiant
       echo "--------------------------------------------------------------------"
       docker run -d -p 80:80 -p 8787:8787 -v c:/Users/$USERNAME:/home/rstudio vnijs/radiant
@@ -100,7 +100,7 @@ else
       start http://localhost:8787
     elif [ "${startup}" == "q" ]; then
       running=$(docker ps -q)
-      docker kill ${running}
+      docker stop ${running}
     fi
 
     if [ "${startup}" == "q" ]; then
