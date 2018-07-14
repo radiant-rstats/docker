@@ -47,6 +47,8 @@ The rsm-msba directory also contains a docker-compose file that pulls in a postg
 docker-compose -f ./rsm-msba/docker-rsm-msba-pg.yml up
 ```
 
+The `pg-connect.Rmd` file shows how you can connect to the `postgres` data base. The `pg-radiant.state.rda` file illustrates how you can connect to a data base from radiant.
+
 ## Customize the rsm-msba container
 
 The rsm-msba container build on the vnijs/radiant container. If you want to make changes to settings for radiant clone and docker repo: https://github.com/radiant-rstats/radiant

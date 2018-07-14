@@ -7,8 +7,6 @@ services:
       - 8787:8787
       - 8888:8888
     volumes:
-      # - ~/Dropbox:/home/rstudio/Dropbox
-      # - ~/GitLab:/home/rstudio/GitLab
       - ~:/home/rstudio
 
   postgres:
@@ -20,6 +18,8 @@ services:
     ports:
       - 5432:5432
     restart: always
+    volumes:
+       - ~/postgresql/data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -29,3 +29,5 @@ services:
     ports:
       - 5050:80
     restart: always
+    volumes:
+       - ~/postgresql/pgadmin:/var/lib/pgadmin

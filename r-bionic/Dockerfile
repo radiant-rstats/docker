@@ -17,7 +17,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     build-essential \
     clang \
   && add-apt-repository --enable-source --yes "ppa:marutter/rrutter3.5" \
-  && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5"
+  && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
+  && apt-get update
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
   apt-transport-https \
