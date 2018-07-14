@@ -37,7 +37,6 @@ else
     echo "--------------------------------------------------------------------"
     echo "Downloading the radiant computing container"
     echo "--------------------------------------------------------------------"
-    docker pull vnijs/r-bionic
     docker pull vnijs/radiant
   fi
 
@@ -45,12 +44,14 @@ else
   echo "Starting radiant computing container"
   echo "--------------------------------------------------------------------"
 
-  docker run -d -p 80:80 -p 8787:8787 -v c:/Users/$USERNAME:/home/rstudio vnijs/radiant
+  HOMEDIR=c:/Users/$USERNAME
+
+  docker run -d -p 80:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio vnijs/radiant
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
-  if [ -d c:/Users/$USERNAME/.rstudio ]; then
-    find c:/Users/$USERNAME/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i 's/abend="1"/abend="0"/'
+  if [ -d ${HOMEDIR}/.rstudio ]; then
+    find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i 's/abend="1"/abend="0"/'
   fi
 
    show_service () {
@@ -69,11 +70,11 @@ else
       docker stop ${running}
       docker pull vnijs/radiant
       echo "--------------------------------------------------------------------"
-      docker run -d -p 80:80 -p 8787:8787 -v c:/Users/$USERNAME:/home/rstudio vnijs/radiant
+      docker run -d -p 80:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio vnijs/radiant
       echo "--------------------------------------------------------------------"
     elif [ ${startup} == 1 ]; then
 
-      RPROF=c:/Users/$USERNAME/.Rprofile
+      RPROF=${HOMEDIR}/.Rprofile
       touch ${RPROF}
       if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
         echo "Your setup does not allow report generation in Report > Rmd"
