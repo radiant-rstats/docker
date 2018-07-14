@@ -93,7 +93,7 @@ tail(tailnum_delay)
 
 5. View the data in pgAdmin4
 
-`pgAdmin4` should be running on http://localhost:5050/browser/
+`pgAdmin4` should be running on http://localhost:5050/browser/. You can login using `admin@pgadmin.com` as the user id and `pgadmin` as the password. These settings can be changed in the `docker-rsm-msba-pg.yml` file.
 
 To connect to the data base, create a new "server" by right clicking on the `Server` icon and choosing _Create > Server_. In the  `General` and `Connection` tabs provide the information shown in the screen shots below and click on the `Save` icon.
 
