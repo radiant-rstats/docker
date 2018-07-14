@@ -75,8 +75,6 @@ else
       echo "--------------------------------------------------------------------"
       echo "Updating the rsm-msba computing container"
       docker stop ${running}
-      docker pull vnijs/r-bionic
-      docker pull vnijs/radiant
       docker pull vnijs/rsm-msba
       echo "--------------------------------------------------------------------"
       docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ~:/home/rstudio vnijs/rsm-msba

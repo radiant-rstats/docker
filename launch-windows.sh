@@ -44,12 +44,17 @@ else
   echo "Starting rsm-msba computing container"
   echo "--------------------------------------------------------------------"
 
-  docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
+  HOMEDIR=c:/Users/$USERNAME
+
+  # docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
+  docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
-  if [ -d c:/Users/$USERNAME/.rstudio ]; then
-    find c:/Users/$USERNAME/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i 's/abend="1"/abend="0"/'
+  # if [ -d c:/Users/$USERNAME/.rstudio ]; then
+  if [ -d ${HOMEDIR}/.rstudio ]; then
+    # find c:/Users/$USERNAME/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i 's/abend="1"/abend="0"/'
+    find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i 's/abend="1"/abend="0"/'
   fi
 
    show_service () {
@@ -67,15 +72,15 @@ else
       echo "--------------------------------------------------------------------"
       echo "Updating the rsm-msba computing container"
       docker stop ${running}
-      docker pull vnijs/r-bionic
-      docker pull vnijs/radiant
       docker pull vnijs/rsm-msba
       echo "--------------------------------------------------------------------"
-      docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
+      # docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
+      docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
       echo "--------------------------------------------------------------------"
     elif [ ${startup} == 1 ]; then
 
-      RPROF=c:/Users/$USERNAME/.Rprofile
+      # RPROF=c:/Users/$USERNAME/.Rprofile
+      RPROF=${HOMEDIR}/.Rprofile
       touch ${RPROF}
       if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
         echo "Your setup does not allow report generation in Report > Rmd"
