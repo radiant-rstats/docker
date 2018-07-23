@@ -16,8 +16,8 @@ docker-compose -f ./rsm-msba/docker-rsm-msba-pg.yml up
 ... connect to the database using the code chunk below. The default password is "postgres" but you can, and probably should, change that in the docker compose file.
 
 ```{r}
+library(DBI)
 library(RPostgreSQL)
-library(dplyr)
 con <- dbConnect(
   dbDriver("PostgreSQL"),
   user = "postgres", 
@@ -31,6 +31,7 @@ con <- dbConnect(
 Is there anything in the data base? If this is not the first time you are  running this Rmd file the data base should be available already (i.e., the code chunk below should show "flights" as an existing table)
 
 ```{r}
+library(dplyr)
 dbListTables(con)
 ```
 
