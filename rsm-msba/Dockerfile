@@ -33,7 +33,10 @@ RUN pip3 install -U jupyter \
   dash-renderer \
   dash-html-components \
   dash-core-components \
-  pystan
+  pystan \
+  selenium \
+  tweepy \
+  nltk
 
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get -y install --no-install-recommends\

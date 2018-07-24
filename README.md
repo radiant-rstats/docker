@@ -139,6 +139,14 @@ The rsm-msba directory also contains a docker-compose file that pulls in a postg
 docker-compose -f ./rsm-msba/docker-rsm-msba.yml up
 ```
 
+## Installing R-packages
+
+If you want to install an R-package, e.g., `fortune`, in a way that persists when using the container again, use the command below. This will install the package and create a personal directory for future package installs. You will only need to add the `lib = Sys.getenv("R_LIBS_USER")` argument once to generate the personal directory.
+
+```
+install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))
+```
+
 ## Trouble shooting 
 
 To stop (all) running containers use:

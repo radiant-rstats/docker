@@ -49,6 +49,14 @@ docker-compose -f ./rsm-msba/docker-rsm-msba-pg.yml up
 
 The `pg-connect.Rmd` file shows how you can connect to the `postgres` data base. The `pg-radiant.state.rda` file illustrates how you can connect to a data base from radiant.
 
+## Installing R-packages
+
+If you want to install an R-package, e.g., `fortune`, in a way that persists when using the container again, use the command below. This will install the package and create a personal directory for future package installs. You will only need to add the `lib = Sys.getenv("R_LIBS_USER")` argument once to generate the personal directory.
+
+```
+install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))
+```
+
 ## Customize the rsm-msba container
 
 The rsm-msba container build on the vnijs/radiant container. If you want to make changes to settings for radiant clone and docker repo: https://github.com/radiant-rstats/radiant

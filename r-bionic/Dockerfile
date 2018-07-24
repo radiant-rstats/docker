@@ -102,7 +102,11 @@ RUN useradd rstudio \
   && echo "rstudio:rstudio" | chpasswd \
   && mkdir /home/rstudio \
   && chown rstudio:rstudio /home/rstudio \
-  && addgroup rstudio staff
+  && addgroup rstudio staff \
+  && addgroup rstudio root
+
+## add rstudio to sudo
+# RUN adduser rstudio sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 ## Shiny
 
