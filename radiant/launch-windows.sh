@@ -89,11 +89,11 @@ else
           echo 'options(radiant.report = TRUE)' >> ${RPROF}
         fi
       fi
-      if ! grep -qF 'options(radiant.sf_volumes' ${RPROF}; then
-        echo 'home <- radiant.data::find_home()' >> ${RPROF}
-        echo 'options(radiant.sf_volumes = c(Desktop = file.path(home, "Desktop"), Home = home,  Dropbox = file.path(home, "Dropbox")))' >> ${RPROF}
-        echo 'rm(home)' >> ${RPROF}
-      fi
+      # if ! grep -qF 'options(radiant.sf_volumes' ${RPROF}; then
+      #   echo 'home <- radiant.data::find_home()' >> ${RPROF}
+      #   echo 'options(radiant.sf_volumes = c(Desktop = file.path(home, "Desktop"), Home = home,  Dropbox = file.path(home, "Dropbox")))' >> ${RPROF}
+      #   echo 'rm(home)' >> ${RPROF}
+      # fi
       echo "Starting Radiant in the default browser"
       start http://localhost
     elif [ ${startup} == 2 ]; then

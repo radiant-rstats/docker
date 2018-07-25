@@ -7,3 +7,4 @@ docker build -t $USER/radiant ./radiant
 docker push $USER/radiant
 docker build -t $USER/rsm-msba ./rsm-msba
 docker push $USER/rsm-msba
+

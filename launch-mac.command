@@ -93,11 +93,11 @@ else
           printf '\noptions(radiant.maxRequestSize = -1)\noptions(radiant.report = TRUE)' >> ~/.Rprofile
         fi
       fi
-      if ! grep -qF 'options(radiant.sf_volumes' ~/.Rprofile; then
-        echo 'home <- radiant.data::find_home()' >> ~/.Rprofile
-        echo 'options(radiant.sf_volumes = c(Desktop = file.path(home, "Desktop"), Home = home,  Dropbox = file.path(home, "Dropbox")))' >> ~/.Rprofile
-        echo 'rm(home)' >> ~/.Rprofile
-      fi
+      # if ! grep -qF 'options(radiant.sf_volumes' ~/.Rprofile; then
+      #   echo 'home <- radiant.data::find_home()' >> ~/.Rprofile
+      #   echo 'options(radiant.sf_volumes = c(Home = "~")' >> ~/.Rprofile
+      #   echo 'rm(home)' >> ~/.Rprofile
+      # fi
       echo "Starting Radiant in the default browser"
       open http://localhost
     elif [ ${startup} == 2 ]; then

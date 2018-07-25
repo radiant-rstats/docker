@@ -1,4 +1,4 @@
-FROM vnijs/radiant
+FROM vnijs/radiant:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 

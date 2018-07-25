@@ -8,14 +8,30 @@ RUN set -e && ln -sf /bin/bash /bin/sh
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
   && apt-get -y upgrade \
   && apt-get install -y --no-install-recommends \
-    software-properties-common \
-    ed \
-    less \
-    locales \
-    wget \
+    bash-completion \
     ca-certificates \
-    build-essential \
-    clang \
+    file \
+    fonts-texgyre \
+    g++ \
+    gfortran \
+    gsfonts \
+    libblas-dev \
+    libbz2-1.0 \
+    libcurl3 \
+    libopenblas-dev \
+    libpangocairo-1.0-0 \
+    libpcre3 \
+    libpng16-16 \
+    libreadline7 \
+    libtiff5 \
+    liblzma5 \
+    locales \
+    make \
+    unzip \
+    zip \
+    zlib1g \
+    wget \
+    software-properties-common \
   && add-apt-repository --enable-source --yes "ppa:marutter/rrutter3.5" \
   && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
   && apt-get update
@@ -41,11 +57,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
   r-cran-catools \
   r-cran-bitops
 
-## OpenBLAS for faster linear algebra: http://brettklamer.com/diversions/statistical/faster-blas-in-r/
-RUN DEBIAN_FRONTEND=noninteractive apt-get install  -y \
-  apt-utils \
-  libopenblas-base
-
 ## Utilities
 RUN DEBIAN_FRONTEND=noninteractive apt-get  install -y \
   vim \
@@ -67,7 +78,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get  install -y \
   supervisor \
   libc6 \
   libzmq5 \
-  libmagick++-dev
+  libmagick++-dev \
+  ed
 
 ## TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -102,11 +114,7 @@ RUN useradd rstudio \
   && echo "rstudio:rstudio" | chpasswd \
   && mkdir /home/rstudio \
   && chown rstudio:rstudio /home/rstudio \
-  && addgroup rstudio staff \
-  && addgroup rstudio root
-
-## add rstudio to sudo
-# RUN adduser rstudio sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+  && addgroup rstudio staff
 
 ## Shiny
 
@@ -130,6 +138,9 @@ RUN mkdir -p /var/log/shiny-server \
   && chown shiny:shiny /home/shiny/.Rprofile \
   && chown rstudio:rstudio /home/rstudio/.Rprofile \
   && adduser rstudio shiny
+
+## add rstudio to sudo
+RUN adduser rstudio sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 RUN mkdir -p /var/log/supervisor \
   && chown rstudio:rstudio /var/log/supervisor
