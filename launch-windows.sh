@@ -54,7 +54,7 @@ else
     find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i 's/abend="1"/abend="0"/'
   fi
 
-   show_service () {
+  show_service () {
     echo "--------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
@@ -134,9 +134,11 @@ else
     fi
   }
 
-  ## keep asking until quit
+  ## sleep to give the server time to start up fully
+  sleep 2s
   show_service
   ret=$?
+  ## keep asking until quit
   while [ $ret -ne 2 ]; do
     sleep 2s
     clear

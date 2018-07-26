@@ -104,7 +104,7 @@ ENV LANG en_US.UTF-8
 # RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
 ## R-Studio Preview
-ENV rstudio_version 1.2.792
+ENV rstudio_version 1.2.830
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${rstudio_version}-amd64.deb
 RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-${rstudio_version}-amd64.deb
@@ -114,10 +114,10 @@ RUN useradd rstudio \
   && echo "rstudio:rstudio" | chpasswd \
   && mkdir /home/rstudio \
   && chown rstudio:rstudio /home/rstudio \
-  && addgroup rstudio staff
+  && addgroup rstudio staff \
+  && addgroup rstudio root
 
 ## Shiny
-
 ENV shiny_version 1.5.7.907
 
 RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${shiny_version}-amd64.deb

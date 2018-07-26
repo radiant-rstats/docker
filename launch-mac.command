@@ -137,9 +137,11 @@ else
     fi
   }
 
-  ## keep asking until quit
+  ## sleep to give the server time to start up fully
+  sleep 2s
   show_service
   ret=$?
+  ## keep asking until quit
   while [ $ret -ne 2 ]; do
     sleep 2s
     clear
