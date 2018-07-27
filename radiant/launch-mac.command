@@ -95,7 +95,7 @@ else
         read allow_report
 
         if [ "${allow_report}" == "y" ]; then
-          printf '\noptions(radiant.maxRequestSize = -1)\noptions(radiant.report = TRUE)' >> ~/.Rprofile
+          printf 'options(radiant.maxRequestSize = -1)\noptions(radiant.report = TRUE)\n\n' >> ~/.Rprofile
         fi
       fi
 

@@ -93,6 +93,8 @@ else
           ## Windows does not reliably use newlines with printf
           echo 'options(radiant.maxRequestSize = -1)' >> ${RPROF}
           echo 'options(radiant.report = TRUE)' >> ${RPROF}
+          echo '' >> ${RPROF}
+          echo '' >> ${RPROF}
         fi
       fi
       if [ "${port}" == "" ]; then
