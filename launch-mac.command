@@ -56,9 +56,12 @@ else
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
-  if [ -d ~/.rstudio ]; then
-    find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i '' -e 's/abend="1"/abend="0"/'
-  fi
+  rstudio_abend () {
+    if [ -d ~/.rstudio ]; then
+      find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i '' -e 's/abend="1"/abend="0"/'
+    fi
+  }
+  rstudio_abend
 
   show_service () {
     echo "---------------------------------------------------------------------"
@@ -109,6 +112,7 @@ else
         echo "Starting Rstudio in the default browser on port 8787"
         open http://localhost:8787
       else
+        rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
         docker run -d -p ${port}:8787 -v ~:/home/rstudio vnijs/rsm-msba
         sleep 2s
