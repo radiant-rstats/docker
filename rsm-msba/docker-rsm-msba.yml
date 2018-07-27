@@ -5,8 +5,7 @@ services:
     ports:
       - 80:80
       - 8787:8787
-      - 8888:8888
+      - 8989:8888
     volumes:
-      #- ~/Dropbox:/home/rstudio/Dropbox
-      #- ~/GitLab:/home/rstudio/GitLab
+      # - C:/Users/$USERNAME:/home/rstudio
       - ~:/home/rstudio

@@ -4,10 +4,10 @@
 clear
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then
-  echo "--------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
   echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
-  echo "--------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------"
   read
 else
 
@@ -16,37 +16,37 @@ else
   {
     docker ps -q
   } || {
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     echo "Docker is not running. Please start docker on your computer"
     echo "When docker has finished starting up press [ENTER} to continue"
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     read
   }
 
   ## kill running containers
   running=$(docker ps -q)
   if [ "${running}" != "" ]; then
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     echo "Stopping running containers"
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     docker stop ${running}
   fi
 
   available=$(docker images -q vnijs/rsm-msba)
   if [ "${available}" == "" ]; then
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     echo "Downloading the rsm-msba computing container"
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     docker pull vnijs/rsm-msba
   fi
 
-  echo "--------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------"
   echo "Starting rsm-msba computing container"
-  echo "--------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------"
 
   HOMEDIR=c:/Users/$USERNAME
 
-  docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+  docker run -d -p 80:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
 
   ## make sure abend is set correctly to avoid warnings from Rstudio
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -55,24 +55,26 @@ else
   fi
 
   show_service () {
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
     echo "Press (4) to update the rsm-msba container, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
-    echo "--------------------------------------------------------------------"
-    read startup
+    echo "---------------------------------------------------------------------"
+    echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
+    echo "---------------------------------------------------------------------"
+    read startup port
 
     if [ ${startup} == 4 ]; then
       running=$(docker ps -q)
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
       echo "Updating the rsm-msba computing container"
       docker stop ${running}
       docker pull vnijs/rsm-msba
-      echo "--------------------------------------------------------------------"
-      docker run -d -p 80:80 -p 8787:8787 -p 8888:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
+      docker run -d -p 80:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+      echo "---------------------------------------------------------------------"
     elif [ ${startup} == 1 ]; then
 
       RPROF=${HOMEDIR}/.Rprofile
@@ -90,23 +92,39 @@ else
           echo 'options(radiant.report = TRUE)' >> ${RPROF}
         fi
       fi
-      # if ! grep -qF 'options(radiant.sf_volumes' ${RPROF}; then
-      #   echo 'home <- radiant.data::find_home()' >> ${RPROF}
-      #   echo 'options(radiant.sf_volumes = c(Desktop = file.path(home, "Desktop"), Home = home,  Dropbox = file.path(home, "Dropbox")))' >> ${RPROF}
-      #   echo 'rm(home)' >> ${RPROF}
-      # fi
-      echo "Starting Radiant in the default browser"
-      start http://localhost
+      if [ "${port}" == "" ]; then
+        echo "Starting Radiant in the default browser on port 80"
+        start http://localhost
+      else
+        echo "Starting Radiant in the default browser on port ${port}"
+        docker run -d -p ${port}:80 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+        sleep 2s
+        start http://localhost:${port}
+      fi
     elif [ ${startup} == 2 ]; then
-      echo "Starting Rstudio in the default browser"
-      start http://localhost:8787
+      if [ "${port}" == "" ]; then
+        echo "Starting Rstudio in the default browser on port 8787"
+        start http://localhost:8787
+      else
+        echo "Starting Rstudio in the default browser on port ${port}"
+        docker run -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+        sleep 2s
+        start http://localhost:${port}
+      fi
     elif [ ${startup} == 3 ]; then
-      echo "Starting Jupyter Lab in the default browser"
-      start http://localhost:8888/lab
+      if [ "${port}" == "" ]; then
+        echo "Starting Jupyter Lab in the default browser on port 8989"
+        start http://localhost:8989/lab
+      else
+        echo "Starting Jupyter Lab in the default browser on port ${port}"
+        docker run -d -p ${port}:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+        sleep 2s
+        start http://localhost:${port}/lab
+      fi
     elif [ "${startup}" == "q" ]; then
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
       echo "Stopping rsm-msba computing container and cleaning up as needed"
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
 
       running=$(docker ps -q)
       if [ "${running}" != "" ]; then

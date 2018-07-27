@@ -4,10 +4,10 @@
 clear
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then
-  echo "--------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
   echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
-  echo "--------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------"
   read
 else
 
@@ -16,35 +16,35 @@ else
   {
     docker ps -q
   } || {
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     echo "Docker is not running. Please start docker on your computer"
     echo "When docker has finished starting up press [ENTER} to continue"
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     read
   }
 
   ## kill running containers
   running=$(docker ps -q)
   if [ "${running}" != "" ]; then
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     echo "Stopping running containers"
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     docker stop ${running}
   fi
 
   available=$(docker images -q vnijs/radiant)
   if [ "${available}" == "" ]; then
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     echo "Downloading the radiant computing container"
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     docker pull vnijs/radiant
   fi
 
-  echo "--------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------"
   echo "Starting radiant computing container"
-  echo "--------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------"
 
-  HOMEDIR=c:/Users/$USERNAME
+  HOMEDIR=C:/Users/$USERNAME
 
   docker run -d -p 80:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio vnijs/radiant
 
@@ -55,23 +55,25 @@ else
   fi
 
    show_service () {
-    echo "--------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to update the radiant container, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
-    echo "--------------------------------------------------------------------"
-    read startup
+    echo "---------------------------------------------------------------------"
+    echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
+    echo "---------------------------------------------------------------------"
+    read startup port
 
     if [ ${startup} == 3 ]; then
       running=$(docker ps -q)
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
       echo "Updating the radiant computing container"
       docker stop ${running}
       docker pull vnijs/radiant
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
       docker run -d -p 80:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio vnijs/radiant
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
     elif [ ${startup} == 1 ]; then
 
       RPROF=${HOMEDIR}/.Rprofile
@@ -89,20 +91,29 @@ else
           echo 'options(radiant.report = TRUE)' >> ${RPROF}
         fi
       fi
-      # if ! grep -qF 'options(radiant.sf_volumes' ${RPROF}; then
-      #   echo 'home <- radiant.data::find_home()' >> ${RPROF}
-      #   echo 'options(radiant.sf_volumes = c(Desktop = file.path(home, "Desktop"), Home = home,  Dropbox = file.path(home, "Dropbox")))' >> ${RPROF}
-      #   echo 'rm(home)' >> ${RPROF}
-      # fi
-      echo "Starting Radiant in the default browser"
-      start http://localhost
+      if [ "${port}" == "" ]; then
+        echo "Starting Radiant in the default browser on port 80"
+        start http://localhost
+      else
+        echo "Starting Radiant in the default browser on port ${port}"
+        docker run -d -p ${port}:80 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+        sleep 2s
+        start http://localhost:${port}
+      fi
     elif [ ${startup} == 2 ]; then
-      echo "Starting Rstudio in the default browser"
-      start http://localhost:8787
+      if [ "${port}" == "" ]; then
+        echo "Starting Rstudio in the default browser on port 8787"
+        start http://localhost:8787
+      else
+        echo "Starting Rstudio in the default browser on port ${port}"
+        docker run -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+        sleep 2s
+        start http://localhost:${port}
+      fi
     elif [ "${startup}" == "q" ]; then
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
       echo "Stopping radiant computing container and cleaning up as needed"
-      echo "--------------------------------------------------------------------"
+      echo "---------------------------------------------------------------------"
 
       running=$(docker ps -q)
       if [ "${running}" != "" ]; then
