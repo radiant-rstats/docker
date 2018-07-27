@@ -38,7 +38,6 @@ RUN pip3 install jupyter \
   tweepy \
   nltk
 
-
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get -y install --no-install-recommends\
     libzmq3-dev \
@@ -69,7 +68,6 @@ RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`cu
 RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 
 ENV PYTHONUSERBASE=/home/rstudio/.rsm-msba
-# ENV PYTHONPATH=/home/rstudio/.rsm-msba/site-packages:$PYTHONPATH:
 ENV JUPYTER_PATH=/home/rstudio/.rsm-msba/share/jupyter
 ENV JUPYTER_RUNTIME_DIR=/home/rstudio/.rsm-msba/share/jupyter/runtime
 ENV JUPYTER_CONFIG_DIR=/home/rstudio/.rsm-msba/jupyter
