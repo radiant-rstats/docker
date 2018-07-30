@@ -31,9 +31,7 @@ http://www.techoism.com/how-to-install-git-bash-on-windows/
 
 For detailed install instructions on Windows see [install/rsm-msba-windows.md](install/rsm-msba-windows.md)
 
-For detailed install instructions on macOS see [install/rsm-msba-windows.md](install/rsm-msba-windows.md)
-
-For detailed install instructions on macOS see:
+For detailed install instructions on macOS see [install/rsm-msba-macos.md](install/rsm-msba-macos.md)
 
 ## TL;DR
 
