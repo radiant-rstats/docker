@@ -29,9 +29,9 @@ On windows please install Git Bash:
 
 http://www.techoism.com/how-to-install-git-bash-on-windows/
 
-For detailed install instructions on Windows see [install-rsm-msba-windows.md](install-rsm-msba-windows.md)
+For detailed install instructions on Windows see [install/rsm-msba-windows.md](install/rsm-msba-windows.md)
 
-For detailed install instructions on macOS see [install-rsm-msba-windows.md](install-rsm-msba-windows.md)
+For detailed install instructions on macOS see [install/rsm-msba-windows.md](install/rsm-msba-windows.md)
 
 For detailed install instructions on macOS see:
 
