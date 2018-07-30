@@ -29,6 +29,12 @@ On windows please install Git Bash:
 
 http://www.techoism.com/how-to-install-git-bash-on-windows/
 
+For detailed install instructions on Windows see [install-rsm-msba-windows.md](install-rsm-msba-windows.md)
+
+For detailed install instructions on macOS see [install-rsm-msba-windows.md](install-rsm-msba-windows.md)
+
+For detailed install instructions on macOS see:
+
 ## TL;DR
 
 To jump straight in and run the main application run the command below on macOS:
@@ -145,6 +151,14 @@ If you want to install an R-package, e.g., `fortune`, in a way that persists whe
 
 ```
 install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))
+```
+
+## Installing Python packages
+
+If you want to install a python package, e.g., `redis`, in a way that persists when using the container again, use the command below from the Jupyter (or Rstudio) terminal. This will install the package and create a personal directory for future package installs.
+
+```
+pip3 install -U "redis"
 ```
 
 ## Trouble shooting 
