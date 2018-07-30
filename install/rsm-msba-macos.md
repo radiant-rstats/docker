@@ -17,12 +17,12 @@ Optional: If you are interested, the linked video gives a brief intro to what Do
 ```bash
 xcode-select --install
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker
-open ~/git/docker
+ln -s ~/git/docker/launch-mac.command ~/Desktop/launch-mac.command
 ~/git/docker/launch-mac.command
 ```
 
-This step will start up a script that will finalize the installation of the computing envionrment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
+This step will start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
 
 ![](figures/rsm-msba-menu.png)
 
-**Step 3**: Create a shortcut, or alias, to `launch-mac.command` on your Desktop so you can easily "fire up" the container in the future. To create an alias, right-click on the file and choose "Make alias". Then drag the alias to the Desktop
+The code above also created a shortcut to the file `launch-mac.command` on your Desktop that you can double-click to "fire up" the container again in the future.
