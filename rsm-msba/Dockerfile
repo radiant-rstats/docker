@@ -2,41 +2,11 @@ FROM vnijs/radiant:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
+## copy reticulate and python examples to home directory
+COPY py_requirements.txt /home/rstudio/py_requirements.txt
+
 ## Installing python packages
-RUN pip3 install jupyter \
-  jupyterlab \
-  ipywidgets \
-  pandas \
-  numexpr \
-  matplotlib \
-  scipy \
-  seaborn \
-  scikit-learn \
-  sympy \
-  cython \
-  patsy \
-  statsmodels \
-  cloudpickle \
-  dill \
-  numba \
-  bokeh \
-  sqlalchemy \
-  vincent \
-  beautifulsoup4 \
-  protobuf \
-  xlrd \
-  tensorflow \
-  keras \
-  rpy2 \
-  plotly \
-  dash \
-  dash-renderer \
-  dash-html-components \
-  dash-core-components \
-  pystan \
-  selenium \
-  tweepy \
-  nltk
+RUN pip3 install -r /home/rstudio/py_requirements.txt
 
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get -y install --no-install-recommends\
@@ -49,7 +19,6 @@ ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 ## https://github.com/jupyter-widgets/ipywidgets/issues/2061
 # RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash
-# RUN apt-get install -y nodejs-legacy
 RUN apt-get install -y nodejs
 RUN npm install -g npm
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager

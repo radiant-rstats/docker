@@ -25,4 +25,4 @@ This step will start up a script that will finalize the installation of the comp
 
 ![](figures/rsm-msba-menu.png)
 
-**Step 3**: Create a shortcut to `launch-mac.command` on your Desktop so you can "fire up" the container in the future.
+**Step 3**: Create a shortcut, or alias, to `launch-mac.command` on your Desktop so you can easily "fire up" the container in the future. To create an alias, right-click on the file and choose "Make alias". Then drag the alias to the Desktop
