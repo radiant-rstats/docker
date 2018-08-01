@@ -42,5 +42,3 @@ This step will start up a script that will finalize the installation of the comp
 
 **Step 5**: Create a shortcut to `launch-windows.sh` on your Desktop so you can easily "fire up" the container in the future. To create a shortcut, right-click on the file and choose "Send to > Desktop (create shortcut)". 
 
-
-If you have any issues please report through Piazza: https://piazza.com/ucsd/summer2018/ict
