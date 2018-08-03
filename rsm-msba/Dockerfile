@@ -22,6 +22,11 @@ RUN curl -sL https://deb.nodesource.com/setup_9.x | bash
 RUN apt-get install -y nodejs
 RUN npm install -g npm
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+RUN jupyter labextension install @jupyterlab/shortcutui
+RUN jupyter labextension install @jupyterlab/git
+
+## enable jupyterlab git extension
+RUN jupyter serverextension enable --py jupyterlab_git --system
 
 RUN R -e 'install.packages(c("repr", "IRdisplay", "crayon", "pbdZMQ", "uuid"))' -e 'devtools::install_github("IRkernel/IRkernel")'
 RUN R -e 'IRkernel::installspec(user = FALSE)'

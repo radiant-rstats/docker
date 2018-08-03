@@ -44,7 +44,7 @@ else
   echo "Starting rsm-msba computing container"
   echo "---------------------------------------------------------------------"
 
-  HOMEDIR=c:/Users/$USERNAME
+  HOMEDIR="C:/Users/$USERNAME"
 
   docker run -d -p 80:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
 

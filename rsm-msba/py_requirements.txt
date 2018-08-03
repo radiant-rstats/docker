@@ -29,6 +29,7 @@ dash-renderer
 dash-html-components
 dash-core-components
 pystan
-selenium
+selenium==3.8
 tweepy
-  nltk
+nltk
+jupyterlab-git
