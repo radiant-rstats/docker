@@ -46,7 +46,7 @@ else
 
   HOMEDIR="C:/Users/$USERNAME"
 
-  docker run -d -p 80:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+  docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
 
   ## make sure abend is set correctly to avoid warnings from Rstudio
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -76,7 +76,7 @@ else
       docker stop ${running}
       docker pull vnijs/rsm-msba
       echo "---------------------------------------------------------------------"
-      docker run -d -p 80:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+      docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
       echo "---------------------------------------------------------------------"
     elif [ ${startup} == 1 ]; then
 
@@ -98,8 +98,8 @@ else
         fi
       fi
       if [ "${port}" == "" ]; then
-        echo "Starting Radiant in the default browser on port 80"
-        start http://localhost
+        echo "Starting Radiant in the default browser on port 8080"
+        start http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
         docker run -d -p ${port}:80 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
