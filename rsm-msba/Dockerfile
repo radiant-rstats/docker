@@ -53,9 +53,6 @@ RUN chown -R rstudio:rstudio /home/rstudio/python/
 ## copy dbase connections
 COPY connections/ /etc/rstudio/connections
 
-## currently needed for cache and jupyter kernels
-RUN chown -R rstudio:rstudio /root
-
 ## updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

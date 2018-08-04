@@ -60,11 +60,11 @@ As mentioned above, for Rstudio the username and password are both "rstudio". Fo
 
 **Trouble shooting**:
 
-Check if a firewall or VPN is blocking docker access to your home directory. I this is an issue a warning should show when you try to check the "C" drive in docker settings. See screen shot below
+Check if a firewall or VPN is blocking docker access to your home directory. If this is an issue on your system, a warning should show when you check the "C" drive in docker settings and click "Apply". See screen shot below
 
 <img src="figures/reset-credentials.png" width="500px">
 
-If there is an error related to the firewall try turning off the firewall to check if the rsm-msba container now works. A better option, however, would be to visit IT to ensure you have your firewall and/or virus checker configured correctly.
+If there is an error related to the firewall, try turning off the firewall to check if the rsm-msba container now works. A better option, however, would be to visit IT to ensure you have your firewall and/or virus checker configured correctly.
 
 If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials"
 

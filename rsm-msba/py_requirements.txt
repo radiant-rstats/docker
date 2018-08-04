@@ -30,6 +30,7 @@ dash-html-components
 dash-core-components
 pystan
 selenium==3.8
+lxml
 tweepy
 nltk
 jupyterlab-git
