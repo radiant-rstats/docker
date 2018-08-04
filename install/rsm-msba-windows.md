@@ -36,9 +36,36 @@ start C:/Users/$USERNAME/git/docker
 C:/Users/$USERNAME/git/docker/launch-windows.sh
 ```
 
-This step will start up a script that will finalize the installation of the computing envionrment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
+This step will start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
 
 ![](figures/rsm-msba-menu.png)
 
 **Step 5**: Create a shortcut to `launch-windows.sh` on your Desktop so you can easily "fire up" the container in the future. To create a shortcut, right-click on the file and choose "Send to > Desktop (create shortcut)". 
 
+
+**Step 6**: Check that you can launch Rstudio and Jupyter
+
+You will know that installation was successful if you can now run Rstudio and Jupyter. When you press 2 (+ enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (+ enter) Jupyter Lab should start up in another tab in your web browser. 
+
+As mentioned above, for Rstudio the username and password are both "rstudio". For Jupyter Lab the password is "jupyter".
+
+**Rstudio**:
+
+<img src="figures/rsm-rstudio.png" width="500px">
+
+**Jupyter**:
+
+<img src="figures/rsm-jupyter.png" width="500px">
+
+
+**Trouble shooting**:
+
+Check if a firewall or VPN is blocking docker access to your home directory. I this is an issue a warning should show when you try to check the "C" drive in docker settings. See screen shot below
+
+<img src="figures/reset-credentials.png" width="500px">
+
+If there is an error related to the firewall try turning off the firewall to check if the rsm-msba container now works. A better option, however, would be to visit IT to ensure you have your firewall and/or virus checker configured correctly.
+
+If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials"
+
+Alternative "fixes" that have worked are to restart docker and/or restart your computer

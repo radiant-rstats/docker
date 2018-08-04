@@ -26,3 +26,22 @@ This step will start up a script that will finalize the installation of the comp
 ![](figures/rsm-msba-menu.png)
 
 The code above also created a shortcut to the file `launch-mac.command` on your Desktop that you can double-click to "fire up" the container again in the future.
+
+
+**Step 3**: Check that you can launch Rstudio and Jupyter
+
+You will know that installation was successful if you can now run Rstudio and Jupyter. When you press 2 (+ enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (+ enter) Jupyter Lab should start up in another tab in your web browser. 
+
+As mentioned above, for Rstudio the username and password are both "rstudio". For Jupyter Lab the password is "jupyter".
+
+**Rstudio**:
+
+<img src="figures/rsm-rstudio.png" width="500px">
+
+**Jupyter**:
+
+<img src="figures/rsm-jupyter.png" width="500px">
+
+**Trouble shooting**:
+
+The only issues we have seen on macOS so far can be "fixed" by restarting docker and/or restarting your computer
