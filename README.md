@@ -38,13 +38,13 @@ For detailed install instructions on macOS see [install/rsm-msba-macos.md](insta
 To jump straight in and run the main application run the command below on macOS:
 
 ```bash
-docker run --rm -p 80:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
+docker run --rm -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
 ```
 
 For Windows run the command below:
 
 ```bash
-docker run --rm -p 80:80 -p 8787:8787 -p 8989:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
+docker run --rm -p 8080:80 -p 8787:8787 -p 8989:8888 -v c:/Users/$USERNAME:/home/rstudio vnijs/rsm-msba
 ```
 
 Perhaps even easier, you can start the `rsm-msba` container on macOS using `launch-mac.command` and on Windows using `launch-windows.sh`. To get these files download the repo https://github.com/radiant-rstats/docker or clone the repo using `git clone https://github.com/radiant-rstats/docker.git` is you have git installed. To run the script on Windows you will need [Git Bash installed](https://github.com/git-for-windows/git/releases/download/v2.18.0.windows.1/Git-2.18.0-64-bit.exe)

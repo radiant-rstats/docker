@@ -52,7 +52,7 @@ else
   echo "Starting radiant computing container"
   echo "---------------------------------------------------------------------"
 
-  docker run -d -p 80:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
+  docker run -d -p 8080:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -82,7 +82,7 @@ else
       docker stop ${running}
       docker pull vnijs/radiant
       echo "---------------------------------------------------------------------"
-      docker run -d -p 80:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
+      docker run -d -p 8080:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
       echo "---------------------------------------------------------------------"
     elif [ ${startup} == 1 ]; then
 
@@ -100,8 +100,8 @@ else
       fi
 
       if [ "${port}" == "" ]; then
-        echo "Starting Radiant in the default browser on port 80"
-        open http://localhost
+        echo "Starting Radiant in the default browser on port 8080"
+        open http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
         docker run -d -p ${port}:80 -v ~:/home/rstudio vnijs/radiant
