@@ -64,7 +64,7 @@ Check if a firewall or VPN is blocking docker access to your home directory. If 
 
 <img src="figures/reset-credentials.png" width="500px">
 
-If there is an error related to the firewall, try turning off the firewall to check if the rsm-msba container now works. A better option, however, would be to visit IT to ensure you have your firewall and/or virus checker configured correctly.
+If there is an error related to the firewall, try turning off the firewall to check if the rsm-msba container now works. You should not be without a virus checker or firewall however! We recommend using **Windows Defender**. If you are not sure if Windows Defender is correctly configured, please check with IT. 
 
 If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials"
 
