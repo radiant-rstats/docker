@@ -99,9 +99,13 @@ apt-get clean
 ## R-Studio Preview
 rstudio_version=1.2.830
 
-wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${rstudio_version}-amd64.deb
-gdebi --n rstudio-server-${rstudio_version}-amd64.deb
-rm rstudio-server-${rstudio_version}-amd64.deb
+#wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${rstudio_version}-amd64.deb
+#gdebi --n rstudio-server-${rstudio_version}-amd64.deb
+#rm rstudio-server-${rstudio_version}-amd64.deb
+
+wget https://s3.amazonaws.com/rstudio-ide-build/desktop/trusty/amd64/rstudio--${rstudio_version}-amd64.deb
+gdebi --n rstudio-${rstudio_version}-amd64.deb
+rm rstudio-${rstudio_version}-amd64.deb
 
 shiny_version=1.5.7.907
 
