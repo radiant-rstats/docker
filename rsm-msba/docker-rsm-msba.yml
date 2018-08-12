@@ -3,7 +3,7 @@ services:
   rsm-msba:
     image: "vnijs/rsm-msba"
     ports:
-      - 80:80
+      - 8080:80
       - 8787:8787
       - 8989:8888
     volumes:

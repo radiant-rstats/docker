@@ -2,15 +2,16 @@ FROM vnijs/r-bionic:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
-## Installing R-packages from miniCRAN repo
+## installing R-packages from miniCRAN repo
 RUN R -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
-
 RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/radiant/
 RUN chown shiny:shiny -R /srv/shiny-server
 COPY shiny-server.conf  /etc/shiny-server/shiny-server.conf
 
-## only picked up for root, not rstudio
-ENV PYTHONUSERBASE=/home/rstudio/.rsm-msba
+## path for local install of python packages from Rstudio or Jupyter Lab
+ARG PYBASE=/home/rstudio/.rsm-msba
+RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
+  && echo "WORKON_HOME=${PYBASE}" >> /etc/R/Renviron.site
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

@@ -1,5 +1,6 @@
 jupyter
 jupyterlab
+jupyterlab-git
 ipywidgets
 pandas
 numexpr
@@ -33,4 +34,3 @@ selenium==3.8
 lxml
 tweepy
 nltk
-jupyterlab-git

@@ -1,11 +1,10 @@
-## Based mainly on https://github.com/mccahill/docker-rstudio
+## based mainly on https://github.com/mccahill/docker-rstudio
 FROM ubuntu:bionic
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
+ENV DEBIAN_FRONTEND noninteractive 
 
-RUN set -e && ln -sf /bin/bash /bin/sh
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+RUN apt-get update \
   && apt-get -y upgrade \
   && apt-get install -y --no-install-recommends \
     bash-completion \
@@ -36,7 +35,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
   && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
   && apt-get update
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
+RUN apt-get -y install --no-install-recommends\
   apt-transport-https \
   gdebi-core \
   libapparmor1 \
@@ -58,7 +57,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends\
   r-cran-bitops
 
 ## Utilities
-RUN DEBIAN_FRONTEND=noninteractive apt-get  install -y \
+RUN apt-get  install -y \
   vim \
   net-tools \
   inetutils-ping \
@@ -82,7 +81,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get  install -y \
   ed
 
 ## TeX for the rmarkdown package in RStudio, and pandoc is also useful
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt-get install -y \
   texlive \
   texlive-base \
   texlive-latex-extra \
@@ -99,37 +98,31 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-## Set the locale so RStudio doesn't complain about UTF-8
-# RUN locale-gen en_US en_US.UTF-8
-# RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
-
 ## R-Studio Preview
-ENV rstudio_version 1.2.830
+ENV RSTUDIO_VERSION 1.2.830
 
-RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${rstudio_version}-amd64.deb
-RUN DEBIAN_FRONTEND=noninteractive gdebi --n rstudio-server-${rstudio_version}-amd64.deb
-RUN rm rstudio-server-${rstudio_version}-amd64.deb
+RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
+  && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
+  && rm rstudio-server-*-amd64.deb
 
 RUN useradd rstudio \
   && echo "rstudio:rstudio" | chpasswd \
   && mkdir /home/rstudio \
   && chown rstudio:rstudio /home/rstudio \
   && addgroup rstudio staff \
-  && addgroup rstudio root
+  && adduser rstudio sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 ## Shiny
-ENV shiny_version 1.5.7.907
+ENV SHINY_VERSION 1.5.7.907
 
-RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${shiny_version}-amd64.deb
-RUN DEBIAN_FRONTEND=noninteractive gdebi -n shiny-server-${shiny_version}-amd64.deb
-RUN rm shiny-server-${shiny_version}-amd64.deb
+RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${SHINY_VERSION}-amd64.deb \
+  && gdebi -n shiny-server-${SHINY_VERSION}-amd64.deb \
+  && rm shiny-server-*-amd64.deb
 
 WORKDIR /home/rstudio
-
 COPY .Rprofile /home/rstudio/.Rprofile
-RUN ln -sf /home/rstudio/.Rprofile /home/shiny/.Rprofile
-
-RUN mkdir -p /var/log/shiny-server \
+RUN ln -sf /home/rstudio/.Rprofile /home/shiny/.Rprofile \
+  && mkdir -p /var/log/shiny-server \
   && mkdir -p /srv/shiny-server/apps \
   && chown shiny:shiny /var/log/shiny-server \
   && chmod -R ug+s /var/log/shiny-server \
@@ -137,10 +130,6 @@ RUN mkdir -p /var/log/shiny-server \
   && chmod -R ug+s /srv/shiny-server \
   && chown shiny:shiny /home/shiny/.Rprofile \
   && chown rstudio:rstudio /home/rstudio/.Rprofile \
-  && adduser rstudio shiny
-
-## add rstudio to sudo
-RUN adduser rstudio sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-RUN mkdir -p /var/log/supervisor \
+  && adduser rstudio shiny \ 
+  && mkdir -p /var/log/supervisor \
   && chown rstudio:rstudio /var/log/supervisor

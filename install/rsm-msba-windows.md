@@ -68,4 +68,4 @@ If there is an error related to the firewall, try turning off the firewall to ch
 
 If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials"
 
-Alternative "fixes" that have worked are to restart docker and/or restart your computer
+Alternative "fixes" that have worked are to restart docker and/or restart your computer. It is best to quit any running process before you restart your computer (i.e., press q + enter in the terminal menu)
