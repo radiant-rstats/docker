@@ -18,7 +18,7 @@ else
   } || {
     echo "---------------------------------------------------------------------"
     echo "Docker is not running. Please start docker on your computer"
-    echo "When docker has finished starting up press [ENTER} to continue"
+    echo "When docker has finished starting up press [ENTER] to continue"
     echo "---------------------------------------------------------------------"
     read
   }
@@ -41,7 +41,7 @@ else
   fi
 
   echo "---------------------------------------------------------------------"
-  echo "Starting radiant computing container"
+  echo "Starting the radiant computing container"
   echo "---------------------------------------------------------------------"
 
   HOMEDIR="C:/Users/$USERNAME"
@@ -75,6 +75,13 @@ else
       echo "Updating the radiant computing container"
       docker stop ${running}
       docker pull vnijs/radiant
+
+      ## from https://stackoverflow.com/a/246128/1974918
+      docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+      if [ -d ${docker_dir} ]; then
+        cd ${docker_dir} && git pull && cd - 2>&1 >/dev/null
+      fi
+
       echo "---------------------------------------------------------------------"
       docker run -d -p 8080:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio vnijs/radiant
       echo "---------------------------------------------------------------------"
@@ -102,7 +109,7 @@ else
         start http://localhost
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run -d -p ${port}:80 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+        docker run -d -p ${port}:80 -v ${HOMEDIR}:/home/rstudio vnijs/radiant
         sleep 2s
         start http://localhost:${port}
       fi
@@ -113,13 +120,13 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio vnijs/rsm-msba
+        docker run -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio vnijs/radiant
         sleep 2s
         start http://localhost:${port}
       fi
     elif [ "${startup}" == "q" ]; then
       echo "---------------------------------------------------------------------"
-      echo "Stopping radiant computing container and cleaning up as needed"
+      echo "Stopping the radiant computing container and cleaning up as needed"
       echo "---------------------------------------------------------------------"
 
       running=$(docker ps -q)

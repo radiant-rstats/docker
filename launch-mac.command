@@ -26,7 +26,7 @@ else
     open /Applications/Docker.app
     echo "---------------------------------------------------------------------"
     echo "Waiting for docker to start ..."
-    echo "When docker has finished starting up press [ENTER} to continue"
+    echo "When docker has finished starting up press [ENTER] to continue"
     echo "---------------------------------------------------------------------"
     read
   }
@@ -49,7 +49,7 @@ else
   fi
 
   echo "---------------------------------------------------------------------"
-  echo "Starting rsm-msba computing container"
+  echo "Starting the rsm-msba computing container"
   echo "---------------------------------------------------------------------"
 
   docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
@@ -87,6 +87,7 @@ else
       if [ -d ${docker_dir} ]; then
         cd ${docker_dir} && git pull && cd - 2>&1 >/dev/null
       fi
+      
       echo "---------------------------------------------------------------------"
       docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
       echo "---------------------------------------------------------------------"
@@ -136,7 +137,7 @@ else
       fi
     elif [ "${startup}" == "q" ]; then
       echo "---------------------------------------------------------------------"
-      echo "Stopping rsm-msba computing container and cleaning up as needed"
+      echo "Stopping the rsm-msba computing container and cleaning up as needed"
       echo "---------------------------------------------------------------------"
 
       running=$(docker ps -q)

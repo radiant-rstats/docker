@@ -1,12 +1,12 @@
 #!/bin/bash
 
-## script to start Radiant, Rstudio, and JupyterLab
+## script to start Radiant and Rstudio
 ## script requires correct permissions to execute
 ## if you put the script on your Desktop, running the
 ## command below from a terminal should work
 ## then double-click to start the container
 
-## chmod 755 ~/Desktop/launch-mac.command
+## chmod 755 ~/Desktop/launch-linux.sh
 
 clear
 has_docker=$(which docker)
@@ -40,19 +40,19 @@ else
     docker stop ${running}
   fi
 
-  available=$(docker images -q vnijs/rsm-msba)
+  available=$(docker images -q vnijs/radiant)
   if [ "${available}" == "" ]; then
     echo "---------------------------------------------------------------------"
-    echo "Downloading the rsm-msba computing container"
+    echo "Downloading the radiant computing container"
     echo "---------------------------------------------------------------------"
     docker pull vnijs/rsm-msba
   fi
 
   echo "---------------------------------------------------------------------"
-  echo "Starting the rsm-msba computing container"
+  echo "Starting the radiant computing container"
   echo "---------------------------------------------------------------------"
 
-  docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
+  docker run -d -p 8080:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -67,20 +67,19 @@ else
     echo "---------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
-    echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (4) to update the rsm-msba container, followed by [ENTER]:"
+    echo "Press (3) to update the radiant container, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "---------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
     echo "---------------------------------------------------------------------"
     read startup port
 
-    if [ ${startup} == 4 ]; then
+    if [ ${startup} == 3 ]; then
       running=$(docker ps -q)
       echo "---------------------------------------------------------------------"
-      echo "Updating the rsm-msba computing container"
+      echo "Updating the radiant computing container"
       docker stop ${running}
-      docker pull vnijs/rsm-msba
+      docker pull vnijs/radiant 
 
       ## from https://stackoverflow.com/a/246128/1974918
       docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
@@ -89,7 +88,7 @@ else
       fi
 
       echo "---------------------------------------------------------------------"
-      docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
+      docker run -d -p 8080:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
       echo "---------------------------------------------------------------------"
     elif [ ${startup} == 1 ]; then
 
@@ -125,19 +124,9 @@ else
         sleep 2s
         xdg-open http://localhost:${port}
       fi
-    elif [ ${startup} == 3 ]; then
-      if [ "${port}" == "" ]; then
-        echo "Starting Jupyter Lab in the default browser on port 8989"
-        xdg-open http://localhost:8989/lab
-      else
-        echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run -d -p ${port}:8888 -v ~:/home/rstudio vnijs/rsm-msba
-        sleep 2s
-        xdg-open http://localhost:${port}/lab
-      fi
     elif [ "${startup}" == "q" ]; then
       echo "---------------------------------------------------------------------"
-      echo "Stopping the rsm-msba computing container and cleaning up as needed"
+      echo "Stopping the radiant computing container and cleaning up as needed"
       echo "---------------------------------------------------------------------"
 
       running=$(docker ps -q)

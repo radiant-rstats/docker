@@ -18,7 +18,7 @@ else
   } || {
     echo "---------------------------------------------------------------------"
     echo "Docker is not running. Please start docker on your computer"
-    echo "When docker has finished starting up press [ENTER} to continue"
+    echo "When docker has finished starting up press [ENTER] to continue"
     echo "---------------------------------------------------------------------"
     read
   }
@@ -41,7 +41,7 @@ else
   fi
 
   echo "---------------------------------------------------------------------"
-  echo "Starting rsm-msba computing container"
+  echo "Starting the rsm-msba computing container"
   echo "---------------------------------------------------------------------"
 
   HOMEDIR="C:/Users/$USERNAME"
@@ -136,7 +136,7 @@ else
       fi
     elif [ "${startup}" == "q" ]; then
       echo "---------------------------------------------------------------------"
-      echo "Stopping rsm-msba computing container and cleaning up as needed"
+      echo "Stopping the rsm-msba computing container and cleaning up as needed"
       echo "---------------------------------------------------------------------"
 
       running=$(docker ps -q)
