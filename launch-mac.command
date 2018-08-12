@@ -81,6 +81,12 @@ else
       echo "Updating the rsm-msba computing container"
       docker stop ${running}
       docker pull vnijs/rsm-msba
+
+      docker_dir=~/git/docker
+      if [ -d ${docker_dir} ]; then
+        cd ${docker_dir} && git pull && cd -
+      fi
+
       echo "---------------------------------------------------------------------"
       docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
       echo "---------------------------------------------------------------------"
