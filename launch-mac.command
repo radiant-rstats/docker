@@ -82,11 +82,11 @@ else
       docker stop ${running}
       docker pull vnijs/rsm-msba
 
-      docker_dir=~/git/docker
+      ## from https://stackoverflow.com/a/246128/1974918
+      docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
       if [ -d ${docker_dir} ]; then
-        cd ${docker_dir} && git pull && cd -
+        cd ${docker_dir} && git pull && cd - 2>&1 >/dev/null
       fi
-
       echo "---------------------------------------------------------------------"
       docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
       echo "---------------------------------------------------------------------"
