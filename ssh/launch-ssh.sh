@@ -8,7 +8,7 @@
 ## in the example below "mac" is set in ~/.ssh/config as a shortcut
 ## to myid@123.123.123.123
 
-UHOST={$1:-mac}
+UHOST=${1:-mac}
 
 clear
 
