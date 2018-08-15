@@ -1,11 +1,11 @@
 git pull
 docker login
-VERSION=0.6
+VERSION=0.7
 
 ## r-bionic
-# docker build -t $USER/r-bionic:latest ./r-bionic
-# docker tag $USER/r-bionic:latest $USER/r-bionic:${VERSION}
-# docker push $USER/r-bionic:${VERSION}; docker push $USER/r-bionic:latest
+docker build -t $USER/r-bionic:latest ./r-bionic
+docker tag $USER/r-bionic:latest $USER/r-bionic:${VERSION}
+docker push $USER/r-bionic:${VERSION}; docker push $USER/r-bionic:latest
 
 ## radiant
 docker build -t $USER/radiant:latest ./radiant
