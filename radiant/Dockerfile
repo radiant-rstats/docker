@@ -8,6 +8,8 @@ RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/ra
   && chown shiny:shiny -R /srv/shiny-server
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
+RUN R -e 'devtools::install_version("usethis", version = "1.3.0", repos = "https://cloud.r-project.org")'
+
 ## path for local install of python packages from Rstudio or Jupyter Lab
 ARG PYBASE=/home/rstudio/.rsm-msba
 RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
