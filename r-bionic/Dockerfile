@@ -2,7 +2,7 @@
 FROM ubuntu:bionic
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
-ENV DEBIAN_FRONTEND noninteractive 
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -78,7 +78,9 @@ RUN apt-get  install -y \
   libc6 \
   libzmq5 \
   libmagick++-dev \
-  ed
+  ed \
+  rsync \
+  vifm
 
 ## TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN apt-get install -y \
@@ -130,6 +132,6 @@ RUN ln -sf /home/rstudio/.Rprofile /home/shiny/.Rprofile \
   && chmod -R ug+s /srv/shiny-server \
   && chown shiny:shiny /home/shiny/.Rprofile \
   && chown rstudio:rstudio /home/rstudio/.Rprofile \
-  && adduser rstudio shiny \ 
+  && adduser rstudio shiny \
   && mkdir -p /var/log/supervisor \
   && chown rstudio:rstudio /var/log/supervisor

@@ -8,6 +8,8 @@ RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/ra
   && chown shiny:shiny -R /srv/shiny-server
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
+## work around for https://github.com/r-lib/usethis/issues/438#issuecomment-413312615
+## remove after new version of fs is up on CRAN
 RUN R -e 'devtools::install_version("usethis", version = "1.3.0", repos = "https://cloud.r-project.org")'
 
 ## path for local install of python packages from Rstudio or Jupyter Lab
