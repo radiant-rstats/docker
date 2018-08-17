@@ -41,7 +41,7 @@ show_service () {
   echo "Press (1) to show Radiant, followed by [ENTER]:"
   echo "Press (2) to show Rstudio, followed by [ENTER]:"
   echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
-  echo "Press (q) to stop the docker process, followed by [ENTER]:"
+  echo "Press (q) to close the ssh tunnel, followed by [ENTER]:"
   echo "---------------------------------------------------------------------"
   read startup
 
