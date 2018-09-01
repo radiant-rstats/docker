@@ -45,6 +45,7 @@ else
     echo "---------------------------------------------------------------------"
     echo "Downloading the rsm-msba computing container"
     echo "---------------------------------------------------------------------"
+    docker logout
     docker pull vnijs/rsm-msba
   fi
 
@@ -69,6 +70,7 @@ else
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
     echo "Press (4) to update the rsm-msba container, followed by [ENTER]:"
+    echo "Press (5) to update the rsm-msba launch scripts, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "---------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
@@ -82,15 +84,17 @@ else
       docker stop ${running}
       docker pull vnijs/rsm-msba
 
-      ## from https://stackoverflow.com/a/246128/1974918
-      docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-      if [ -d ${docker_dir} ]; then
-        cd ${docker_dir} && git pull && cd - 2>&1 >/dev/null
-      fi
-      
       echo "---------------------------------------------------------------------"
       docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
       echo "---------------------------------------------------------------------"
+    elif [ ${startup} == 5 ]; then
+      ## from https://stackoverflow.com/a/246128/1974918
+      docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+      if [ -d ${docker_dir} ]; then
+        echo "Updating the rsm-msba launch scripts"
+        cd ${docker_dir} && git pull && cd - 2>&1 >/dev/null
+        sleep 2s
+      fi
     elif [ ${startup} == 1 ]; then
 
       touch ~/.Rprofile

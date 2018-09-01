@@ -45,6 +45,7 @@ else
     echo "---------------------------------------------------------------------"
     echo "Downloading the radiant computing container"
     echo "---------------------------------------------------------------------"
+    docker logout
     docker pull vnijs/rsm-msba
   fi
 
@@ -79,7 +80,7 @@ else
       echo "---------------------------------------------------------------------"
       echo "Updating the radiant computing container"
       docker stop ${running}
-      docker pull vnijs/radiant 
+      docker pull vnijs/radiant
 
       ## from https://stackoverflow.com/a/246128/1974918
       docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"

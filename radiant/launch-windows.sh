@@ -37,6 +37,7 @@ else
     echo "---------------------------------------------------------------------"
     echo "Downloading the radiant computing container"
     echo "---------------------------------------------------------------------"
+    docker logout
     docker pull vnijs/radiant
   fi
 
