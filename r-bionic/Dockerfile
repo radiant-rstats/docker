@@ -101,7 +101,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 ## R-Studio Preview
-ENV RSTUDIO_VERSION 1.2.907
+ENV RSTUDIO_VERSION 1.2.981
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
@@ -115,7 +115,7 @@ RUN useradd rstudio \
   && adduser rstudio sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 ## Shiny
-ENV SHINY_VERSION 1.5.7.907
+ENV SHINY_VERSION 1.5.9.923
 
 RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${SHINY_VERSION}-amd64.deb \
   && gdebi -n shiny-server-${SHINY_VERSION}-amd64.deb \
