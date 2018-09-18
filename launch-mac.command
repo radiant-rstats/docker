@@ -92,7 +92,7 @@ else
       docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
       if [ -d ${docker_dir} ]; then
         echo "Updating the rsm-msba launch scripts"
-        cd ${docker_dir} && git add . && git commit -m "Commit local changes" && git pull && cd - 2>&1 >/dev/null
+        cd ${docker_dir} && git add . && git commit -m "Commit local changes" && git fetch --all && git merge --no-edit && cd - 2>&1 >/dev/null
         sleep 2s
       fi
     elif [ ${startup} == 1 ]; then
