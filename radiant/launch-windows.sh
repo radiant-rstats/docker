@@ -64,6 +64,7 @@ else
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to update the radiant container, followed by [ENTER]:"
+    echo "Press (4) to update the radiant launch scripts, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "---------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
@@ -77,15 +78,18 @@ else
       docker stop ${running}
       docker pull vnijs/radiant
 
-      ## from https://stackoverflow.com/a/246128/1974918
-      docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-      if [ -d ${docker_dir} ]; then
-        cd ${docker_dir} && git pull && cd - 2>&1 >/dev/null
-      fi
-
       echo "---------------------------------------------------------------------"
       docker run -d -p 8080:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio vnijs/radiant
       echo "---------------------------------------------------------------------"
+    elif [ ${startup} == 4 ]; then
+      ## from https://stackoverflow.com/a/246128/1974918
+      docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+      if [ -d ${docker_dir} ]; then
+        echo "Updating the radiant launch scripts"
+        ## git commit before fetch + merge (base on https://stackoverflow.com/a/12752465/1974918)
+        cd ${docker_dir} && git add . && git commit -m "Commit local changes" && git fetch --all && git merge --no-edit && cd - 2>&1 >/dev/null
+        sleep 2s
+      fi
     elif [ ${startup} == 1 ]; then
 
       RPROF=${HOMEDIR}/.Rprofile
