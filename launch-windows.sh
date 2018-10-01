@@ -87,8 +87,8 @@ else
       if [ -d ${docker_dir} ]; then
         echo "Updating the rsm-msba launch scripts"
         ## git commit before fetch + merge (based on https://stackoverflow.com/a/12752465/1974918)
-        # cd ${docker_dir} && git add . && git commit -m "Commit local changes" && git fetch --all && git merge --no-edit && cd - 2>&1 >/dev/null
-        cd ${docker_dir} && git fetch --all && git reset --hard origin/master && cd - 2>&1 >/dev/null
+        cd ${docker_dir} && git add . && git commit -m "Commit local changes" && git fetch --all && git merge --no-edit && cd - 2>&1 >/dev/null
+        # cd ${docker_dir} && git fetch --all && git reset --hard origin/master && cd - 2>&1 >/dev/null
         sleep 2s
       fi
     elif [ ${startup} == 1 ]; then
