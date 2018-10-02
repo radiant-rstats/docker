@@ -41,8 +41,11 @@ else
     docker pull vnijs/rsm-msba
   fi
 
+  version=$(docker inspect -f '{{.RepoTags}}' vnijs/rsm-msba)
+
   echo "---------------------------------------------------------------------"
   echo "Starting the rsm-msba computing container"
+  echo "Version: ${version//[!0-9\.]/}"
   echo "---------------------------------------------------------------------"
 
   HOMEDIR="C:/Users/$USERNAME"

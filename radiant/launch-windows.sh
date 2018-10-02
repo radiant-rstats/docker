@@ -41,8 +41,11 @@ else
     docker pull vnijs/radiant
   fi
 
+  version=$(docker inspect -f '{{.RepoTags}}' vnijs/radiant)
+
   echo "---------------------------------------------------------------------"
   echo "Starting the radiant computing container"
+  echo "Version: ${version//[!0-9\.]/}"
   echo "---------------------------------------------------------------------"
 
   HOMEDIR="C:/Users/$USERNAME"
