@@ -49,11 +49,11 @@ else
     docker pull vnijs/rsm-msba
   fi
 
-  version=$(docker inspect -f '{{.RepoTags}}' vnijs/rsm-msba)
+  version=$(docker inspect -f '{{.Created}}' vnijs/rsm-msba)
 
   echo "---------------------------------------------------------------------"
   echo "Starting the rsm-msba computing container"
-  echo "Version: ${version//[!0-9\.]/}"
+  echo "Version: ${version//T*/}"
   echo "---------------------------------------------------------------------"
 
   docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba

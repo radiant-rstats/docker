@@ -41,11 +41,11 @@ else
     docker pull vnijs/rsm-msba
   fi
 
-  version=$(docker inspect -f '{{.RepoTags}}' vnijs/rsm-msba)
+  version=$(docker inspect -f '{{.Created}}' vnijs/rsm-msba)
 
   echo "---------------------------------------------------------------------"
   echo "Starting the rsm-msba computing container"
-  echo "Version: ${version//[!0-9\.]/}"
+  echo "Version: ${version//T*/}"
   echo "---------------------------------------------------------------------"
 
   HOMEDIR="C:/Users/$USERNAME"
@@ -62,6 +62,8 @@ else
   rstudio_abend
 
   show_service () {
+    echo "---------------------------------------------------------------------"
+    echo "rsm-msba computing container (${version//T*/})"
     echo "---------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
