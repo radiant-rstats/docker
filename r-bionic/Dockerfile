@@ -88,7 +88,6 @@ RUN apt-get install -y \
   texlive-base \
   texlive-latex-extra \
   texlive-pstricks \
-  pandoc \
   && apt-get -y autoremove \
   && apt-get clean
 
@@ -100,12 +99,20 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
+## Install newer pandoc version
+RUN wget https://github.com/jgm/pandoc/releases/download/2.3.1/pandoc-2.3.1-linux.tar.gz \
+  && tar xvzf pandoc-2.3.1-linux.tar.gz --strip-components=1 -C /usr/local \
+  && rm pandoc-*
+
 ## R-Studio Preview
-ENV RSTUDIO_VERSION 1.2.981
+ENV RSTUDIO_VERSION 1.2.1015
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && rm rstudio-server-*-amd64.deb
+
+## link to Rstudio's pandoc
+# RUN ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin
 
 RUN useradd rstudio \
   && echo "rstudio:rstudio" | chpasswd \
