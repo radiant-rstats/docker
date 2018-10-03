@@ -41,11 +41,11 @@ else
     docker pull vnijs/radiant
   fi
 
-  version=$(docker inspect -f '{{.RepoTags}}' vnijs/radiant)
+  version=$(docker inspect -f '{{.Created}}' vnijs/radiant)
 
   echo "---------------------------------------------------------------------"
   echo "Starting the radiant computing container"
-  echo "Version: ${version//[!0-9\.]/}"
+  echo "Version: ${version//T*/}"
   echo "---------------------------------------------------------------------"
 
   HOMEDIR="C:/Users/$USERNAME"
@@ -63,6 +63,8 @@ else
   rstudio_abend
 
    show_service () {
+    echo "---------------------------------------------------------------------"
+    echo "radiant computing container (${version//T*/})"
     echo "---------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
