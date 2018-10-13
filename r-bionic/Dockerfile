@@ -88,6 +88,7 @@ RUN apt-get install -y \
   texlive-base \
   texlive-latex-extra \
   texlive-pstricks \
+  texlive-xetex \
   && apt-get -y autoremove \
   && apt-get clean
 
@@ -105,7 +106,7 @@ RUN wget https://github.com/jgm/pandoc/releases/download/2.3.1/pandoc-2.3.1-linu
   && rm pandoc-*
 
 ## R-Studio Preview
-ENV RSTUDIO_VERSION 1.2.1015
+ENV RSTUDIO_VERSION 1.2.1047
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \

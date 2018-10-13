@@ -10,7 +10,7 @@ COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 ## temp for updates
 # RUN R -e 'install.packages("radiant.data", repos = "https://radiant-rstats.github.io/minicran/")'
-# RUN R -e 'install.packages("radiant.model", repos = "https://radiant-rstats.github.io/minicran/")'
+RUN R -e 'devtools::install_github("PMassicotte/gtrendsR")'
 
 ## path for local install of python packages from Rstudio or Jupyter Lab
 ARG PYBASE=/home/rstudio/.rsm-msba
