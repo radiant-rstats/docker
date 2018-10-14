@@ -4,13 +4,22 @@ ID="vnijs"
 LABEL="rsm-msba"
 IMAGE=${ID}/${LABEL}
 
+## what os is being used
+ostype=`uname`
+
 ## script to start Radiant, Rstudio, and JupyterLab
 clear
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then
   echo "-----------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
-  echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
+  if [[ "$ostype" == "Linux" ]]; then
+    echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04"
+  elif [[ "$ostype" == "Darwin" ]]; then
+    echo "https://download.docker.com/mac/stable/Docker.dmg"
+  else
+    echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
+  fi
   echo "-----------------------------------------------------------------------"
   read
 else
@@ -45,15 +54,7 @@ else
     docker pull ${IMAGE}
   fi
 
-  BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE})
 
-  echo "-----------------------------------------------------------------------"
-  echo "Starting the ${LABEL} computing container"
-  echo "Build date: ${BUILD_DATE//T*/}"
-  echo "-----------------------------------------------------------------------"
-
-  ## what os is being used
-  ostype=`uname`
   ## function is not efficient by alias has scopping issues
   if [[ "$ostype" == "Linux" ]]; then
     HOMEDIR=~
@@ -72,6 +73,13 @@ else
       start $1
     }
   fi
+
+  BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE})
+
+  echo "-----------------------------------------------------------------------"
+  echo "Starting the ${LABEL} computing container on ${ostype}"
+  echo "Build date: ${BUILD_DATE//T*/}"
+  echo "-----------------------------------------------------------------------"
 
   docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
 
