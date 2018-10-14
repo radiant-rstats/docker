@@ -87,7 +87,8 @@ else
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
   rstudio_abend () {
     if [ -d ${HOMEDIR}/.rstudio/sessions/active ]; then
-      find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f -print0 | xargs -0 sed -i '' -e 's/abend="1"/abend="0"/'
+      # find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f -print0 | xargs -0 sed -i '' -e 's/abend="1"/abend="0"/'
+      find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f -exec sed -i '' -e 's/abend="1"/abend="0"/' {} \;
     fi
   }
   rstudio_abend
