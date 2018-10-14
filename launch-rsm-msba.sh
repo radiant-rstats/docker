@@ -54,7 +54,6 @@ else
     docker pull ${IMAGE}
   fi
 
-
   ## function is not efficient by alias has scopping issues
   if [[ "$ostype" == "Linux" ]]; then
     HOMEDIR=~
@@ -68,6 +67,7 @@ else
       open $1
     }
   else
+    ostype="Windows"
     HOMEDIR="C:/Users/$USERNAME"
     open_browser () {
       start $1
