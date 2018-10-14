@@ -128,15 +128,11 @@ else
       docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 5 ]; then
-      ## from https://stackoverflow.com/a/246128/1974918
-      docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-      if [ -d ${docker_dir} ]; then
-        echo "Updating launch scripts"
-        ## git commit before fetch + merge (based on https://stackoverflow.com/a/12752465/1974918)
-        # cd ${docker_dir} && git add . && git commit -m "Commit local changes" && git fetch --all && git merge --no-edit && cd - 2>&1 >/dev/null
-        cd ${docker_dir} && git fetch --all && git reset --hard origin/master && git pull && cd - 2>&1 >/dev/null
-        sleep 2s
-      fi
+      echo "Updating ${ID} launch script"
+      wget https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh -O ${HOMEDIR}/Desktop/launch-rsm-msba.sh
+      chmod 755 ${HOMEDIR}/Desktop/launch-rsm-msba.sh
+      sh ${HOMEDIR}/Desktop/launch-rsm-msba.sh
+      exit 1
     elif [ ${startup} == 1 ]; then
 
       RPROF=${HOMEDIR}/.Rprofile
