@@ -131,7 +131,7 @@ else
       echo "Updating ${ID} launch script"
       curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh -o ${HOMEDIR}/Desktop/launch-rsm-msba.sh
       chmod 755 ${HOMEDIR}/Desktop/launch-rsm-msba.sh
-      sleep 5
+      sleep 6
       sh ${HOMEDIR}/Desktop/launch-rsm-msba.sh
       exit 1
     elif [ ${startup} == 1 ]; then
