@@ -33,17 +33,19 @@ Again, follow all default settings until the last screen (see image below). Ther
 ```bash
 git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
 start C:/Users/$USERNAME/git/docker
-C:/Users/$USERNAME/git/docker/launch-windows.sh
+cp C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
+C:/Users/$USERNAME/Desktop/launch-rsm-msba.sh
 ```
 
 This step will start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
 
 ![](figures/rsm-msba-menu.png)
 
-**Step 5**: Create a shortcut to `launch-windows.sh` on your Desktop so you can easily "fire up" the container in the future. To create a shortcut, right-click on the file and choose "Send to > Desktop (create shortcut)". 
+~/Desktop/launch-rsm-msba.sh
 
+The code above also created a copy of the file `launch-rsm-msba.sh` on your Desktop that you can double-click to "fire up" the container again in the future.
 
-**Step 6**: Check that you can launch Rstudio and Jupyter
+**Step 5**: Check that you can launch Rstudio and Jupyter
 
 You will know that installation was successful if you can now run Rstudio and Jupyter. When you press 2 (+ enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (+ enter) Jupyter Lab should start up in another tab in your web browser. 
 

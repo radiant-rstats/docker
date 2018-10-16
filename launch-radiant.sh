@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ID="vnijs"
-LABEL="rsm-msba"
+LABEL="radiant"
 IMAGE=${ID}/${LABEL}
 
 ## what os is being used
@@ -60,7 +60,6 @@ else
     open_browser () {
       xdg-open $1
     }
-
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~
@@ -100,7 +99,7 @@ else
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "-----------------------------------------------------------------------"
 
-  docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+  docker run -d -p 8080:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -121,9 +120,8 @@ else
     echo "-----------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
-    echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (5) to update the launch script, followed by [ENTER]:"
+    echo "Press (3) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (4) to update the launch script, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
@@ -131,7 +129,7 @@ else
     echo "-----------------------------------------------------------------------"
     read startup port
 
-    if [ ${startup} == 4 ]; then
+    if [ ${startup} == 3 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing container"
@@ -148,13 +146,13 @@ else
       docker pull ${IMAGE}:${VERSION}
 
       echo "-----------------------------------------------------------------------"
-      docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
+      docker run -d -p 8080:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 5 ]; then
+    elif [ ${startup} == 4 ]; then
       echo "Updating ${ID} launch script"
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh -o ${HOMEDIR}/Desktop/launch-rsm-msba.sh
-      chmod 755 ${HOMEDIR}/Desktop/launch-rsm-msba.sh
-      ${HOMEDIR}/Desktop/launch-rsm-msba.sh
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-radiant.sh -o ${HOMEDIR}/Desktop/launch-radiant.sh
+      chmod 755 ${HOMEDIR}/Desktop/launch-radiant.sh
+      ${HOMEDIR}/Desktop/launch-radiant.sh
       exit 1
     elif [ ${startup} == 1 ]; then
 
@@ -194,16 +192,6 @@ else
         docker run -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
         sleep 2s
         open_browser http://localhost:${port}
-      fi
-    elif [ ${startup} == 3 ]; then
-      if [ "${port}" == "" ]; then
-        echo "Starting Jupyter Lab in the default browser on port 8989"
-        open_browser http://localhost:8989/lab
-      else
-        echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run -d -p ${port}:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
-        sleep 2s
-        open_browser http://localhost:${port}/lab
       fi
     elif [ "${startup}" == "q" ]; then
       echo "-----------------------------------------------------------------------"

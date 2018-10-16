@@ -48,6 +48,8 @@ RUN apt-get -y install --no-install-recommends\
   libxml2-dev \
   unixodbc-dev \
   libicu-dev \
+  libgdal-dev \
+  libproj-dev \
   r-base \
   r-base-dev \
   r-cran-rcpp \
@@ -143,3 +145,7 @@ RUN ln -sf /home/rstudio/.Rprofile /home/shiny/.Rprofile \
   && adduser rstudio shiny \
   && mkdir -p /var/log/supervisor \
   && chown rstudio:rstudio /var/log/supervisor
+
+## set path to user directory to install packages
+RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron
+
