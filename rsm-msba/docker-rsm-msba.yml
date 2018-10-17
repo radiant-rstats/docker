@@ -7,5 +7,5 @@ services:
       - 8787:8787
       - 8989:8888
     volumes:
-      # - C:/Users/$USERNAME:/home/rstudio
-      - ~:/home/rstudio
+      - C:/Users/$USERNAME:/home/rstudio
+      # - ~:/home/rstudio
