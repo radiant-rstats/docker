@@ -7,13 +7,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Startup the rsm-msba computing container by pasting the command below in a (bash) terminal and  ...
+Start the rsm-msba computing container by double clicking the `launch-rsm-msba-pg.sh` file. In the menu that appears, press 4 + Enter to start the postgres server. Alternatively, copy-and-paste the command below into a (bash) shell from the `git/docker` directory.
 
 ```bash
 docker-compose -f ./rsm-msba/docker-rsm-msba-pg.yml up
 ```
 
-... connect to the database using the code chunk below. The default password is "postgres" but you can, and probably should, change that in the docker compose file.
+... connect to the database using the code chunk below. The default password is "postgres" but you can change that if you want.
 
 ```{r}
 library(DBI)
@@ -21,7 +21,8 @@ library(RPostgreSQL)
 con <- dbConnect(
   dbDriver("PostgreSQL"),
   user = "postgres", 
-  host = "postgres",
+  host = "postgres",       ## use when establishing a connection between containers
+  # host = "127.0.0.1",    ## use when connection to postgres from local Rstudio
   port = 5432,
   dbname = "postgres",
   password = rstudioapi::askForPassword("Database password")
@@ -37,10 +38,12 @@ dbListTables(con)
 
 If the database is empty, lets start with the example at https://db.rstudio.com/dplyr/ and work through the following 5 steps:
 
-1. install the nycflights13 package
+1. install the nycflights13 package if not already available
 
 ```{r}
-install.packages("nycflights13")
+if (!require("nycflights13")) {
+  install.packages("nycflights13")
+}
 ```
 
 2. Push data into the database 
@@ -94,7 +97,7 @@ tail(tailnum_delay)
 
 5. View the data in pgAdmin4
 
-`pgAdmin4` should be running on http://localhost:5050/browser/. You can login using `admin@pgadmin.com` as the user id and `pgadmin` as the password. These settings can be changed in the `docker-rsm-msba-pg.yml` file.
+If you used `docker-compose` to start the rsm-msba container, `pgAdmin4` should be running on http://localhost:5050/browser/. You can login using `admin@pgadmin.com` as the user id and `pgadmin` as the password. These settings can be changed in the `docker-rsm-msba-pg.yml` file.  If you used `launch-rsm-msba-pg.sh` to start the rsm-msba container, press 5 + Enter to start up `pgAdmin4`
 
 To connect to the data base, create a new "server" by right clicking on the `Server` icon and choosing _Create > Server_. In the  `General` and `Connection` tabs provide the information shown in the screen shots below and click on the `Save` icon.
 
