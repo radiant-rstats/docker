@@ -193,7 +193,7 @@ else
       if [ "${port}" == "" ]; then
         port=5432
       fi
-      if [ -d "${HOMEDIR}/postgresql/data" ]; then
+      if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
         mkdir -p "${HOMEDIR}/postgresql/data"
       fi
       echo "Starting postgres on port ${port}"
@@ -209,8 +209,8 @@ else
       if [ "${port}" == "" ]; then
         port=5050
       fi
-      if [ -d "${HOMEDIR}/postgresql/admin" ]; then
-        mkdir -p "${HOMEDIR}/postgresql/admin"
+      if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
+        mkdir -p "${HOMEDIR}/postgresql/pgadmin"
       fi
       echo "Starting pgadmin4 on port ${port}"
       docker run --net ${LABEL} -p ${port}:80 \
