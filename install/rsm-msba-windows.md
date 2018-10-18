@@ -32,7 +32,6 @@ Again, follow all default settings until the last screen (see image below). Ther
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
-start C:/Users/$USERNAME/git/docker
 cp C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
 C:/Users/$USERNAME/Desktop/launch-rsm-msba.sh
 ```
@@ -40,8 +39,6 @@ C:/Users/$USERNAME/Desktop/launch-rsm-msba.sh
 This step will start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
 
 ![](figures/rsm-msba-menu.png)
-
-~/Desktop/launch-rsm-msba.sh
 
 The code above also created a copy of the file `launch-rsm-msba.sh` on your Desktop that you can double-click to "fire up" the container again in the future.
 
