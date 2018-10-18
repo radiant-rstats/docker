@@ -239,11 +239,11 @@ else
 
       docker pull ${IMAGE}:${VERSION}
 
-      if [ ! -z $(docker images -q postgres) ]; then
+      if [ "$(docker images -q postgres)" != "" ]; then
         docker pull postgres
       fi
 
-      if [ ! -z $(docker images -q dpage/pgadmin4) ]; then
+      if [ "$(docker images -q dpage/pgadmin4)" != "" ]; then
         docker pull dpage/pgadmin4
       fi
 
