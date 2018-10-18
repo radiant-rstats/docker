@@ -258,9 +258,9 @@ else
       docker stop ${running}
       docker rm ${running}
       docker network rm ${LABEL}
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${HOMEDIR}/Desktop/launch-${LABEL}.sh
-      chmod 755 ${HOMEDIR}/Desktop/launch-${LABEL}.sh
-      ${HOMEDIR}/Desktop/launch-${LABEL}.sh
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}-pg.sh -o ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
+      chmod 755 ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
+      ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
       exit 1
 
     elif [ "${startup}" == "q" ]; then
