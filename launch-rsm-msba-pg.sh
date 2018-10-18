@@ -193,6 +193,9 @@ else
       if [ "${port}" == "" ]; then
         port=5432
       fi
+      if [ -d "${HOMEDIR}/postgresql/data" ]; then
+        mkdir -p "${HOMEDIR}/postgresql/data"
+      fi
       echo "Starting postgres on port ${port}"
       docker run --net ${LABEL} -p ${port}:5432 \
         --name postgres \
@@ -205,6 +208,9 @@ else
     elif [ ${startup} == 5 ]; then
       if [ "${port}" == "" ]; then
         port=5050
+      fi
+      if [ -d "${HOMEDIR}/postgresql/admin" ]; then
+        mkdir -p "${HOMEDIR}/postgresql/admin"
       fi
       echo "Starting pgadmin4 on port ${port}"
       docker run --net ${LABEL} -p ${port}:80 \
@@ -232,6 +238,14 @@ else
       fi
 
       docker pull ${IMAGE}:${VERSION}
+
+      if [ ! -z $(docker images -q postgres) ]; then
+        docker pull postgres
+      fi
+
+      if [ ! -z $(docker images -q dpage/pgadmin4) ]; then
+        docker pull dpage/pgadmin4
+      fi
 
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
