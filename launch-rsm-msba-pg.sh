@@ -253,7 +253,7 @@ else
       docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 7 ]; then
-      echo "Updating ${ID} launch script"
+      echo "Updating ${ID}/${LABEL} launch script"
       running=$(docker ps -q)
       docker stop ${running}
       docker rm ${running}
