@@ -82,7 +82,7 @@ else
   fi
 
   ## legacy - moving R/ directory with local installed packages
-  if [ -d "${HOMEDIR}/R" ]; then
+  if [ -d "${HOMEDIR}/R" ] && [ ! -d "${HOMEDIR}/.rsm-msba/R" ]; then
     echo "-----------------------------------------------------------------------"
     if [ "$ostype" != "Linux" ]; then
       echo "Moving user installed libraries to .rsm-msba/R"
