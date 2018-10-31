@@ -9,8 +9,8 @@ docker tag $USER/r-bionic:latest $USER/r-bionic:${VERSION}
 docker push $USER/r-bionic:${VERSION}; docker push $USER/r-bionic:latest
 
 ## radiant
-docker build -t $USER/radiant:latest ./radiant
-## docker build --no-cache -t $USER/radiant ./radiant
+## docker build -t $USER/radiant:latest ./radiant
+docker build --no-cache -t $USER/radiant ./radiant
 docker tag $USER/radiant:latest $USER/radiant:${VERSION}
 docker push $USER/radiant:${VERSION}; docker push $USER/radiant:latest
 
