@@ -4,6 +4,12 @@ ID="vnijs"
 LABEL="rsm-msba"
 IMAGE=${ID}/${LABEL}
 
+## username and password for postgres and pgadmin4
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
+PGADMIN_DEFAULT_PASSWORD=pgadmin
+
 ## what os is being used
 ostype=`uname`
 
@@ -76,7 +82,7 @@ else
   fi
 
   ## legacy - moving R/ directory with local installed packages
-  if [ -d "${HOMEDIR}/R" ]; then
+  if [ -d "${HOMEDIR}/R" ] && [ ! -d "${HOMEDIR}/.rsm-msba/R" ]; then
     echo "-----------------------------------------------------------------------"
     if [ "$ostype" != "Linux" ]; then
       echo "Moving user installed libraries to .rsm-msba/R"
@@ -100,7 +106,9 @@ else
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "-----------------------------------------------------------------------"
 
-  docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+  ## based on https://stackoverflow.com/a/52852871/1974918
+  docker network create ${LABEL}  # default options are fine
+  docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -122,42 +130,20 @@ else
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (5) to update the launch script, followed by [ENTER]:"
+    echo "Press (4) to launch postgres server, followed by [ENTER]:"
+    echo "Press (5) to launch pgadmin4, followed by [ENTER]:"
+    echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (7) to update the launch script, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
-    echo "Note: To start a specific container version type, e.g., 4 0.8.6 [ENTER]"
+    echo "Note: To start a specific container version type, e.g., 6 0.9.2 [ENTER]"
     echo "-----------------------------------------------------------------------"
     read startup port
 
-    if [ ${startup} == 4 ]; then
-      running=$(docker ps -q)
-      echo "-----------------------------------------------------------------------"
-      echo "Updating the ${LABEL} computing container"
-      docker stop ${running}
-
-      if [ "${port}" == "" ]; then
-        echo "Pulling down tag \"latest\""
-        VERSION="latest"
-      else
-        echo "Pulling down tag ${port}"
-        VERSION=${port}
-      fi
-
-      docker pull ${IMAGE}:${VERSION}
-
-      echo "-----------------------------------------------------------------------"
-      docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
-      echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 5 ]; then
-      echo "Updating ${ID} launch script"
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh -o ${HOMEDIR}/Desktop/launch-rsm-msba.sh
-      chmod 755 ${HOMEDIR}/Desktop/launch-rsm-msba.sh
-      ${HOMEDIR}/Desktop/launch-rsm-msba.sh
-      exit 1
+    if [ -z "${startup}" ]; then
+      echo "Invalid entry. Resetting launch menu ..."
     elif [ ${startup} == 1 ]; then
-
       RPROF=${HOMEDIR}/.Rprofile
       touch ${RPROF}
       if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
@@ -201,10 +187,84 @@ else
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run -d -p ${port}:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL} -d -p ${port}:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
         sleep 2s
         open_browser http://localhost:${port}/lab
       fi
+    elif [ ${startup} == 4 ]; then
+      if [ "${port}" == "" ]; then
+        port=5432
+      fi
+      if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
+        mkdir -p "${HOMEDIR}/postgresql/data"
+      fi
+      echo "Starting postgres on port ${port}"
+      docker run --net ${LABEL} -p ${port}:5432 \
+        --name postgres \
+        -e POSTGRES_USER=${POSTGRES_USER} \
+        -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+        -e PGDATA=/var/lib/postgresql/data \
+        -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+        -d postgres
+      sleep 2s
+    elif [ ${startup} == 5 ]; then
+      if [ "${port}" == "" ]; then
+        port=5050
+      fi
+      if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
+        mkdir -p "${HOMEDIR}/postgresql/pgadmin"
+      fi
+      echo "Starting pgadmin4 on port ${port}"
+      docker run --net ${LABEL} -p ${port}:80 \
+        --name pgadmin \
+        -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
+        -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
+        -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
+        -d dpage/pgadmin4
+      sleep 2s
+      open_browser http://localhost:${port}
+    elif [ ${startup} == 6 ]; then
+      running=$(docker ps -q)
+      echo "-----------------------------------------------------------------------"
+      echo "Updating the ${LABEL} computing container"
+      docker stop ${running}
+      docker rm ${running}
+      docker network rm ${LABEL}
+
+      if [ "${port}" == "" ]; then
+        echo "Pulling down tag \"latest\""
+        VERSION="latest"
+      else
+        echo "Pulling down tag ${port}"
+        VERSION=${port}
+      fi
+
+      docker pull ${IMAGE}:${VERSION}
+
+      if [ "$(docker images -q postgres)" != "" ]; then
+        docker pull postgres
+      fi
+
+      if [ "$(docker images -q dpage/pgadmin4)" != "" ]; then
+        docker pull dpage/pgadmin4
+      fi
+
+      echo "-----------------------------------------------------------------------"
+      ## based on https://stackoverflow.com/a/52852871/1974918
+      docker network create ${LABEL}  # default options are fine
+      docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
+      echo "-----------------------------------------------------------------------"
+    elif [ ${startup} == 7 ]; then
+      echo "Updating ${ID}/${LABEL} launch script"
+      running=$(docker ps -q)
+      docker stop ${running}
+      docker rm ${running}
+      docker network rm ${LABEL}
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}-pg.sh -o ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
+      chmod 755 ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
+      ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
+      exit 1
+
     elif [ "${startup}" == "q" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Stopping the ${LABEL} computing container and cleaning up as needed"
@@ -214,6 +274,7 @@ else
       if [ "${running}" != "" ]; then
         echo "Stopping running containers ..."
         docker stop ${running}
+        docker network rm ${LABEL}
       fi
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')
@@ -227,6 +288,8 @@ else
         echo "Removing errand docker processes ..."
         docker rm ${procs}
       fi
+    else
+      echo "Invalid entry. Resetting launch menu ..."
     fi
 
     if [ "${startup}" == "q" ]; then

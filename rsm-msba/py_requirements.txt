@@ -82,7 +82,7 @@ pygobject==3.26.1
 pyparsing==2.2.1
 PySocks==1.6.8
 pystan==2.18.0.0
-python-apt==1.6.2
+python-apt==1.6.3
 python-dateutil==2.7.3
 python-debian==0.1.32
 pytz==2018.5

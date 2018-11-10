@@ -56,8 +56,22 @@ As mentioned above, for Rstudio the username and password are both "rstudio". Fo
 
 <img src="figures/rsm-jupyter.png" width="500px">
 
+## Updating the RSM-MSBA computing environment on macOS
 
-**Trouble shooting**:
+To update the container use the launch script and press 6 (+ enter). To update the launch script itself, press 7 (+ enter).
+
+![](figures/rsm-msba-menu.png)
+
+If for some reason you are having trouble updating either the container or the launch script open a bash terminal and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
+
+```bash
+docker pull vnijs/rsm-msba
+rm -rf C:/Users/$USERNAME/git/docker
+git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
+cp C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
+```
+
+## Trouble shooting
 
 Check if a firewall or VPN is blocking docker access to your home directory. If this is an issue on your system, a warning should show when you check the "C" drive in docker settings and click "Apply". See screen shot below
 
@@ -65,6 +79,6 @@ Check if a firewall or VPN is blocking docker access to your home directory. If 
 
 If there is an error related to the firewall, try turning off the firewall to check if the rsm-msba container now works. You should not be without a virus checker or firewall however! We recommend using **Windows Defender**. If you are not sure if Windows Defender is correctly configured, please check with IT. 
 
-If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials"
+If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials" or type "docker logout" in a bash terminal.
 
 Alternative "fixes" that have worked are to restart docker and/or restart your computer. It is best to quit any running process before you restart your computer (i.e., press q + enter in the terminal menu)

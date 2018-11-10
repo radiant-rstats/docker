@@ -125,37 +125,13 @@ else
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
-    echo "Note: To start a specific container version type, e.g., 4 0.8.6 [ENTER]"
+    echo "Note: To start a specific container version type, e.g., 4 0.9.2 [ENTER]"
     echo "-----------------------------------------------------------------------"
     read startup port
 
-    if [ ${startup} == 3 ]; then
-      running=$(docker ps -q)
-      echo "-----------------------------------------------------------------------"
-      echo "Updating the ${LABEL} computing container"
-      docker stop ${running}
-
-      if [ "${port}" == "" ]; then
-        echo "Pulling down tag \"latest\""
-        VERSION="latest"
-      else
-        echo "Pulling down tag ${port}"
-        VERSION=${port}
-      fi
-
-      docker pull ${IMAGE}:${VERSION}
-
-      echo "-----------------------------------------------------------------------"
-      docker run -d -p 8080:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
-      echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 4 ]; then
-      echo "Updating ${ID} launch script"
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-radiant.sh -o ${HOMEDIR}/Desktop/launch-radiant.sh
-      chmod 755 ${HOMEDIR}/Desktop/launch-radiant.sh
-      ${HOMEDIR}/Desktop/launch-radiant.sh
-      exit 1
+    if [ -z "${startup}" ]; then
+      echo "Invalid entry. Resetting launch menu ..."
     elif [ ${startup} == 1 ]; then
-
       RPROF=${HOMEDIR}/.Rprofile
       touch ${RPROF}
       if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
@@ -193,6 +169,32 @@ else
         sleep 2s
         open_browser http://localhost:${port}
       fi
+    elif [ ${startup} == 3 ]; then
+      running=$(docker ps -q)
+      echo "-----------------------------------------------------------------------"
+      echo "Updating the ${LABEL} computing container"
+      docker stop ${running}
+
+      if [ "${port}" == "" ]; then
+        echo "Pulling down tag \"latest\""
+        VERSION="latest"
+      else
+        echo "Pulling down tag ${port}"
+        VERSION=${port}
+      fi
+
+      docker pull ${IMAGE}:${VERSION}
+
+      echo "-----------------------------------------------------------------------"
+      docker run -d -p 8080:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
+      echo "-----------------------------------------------------------------------"
+    elif [ ${startup} == 4 ]; then
+      echo "Updating ${ID} launch script"
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-radiant.sh -o ${HOMEDIR}/Desktop/launch-radiant.sh
+      chmod 755 ${HOMEDIR}/Desktop/launch-radiant.sh
+      ${HOMEDIR}/Desktop/launch-radiant.sh
+      exit 1
+
     elif [ "${startup}" == "q" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Stopping the ${LABEL} computing container and cleaning up as needed"
@@ -215,6 +217,8 @@ else
         echo "Removing errand docker processes ..."
         docker rm ${procs}
       fi
+    else
+      echo "Invalid entry. Resetting launch menu ..."
     fi
 
     if [ "${startup}" == "q" ]; then
