@@ -56,7 +56,7 @@ As mentioned above, for Rstudio the username and password are both "rstudio". Fo
 
 <img src="figures/rsm-jupyter.png" width="500px">
 
-## Updating the RSM-MSBA computing environment on macOS
+## Updating the RSM-MSBA computing environment on Windows
 
 To update the container use the launch script and press 6 (+ enter). To update the launch script itself, press 7 (+ enter).
 
