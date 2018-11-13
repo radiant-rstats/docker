@@ -1,6 +1,6 @@
 git pull
 docker login
-VERSION=0.9.2
+VERSION=0.9.4
 
 ## r-bionic
 docker build -t $USER/r-bionic:latest ./r-bionic
