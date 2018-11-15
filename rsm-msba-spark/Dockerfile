@@ -30,6 +30,11 @@ RUN echo "JAVA_HOME=${JAVA_HOME}" >> /etc/R/Renviron.site
 COPY py_requirements.txt /home/rstudio/py_requirements.txt
 RUN pip3 install --upgrade -r /home/rstudio/py_requirements.txt
 
+ENV IPYTHON=1
+ENV PYSPARK_PYTHON=/usr/bin/python3
+ENV PYSPARK_DRIVER_PYTHON=ipython3
+ENV PYSPARK_DRIVER_PYTHON_OPTS="notebook"
+
 EXPOSE 80 8787 8888
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
