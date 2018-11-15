@@ -21,10 +21,9 @@ RUN R -e 'options(spark.install.dir = "/opt")' \
       -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("HADOOP_VERSION"))'
 
 ## setting environment variables for pyspark
-ENV IPYTHON=1
 ENV PYSPARK_PYTHON=/usr/bin/python3
-ENV PYSPARK_DRIVER_PYTHON=ipython3
-ENV PYSPARK_DRIVER_PYTHON_OPTS="notebook"
+ENV PYSPARK_DRIVER_PYTHON=jupyter
+ENV PYSPARK_DRIVER_PYTHON_OPTS=lab
 ENV SPARK_HOME=/opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
 ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
 RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site \
