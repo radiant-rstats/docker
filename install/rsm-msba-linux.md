@@ -50,7 +50,7 @@ To update the container use the launch script and press 6 (+ enter). To update t
 
 ![](figures/rsm-msba-menu.png)
 
-If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
+If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.W
 
 ```bash
 docker pull vnijs/rsm-msba
@@ -58,3 +58,7 @@ rm -rf ~/git/docker
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker
 cp ~/git/docker/launch-rsm-msba.sh ~/Desktop
 ```
+
+## Extended functionality with Apache Spark
+
+To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` script to your desktop. Starting up the script that will finalize the installation of the computing environment and will download the latest version of the computing environment. 

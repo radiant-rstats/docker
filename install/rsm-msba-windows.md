@@ -71,6 +71,10 @@ git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/do
 cp C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
 ```
 
+## Extended functionality with Apache Spark
+
+To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` script to your desktop. Starting up the script that will finalize the installation of the computing environment and will download the latest version of the computing environment. 
+
 ## Trouble shooting
 
 Check if a firewall or VPN is blocking docker access to your home directory. If this is an issue on your system, a warning should show when you check the "C" drive in docker settings and click "Apply". See screen shot below
