@@ -1,7 +1,6 @@
 FROM vnijs/rsm-msba-spark:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
-ENV DEBIAN_FRONTEND noninteractive
 
 ## install python packages
 COPY py_requirements.txt /home/rstudio/py_requirements.txt
