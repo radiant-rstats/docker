@@ -73,7 +73,7 @@ cp C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
 
 ## Extended functionality with Apache Spark
 
-To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` script to your desktop. Starting up the script that will finalize the installation of the computing environment and will download the latest version of the computing environment. 
+To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` script to your desktop. Starting up the script will update the computing environment. 
 
 ## Trouble shooting
 
