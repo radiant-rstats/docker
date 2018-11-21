@@ -1,7 +1,7 @@
 version: '3.1'
 services:
-  rsm-msba-spark:
-    image: "vnijs/rsm-msba-spark"
+  rsm-msba-beakerx:
+    image: "vnijs/rsm-msba-beakerx"
     environment:
       SHELL: bin/bash
       PYTHONUSERBASE: /home/rstudio/.rsm-msba

@@ -222,7 +222,7 @@ else
         -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
         -e PGDATA=/var/lib/postgresql/data \
         -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-        -d postgres
+        -d postgres:10.6
       sleep 2s
     elif [ ${startup} == 5 ]; then
       if [ "${port}" == "" ]; then
@@ -258,8 +258,8 @@ else
 
       docker pull ${IMAGE}:${VERSION}
 
-      if [ "$(docker images -q postgres)" != "" ]; then
-        docker pull postgres
+      if [ "$(docker images -q postgres:10.6)" != "" ]; then
+        docker pull postgres:10.6
       fi
 
       if [ "$(docker images -q dpage/pgadmin4)" != "" ]; then

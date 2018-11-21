@@ -1,6 +1,8 @@
 ---
 title: "Connecting to a postgresql database"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -21,11 +23,13 @@ library(RPostgreSQL)
 con <- dbConnect(
   dbDriver("PostgreSQL"),
   user = "postgres", 
-  host = "postgres",       ## use when establishing a connection between containers
-  # host = "127.0.0.1",    ## use when connection to postgres from local Rstudio
+  host = "postgres",    ## use when establishing a connection between containers
+  # host = "127.0.0.1", ## use when connection to postgres from local Rstudio
   port = 5432,
   dbname = "postgres",
-  password = rstudioapi::askForPassword("Database password")
+  password = "postgres"
+  ## use the line below in interactive sessions
+  # password = rstudioapi::askForPassword("Database password")
 )
 ```
 
@@ -33,7 +37,8 @@ Is there anything in the data base? If this is not the first time you are  runni
 
 ```{r}
 library(dplyr)
-dbListTables(con)
+db_tabs <- dbListTables(con)
+db_tabs
 ```
 
 If the database is empty, lets start with the example at https://db.rstudio.com/dplyr/ and work through the following 5 steps:
@@ -49,15 +54,18 @@ if (!require("nycflights13")) {
 2. Push data into the database 
 
 ```{r}
-copy_to(con, nycflights13::flights, "flights",
-  temporary = FALSE,
-  indexes = list(
-    c("year", "month", "day"),
-    "carrier",
-    "tailnum",
-    "dest"
+## only push to db if table does not yet exist
+if (!"flights" %in% db_tabs) {
+  copy_to(con, nycflights13::flights, "flights",
+    temporary = FALSE,
+    indexes = list(
+      c("year", "month", "day"),
+      "carrier",
+      "tailnum",
+      "dest"
+    )
   )
-)
+}
 ```
 
 3. Create a reference to the data base that (db)plyr can work with
@@ -88,7 +96,10 @@ tailnum_delay_db
 tailnum_delay_db %>% show_query()
 
 nrow(tailnum_delay_db)
-tail(tailnum_delay_db)
+
+## will produce an error because tail is not support on 
+## sql sources
+## tail(tailnum_delay_db)
 
 tailnum_delay <- tailnum_delay_db %>% collect()
 nrow(tailnum_delay)
