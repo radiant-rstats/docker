@@ -3,6 +3,9 @@ FROM vnijs/rsm-msba:latest
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 ENV DEBIAN_FRONTEND noninteractive
 
+## needed to get packages installed in the correct directory
+ENV PY_MODS=/usr/local/lib/python3.6/dist-packages/
+
 ## installing java
 RUN apt-add-repository ppa:webupd8team/java \
   && apt-get update \
@@ -29,9 +32,12 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
 RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site \
   && echo "JAVA_HOME=${JAVA_HOME}" >> /etc/R/Renviron.site
 
+## adding path to pyspark binary
+ENV PATH="${SPARK_HOME}/bin:${PATH}"
+
 ## install python packages
 COPY py_requirements.txt /home/rstudio/py_requirements.txt
-RUN pip3 install --upgrade -r /home/rstudio/py_requirements.txt
+RUN pip3 install -r /home/rstudio/py_requirements.txt -t ${PY_MODS}
 
 EXPOSE 80 8787 8888
 

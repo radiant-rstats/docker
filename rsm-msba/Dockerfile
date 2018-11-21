@@ -4,18 +4,23 @@ MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 ENV DEBIAN_FRONTEND noninteractive
 
 ## install python packages
+# COPY py_requirements.txt /home/rstudio/py_requirements.txt
 COPY py_requirements.txt /home/rstudio/py_requirements.txt
+# RUN pip3 install -r /home/rstudio/py_requirements.txt
 RUN pip3 install --upgrade -r /home/rstudio/py_requirements.txt
 
-ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
-## don't use nodejs 10 until this issue is resolved https://github.com/jupyter-widgets/ipywidgets/issues/2061
-# RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
-RUN apt-get -y install --no-install-recommends \
+
+RUN apt-get update \
+  && apt-get -y upgrade \
+  && apt-get -y install --no-install-recommends \
     python3-venv \
     python3-virtualenv \
     libzmq3-dev \
-    gpg-agent \
-  && curl -sL https://deb.nodesource.com/setup_9.x | bash \
+    gpg-agent
+
+## don't use nodejs 10 until this issue is resolved https://github.com/jupyter-widgets/ipywidgets/issues/2061
+ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm \
   && jupyter labextension install @jupyter-widgets/jupyterlab-manager \
