@@ -1,5 +1,10 @@
 #!/bin/bash
 
+## set ARG_HOME to directory of your choosing if you do NOT
+## want to to map the docker home directory to your local
+## home directory
+# ARG_HOME=~/rady
+ARG_HOME=""
 ID="vnijs"
 LABEL="rsm-msba-beakerx"
 IMAGE=${ID}/${LABEL}
@@ -79,6 +84,18 @@ else
     open_browser () {
       start $1
     }
+  fi
+
+  ## change mapping of docker home directory to local directory if specified
+  if [ "${ARG_HOME}" != "" ]; then
+    if [ -d "${ARG_HOME}" ]; then
+      HOMEDIR=${ARG_HOME}
+    else
+      echo "The directory ${ARG_HOME} does not yet exist."
+      echo "Please create the directory and start the launch script again"
+      sleep 5s
+      exit 1
+    fi
   fi
 
   ## legacy - moving R/ directory with local installed packages

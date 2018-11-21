@@ -2,10 +2,11 @@ FROM vnijs/rsm-msba-spark:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
-## install python packages
+## install beakerx
 COPY py_requirements.txt /home/rstudio/py_requirements.txt
-RUN pip3 install --upgrade -r /home/rstudio/py_requirements.txt
-RUN jupyter labextension install beakerx-jupyterlab
+RUN pip3 install --upgrade -r /home/rstudio/py_requirements.txt \
+  && beakerx install \
+  && jupyter labextension install beakerx-jupyterlab
 
 EXPOSE 80 8787 8888
 

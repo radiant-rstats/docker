@@ -4,11 +4,8 @@ MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 ENV DEBIAN_FRONTEND noninteractive
 
 ## install python packages
-# COPY py_requirements.txt /home/rstudio/py_requirements.txt
 COPY py_requirements.txt /home/rstudio/py_requirements.txt
-# RUN pip3 install -r /home/rstudio/py_requirements.txt
 RUN pip3 install --upgrade -r /home/rstudio/py_requirements.txt
-
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -42,17 +39,9 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 
 ## path for local install of python packages from Rstudio or Jupyter Lab
 ARG PYBASE=/home/rstudio/.rsm-msba
-ENV PYTHONUSERBASE=${PYBASE}
-## needed to keep jupyter --paths separate from local install
-ENV JUPYTER_PATH=${PYBASE}/share/jupyter
-ENV JUPYTER_RUNTIME_DIR=${PYBASE}/share/jupyter/runtime
-ENV JUPYTER_CONFIG_DIR=${PYBASE}/jupyter
+ENV PYBASE=${PYBASE}
 RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
   && echo "WORKON_HOME=${PYBASE}" >> /etc/R/Renviron.site
-
-## copy reticulate and python examples to home directory
-# COPY python/ /home/rstudio/python
-# RUN chown -R rstudio:rstudio /home/rstudio/python/
 
 ## copy dbase connections for use with rsm-msba/docker-rsm-msba-pg.yml
 COPY connections/ /etc/rstudio/connections
@@ -63,3 +52,4 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 80 8787 8888
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
