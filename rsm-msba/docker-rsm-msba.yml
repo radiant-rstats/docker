@@ -5,7 +5,7 @@ services:
     ports:
       - 8080:80
       - 8787:8787
-      - 8989:8888
+      - 8989:8989
     volumes:
       # - C:/Users/$USERNAME:/home/rstudio
       - ~:/home/rstudio
