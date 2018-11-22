@@ -37,3 +37,4 @@ nltk
 psycopg2_binary
 mysql
 mysqlclient
+pyodbc
