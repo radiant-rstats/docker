@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ## installing java
 RUN apt-get -y update \
-  && apt-get install --no-install-recommends -y openjdk-8-jre-headless ca-certificates-java \
+  && apt-get install --no-install-recommends -y openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && R CMD javareconf
