@@ -34,3 +34,6 @@ selenium==3.8
 lxml
 tweepy
 nltk
+psycopg2_binary
+mysql
+mysqlclient
