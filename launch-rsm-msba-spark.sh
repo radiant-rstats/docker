@@ -125,7 +125,7 @@ else
 
   ## based on https://stackoverflow.com/a/52852871/1974918
   docker network create ${LABEL}  # default options are fine
-  docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+  docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -204,7 +204,7 @@ else
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL} -d -p ${port}:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
         sleep 2s
         open_browser http://localhost:${port}/lab
       fi
@@ -269,7 +269,7 @@ else
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
       docker network create ${LABEL}  # default options are fine
-      docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
+      docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 7 ]; then
       echo "Updating ${ID}/${LABEL} launch script"

@@ -49,7 +49,7 @@ COPY connections/ /etc/rstudio/connections
 ## updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 80 8787 8888
+EXPOSE 80 8787 8989
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
