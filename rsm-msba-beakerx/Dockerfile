@@ -15,6 +15,9 @@ RUN rm -rf /usr/share/jupyter/kernels/clojure \
   && rm -rf /usr/share/jupyter/kernels/kotlin \
   && rm -rf /usr/share/jupyter/kernels/scala
 
+## update R-packages
+RUN R -e 'radiant.update::radiant.update()'
+
 EXPOSE 80 8787 8989
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
