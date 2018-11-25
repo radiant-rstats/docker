@@ -46,11 +46,11 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
 ## copy dbase connections for use with rsm-msba/docker-rsm-msba-pg.yml
 COPY connections/ /etc/rstudio/connections
 
-## updating the supervisord.conf file for Jupyter
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
+
+## updating the supervisord.conf file for Jupyter
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 80 8787 8989
 

@@ -31,6 +31,7 @@ RUN apt-get update \
     zlib1g \
     wget \
     software-properties-common \
+    cmake \
   && add-apt-repository --enable-source --yes "ppa:marutter/rrutter3.5" \
   && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
   && apt-get update
@@ -108,7 +109,7 @@ ENV LANG en_US.UTF-8
 #  && rm pandoc-*
 
 ## R-Studio Preview
-ENV RSTUDIO_VERSION 1.2.1114
+ENV RSTUDIO_VERSION 1.2.1139
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \

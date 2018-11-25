@@ -9,13 +9,21 @@ RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/ra
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 ## temp for updates
-# RUN R -e 'install.packages("radiant.data", repos = "https://radiant-rstats.github.io/minicran/")'
 RUN R -e 'remotes::install_github("PMassicotte/gtrendsR@da29cf4e427b6bf33d5925ce82596d9c33f9656c", upgrade = "never")'
+
+## install lightGBM
+RUN git clone --recursive https://github.com/Microsoft/LightGBM \
+  && cd LightGBM \
+  && Rscript build_r.R \
+  && cd ..
 
 ## path for local install of python packages from Rstudio or Jupyter Lab
 ARG PYBASE=/home/rstudio/.rsm-msba
 RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
   && echo "WORKON_HOME=${PYBASE}" >> /etc/R/Renviron.site
+
+## update R-packages
+RUN R -e 'radiant.update::radiant.update()'
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
