@@ -116,7 +116,7 @@ else
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "-----------------------------------------------------------------------"
 
-  docker run -d -p 8080:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+  docker run -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -171,7 +171,7 @@ else
         open_browser http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run -d -p ${port}:80 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run -d -p ${port}:8080 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -203,7 +203,7 @@ else
       docker pull ${IMAGE}:${VERSION}
 
       echo "-----------------------------------------------------------------------"
-      docker run -d -p 8080:80 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
+      docker run -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 4 ]; then
       echo "Updating ${ID} launch script"
