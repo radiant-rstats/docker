@@ -34,6 +34,7 @@ ssh -M -S .tmp-ssh-info -fnNT \
   -L 8080:localhost:8080 \
   -L 8787:localhost:8787 \
   -L 8989:localhost:8989 \
+  -L 5050:localhost:5050 \
   ${UHOST}
 
 show_service () {
@@ -41,6 +42,7 @@ show_service () {
   echo "Press (1) to show Radiant, followed by [ENTER]:"
   echo "Press (2) to show Rstudio, followed by [ENTER]:"
   echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
+  echo "Press (4) to show pgAdmin, followed by [ENTER]:"
   echo "Press (q) to close the ssh tunnel, followed by [ENTER]:"
   echo "---------------------------------------------------------------------"
   read startup
@@ -54,6 +56,9 @@ show_service () {
   elif [ ${startup} == 3 ]; then
     echo "Starting Jupyter Lab in the default browser on port 8989"
     open_browser http://localhost:8989/lab
+  elif [ ${startup} == 4 ]; then
+    echo "Starting pgAdmin in the default browser on port 5050"
+    open_browser http://localhost:5050
   elif [ "${startup}" == "q" ]; then
     ssh -S .tmp-ssh-info -O exit ${UHOST}
     echo "---------------------------------------------------------------------"
