@@ -18,6 +18,10 @@ Once the install is done, right click on the docker icon, select "Settings", and
 
 <img src="figures/windows-shared-drives.png" width="500px">
 
+You can also change the (maximum) resources docker is allowed to use on your system. You can set this (close) to the maximum available on your system.
+
+<img src="figures/docker-resources.png" width="500px">
+
 Optional: If you are interested, the linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
 **Step 3**: Install git bash from the link below
