@@ -31,7 +31,6 @@ RUN apt-get update \
     zlib1g \
     wget \
     software-properties-common \
-    cmake \
   && add-apt-repository --enable-source --yes "ppa:marutter/rrutter3.5" \
   && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
   && apt-get update
@@ -52,6 +51,7 @@ RUN apt-get -y install --no-install-recommends\
   libgdal-dev \
   libproj-dev \
   libgsl-dev \
+  cmake \
   r-base \
   r-base-dev \
   r-cran-rcpp \
