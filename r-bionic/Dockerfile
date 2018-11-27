@@ -51,6 +51,7 @@ RUN apt-get -y install --no-install-recommends\
   libicu-dev \
   libgdal-dev \
   libproj-dev \
+  libgsl-dev \
   r-base \
   r-base-dev \
   r-cran-rcpp \

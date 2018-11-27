@@ -18,6 +18,6 @@ RUN rm -rf /usr/share/jupyter/kernels/clojure \
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
 
-EXPOSE 80 8787 8989
+EXPOSE 8080 8787 8989
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

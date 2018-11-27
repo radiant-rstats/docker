@@ -124,8 +124,7 @@ else
   echo "-----------------------------------------------------------------------"
 
   ## based on https://stackoverflow.com/a/52852871/1974918
-  docker network create ${LABEL}  # default options are fine
-  docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+  docker run --net ${LABEL}_default -d -p 8080:80 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -183,7 +182,7 @@ else
         open_browser http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run -d -p ${port}:80 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL}_default -d -p ${port}:8080 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -194,7 +193,7 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL}_default -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -204,7 +203,7 @@ else
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL}_default -d -p ${port}:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
         sleep 2s
         open_browser http://localhost:${port}/lab
       fi
@@ -216,7 +215,7 @@ else
         mkdir -p "${HOMEDIR}/postgresql/data"
       fi
       echo "Starting postgres on port ${port}"
-      docker run --net ${LABEL} -p ${port}:5432 \
+      docker run --net ${LABEL}_default -p ${port}:5432 \
         --name postgres \
         -e POSTGRES_USER=${POSTGRES_USER} \
         -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
@@ -232,7 +231,7 @@ else
         mkdir -p "${HOMEDIR}/postgresql/pgadmin"
       fi
       echo "Starting pgadmin4 on port ${port}"
-      docker run --net ${LABEL} -p ${port}:80 \
+      docker run --net ${LABEL}_default -p ${port}:80 \
         --name pgadmin \
         -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
         -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
@@ -246,7 +245,6 @@ else
       echo "Updating the ${LABEL} computing container"
       docker stop ${running}
       docker rm ${running}
-      docker network rm ${LABEL}
 
       if [ "${port}" == "" ]; then
         echo "Pulling down tag \"latest\""
@@ -268,18 +266,16 @@ else
 
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
-      docker network create ${LABEL}  # default options are fine
-      docker run --net ${LABEL} -d -p 8080:80 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
+      docker run --net ${LABEL}_default -d -p 8080:80 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 7 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
       running=$(docker ps -q)
       docker stop ${running}
       docker rm ${running}
-      docker network rm ${LABEL}
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}-pg.sh -o ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
-      chmod 755 ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
-      ${HOMEDIR}/Desktop/launch-${LABEL}-pg.sh
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${HOMEDIR}/Desktop/launch-${LABEL}.sh
+      chmod 755 ${HOMEDIR}/Desktop/launch-${LABEL}.sh
+      ${HOMEDIR}/Desktop/launch-${LABEL}.sh
       exit 1
 
     elif [ "${startup}" == "q" ]; then
@@ -291,7 +287,6 @@ else
       if [ "${running}" != "" ]; then
         echo "Stopping running containers ..."
         docker stop ${running}
-        docker network rm ${LABEL}
       fi
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')
