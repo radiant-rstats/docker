@@ -128,3 +128,5 @@ Werkzeug==0.14.1
 widgetsnbextension==3.4.2
 xlrd==1.1.0
 xonsh==0.7.8
+xgboost==0.81
+lightgbm==2.2.2
