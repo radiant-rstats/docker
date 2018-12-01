@@ -52,6 +52,7 @@ RUN apt-get -y install --no-install-recommends\
   libproj-dev \
   libgsl-dev \
   cmake \
+  cargo \
   r-base \
   r-base-dev \
   r-cran-rcpp \
@@ -94,7 +95,8 @@ RUN apt-get install -y \
   texlive-pstricks \
   texlive-xetex \
   && apt-get -y autoremove \
-  && apt-get clean
+  && apt-get clean \
+  && apt-get update
 
 ## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
@@ -110,7 +112,7 @@ ENV LANG en_US.UTF-8
 #  && rm pandoc-*
 
 ## R-Studio Preview
-ENV RSTUDIO_VERSION 1.2.1139
+ENV RSTUDIO_VERSION 1.2.1153
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
