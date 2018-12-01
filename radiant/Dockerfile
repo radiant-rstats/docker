@@ -10,7 +10,7 @@ COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 ## temp for updates
 RUN R -e 'remotes::install_github("PMassicotte/gtrendsR@da29cf4e427b6bf33d5925ce82596d9c33f9656c", upgrade = "never")'
-RUN R -e 'remotes::install_github("thomasp95/gganimate")'
+RUN R -e 'remotes::install_github("thomasp85/gganimate")'
 RUN R -e 'remotes::install_github("tidymodels/tidymodels")'
 
 ## install lightGBM
