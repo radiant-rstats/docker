@@ -1,6 +1,8 @@
 absl-py==0.6.1
+alembic==1.0.5
 asn1crypto==0.24.0
 astor==0.7.1
+async-generator==1.10
 backcall==0.1.0
 beautifulsoup4==4.6.3
 bleach==2.1.4
@@ -39,6 +41,7 @@ jupyter==1.0.0
 jupyter-client==5.2.3
 jupyter-console==5.2.0
 jupyter-core==4.4.0
+jupyterhub==0.9.4
 jupyterlab==0.34.10
 jupyterlab-git==0.2.2
 jupyterlab-launcher==0.13.1
@@ -48,8 +51,10 @@ Keras-Preprocessing==1.0.5
 keyring==10.6.0
 keyrings.alt==3.0
 kiwisolver==1.0.1
+lightgbm==2.2.2
 llvmlite==0.24.0
 lxml==4.2.5
+Mako==1.0.7
 Markdown==3.0.1
 MarkupSafe==1.1.0
 matplotlib==2.2.3
@@ -66,6 +71,7 @@ numexpr==2.6.8
 numpy==1.15.4
 oauthlib==2.1.0
 packaging==17.1
+pamela==0.3.0
 pandas==0.23.4
 pandocfilters==1.4.2
 parso==0.3.1
@@ -91,6 +97,8 @@ pystan==2.18.0.0
 python-apt==1.6.3
 python-dateutil==2.7.5
 python-debian==0.1.32
+python-editor==1.0.3
+python-oauth2==1.1.0
 pytz==2018.7
 pyxdg==0.25
 PyYAML==3.13
@@ -126,7 +134,6 @@ wcwidth==0.1.7
 webencodings==0.5.1
 Werkzeug==0.14.1
 widgetsnbextension==3.4.2
+xgboost==0.81
 xlrd==1.1.0
 xonsh==0.7.8
-xgboost==0.81
-lightgbm==2.2.2
