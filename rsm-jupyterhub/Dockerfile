@@ -14,7 +14,9 @@ COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
 
+## updating the supervisord.conf file for Jupyter
+# COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 # EXPOSE 80 8787 8989
 
 # CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
