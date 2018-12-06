@@ -16,6 +16,11 @@ else
 fi
 ID="vnijs"
 LABEL="rsm-msba"
+if [ "$2" != "" ]; then
+  IMAGE_VERSION="$2"
+else
+  IMAGE_VERSION="latest"
+fi
 IMAGE=${ID}/${LABEL}
 
 ## username and password for postgres and pgadmin4
@@ -23,6 +28,8 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
 PGADMIN_DEFAULT_PASSWORD=pgadmin
+POSTGRES_VERSION=10.6
+PGADMIN_VERSION=3.6
 
 ## what os is being used
 ostype=`uname`
@@ -65,13 +72,13 @@ else
     docker stop ${running}
   fi
 
-  available=$(docker images -q ${IMAGE})
+  available=$(docker images -q ${IMAGE}:${IMAGE_VERSION})
   if [ "${available}" == "" ]; then
     echo "-----------------------------------------------------------------------"
     echo "Downloading the ${LABEL} computing container"
     echo "-----------------------------------------------------------------------"
     docker logout
-    docker pull ${IMAGE}
+    docker pull ${IMAGE}:${IMAGE_VERSION}
   fi
 
   ## function is not efficient by alias has scopping issues
@@ -125,7 +132,7 @@ else
     echo "-----------------------------------------------------------------------"
   fi
 
-  BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE})
+  BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
 
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing container on ${ostype}"
@@ -134,7 +141,7 @@ else
 
   ## based on https://stackoverflow.com/a/52852871/1974918
   docker network create ${LABEL}  # default options are fine
-  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -192,7 +199,7 @@ else
         open_browser http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8080 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL} -d -p ${port}:8080 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -203,7 +210,7 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL} -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -213,7 +220,7 @@ else
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL} -d -p ${port}:8989 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}/lab
       fi
@@ -231,7 +238,7 @@ else
         -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
         -e PGDATA=/var/lib/postgresql/data \
         -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-        -d postgres:10.6
+        -d postgres:${POSTGRES_VERSION}
       sleep 2s
     elif [ ${startup} == 5 ]; then
       if [ "${port}" == "" ]; then
@@ -246,7 +253,7 @@ else
         -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
         -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
         -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
-        -d dpage/pgadmin4
+        -d dpage/pgadmin4:${PGADMIN_VERSION}
       sleep 2s
       open_browser http://localhost:${port}
     elif [ ${startup} == 6 ]; then
@@ -259,7 +266,7 @@ else
 
       if [ "${port}" == "" ]; then
         echo "Pulling down tag \"latest\""
-        VERSION="latest"
+        VERSION=${IMAGE_VERSION}
       else
         echo "Pulling down tag ${port}"
         VERSION=${port}
@@ -267,12 +274,12 @@ else
 
       docker pull ${IMAGE}:${VERSION}
 
-      if [ "$(docker images -q postgres:10.6)" != "" ]; then
-        docker pull postgres:10.6
+      if [ "$(docker images -q postgres:${POSTGRES_VERSION})" != "" ]; then
+        docker pull postgres:${POSTGRES_VERSION}
       fi
 
-      if [ "$(docker images -q dpage/pgadmin4)" != "" ]; then
-        docker pull dpage/pgadmin4
+      if [ "$(docker images -q dpage/pgadmin4${PGADMIN_VERSION})" != "" ]; then
+        docker pull dpage/pgadmin4:${PGADMIN_VERSION}
       fi
 
       echo "-----------------------------------------------------------------------"

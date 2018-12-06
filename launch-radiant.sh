@@ -16,7 +16,20 @@ else
 fi
 ID="vnijs"
 LABEL="radiant"
+if [ "$2" != "" ]; then
+  IMAGE_VERSION="$2"
+else
+  IMAGE_VERSION="latest"
+fi
 IMAGE=${ID}/${LABEL}
+
+## username and password for postgres and pgadmin4
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
+PGADMIN_DEFAULT_PASSWORD=pgadmin
+POSTGRES_VERSION=10.6
+PGADMIN_VERSION=3.6
 
 ## what os is being used
 ostype=`uname`
@@ -59,13 +72,13 @@ else
     docker stop ${running}
   fi
 
-  available=$(docker images -q ${IMAGE})
+  available=$(docker images -q ${IMAGE}:${IMAGE_VERSION})
   if [ "${available}" == "" ]; then
     echo "-----------------------------------------------------------------------"
     echo "Downloading the ${LABEL} computing container"
     echo "-----------------------------------------------------------------------"
     docker logout
-    docker pull ${IMAGE}
+    docker pull ${IMAGE}:${IMAGE_VERSION}
   fi
 
   ## function is not efficient by alias has scopping issues
@@ -74,6 +87,7 @@ else
     open_browser () {
       xdg-open $1
     }
+
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~
@@ -101,7 +115,7 @@ else
   fi
 
   ## legacy - moving R/ directory with local installed packages
-  if [ -d "${HOMEDIR}/R" ]; then
+  if [ -d "${HOMEDIR}/R" ] && [ ! -d "${HOMEDIR}/.rsm-msba/R" ]; then
     echo "-----------------------------------------------------------------------"
     if [ "$ostype" != "Linux" ]; then
       echo "Moving user installed libraries to .rsm-msba/R"
@@ -111,21 +125,23 @@ else
       cp -r ${HOMEDIR}/R ${HOMEDIR}/.rsm-msba
       rm -rf ${HOMEDIR}/R
     else
-      echo "User installed libraries should now be added to .rsm-msba/R"
+      echo "User installed libraries should be added to .rsm-msba/R"
       echo "To install additional libraries use:"
       echo "install.packages('a-package', lib = Sys.getenv('R_LIBS_USER'))"
     fi
     echo "-----------------------------------------------------------------------"
   fi
 
-  BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE})
+  BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
 
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing container on ${ostype}"
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "-----------------------------------------------------------------------"
 
-  docker run -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+  ## based on https://stackoverflow.com/a/52852871/1974918
+  docker network create ${LABEL}  # default options are fine
+  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -146,12 +162,14 @@ else
     echo "-----------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
-    echo "Press (3) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (4) to update the launch script, followed by [ENTER]:"
+    echo "Press (3) to launch postgres server, followed by [ENTER]:"
+    echo "Press (4) to launch pgadmin4, followed by [ENTER]:"
+    echo "Press (5) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (6) to update the launch script, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
-    echo "Note: To start a specific container version type, e.g., 4 0.9.2 [ENTER]"
+    echo "Note: To start a specific container version type, e.g., 6 0.9.2 [ENTER]"
     echo "-----------------------------------------------------------------------"
     read startup port
 
@@ -180,7 +198,7 @@ else
         open_browser http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run -d -p ${port}:8080 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL} -d -p ${port}:8080 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -191,19 +209,53 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}
+        docker run --net ${LABEL} -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
     elif [ ${startup} == 3 ]; then
+      if [ "${port}" == "" ]; then
+        port=5432
+      fi
+      if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
+        mkdir -p "${HOMEDIR}/postgresql/data"
+      fi
+      echo "Starting postgres on port ${port}"
+      docker run --net ${LABEL} -p ${port}:5432 \
+        --name postgres \
+        -e POSTGRES_USER=${POSTGRES_USER} \
+        -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+        -e PGDATA=/var/lib/postgresql/data \
+        -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+        -d postgres:${POSTGRES_VERSION}
+      sleep 2s
+    elif [ ${startup} == 4 ]; then
+      if [ "${port}" == "" ]; then
+        port=5050
+      fi
+      if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
+        mkdir -p "${HOMEDIR}/postgresql/pgadmin"
+      fi
+      echo "Starting pgadmin4 on port ${port}"
+      docker run --net ${LABEL} -p ${port}:80 \
+        --name pgadmin \
+        -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
+        -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
+        -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
+        -d dpage/pgadmin4:${PGADMIN_VERSION}
+      sleep 2s
+      open_browser http://localhost:${port}
+    elif [ ${startup} == 5 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing container"
       docker stop ${running}
+      docker rm ${running}
+      docker network rm ${LABEL}
 
       if [ "${port}" == "" ]; then
         echo "Pulling down tag \"latest\""
-        VERSION="latest"
+        VERSION=${IMAGE_VERSION}
       else
         echo "Pulling down tag ${port}"
         VERSION=${port}
@@ -211,14 +263,28 @@ else
 
       docker pull ${IMAGE}:${VERSION}
 
+      if [ "$(docker images -q postgres:${POSTGRES_VERSION})" != "" ]; then
+        docker pull postgres:${POSTGRES_VERSION}
+      fi
+
+      if [ "$(docker images -q dpage/pgadmin4${PGADMIN_VERSION})" != "" ]; then
+        docker pull dpage/pgadmin4:${PGADMIN_VERSION}
+      fi
+
       echo "-----------------------------------------------------------------------"
-      docker run -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
+      ## based on https://stackoverflow.com/a/52852871/1974918
+      docker network create ${LABEL}  # default options are fine
+      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 4 ]; then
-      echo "Updating ${ID} launch script"
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-radiant.sh -o ${HOMEDIR}/Desktop/launch-radiant.sh
-      chmod 755 ${HOMEDIR}/Desktop/launch-radiant.sh
-      ${HOMEDIR}/Desktop/launch-radiant.sh
+    elif [ ${startup} == 7 ]; then
+      echo "Updating ${ID}/${LABEL} launch script"
+      running=$(docker ps -q)
+      docker stop ${running}
+      docker rm ${running}
+      docker network rm ${LABEL}
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${HOMEDIR}/Desktop/launch-${LABEL}.sh
+      chmod 755 ${HOMEDIR}/Desktop/launch-${LABEL}.sh
+      ${HOMEDIR}/Desktop/launch-${LABEL}.sh
       exit 1
 
     elif [ "${startup}" == "q" ]; then
@@ -230,6 +296,7 @@ else
       if [ "${running}" != "" ]; then
         echo "Stopping running containers ..."
         docker stop ${running}
+        docker network rm ${LABEL}
       fi
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')
