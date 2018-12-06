@@ -3,8 +3,17 @@
 ## set ARG_HOME to directory of your choosing if you do NOT
 ## want to to map the docker home directory to your local
 ## home directory
-# ARG_HOME=~/rady
-ARG_HOME=""
+## Use something like the command below on macOS or Linux to setup a 'launch'
+## command. You can then use that command, e.g., launch ., to launch the
+## container from a specific directory
+## ln -s ~/git/docker/launch-rsm-msba.sh /usr/local/bin/launchm
+if [ "$1" != "" ]; then
+  ARG_HOME="$(cd $1; pwd)"
+else
+  ARG_HOME=""
+  ## change to some other path to use as default
+  # ARG_HOME="~/rady"
+fi
 ID="vnijs"
 LABEL="rsm-msba"
 IMAGE=${ID}/${LABEL}
@@ -109,7 +118,7 @@ else
       cp -r ${HOMEDIR}/R ${HOMEDIR}/.rsm-msba
       rm -rf ${HOMEDIR}/R
     else
-      echo "User installed libraries should now be added to .rsm-msba/R"
+      echo "User installed libraries should be added to .rsm-msba/R"
       echo "To install additional libraries use:"
       echo "install.packages('a-package', lib = Sys.getenv('R_LIBS_USER'))"
     fi
