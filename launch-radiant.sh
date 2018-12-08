@@ -22,6 +22,7 @@ else
   IMAGE_VERSION="latest"
 fi
 IMAGE=${ID}/${LABEL}
+NB_USER="jovyan"
 
 ## username and password for postgres and pgadmin4
 POSTGRES_USER=postgres
@@ -140,11 +141,11 @@ else
   echo "-----------------------------------------------------------------------"
 
   ## based on https://stackoverflow.com/a/52852871/1974918
-  has_network=$(docker network ls | awk "/${LABEL}/" | awk '{print $2}')
+  has_network=$(docker network ls | awk "/ ${LABEL} /" | awk '{print $2}')
   if [ "${has_network}" == "" ]; then
     docker network create ${LABEL}  # default options are fine
   fi
-  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
+  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -201,7 +202,7 @@ else
         open_browser http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8080 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${LABEL} -d -p ${port}:8080 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -212,7 +213,7 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${LABEL} -d -p ${port}:8787 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -276,11 +277,11 @@ else
 
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
-      has_network=$(docker network ls | awk "/${LABEL}/" | awk '{print $2}')
+      has_network=$(docker network ls | awk "/ ${LABEL} /" | awk '{print $2}')
       if [ "${has_network}" == "" ]; then
         docker network create ${LABEL}  # default options are fine
       fi
-      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
+      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 7 ]; then
       echo "Updating ${ID}/${LABEL} launch script"

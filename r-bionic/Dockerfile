@@ -1,6 +1,12 @@
 ## based mainly on https://github.com/mccahill/docker-rstudio
 FROM ubuntu:bionic
 
+ARG NB_USER="jovyan"
+ARG NB_UID="1001"
+ARG NB_GID="100"
+
+ENV NB_USER=${NB_USER}
+
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -106,11 +112,6 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-## Install newer pandoc version
-# RUN wget https://github.com/jgm/pandoc/releases/download/2.3.1/pandoc-2.3.1-linux.tar.gz \
-#  && tar xvzf pandoc-2.3.1-linux.tar.gz --strip-components=1 -C /usr/local \
-#  && rm pandoc-*
-
 ## R-Studio Preview
 ENV RSTUDIO_VERSION 1.2.1153
 
@@ -121,12 +122,10 @@ RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-
 ## link to Rstudio's pandoc
 RUN ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin/pandoc
 
-RUN useradd rstudio \
-  && echo "rstudio:rstudio" | chpasswd \
-  && mkdir /home/rstudio \
-  && chown rstudio:rstudio /home/rstudio \
-  && addgroup rstudio staff \
-  && adduser rstudio sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
+  && echo "${NB_USER}:rstudio" | chpasswd \
+  && addgroup ${NB_USER} staff \
+  && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 ## Shiny
 ENV SHINY_VERSION 1.5.9.923
@@ -135,9 +134,9 @@ RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${SHINY_
   && gdebi -n shiny-server-${SHINY_VERSION}-amd64.deb \
   && rm shiny-server-*-amd64.deb
 
-WORKDIR /home/rstudio
-COPY .Rprofile /home/rstudio/.Rprofile
-RUN ln -sf /home/rstudio/.Rprofile /home/shiny/.Rprofile \
+WORKDIR /home/${NB_USER}
+COPY .Rprofile /home/${NB_USER}/.Rprofile
+RUN ln -sf /home/${NB_USER}/.Rprofile /home/shiny/.Rprofile \
   && mkdir -p /var/log/shiny-server \
   && mkdir -p /srv/shiny-server/apps \
   && chown shiny:shiny /var/log/shiny-server \
@@ -145,11 +144,10 @@ RUN ln -sf /home/rstudio/.Rprofile /home/shiny/.Rprofile \
   && chown -R shiny:shiny /srv/shiny-server \
   && chmod -R ug+s /srv/shiny-server \
   && chown shiny:shiny /home/shiny/.Rprofile \
-  && chown rstudio:rstudio /home/rstudio/.Rprofile \
-  && adduser rstudio shiny \
+  && chown ${NB_USER} /home/${NB_USER}/.Rprofile \
+  && adduser ${NB_USER} shiny \
   && mkdir -p /var/log/supervisor \
-  && chown rstudio:rstudio /var/log/supervisor
+  && chown ${NB_USER} /var/log/supervisor
 
 ## set path to user directory to install packages
 RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron
-

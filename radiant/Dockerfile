@@ -17,10 +17,11 @@ RUN R -e 'remotes::install_github("tidymodels/tidymodels")'
 RUN git clone --recursive https://github.com/Microsoft/LightGBM \
   && cd LightGBM \
   && Rscript build_r.R \
-  && cd ..
+  && cd .. \
+  && rm -rf LightGBM
 
 ## path for local install of python packages from Rstudio or Jupyter Lab
-ARG PYBASE=/home/rstudio/.rsm-msba
+ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV PYBASE=${PYBASE}
 RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
   && echo "WORKON_HOME=${PYBASE}" >> /etc/R/Renviron.site
