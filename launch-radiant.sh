@@ -140,7 +140,10 @@ else
   echo "-----------------------------------------------------------------------"
 
   ## based on https://stackoverflow.com/a/52852871/1974918
-  docker network create ${LABEL}  # default options are fine
+  has_network=$(docker network ls | awk "/${LABEL}/" | awk '{print $2}')
+  if [ "${has_network}" == "" ]; then
+    docker network create ${LABEL}  # default options are fine
+  fi
   docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
@@ -273,7 +276,10 @@ else
 
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
-      docker network create ${LABEL}  # default options are fine
+      has_network=$(docker network ls | awk "/${LABEL}/" | awk '{print $2}')
+      if [ "${has_network}" == "" ]; then
+        docker network create ${LABEL}  # default options are fine
+      fi
       docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -v ${HOMEDIR}:/home/rstudio ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 7 ]; then
