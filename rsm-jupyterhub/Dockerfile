@@ -6,18 +6,6 @@ ARG NB_USER="rstudio"
 ARG NB_UID="1001"
 ARG NB_GID="100"
 
-## path for local install of python packages from Rstudio or Jupyter Lab
-ARG PYBASE=/home/${NB_USER}/.rsm-msba
-ENV PYBASE=${PYBASE}
-RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
-  && echo "WORKON_HOME=${PYBASE}" >> /etc/R/Renviron.site
-
-ENV PYTHONUSERBASE=${PYBASE} \
-  JUPYTER_PATH=${PYBASE}/share/jupyter \
-  JUPYTER_RUNTIME_DIR=${PYBASE}/share/jupyter/runtime \
-  JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
-  SHELL=/bin/bash
-
 RUN pip3 install jupyterlab --upgrade
 
 # nbrsessionproxy (used for rserver integration)
@@ -27,8 +15,8 @@ RUN  pip3 install nbrsessionproxy \
   && jupyter nbextension     enable  --py --sys-prefix nbrsessionproxy
 
 RUN git clone https://github.com/jupyterhub/nbrsessionproxy /opt/nbrsessionproxy \
-  && pip3 install -e /opt/nbrsessionproxy && \
-  && jupyter serverextension enable --py nbrsessionproxy && \
+  && pip3 install -e /opt/nbrsessionproxy \
+  && jupyter serverextension enable --py nbrsessionproxy \
   && jupyter labextension link /opt/nbrsessionproxy/jupyterlab-rsessionproxy
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
@@ -58,6 +46,21 @@ COPY start.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
+
+## path for local install of python packages from Rstudio or Jupyter Lab
+ENV PYBASE=/home/${NB_USER}/.rsm-msba
+
+## if user is rstudio R settings do not need to be updated
+# RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
+#  && echo "WORKON_HOME=${PYBASE}" >> /etc/R/Renviron.site
+
+## path for local install of python packages from Rstudio or Jupyter Lab
+ENV PYTHONUSERBASE=${PYBASE} \
+  JUPYTER_PATH=${PYBASE}/share/jupyter \
+  JUPYTER_RUNTIME_DIR=${PYBASE}/share/jupyter/runtime \
+  JUPYTER_CONFIG_DIR=${PYBASE}/jupyter
+
+ENV SHELL=/bin/bash
 
 # Add Tini
 ENV TINI_VERSION v0.18.0
