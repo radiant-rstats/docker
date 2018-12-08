@@ -21,6 +21,7 @@ RUN git clone --recursive https://github.com/Microsoft/LightGBM \
 
 ## path for local install of python packages from Rstudio or Jupyter Lab
 ARG PYBASE=/home/rstudio/.rsm-msba
+ENV PYBASE=${PYBASE}
 RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
   && echo "WORKON_HOME=${PYBASE}" >> /etc/R/Renviron.site
 

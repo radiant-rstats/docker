@@ -13,7 +13,7 @@ After installing Docker check that it is running by typing `docker --version` in
 
 ```bash
 docker --version
-Docker version 18.03.1-ce, build 9ee9f40
+Docker version 18.09.0, build 4d60db4
 ```
 
 ## Run from the Docker Hub image

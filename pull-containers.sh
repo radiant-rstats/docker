@@ -14,6 +14,10 @@ docker pull vnijs/${IMAGE}
 IMAGE=rsm-msba-spark
 docker pull vnijs/${IMAGE}
 
-## rsm-msba-beakerx
-IMAGE=rsm-msba-beakerx
+## rsm-jupyterhub
+IMAGE=rsm-jupyterhub
 docker pull vnijs/${IMAGE}
+
+## rsm-msba-beakerx
+#IMAGE=rsm-msba-beakerx
+#docker pull vnijs/${IMAGE}
