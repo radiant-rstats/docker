@@ -16,22 +16,29 @@ You can also change the (maximum) resources docker is allowed to use on your sys
 
 Optional: If you are interested, the linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
-**Step 2**: Open a terminal and copy-and-paste the code below.
+**Step 2**: Open a terminal and copy-and-paste the code below
+
+You will need the macOS command line developer tools for next steps. Follow the prompts until the software is installed.
 
 ```bash
 xcode-select --install
+```
+
+**Step 3**: Now copy-and-paste the code below
+
+```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker
 cp ~/git/docker/launch-rsm-msba.sh ~/Desktop
 ~/Desktop/launch-rsm-msba.sh
 ```
 
-This step will start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
+This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
 
 ![](figures/rsm-msba-menu.png)
 
 The code above also created a copy of the file `launch-rsm-msba.sh` on your Desktop that you can double-click to "fire up" the container again in the future.
 
-**Step 3**: Check that you can launch Rstudio and Jupyter
+**Step 4**: Check that you can launch Rstudio and Jupyter
 
 You will know that installation was successful if you can now run Rstudio and Jupyter. When you press 2 (+ enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (+ enter) Jupyter Lab should start up in another tab in your web browser. 
 
