@@ -4,17 +4,17 @@ services:
     image: "vnijs/rsm-msba"
     environment:
       SHELL: bin/bash
-      PYTHONUSERBASE: /home/rstudio/.rsm-msba
-      JUPYTER_PATH: /home/rstudio/.rsm-msba/share/jupyter
-      JUPYTER_RUNTIME_DIR: /home/rstudio/.rsm-msba/share/jupyter/runtime
-      JUPYTER_CONFIG_DIR: /home/rstudio/.rsm-msba/jupyter
+      PYTHONUSERBASE: /home/jovyan/.rsm-msba
+      JUPYTER_PATH: /home/jovyan/.rsm-msba/share/jupyter
+      JUPYTER_RUNTIME_DIR: /home/jovyan/.rsm-msba/share/jupyter/runtime
+      JUPYTER_CONFIG_DIR: /home/jovyan/.rsm-msba/jupyter
     ports:
-      - 8080:80
+      - 8080:8080
       - 8787:8787
       - 8989:8989
     volumes:
-      # - C:/User/$USERNAME:/home/studio
-      - ~:/home/rstudio
+      # - C:/User/$USERNAME:/home/jovyan
+      - ~:/home/jovyan
 
   postgres:
     image: postgres:10.6

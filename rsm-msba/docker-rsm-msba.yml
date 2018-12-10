@@ -3,9 +3,9 @@ services:
   rsm-msba:
     image: "vnijs/rsm-msba"
     ports:
-      - 8080:80
+      - 8080:8080
       - 8787:8787
       - 8989:8989
     volumes:
-      # - C:/Users/$USERNAME:/home/rstudio
-      - ~:/home/rstudio
+      # - C:/Users/$USERNAME:/home/jovyan
+      - ~:/home/jovyan
