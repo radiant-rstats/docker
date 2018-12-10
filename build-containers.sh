@@ -4,8 +4,8 @@ VERSION=1.0.0
 
 ## r-bionic
 IMAGE=r-bionic
-# docker build -t $USER/${IMAGE}:latest ./${IMAGE}
-docker build --no-cache -t $USER/${IMAGE} ./${IMAGE}
+docker build -t $USER/${IMAGE}:latest ./${IMAGE}
+#docker build --no-cache -t $USER/${IMAGE} ./${IMAGE}
 docker tag $USER/${IMAGE}:latest $USER/${IMAGE}:${VERSION}
 docker push $USER/${IMAGE}:${VERSION}; docker push $USER/${IMAGE}:latest
 
@@ -38,8 +38,8 @@ docker tag $USER/${IMAGE}:latest $USER/${IMAGE}:${VERSION}
 docker push $USER/${IMAGE}:${VERSION}; docker push $USER/${IMAGE}:latest
 
 ## rsm-msba-beakerx
-IMAGE=rsm-msba-beakerx
-docker build -t $USER/${IMAGE}:latest ./${IMAGE}
+#IMAGE=rsm-msba-beakerx
+#docker build -t $USER/${IMAGE}:latest ./${IMAGE}
 ## docker build --no-cache -t $USER/${IMAGE} ./${IMAGE}
-docker tag $USER/${IMAGE}:latest $USER/${IMAGE}:${VERSION}
-docker push $USER/${IMAGE}:${VERSION}; docker push $USER/${IMAGE}:latest
+#docker tag $USER/${IMAGE}:latest $USER/${IMAGE}:${VERSION}
+#docker push $USER/${IMAGE}:${VERSION}; docker push $USER/${IMAGE}:latest
