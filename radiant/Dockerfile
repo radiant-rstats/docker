@@ -6,7 +6,6 @@ MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 RUN R -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
 RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/radiant/ \
   && chown shiny:shiny -R /srv/shiny-server
-COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 ## temp for updates
 RUN R -e 'remotes::install_github("PMassicotte/gtrendsR@da29cf4e427b6bf33d5925ce82596d9c33f9656c", upgrade = "never")'
@@ -28,6 +27,9 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
+
+COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
+RUN sed -i -e "s/\:HOME_USER\:/${NB_USER}/" /etc/shiny-server/shiny-server.conf
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
