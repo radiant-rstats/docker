@@ -13,7 +13,6 @@ services:
       - 8787:8787
       - 8989:8989
     volumes:
-      # - C:/User/$USERNAME:/home/studio
       - ~:/home/jovyan
 
   postgres:
@@ -26,7 +25,6 @@ services:
       - 5432:5432
     restart: always
     volumes:
-       # - C:/User/$USERNAME/postgresql/data:/var/lib/postgresql/data
        - ~/postgresql/data:/var/lib/postgresql/data
 
   pgadmin:
@@ -38,5 +36,4 @@ services:
       - 5050:80
     restart: always
     volumes:
-       # - C:/User/$USERNAME/postgresql/pgadmin:/var/lib/pgadmin
        - ~/postgresql/pgadmin:/var/lib/pgadmin
