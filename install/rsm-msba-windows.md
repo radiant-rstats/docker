@@ -72,7 +72,7 @@ If for some reason you are having trouble updating either the container or the l
 docker pull vnijs/rsm-msba
 rm -rf C:/Users/$USERNAME/git/docker
 git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
-cp C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
+cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
 ```
 
 ## Extended functionality with Apache Spark
@@ -86,7 +86,6 @@ Check if a firewall or VPN is blocking docker access to your home directory. If 
 <img src="figures/reset-credentials.png" width="500px">
 
 If there is an error related to the firewall, try turning off the firewall to check if the rsm-msba container now works. You should not be without a virus checker or firewall however! We recommend using **Windows Defender**. If you are not sure if Windows Defender is correctly configured, please check with IT. 
-
 If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials" or type "docker logout" in a bash terminal.
 
 Alternative "fixes" that have worked are to restart docker and/or restart your computer. It is best to quit any running process before you restart your computer (i.e., press q + enter in the terminal menu)

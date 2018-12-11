@@ -64,7 +64,7 @@ If for some reason you are having trouble updating either the container or the l
 docker pull vnijs/rsm-msba
 rm -rf ~/git/docker
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker
-cp ~/git/docker/launch-rsm-msba.sh ~/Desktop
+cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop
 ```
 
 ## Extended functionality with Apache Spark
