@@ -307,14 +307,14 @@ else
       ${HOMEDIR}/Desktop/launch-${LABEL}.sh
       exit 1
     elif [ ${startup} == 8 ]; then
+      echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rstudio/sessions
       rm -rf ${HOMEDIR}/.rsm-msba/R
     elif [ ${startup} == 9 ]; then
-      if [ -d "${HOMEDIR}/.rsm-msba" ]; then
-        cd ${HOMEDIR}/.rsm-msba
-        ls | grep -v "^jupyter$" | grep -v "^R$" | xargs rm -r
-        cd -
-      fi
+      echo "Removing locally installed Python packages from the .rsm-msba directory"
+      rm -rf ${HOMEDIR}/.rsm-msba/bin
+      rm -rf ${HOMEDIR}/.rsm-msba/lib
+      rm -rf ${HOMEDIR}/.rsm-msba/share
     elif [ "${startup}" == "q" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Stopping the ${LABEL} computing container and cleaning up as needed"
