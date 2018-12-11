@@ -171,6 +171,7 @@ else
     echo "Press (5) to launch pgadmin4, followed by [ENTER]:"
     echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
     echo "Press (7) to update the launch script, followed by [ENTER]:"
+    echo "Press (8) to clear sessions and local packages, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
@@ -304,7 +305,13 @@ else
       chmod 755 ${HOMEDIR}/Desktop/launch-${LABEL}.sh
       ${HOMEDIR}/Desktop/launch-${LABEL}.sh
       exit 1
-
+    elif [ ${startup} == 8 ]; then
+      rm -rf ${HOMEDIR}/.rstudio/sessions
+      if [ -d "${HOMEDIR}/.rsm-msba" ]; then
+        cd ${HOMEDIR}/.rsm-msba
+        ls | grep -v "^jupyter$" | xargs rm -r
+        cd -
+      fi
     elif [ "${startup}" == "q" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Stopping the ${LABEL} computing container and cleaning up as needed"
