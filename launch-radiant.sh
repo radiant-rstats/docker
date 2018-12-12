@@ -305,6 +305,15 @@ else
       running=$(docker ps -q)
       if [ "${running}" != "" ]; then
         echo "Stopping running containers ..."
+        suspend_sessions () {
+          active_session=$(docker exec -it $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}')
+          if [ "${active_session}" != "" ]; then
+            docker exec -it $1 rstudio-server suspend-session ${active_session}
+          fi
+        }
+        for index in ${running}; do
+          suspend_sessions $index
+        done
         docker stop ${running}
         docker network rm ${LABEL}
       fi
