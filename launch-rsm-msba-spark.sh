@@ -35,9 +35,9 @@ PGADMIN_VERSION=3.6
 ## what os is being used
 ostype=`uname`
 
-if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
+# if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
   ## check if script is already running
-  nr_running=$(ps | grep "${LABEL}.sh" -c)
+  nr_running=$(ps -A | grep "${LABEL}" -c)
   if [ "$nr_running" -gt 3 ]; then
     clear
     echo "-----------------------------------------------------------------------"
@@ -47,7 +47,7 @@ if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
     sleep 3s
     exit 1
   fi
-fi
+# fi
 
 ## script to start Radiant, Rstudio, and JupyterLab
 clear
