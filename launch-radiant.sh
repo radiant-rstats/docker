@@ -24,18 +24,6 @@ fi
 IMAGE=${ID}/${LABEL}
 NB_USER="jovyan"
 
-## check if script is already running
-nr_running=$(ps | grep "${LABEL}.sh" -c)
-if [ "${nr_running}" != "3" ]; then
-  clear
-  echo "-----------------------------------------------------------------------"
-  echo "The ${LABEL}.sh launch script is already running"
-  echo "Continue with that script or stop it in the (bash) terminal"
-  echo "-----------------------------------------------------------------------"
-  sleep 5s
-  exit 1
-fi
-
 ## username and password for postgres and pgadmin4
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
@@ -46,6 +34,20 @@ PGADMIN_VERSION=3.6
 
 ## what os is being used
 ostype=`uname`
+
+if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
+  ## check if script is already running
+  nr_running=$(ps | grep "${LABEL}.sh" -c)
+  if [ "$nr_running" -gt 3 ]; then
+    clear
+    echo "-----------------------------------------------------------------------"
+    echo "The ${LABEL}.sh launch script is already running"
+    echo "Continue with that script or stop it in the (bash) terminal"
+    echo "-----------------------------------------------------------------------"
+    sleep 3s
+    exit 1
+  fi
+fi
 
 ## script to start Radiant, Rstudio, and JupyterLab
 clear
@@ -323,9 +325,11 @@ else
             docker exec -it $1 rstudio-server suspend-session ${active_session}
           fi
         }
-        for index in ${running}; do
-          suspend_sessions $index
-        done
+        if [ "$ostype" == "Linux" ] || [ "$ostype" == "macOS" ]; then
+          for index in ${running}; do
+            suspend_sessions $index
+          done
+        fi
         docker stop ${running}
         docker network rm ${LABEL}
       fi
