@@ -343,11 +343,9 @@ else
             docker exec -t $1 rstudio-server suspend-session ${active_session}
           fi
         }
-        # if [ "$ostype" == "Linux" ] || [ "$ostype" == "macOS" ]; then
-          for index in ${running}; do
-            suspend_sessions $index
-          done
-        # fi
+        for index in ${running}; do
+          suspend_sessions $index
+        done
         docker stop ${running}
         docker network rm ${LABEL}
       fi
