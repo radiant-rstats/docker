@@ -338,9 +338,9 @@ else
       if [ "${running}" != "" ]; then
         echo "Stopping running containers ..."
         suspend_sessions () {
-          active_session=$(docker exec -it $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}')
+          active_session=$(docker exec -t $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}')
           if [ "${active_session}" != "" ]; then
-            docker exec -it $1 rstudio-server suspend-session ${active_session}
+            docker exec -t $1 rstudio-server suspend-session ${active_session}
           fi
         }
         if [ "$ostype" == "Linux" ] || [ "$ostype" == "macOS" ]; then
