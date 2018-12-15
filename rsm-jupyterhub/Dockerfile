@@ -6,19 +6,18 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-
 RUN pip3 install jupyterlab --upgrade
 
 ## install jupyterhub and nbrsessionproxy (used for rserver integration)
-RUN  pip3 install jupyterhub nbrsessionproxy && \
-     jupyter serverextension enable --py --sys-prefix nbrsessionproxy && \
-     jupyter nbextension install --py --sys-prefix nbrsessionproxy && \
-     jupyter nbextension enable --py --sys-prefix nbrsessionproxy
+RUN pip3 install jupyterhub nbrsessionproxy && \
+  jupyter serverextension enable --py --sys-prefix nbrsessionproxy && \
+  jupyter nbextension install --py --sys-prefix nbrsessionproxy && \
+  jupyter nbextension enable --py --sys-prefix nbrsessionproxy
 
-RUN git clone https://github.com/jupyterhub/nbrsessionproxy /opt/nbrsessionproxy &&\
-    pip3 install -e /opt/nbrsessionproxy && \
-    jupyter serverextension enable --py nbrsessionproxy && \
-    jupyter labextension link /opt/nbrsessionproxy/jupyterlab-rsessionproxy
+RUN git clone https://github.com/jupyterhub/nbrsessionproxy /opt/nbrsessionproxy && \
+  pip3 install -e /opt/nbrsessionproxy && \
+  jupyter serverextension enable --py nbrsessionproxy && \
+  jupyter labextension link /opt/nbrsessionproxy/jupyterlab-rsessionproxy
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server"
@@ -36,19 +35,18 @@ COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
 
 RUN chmod +x /usr/local/bin/start.sh && \
- chmod +x /usr/local/bin/start-notebook.sh && \
- chmod +x /usr/local/bin/start-singleuser.sh && \
- chmod +x /usr/local/bin/fix-permissions && \
- chmod +x /usr/local/bin/modify-user.sh
+  chmod +x /usr/local/bin/start-notebook.sh && \
+  chmod +x /usr/local/bin/start-singleuser.sh && \
+  chmod +x /usr/local/bin/fix-permissions && \
+  chmod +x /usr/local/bin/modify-user.sh
 
 ## Create NB_USER user with UID=1000 and in the 'users' group
 ## and make sure these dirs are writable by the `users` group.
 RUN groupadd wheel -g 11 && \
-    echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
-    # useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
-    chmod g+w /etc/passwd && \
-    fix-permissions $HOME && \
-    fix-permissions /opt
+  echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
+  chmod g+w /etc/passwd && \
+  fix-permissions $HOME && \
+  fix-permissions /opt
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
@@ -71,29 +69,8 @@ CMD ["start-notebook.sh"]
 RUN modify-user.sh $NB_USER $NB_UID
 
 RUN chown -R ${NB_USER}:${NB_USER} /home/${NB_USER} && \
-    chmod -R u+rw /home/${NB_USER} 
+  chmod -R u+rw /home/${NB_USER}
 
 USER $NB_UID
 
 WORKDIR /home/$NB_USER
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

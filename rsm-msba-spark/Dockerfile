@@ -26,8 +26,9 @@ ENV SPARK_HOME=/opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
 RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site
 
 ## install python packages
-COPY py_requirements.txt /home/rstudio/py_requirements.txt
-RUN pip3 install --upgrade -r /home/rstudio/py_requirements.txt
+COPY py_requirements.txt /home/${NB_USER}/py_requirements.txt
+RUN pip3 install -r /home/${NB_USER}/py_requirements.txt \
+  && rm /home/${NB_USER}/py_requirements.txt
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
