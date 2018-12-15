@@ -40,7 +40,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
   && rm -rf /tmp/*
 
 ## copy dbase connections for use with rsm-msba/docker-rsm-msba-pg.yml
-COPY connections/ /etc/rstudio/connections
+COPY connections/ /etc/${NB_USER}/connections
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
