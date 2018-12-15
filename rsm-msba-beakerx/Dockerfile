@@ -3,11 +3,11 @@ FROM vnijs/rsm-msba-spark:latest
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
 ## install beakerx
-COPY py_requirements.txt /home/${NB_USER}/py_requirements.txt
-RUN pip3 install -r /home/${NB_USER}/py_requirements.txt \
+COPY requirements.txt /home/${NB_USER}/requirements.txt
+RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && beakerx install \
   && jupyter labextension install beakerx-jupyterlab \
-  && rm /home/${NB_USER}/py_requirements.txt
+  && rm /home/${NB_USER}/requirements.txt
 
 ## removing kernels as suggested by JD Long (@CMastication)
 RUN rm -rf /usr/share/jupyter/kernels/clojure \

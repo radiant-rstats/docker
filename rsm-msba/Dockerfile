@@ -12,9 +12,9 @@ RUN apt-get update \
     gpg-agent
 
 ## install python packages
-COPY py_requirements.txt /home/${NB_USER}/py_requirements.txt
-RUN pip3 install --upgrade -r /home/${NB_USER}/py_requirements.txt \
-  && rm /home/${NB_USER}/py_requirements.txt
+COPY requirements.txt /home/${NB_USER}/requirements.txt
+RUN pip3 install --upgrade -r /home/${NB_USER}/requirements.txt \
+  && rm /home/${NB_USER}/requirements.txt
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
