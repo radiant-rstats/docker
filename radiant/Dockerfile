@@ -9,15 +9,15 @@ RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/ra
 
 ## update radiant to development version
 RUN R -e 'remotes::install_github("radiant-rstats/radiant.data")' \
-  && R -e 'remotes::install_github("radiant-rstats/radiant.basics")' \
-  && R -e 'remotes::install_github("radiant-rstats/radiant.design")' \
-  && R -e 'remotes::install_github("radiant-rstats/radiant.model")' \
-  && R -e 'remotes::install_github("radiant-rstats/radiant.multivariate")'
+  -e 'remotes::install_github("radiant-rstats/radiant.basics")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.design")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.model")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.multivariate")'
 
 ## packages in development
 RUN R -e 'remotes::install_github("PMassicotte/gtrendsR@da29cf4e427b6bf33d5925ce82596d9c33f9656c", upgrade = "never")' \
-  && R -e 'remotes::install_github("thomasp85/gganimate")' \
-  && R -e 'remotes::install_github("tidymodels/tidymodels")' \
+  -e 'remotes::install_github("thomasp85/gganimate")' \
+  -e 'remotes::install_github("tidymodels/tidymodels")'
 
 ## install lightGBM
 RUN git clone --recursive https://github.com/Microsoft/LightGBM \
