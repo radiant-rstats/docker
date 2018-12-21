@@ -58,10 +58,11 @@ launcher
 LABEL=rsm-jupyterhub
 build
 
-# LABEL=rsm-msba-beakerx
+LABEL=rsm-msba-beakerx
 # build
-# launcher
+launcher
 
-# git add .
-# git commit -m "Update to image version ${DOCKHUB_VERSION}"
-# git push
+git add .
+git commit -m "Update to image version ${DOCKHUB_VERSION}"
+git push
+
