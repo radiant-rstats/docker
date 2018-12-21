@@ -6,23 +6,24 @@
 ## Use something like the command below on macOS or Linux to setup a 'launch'
 ## command. You can then use that command, e.g., launch ., to launch the
 ## container from a specific directory
-## ln -s ~/git/docker/launch-rsm-msba.sh /usr/local/bin/launchm
-if [ "$1" != "" ]; then
-  ARG_HOME="$(cd $1; pwd)"
-else
-  ARG_HOME=""
-  ## change to some other path to use as default
-  # ARG_HOME="~/rady"
-fi
+## ln -s ~/git/docker/launch-rsm-msba.sh /usr/local/bin/launch
+
+## change to some other path to use as default
+# ARG_HOME="~/rady"
+ARG_HOME=""
+IMAGE_VERSION="latest"
 ID="vnijs"
 LABEL="rsm-msba"
-if [ "$2" != "" ]; then
-  IMAGE_VERSION="$2"
-else
-  IMAGE_VERSION="latest"
-fi
 IMAGE=${ID}/${LABEL}
 NB_USER="jovyan"
+if [ "$2" != "" ]; then
+  IMAGE_VERSION="$2"
+  DOCKERHUB_VERSION=${IMAGE_VERSION}
+else
+  ## see https://stackoverflow.com/questions/34051747/get-environment-variable-from-docker-container
+  DOCKERHUB_VERSION=$(docker inspect -f '{{range $index, $value := .Config.Env}}{{println $value}} {{end}}' ${IMAGE}:${IMAGE_VERSION} | grep DOCKERHUB_VERSION)
+  DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
+fi
 
 ## username and password for postgres and pgadmin4
 POSTGRES_USER=postgres
@@ -41,11 +42,15 @@ if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
   if [ "$nr_running" -gt 3 ]; then
     clear
     echo "-----------------------------------------------------------------------"
-    echo "The ${LABEL}.sh launch script is already running"
-    echo "Continue with that script or stop it in the (bash) terminal"
+    echo "The ${LABEL}.sh launch script is already running (or open)"
+    echo "To close the new session and continue with the old session"
+    echo "press q + enter. To continue with the new session and stop"
+    echo "the old session press enter"
     echo "-----------------------------------------------------------------------"
-    sleep 3s
-    exit 1
+    read contd
+    if [ "${contd}" == "q" ]; then
+      exit 1
+    fi
   fi
 fi
 
@@ -90,7 +95,7 @@ else
   available=$(docker images -q ${IMAGE}:${IMAGE_VERSION})
   if [ "${available}" == "" ]; then
     echo "-----------------------------------------------------------------------"
-    echo "Downloading the ${LABEL} computing container"
+    echo "Downloading the ${LABEL}:${IMAGE_VERSION} computing container"
     echo "-----------------------------------------------------------------------"
     docker logout
     docker pull ${IMAGE}:${IMAGE_VERSION}
@@ -102,12 +107,17 @@ else
     open_browser () {
       xdg-open $1
     }
-
+    sed_fun () {
+      sed -i $1 $2
+    }
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~
     open_browser () {
       open $1
+    }
+    sed_fun () {
+      sed -i '' -e $1 $2
     }
   else
     ostype="Windows"
@@ -115,18 +125,42 @@ else
     open_browser () {
       start $1
     }
+    sed_fun () {
+      sed -i $1 $2
+    }
   fi
 
   ## change mapping of docker home directory to local directory if specified
   if [ "${ARG_HOME}" != "" ]; then
-    if [ -d "${ARG_HOME}" ]; then
-      HOMEDIR=${ARG_HOME}
-    else
+    if [ ! -d "${ARG_HOME}" ]; then
       echo "The directory ${ARG_HOME} does not yet exist."
-      echo "Please create the directory and start the launch script again"
+      echo "Please create the directory and restart the launch script"
       sleep 5s
       exit 1
     fi
+  fi
+
+  if [ "$1" != "${ARG_HOME}" ]; then
+    if [ "$1" != "" ]; then
+      ARG_HOME="$(cd $1; pwd)"
+    fi
+    if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
+      cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
+      rm -rf ${ARG_HOME}/.rstudio/sessions
+    fi
+    if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
+      cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
+      rm -rf ${ARG_HOME}/.rsm-msba/R
+    fi
+    SCRIPT_HOME="$( cd "$(dirname "$0")" ; pwd -P )"
+    if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
+      cp -p "$0" ${ARG_HOME}/launch-${LABEL}.sh
+      sed_fun "s+^ARG_HOME\=\"\"+ARG_HOME\=\"${ARG_HOME}\"+" ${ARG_HOME}/launch-${LABEL}.sh
+      if [ "$2" != "" ]; then
+        sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.sh
+      fi
+    fi
+    HOMEDIR=${ARG_HOME}
   fi
 
   ## legacy - moving R/ directory with local installed packages
@@ -139,10 +173,6 @@ else
 
       cp -r ${HOMEDIR}/R ${HOMEDIR}/.rsm-msba
       rm -rf ${HOMEDIR}/R
-    else
-      echo "User installed libraries should be added to .rsm-msba/R"
-      echo "To install additional libraries use:"
-      echo "install.packages('a-package', lib = Sys.getenv('R_LIBS_USER'))"
     fi
     echo "-----------------------------------------------------------------------"
   fi
@@ -151,6 +181,7 @@ else
 
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing container on ${ostype}"
+  echo "Version   : ${DOCKERHUB_VERSION}"
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "-----------------------------------------------------------------------"
 
@@ -165,18 +196,14 @@ else
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
   rstudio_abend () {
     if [ -d ${HOMEDIR}/.rstudio/sessions/active ]; then
-      if [[ "$ostype" == "macOS" ]]; then
-        find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f -exec sed -i '' -e 's/abend="1"/abend="0"/' {} \; 2>/dev/null
-      else
-        find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f -exec sed -i 's/abend="1"/abend="0"/' {} \; 2>/dev/null
-      fi
+      find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f -exec sed_fun 's/abend="1"/abend="0"/' {} \; 2>/dev/null
     fi
   }
   rstudio_abend
 
   show_service () {
     echo "-----------------------------------------------------------------------"
-    echo "${LABEL} computing container on ${ostype} (${BUILD_DATE//T*/})"
+    echo "${LABEL}:${DOCKERHUB_VERSION} computing container on ${ostype} (${BUILD_DATE//T*/})"
     echo "-----------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
@@ -316,9 +343,14 @@ else
       docker stop ${running}
       docker rm ${running}
       docker network rm ${LABEL}
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${HOMEDIR}/Desktop/launch-${LABEL}.sh
-      chmod 755 ${HOMEDIR}/Desktop/launch-${LABEL}.sh
-      ${HOMEDIR}/Desktop/launch-${LABEL}.sh
+      if [ -d "${HOMEDIR}/Desktop" ]; then
+        SCRIPT_DOWNLOAD="${HOMEDIR}/Desktop"
+      else
+        SCRIPT_DOWNLOAD=${HOMEDIR}
+      fi
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
+      chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
+      ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
       exit 1
     elif [ ${startup} == 8 ]; then
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
