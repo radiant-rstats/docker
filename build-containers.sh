@@ -1,8 +1,8 @@
 git pull
 docker login
 DOCKERHUB_VERSION=1.0.1
-UPLOAD="NO"
-# UPLOAD="YES"
+# UPLOAD="NO"
+UPLOAD="YES"
 
 build () {
   {
