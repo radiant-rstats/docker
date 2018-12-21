@@ -2,6 +2,9 @@ FROM vnijs/rsm-msba-spark:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
+ARG DOCKERHUB_VERSION
+ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION}
+
 ## install beakerx
 COPY requirements.txt /home/${NB_USER}/requirements.txt
 RUN pip3 install -r /home/${NB_USER}/requirements.txt \

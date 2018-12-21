@@ -1,8 +1,11 @@
 FROM vnijs/rsm-msba:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
-ENV DEBIAN_FRONTEND noninteractive
 
+ARG DOCKERHUB_VERSION
+ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION}
+
+ENV DEBIAN_FRONTEND noninteractive
 ## installing java
 RUN apt-get -y update \
   && apt-get install --no-install-recommends -y openjdk-8-jre-headless openjdk-8-jdk-headless ca-certificates-java \

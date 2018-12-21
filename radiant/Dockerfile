@@ -2,10 +2,13 @@ FROM vnijs/r-bionic:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
+ARG DOCKERHUB_VERSION
+ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION}
+
 ## installing R-packages from miniCRAN repo
-RUN R -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
 RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/radiant/ \
-  && chown shiny:shiny -R /srv/shiny-server
+  && chown shiny:shiny -R /srv/shiny-server \
+  && R -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
 
 ## update radiant to development version
 RUN R -e 'remotes::install_github("radiant-rstats/radiant.data")' \

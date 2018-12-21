@@ -1,8 +1,11 @@
 FROM vnijs/radiant:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
-ENV DEBIAN_FRONTEND noninteractive
 
+ARG DOCKERHUB_VERSION
+ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION}
+
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get -y upgrade \
   && apt-get -y install --no-install-recommends \

@@ -2,6 +2,9 @@ FROM vnijs/rsm-msba-spark:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
+ARG DOCKERHUB_VERSION
+ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION}
+
 ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
