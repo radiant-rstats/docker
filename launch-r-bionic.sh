@@ -6,7 +6,7 @@
 ## Use something like the command below on macOS or Linux to setup a 'launch'
 ## command. You can then use that command, e.g., launch ., to launch the
 ## container from a specific directory
-## ln -s ~/git/docker/launch-rsm-msba.sh /usr/local/bin/launch
+## ln -s ~/git/docker/launch-r-bionic.sh /usr/local/bin/launchr
 
 ## change to some other path to use as default
 # ARG_HOME="~/rady"
@@ -15,7 +15,7 @@ IMAGE_VERSION="latest"
 NB_USER="jovyan"
 RPASSWORD="rstudio"
 ID="vnijs"
-LABEL="rsm-msba"
+LABEL="r-bionic"
 IMAGE=${ID}/${LABEL}
 if [ "$2" != "" ]; then
   IMAGE_VERSION="$2"
@@ -55,7 +55,7 @@ if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
   fi
 fi
 
-## script to start Radiant, Rstudio, and JupyterLab
+## script to start shiny-apps, Rstudio, and JupyterLab
 clear
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then
@@ -175,6 +175,11 @@ else
       cp -r ${HOMEDIR}/R ${HOMEDIR}/.rsm-msba
       rm -rf ${HOMEDIR}/R
     fi
+    # else
+    #   echo "User installed libraries should be added to .rsm-msba"
+    #   echo "To install additional R libraries use:"
+    #   echo "install.packages('a-package', lib = Sys.getenv('R_LIBS_USER'))"
+    # fi
     echo "-----------------------------------------------------------------------"
   fi
 
@@ -191,7 +196,7 @@ else
   if [ "${has_network}" == "" ]; then
     docker network create ${LABEL}  # default options are fine
   fi
-  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -215,15 +220,13 @@ else
     echo "-----------------------------------------------------------------------"
     echo "${LABEL}:${DOCKERHUB_VERSION} computing container on ${ostype} (${BUILD_DATE//T*/})"
     echo "-----------------------------------------------------------------------"
-    echo "Press (1) to show Radiant, followed by [ENTER]:"
+    echo "Press (1) to show shiny-apps, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
-    echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (4) to launch postgres server, followed by [ENTER]:"
-    echo "Press (5) to launch pgadmin4, followed by [ENTER]:"
-    echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (7) to update the launch script, followed by [ENTER]:"
-    echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
-    echo "Press (9) to clear Python packages, followed by [ENTER]:"
+    echo "Press (3) to launch postgres server, followed by [ENTER]:"
+    echo "Press (4) to launch pgadmin4, followed by [ENTER]:"
+    echo "Press (5) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (6) to update the launch script, followed by [ENTER]:"
+    echo "Press (7) to clear Rstudio sessions and packages, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
@@ -252,10 +255,10 @@ else
         fi
       fi
       if [ "${port}" == "" ]; then
-        echo "Starting Radiant in the default browser on port 8080"
+        echo "Starting shiny-apps in the default browser on port 8080"
         open_browser http://localhost:8080
       else
-        echo "Starting Radiant in the default browser on port ${port}"
+        echo "Starting shiny-apps in the default browser on port ${port}"
         docker run --net ${LABEL} -d -p ${port}:8080 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
@@ -273,16 +276,6 @@ else
       fi
     elif [ ${startup} == 3 ]; then
       if [ "${port}" == "" ]; then
-        echo "Starting Jupyter Lab in the default browser on port 8989"
-        open_browser http://localhost:8989/lab
-      else
-        echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8989 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
-        sleep 2s
-        open_browser http://localhost:${port}/lab
-      fi
-    elif [ ${startup} == 4 ]; then
-      if [ "${port}" == "" ]; then
         port=5432
       fi
       if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
@@ -297,7 +290,7 @@ else
         -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
         -d postgres:${POSTGRES_VERSION}
       sleep 2s
-    elif [ ${startup} == 5 ]; then
+    elif [ ${startup} == 4 ]; then
       if [ "${port}" == "" ]; then
         port=5050
       fi
@@ -313,7 +306,7 @@ else
         -d dpage/pgadmin4:${PGADMIN_VERSION}
       sleep 2s
       open_browser http://localhost:${port}
-    elif [ ${startup} == 6 ]; then
+    elif [ ${startup} == 5 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing container"
@@ -345,9 +338,9 @@ else
       if [ "${has_network}" == "" ]; then
         docker network create ${LABEL}  # default options are fine
       fi
-      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
+      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 7 ]; then
+    elif [ ${startup} == 6 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -362,15 +355,10 @@ else
       chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
       ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
       exit 1
-    elif [ ${startup} == 8 ]; then
+    elif [ ${startup} == 7 ]; then
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rstudio/sessions
       rm -rf ${HOMEDIR}/.rsm-msba/R
-    elif [ ${startup} == 9 ]; then
-      echo "Removing locally installed Python packages from the .rsm-msba directory"
-      rm -rf ${HOMEDIR}/.rsm-msba/bin
-      rm -rf ${HOMEDIR}/.rsm-msba/lib
-      rm -rf ${HOMEDIR}/.rsm-msba/share
     elif [ "${startup}" == "q" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Stopping the ${LABEL} computing container and cleaning up as needed"

@@ -5,6 +5,7 @@ ARG NB_USER="jovyan"
 ENV NB_USER=${NB_USER}
 ARG NB_UID="1001"
 ARG NB_GID="100"
+ARG RPASSWORD=${RPASSWORD:-"rstudio"}
 
 ARG DOCKERHUB_VERSION
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION}
@@ -63,9 +64,7 @@ RUN apt-get -y install --no-install-recommends\
   cargo \
   r-base \
   r-base-dev \
-  r-cran-rcpp \
   r-cran-pbdzmq \
-  r-cran-r6 \
   r-cran-catools \
   r-cran-bitops
 
@@ -115,7 +114,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 ## R-Studio Preview
-ENV RSTUDIO_VERSION 1.2.1194
+ENV RSTUDIO_VERSION 1.2.1206
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
@@ -125,7 +124,7 @@ RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-
 RUN ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin/pandoc
 
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
-  && echo "${NB_USER}:rstudio" | chpasswd \
+  && echo "${NB_USER}:${RPASSWORD}" | chpasswd \
   && addgroup ${NB_USER} staff \
   && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
@@ -153,3 +152,15 @@ RUN ln -sf /home/${NB_USER}/.Rprofile /home/shiny/.Rprofile \
 
 ## set path to user directory to install packages
 RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron
+
+## installing some basic r-packages
+RUN R -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown"))'
+
+COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY userconf.sh /usr/local/bin/userconf.sh
+RUN chmod +x /usr/local/bin/userconf.sh
+
+EXPOSE 8080 8787
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

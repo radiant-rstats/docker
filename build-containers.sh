@@ -1,8 +1,8 @@
 git pull
 docker login
 DOCKERHUB_VERSION=1.0.1
-# UPLOAD="NO"
-UPLOAD="YES"
+UPLOAD="NO"
+# UPLOAD="YES"
 
 build () {
   {
@@ -37,32 +37,33 @@ else
 fi
 
 launcher () {
-  cp -p ./launch-rsm-msba.sh ./launch-${LABEL}.sh
-  sed_fun "s/^LABEL=\"rsm-msba\"/LABEL=\"${LABEL}\"/" ./launch-${LABEL}.sh
-  sed_fun "s/launch-rsm-msba\.sh/launch-${LABEL}\.sh/" ./launch-${LABEL}.sh
+  cp -p ./launch-$1.sh ./launch-${LABEL}.sh
+  sed_fun "s/^LABEL=\"$1\"/LABEL=\"${LABEL}\"/" ./launch-${LABEL}.sh
+  sed_fun "s/launch-$1\.sh/launch-${LABEL}\.sh/" ./launch-${LABEL}.sh
+  sed_fun "s/$2/$3/" ./launch-${LABEL}.sh
 }
 
 LABEL=r-bionic
 build
+launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
-build
+# build
 
 LABEL=rsm-msba
-build
+# build
 
 LABEL=rsm-msba-spark
-build
-launcher
+# build
+launcher "rsm-msba"
 
 LABEL=rsm-jupyterhub
-build
+# build
 
 LABEL=rsm-msba-beakerx
 # build
-launcher
+launcher "rsm-msba"
 
 git add .
 git commit -m "Update to image version ${DOCKHUB_VERSION}"
 git push
-

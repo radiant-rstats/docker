@@ -185,6 +185,15 @@ else
     if [ -d ${HOMEDIR}/.rstudio/sessions/active ]; then
       find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f -exec sed_fun 's/abend="1"/abend="0"/' {} \; 2>/dev/null
     fi
+    if [ -d ${HOMEDIR}/.rstudio/monitored/user-settings ]; then
+      touch ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun 's/^alwaysSaveHistory="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun 's/^loadRData="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun 's/^saveAction="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      echo 'alwaysSaveHistory="1"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      echo 'loadRData="0"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      echo 'saveAction="0"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+    fi
   }
   rstudio_abend
 fi

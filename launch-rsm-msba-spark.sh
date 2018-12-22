@@ -12,10 +12,11 @@
 # ARG_HOME="~/rady"
 ARG_HOME=""
 IMAGE_VERSION="latest"
+NB_USER="jovyan"
+RPASSWORD="rstudio"
 ID="vnijs"
 LABEL="rsm-msba-spark"
 IMAGE=${ID}/${LABEL}
-NB_USER="jovyan"
 if [ "$2" != "" ]; then
   IMAGE_VERSION="$2"
   DOCKERHUB_VERSION=${IMAGE_VERSION}
@@ -190,13 +191,22 @@ else
   if [ "${has_network}" == "" ]; then
     docker network create ${LABEL}  # default options are fine
   fi
-  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
   rstudio_abend () {
     if [ -d ${HOMEDIR}/.rstudio/sessions/active ]; then
       find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f -exec sed_fun 's/abend="1"/abend="0"/' {} \; 2>/dev/null
+    fi
+    if [ -d ${HOMEDIR}/.rstudio/monitored/user-settings ]; then
+      touch ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun 's/^alwaysSaveHistory="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun 's/^loadRData="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun 's/^saveAction="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      echo 'alwaysSaveHistory="1"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      echo 'loadRData="0"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      echo 'saveAction="0"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
     fi
   }
   rstudio_abend
@@ -257,7 +267,7 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8787 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${LABEL} -d -p ${port}:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -335,7 +345,7 @@ else
       if [ "${has_network}" == "" ]; then
         docker network create ${LABEL}  # default options are fine
       fi
-      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
+      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 7 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
