@@ -146,7 +146,9 @@ else
       ARG_HOME="$(cd $1; pwd)"
       ## replace first occurence of /c/
       ## https://stackoverflow.com/a/13210909/1974918
-      ARG_HOME="${ARG_HOME/\/c\//C:/}"
+      # ARG_HOME="${ARG_HOME/\/c\//C:/}"
+      ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
+      ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
     fi
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
       cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
@@ -159,7 +161,9 @@ else
     SCRIPT_HOME="$( cd "$(dirname "$0")" ; pwd -P )"
     ## replace first occurence of /c/
     ## https://stackoverflow.com/a/13210909/1974918
-    SCRIPT_HOME="${SCRIPT_HOME/\/c\//C:/}"
+    # SCRIPT_HOME="${SCRIPT_HOME/\/c\//C:/}"
+    ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
+    SCRIPT_HOME="$(echo "$SCRIPT_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
       cp -p "$0" ${ARG_HOME}/launch-${LABEL}.sh
       sed_fun "s+^ARG_HOME\=\"\"+ARG_HOME\=\"${ARG_HOME}\"+" ${ARG_HOME}/launch-${LABEL}.sh

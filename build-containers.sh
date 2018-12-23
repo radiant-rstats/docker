@@ -1,8 +1,8 @@
 git pull
 docker login
 DOCKERHUB_VERSION=1.1.0
-# UPLOAD="NO"
-UPLOAD="YES"
+UPLOAD="NO"
+# UPLOAD="YES"
 
 build () {
   {
@@ -44,21 +44,21 @@ launcher () {
 }
 
 LABEL=r-bionic
-build
+# build
 launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
-build
+# build
 
 LABEL=rsm-msba
-build
+# build
 
 LABEL=rsm-msba-spark
-build
+# build
 launcher "rsm-msba"
 
 LABEL=rsm-jupyterhub
-build
+# build
 
 LABEL=rsm-msba-beakerx
 # build
