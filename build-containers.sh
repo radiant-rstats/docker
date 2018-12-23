@@ -40,7 +40,9 @@ launcher () {
   cp -p ./launch-$1.sh ./launch-${LABEL}.sh
   sed_fun "s/^LABEL=\"$1\"/LABEL=\"${LABEL}\"/" ./launch-${LABEL}.sh
   sed_fun "s/launch-$1\.sh/launch-${LABEL}\.sh/" ./launch-${LABEL}.sh
-  sed_fun "s/$2/$3/" ./launch-${LABEL}.sh
+  if [ "$2" != "" ] && [ "$3" != "" ]; then
+    sed_fun "s/$2/$3/" ./launch-${LABEL}.sh
+  fi
 }
 
 LABEL=r-bionic
@@ -64,6 +66,6 @@ LABEL=rsm-msba-beakerx
 # build
 launcher "rsm-msba"
 
-git add .
-git commit -m "Update to image version ${DOCKERHUB_VERSION}"
-git push
+# git add .
+# git commit -m "Update to image version ${DOCKERHUB_VERSION}"
+# git push
