@@ -41,8 +41,9 @@ ostype=`uname`
 if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
   ## check if script is already running and script is not udating
   nr_running=$(ps | grep "${LABEL}.sh" -c)
-  if [ "$nr_running" -gt 3 ] && [ "$UPDATE_SCRIPT" == "" ]; then
+  if [ "$nr_running" -gt 3 ] && [ "$UPDATE_SCRIPT" != "TRUE" ]; then
     # clear
+    echo "UPDATE? $UPDATE_SCRIPT"
     echo "-----------------------------------------------------------------------"
     echo "The ${LABEL}.sh launch script is already running (or open)"
     echo "To close the new session and continue with the old session"
