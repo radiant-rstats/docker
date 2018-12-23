@@ -39,7 +39,7 @@ PGADMIN_VERSION=3.6
 ostype=`uname`
 
 if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
-  ## check if script is already running and script is not udating
+  ## check if script is already running
   nr_running=$(ps | grep "${LABEL}.sh" -c)
   if [ "$nr_running" -gt 3 ]; then
     clear
@@ -371,7 +371,6 @@ else
       fi
       curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
       chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
-      UPDATE_SCRIPT=TRUE
       ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
       exit 1
     elif [ ${startup} == 8 ]; then

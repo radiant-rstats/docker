@@ -63,7 +63,7 @@ LABEL=rsm-jupyterhub
 build
 
 LABEL=rsm-msba-beakerx
-# build
+build
 launcher "rsm-msba"
 
 git add .
