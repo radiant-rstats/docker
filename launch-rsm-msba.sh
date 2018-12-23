@@ -44,7 +44,7 @@ if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
   if [ "$nr_running" -gt 3 ]; then
     clear
     echo "-----------------------------------------------------------------------"
-    echo "The ${LABEL}.sh launch script is already running (or open)"
+    echo "The ${LABEL}.sh launch script may already be running (or open)"
     echo "To close the new session and continue with the old session"
     echo "press q + enter. To continue with the new session and stop"
     echo "the old session press enter"
