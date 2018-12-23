@@ -122,7 +122,8 @@ else
     }
   else
     ostype="Windows"
-    HOMEDIR="C:/Users/$USERNAME"
+    # HOMEDIR="C:/Users/$USERNAME"
+    HOMEDIR="/c/Users/$USERNAME"
     open_browser () {
       start $1
     }
