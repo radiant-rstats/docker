@@ -14,6 +14,7 @@ ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
 RPASSWORD="rstudio"
+JPASSWORD="jupyter"
 ID="vnijs"
 LABEL="rsm-msba"
 IMAGE=${ID}/${LABEL}
@@ -201,7 +202,7 @@ else
   if [ "${has_network}" == "" ]; then
     docker network create ${LABEL}  # default options are fine
   fi
-  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
@@ -287,7 +288,7 @@ else
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8989 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${LABEL} -d -p ${port}:8989 -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}/lab
       fi
@@ -355,7 +356,7 @@ else
       if [ "${has_network}" == "" ]; then
         docker network create ${LABEL}  # default options are fine
       fi
-      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
+      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 7 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
