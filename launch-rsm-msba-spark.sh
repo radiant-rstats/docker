@@ -1,15 +1,23 @@
 #!/bin/bash
 
-## set ARG_HOME to directory of your choosing if you do NOT
+## set ARG_HOME to a directory of your choosing if you do NOT
 ## want to to map the docker home directory to your local
 ## home directory
-## Use something like the command below on macOS or Linux to setup a 'launch'
-## command. You can then use that command, e.g., launch ., to launch the
-## container from a specific directory
+
+## use the command below on macOS or Linux to setup a 'launch'
+## command. You can then use that command, e.g., launch ., to
+## launch the container from any directory
 ## ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch
+
+## to map the directory where the launch script is located to
+## the docker home directory call the script_home function
+script_home () {
+  echo "$(echo "$( cd "$(dirname "$0")" ; pwd -P )" | sed -E "s|^/([A-z]{1})/|\1:/|")"
+}
 
 ## change to some other path to use as default
 # ARG_HOME="~/rady"
+# ARG_HOME="$(script_home)"
 ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
@@ -159,15 +167,10 @@ else
       cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
       rm -rf ${ARG_HOME}/.rsm-msba/R
     fi
-    SCRIPT_HOME="$( cd "$(dirname "$0")" ; pwd -P )"
-    ## replace first occurence of /c/
-    ## https://stackoverflow.com/a/13210909/1974918
-    # SCRIPT_HOME="${SCRIPT_HOME/\/c\//C:/}"
-    ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
-    SCRIPT_HOME="$(echo "$SCRIPT_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
+    SCRIPT_HOME="$(script_home)"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
       cp -p "$0" ${ARG_HOME}/launch-${LABEL}.sh
-      sed_fun "s+^ARG_HOME\=\"\"+ARG_HOME\=\"${ARG_HOME}\"+" ${ARG_HOME}/launch-${LABEL}.sh
+      sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.sh
       if [ "$2" != "" ]; then
         sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.sh
       fi
