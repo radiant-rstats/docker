@@ -37,7 +37,6 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
-RUN R -e 'radiant.update::radiant.update()'
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 RUN sed -i -e "s/\:HOME_USER\:/${NB_USER}/" /etc/shiny-server/shiny-server.conf
