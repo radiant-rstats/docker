@@ -162,10 +162,15 @@ else
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
       cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
       rm -rf ${ARG_HOME}/.rstudio/sessions
+      rm -rf ${ARG_HOME}/.rstudio/projects
+      rm -rf ${ARG_HOME}/.rstudio/projects_settings
     fi
     if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
       cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
       rm -rf ${ARG_HOME}/.rsm-msba/R
+      rm -rf ${ARG_HOME}/.rsm-msba/bin
+      rm -rf ${ARG_HOME}/.rsm-msba/lib
+      rm -rf ${ARG_HOME}/.rsm-msba/share
     fi
     SCRIPT_HOME="$(script_home)"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
@@ -380,6 +385,8 @@ else
     elif [ ${startup} == 8 ]; then
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rstudio/sessions
+      rm -rf ${HOMEDIR}/.rstudio/projects
+      rm -rf ${HOMEDIR}/.rstudio/projects_settings
       rm -rf ${HOMEDIR}/.rsm-msba/R
     elif [ ${startup} == 9 ]; then
       echo "Removing locally installed Python packages from the .rsm-msba directory"

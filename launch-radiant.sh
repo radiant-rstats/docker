@@ -161,6 +161,8 @@ else
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
       cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
       rm -rf ${ARG_HOME}/.rstudio/sessions
+      rm -rf ${ARG_HOME}/.rstudio/projects
+      rm -rf ${ARG_HOME}/.rstudio/projects_settings
     fi
     if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
       cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
@@ -373,6 +375,8 @@ else
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rstudio/sessions
       rm -rf ${HOMEDIR}/.rsm-msba/R
+      rm -rf ${HOMEDIR}/.rstudio/projects
+      rm -rf ${HOMEDIR}/.rstudio/projects_settings
     elif [ "${startup}" == "q" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Stopping the ${LABEL} computing container and cleaning up as needed"
