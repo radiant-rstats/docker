@@ -16,7 +16,7 @@ RUN apt-get update \
 
 ## install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
-RUN pip3 install --upgrade -r /home/${NB_USER}/requirements.txt \
+RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && rm /home/${NB_USER}/requirements.txt
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
@@ -24,7 +24,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm \
   && jupyter labextension install @jupyter-widgets/jupyterlab-manager \
-  ## extension does not yet support current version of jupyterlab
+  ## extension not supported in jupyterlab >= 0.35
   # && jupyter labextension install @jupyterlab/shortcutui \
   && jupyter labextension install @jupyterlab/git \
   && jupyter serverextension enable --py jupyterlab_git --system
