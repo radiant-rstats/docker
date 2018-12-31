@@ -11,11 +11,11 @@ RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/ra
   && R -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
 
 ## update radiant to development version
-RUN R -e 'remotes::install_github("radiant-rstats/radiant.data")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.basics")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.design")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.model")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.multivariate")'
+RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
 ## packages in development
 RUN R -e 'remotes::install_github("PMassicotte/gtrendsR@da29cf4e427b6bf33d5925ce82596d9c33f9656c", upgrade = "never")' \

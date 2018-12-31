@@ -54,6 +54,13 @@ RUN groupadd wheel -g 11 && \
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
 
+## update radiant to development version
+RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
+
 ## path for local install of python packages from Rstudio or Jupyter Lab
 ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \

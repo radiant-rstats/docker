@@ -48,6 +48,13 @@ COPY connections/ /etc/${NB_USER}/connections
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
 
+## update radiant to development version
+RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
+
 ## updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

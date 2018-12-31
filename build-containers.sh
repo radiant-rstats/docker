@@ -1,8 +1,8 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.1.0
-UPLOAD="NO"
-# UPLOAD="YES"
+DOCKERHUB_VERSION=1.1.1
+# UPLOAD="NO"
+UPLOAD="YES"
 
 build () {
   {
@@ -45,28 +45,41 @@ launcher () {
   fi
 }
 
-LABEL=r-bionic
-# build
-launcher "radiant" "Radiant" "shiny-apps"
-
-LABEL=radiant
-# build
-
 LABEL=rsm-msba
-# build
+build
 
 LABEL=rsm-msba-spark
-# build
+build
 launcher "rsm-msba"
 
 LABEL=rsm-jupyterhub
-# build
+build
 
-LABEL=rsm-msba-beakerx
-# build
+exit 1
+
+
+LABEL=r-bionic
+build
+launcher "radiant" "Radiant" "shiny-apps"
+
+LABEL=radiant
+build
+
+LABEL=rsm-msba
+build
+
+LABEL=rsm-msba-spark
+build
 launcher "rsm-msba"
 
-git add .
+LABEL=rsm-jupyterhub
+build
+
+LABEL=rsm-msba-beakerx
+build
+launcher "rsm-msba"
+
+# git add .
 # git commit -m "Update to image version ${DOCKERHUB_VERSION}"
-git commit -m "Update to R and Python cleanup steps"
-git push
+# git commit -m "Update to R and Python cleanup steps"
+# git push
