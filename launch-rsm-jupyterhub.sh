@@ -1,15 +1,23 @@
 #!/bin/bash
 
-## set ARG_HOME to directory of your choosing if you do NOT
+## set ARG_HOME to a directory of your choosing if you do NOT
 ## want to to map the docker home directory to your local
 ## home directory
-## Use something like the command below on macOS or Linux to setup a 'launch'
-## command. You can then use that command, e.g., launch ., to launch the
-## container from a specific directory
+
+## use the command below on macOS or Linux to setup a 'launch'
+## command. You can then use that command, e.g., launch ., to
+## launch the container from any directory
 ## ln -s ~/git/docker/launch-rsm-jupyterhub.sh /usr/local/bin/launch
+
+## to map the directory where the launch script is located to
+## the docker home directory call the script_home function
+script_home () {
+  echo "$(echo "$( cd "$(dirname "$0")" ; pwd -P )" | sed -E "s|^/([A-z]{1})/|\1:/|")"
+}
 
 ## change to some other path to use as default
 # ARG_HOME="~/rady"
+# ARG_HOME="$(script_home)"
 ARG_HOME=""
 IMAGE_VERSION="latest"
 ID="vnijs"
@@ -135,19 +143,29 @@ else
   if [ "$1" != "${ARG_HOME}" ]; then
     if [ "$1" != "" ]; then
       ARG_HOME="$(cd $1; pwd)"
+      ## replace first occurence of /c/
+      ## https://stackoverflow.com/a/13210909/1974918
+      # ARG_HOME="${ARG_HOME/\/c\//C:/}"
+      ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
+      ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
     fi
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
       cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
       rm -rf ${ARG_HOME}/.rstudio/sessions
+      rm -rf ${ARG_HOME}/.rstudio/projects
+      rm -rf ${ARG_HOME}/.rstudio/projects_settings
     fi
     if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
       cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
       rm -rf ${ARG_HOME}/.rsm-msba/R
+      rm -rf ${ARG_HOME}/.rsm-msba/bin
+      rm -rf ${ARG_HOME}/.rsm-msba/lib
+      rm -rf ${ARG_HOME}/.rsm-msba/share
     fi
-    SCRIPT_HOME="$( cd "$(dirname "$0")" ; pwd -P )"
+    SCRIPT_HOME="$(script_home)"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
       cp -p "$0" ${ARG_HOME}/launch-${LABEL}.sh
-      sed_fun "s+^ARG_HOME\=\"\"+ARG_HOME\=\"${ARG_HOME}\"+" ${ARG_HOME}/launch-${LABEL}.sh
+      sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.sh
       if [ "$2" != "" ]; then
         sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.sh
       fi
@@ -187,12 +205,13 @@ else
     fi
     if [ -d ${HOMEDIR}/.rstudio/monitored/user-settings ]; then
       touch ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
-      sed_fun 's/^alwaysSaveHistory="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
-      sed_fun 's/^loadRData="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
-      sed_fun 's/^saveAction="[0-1]"//' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun '/^alwaysSaveHistory="[0-1]"/d' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun '/^loadRData="[0-1]"/d' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun '/^saveAction="[0-1]"/d' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
       echo 'alwaysSaveHistory="1"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
       echo 'loadRData="0"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
       echo 'saveAction="0"' >> ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
+      sed_fun '/^$/d' ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
     fi
   }
   rstudio_abend

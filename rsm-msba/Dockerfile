@@ -55,6 +55,11 @@ RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "neve
   -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
   -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
+## set jupyterlab password based on docker run argument
+## ARG only leads to conflict with rstudio on alternate port
+ARG JPASSWORD=${JPASSWORD:-jupyter}
+ENV JPASSWORD=${JPASSWORD}
+
 ## updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

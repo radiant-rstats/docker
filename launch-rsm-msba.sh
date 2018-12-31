@@ -22,10 +22,6 @@ ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
 RPASSWORD="rstudio"
-## changing password for jupyter currently requires changes in
-## supervisord.conf and rebuilding the image. Using an environment
-## variable in supervisord.conf *does* work but interacts with
-## launching rstudio on other ports so is not currently implemented
 JPASSWORD="jupyter"
 ID="vnijs"
 LABEL="rsm-msba"
