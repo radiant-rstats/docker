@@ -17,13 +17,13 @@ RUN pip3 install jupyterhub nbrsessionproxy && \
   jupyter nbextension install --py --sys-prefix nbrsessionproxy && \
   jupyter nbextension enable --py --sys-prefix nbrsessionproxy
 
-RUN git clone https://github.com/jupyterhub/nbrsessionproxy /opt/nbrsessionproxy && \
-  pip3 install -e /opt/nbrsessionproxy && \
-  jupyter serverextension enable --py nbrsessionproxy && \
-  jupyter labextension link /opt/nbrsessionproxy/jupyterlab-rsessionproxy
+# RUN git clone https://github.com/jupyterhub/nbrsessionproxy /opt/nbrsessionproxy && \
+#  pip3 install -e /opt/nbrsessionproxy && \
+#  jupyter serverextension enable --py nbrsessionproxy && \
+#  jupyter labextension link /opt/nbrsessionproxy/jupyterlab-rsessionproxy
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
-ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server"
+ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server"
 
 ## Temp fix (@tbpetersen)
 ## There is a bug in one of the libraries being used. I updated one line and then overwrite the file with the fixed version
