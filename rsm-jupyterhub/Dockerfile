@@ -9,19 +9,8 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-## install jupyterhub and nbrsessionproxy (used for rserver integration)
-RUN pip3 install jupyterhub nbrsessionproxy && \
-  jupyter serverextension enable --py --sys-prefix nbrsessionproxy && \
-  jupyter nbextension install --py --sys-prefix nbrsessionproxy && \
-  jupyter nbextension enable --py --sys-prefix nbrsessionproxy
-
-#RUN git clone https://github.com/jupyterhub/nbrsessionproxy /opt/nbrsessionproxy  \
-#   && cd /opt/nbrsessionproxy \
-#   && git checkout 6db4a162bfa2e35e65e6b9f06193a4a0f778a118 \
-#   && pip3 install -e /opt/nbrsessionproxy \
-#   && jupyter serverextension enable --py nbrsessionproxy \
-#   && jupyter labextension link /opt/nbrsessionproxy/jupyterlab-rsessionproxy \
-#   && cd -
+RUN pip3 install jupyterhub jupyter-rsession-proxy \
+  && jupyter labextension install jupyterlab-server-proxy
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server"
@@ -71,4 +60,4 @@ RUN chmod +x /tini
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
-USER 0
+USER ${NB_USER}
