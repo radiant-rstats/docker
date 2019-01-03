@@ -195,7 +195,7 @@ else
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "-----------------------------------------------------------------------"
 
-  docker run --rm -p 8888:8888 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+  docker run --rm -p 8888:8888 -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
