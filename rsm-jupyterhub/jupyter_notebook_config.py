@@ -15,6 +15,15 @@ c.NotebookApp.open_browser = False
 # https://github.com/jupyter/notebook/issues/3130
 c.FileContentsManager.delete_to_trash = False
 
+c.LauncherShortcuts.shortcuts = {
+    'Radiant': {
+        'title': 'Radiant: Business analytics using R and Shiny',
+        'target': '{base_url}shiny/radiant'
+    }
+}
+
+# 'path': '/srv/shiny-server/radiant/inst/app/'
+
 # Generate a self-signed certificate
 if 'GEN_CERT' in os.environ:
     dir_name = jupyter_data_dir()

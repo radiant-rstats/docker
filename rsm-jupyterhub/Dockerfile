@@ -9,8 +9,9 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-RUN pip3 install jupyterhub jupyter-rsession-proxy \
-  && jupyter labextension install jupyterlab-server-proxy
+RUN pip3 install jupyterhub jupyter-server-proxy jupyter-rsession-proxy jupyter-launcher-shortcuts \
+  && jupyter labextension install jupyterlab-server-proxy \
+  && jupyter labextension install jupyterlab-launcher-shortcuts
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server"
