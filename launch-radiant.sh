@@ -158,6 +158,11 @@ else
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
     fi
+
+    echo "-----------------------------------------------------------------------"
+    echo "Copying Rstudio settings to ${ARG_HOME}"
+    echo "-----------------------------------------------------------------------"
+
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
       cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
       rm -rf ${ARG_HOME}/.rstudio/sessions
