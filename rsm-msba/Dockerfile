@@ -49,11 +49,11 @@ COPY connections/ /etc/${NB_USER}/connections
 RUN R -e 'radiant.update::radiant.update()'
 
 ## update radiant to development version
-RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
+#RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
 ## set jupyterlab password based on docker run argument
 ## ARG only leads to conflict with rstudio on alternate port
