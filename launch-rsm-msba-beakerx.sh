@@ -216,8 +216,10 @@ else
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
   rstudio_abend () {
     if [ -d ${HOMEDIR}/.rstudio/sessions/active ]; then
-      RSTUDIO_STATE_FILES=$(find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f)
-      sed_fun 's/abend="1"/abend="0"/' ${RSTUDIO_STATE_FILES}
+      RSTUDIO_STATE_FILES=$(find ${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state -type f 2>/dev/null)
+      if [ "${RSTUDIO_STATE_FILES}" != "" ]; then
+        sed_fun 's/abend="1"/abend="0"/' ${RSTUDIO_STATE_FILES}
+      fi
     fi
     if [ -d ${HOMEDIR}/.rstudio/monitored/user-settings ]; then
       touch ${HOMEDIR}/.rstudio/monitored/user-settings/user-settings
