@@ -14,10 +14,10 @@ Detailed discussion of the steps involved is available at the link below:
 
 https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
 
-Once you docker is installed, make sure it is running. You can can check this by running the following command.
+Once docker is installed, make sure it is running. You can can check this by using the following command. If this produces some output and no errors you are all set to continue.
 
 ```bash
-docker ps -q
+docker ps
 ```
 
 ![](figures/docker-icon.png)
