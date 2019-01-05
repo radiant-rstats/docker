@@ -19,7 +19,9 @@ COPY fix-permissions /usr/local/bin/
 COPY start.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
-COPY jupyter_notebook_config.py /etc/jupyter/
+
+## already added in rsm-msba
+# COPY jupyter_notebook_config.py /etc/jupyter/
 
 RUN chmod +x /usr/local/bin/start.sh && \
   chmod +x /usr/local/bin/start-notebook.sh && \
@@ -33,7 +35,8 @@ RUN groupadd wheel -g 11 && \
   chmod g+w /etc/passwd && \
   fix-permissions $HOME && \
   fix-permissions /opt && \
-  fix-permissions /var/lib/shiny-server
+  fix-permissions /var/lib/shiny-server && \
+  fix-permissions /var/log/shiny-server
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'

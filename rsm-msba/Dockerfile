@@ -58,7 +58,10 @@ RUN R -e 'radiant.update::radiant.update()'
 ## add to requirements file once stabalized
 RUN pip3 install jupyter-rsession-proxy \
   && jupyter labextension install jupyterlab-server-proxy \
-  && chown ${NB_USER}:shiny -R /var/lib/shiny-server
+  && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
+  && chown ${NB_USER}:shiny -R /var/log/shiny-server
+
+COPY jupyter_notebook_config.py /etc/jupyter/
 
 ## set jupyterlab password based on docker run argument
 ## ARG only leads to conflict with rstudio on alternate port

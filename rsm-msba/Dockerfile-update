@@ -1,4 +1,4 @@
-FROM vnijs/rsm-msba:1.1.1
+FROM vnijs/rsm-msba:1.2.1
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 

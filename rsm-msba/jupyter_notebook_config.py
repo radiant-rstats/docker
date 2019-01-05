@@ -18,6 +18,7 @@ c.NotebookApp.open_browser = False
 # https://github.com/jupyter/notebook/issues/3130
 c.FileContentsManager.delete_to_trash = False
 
+## based on @yuvipanda's comments https://github.com/yuvipanda/jupyter-launcher-shortcuts/issues/1
 def _get_shiny_cmd(port):
     conf = textwrap.dedent("""
         run_as {user};
@@ -44,38 +45,7 @@ def _get_shiny_cmd(port):
     f.close()
     return ['shiny-server', f.name]
 
-import shutil
-
-def _get_rserver_cmd(port):
-    # Other paths rsession maybe in
-    other_paths = [
-        # When rstudio-server deb is installed
-        '/usr/lib/rstudio-server/bin/rserver',
-        # When just rstudio deb is installed
-        '/usr/lib/rstudio/bin/rserver',
-    ]
-    if shutil.which('rserver'):
-        executable = 'rserver'
-    else:
-        for op in other_paths:
-            if os.path.exists(op):
-                executable = op
-                break
-        else:
-            raise FileNotFoundError('Can not find rserver in PATH')
-
-    return [
-        executable,
-        '--www-port=' + str(port)
-    ]
-
 c.ServerProxy.servers = {
-    'rstudio-rserver': {
-        'command': _get_rserver_cmd,
-        'launcher_entry': {
-            'title': 'RStudio (via RServer)',
-        }
-    },
     'radiant': {
         'command': _get_shiny_cmd,
         'launcher_entry': {
