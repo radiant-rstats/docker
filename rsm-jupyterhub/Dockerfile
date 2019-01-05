@@ -9,7 +9,7 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-RUN pip3 install jupyterhub jupyter-server-proxy jupyter-rsession-proxy jupyter-launcher-shortcuts \
+RUN pip3 install jupyterhub jupyter-rsession-proxy \
   && jupyter labextension install jupyterlab-server-proxy \
   && jupyter labextension install jupyterlab-launcher-shortcuts
 
@@ -62,3 +62,4 @@ ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
 USER ${NB_USER}
+# USER 0
