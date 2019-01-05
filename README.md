@@ -15,7 +15,7 @@ After installing Docker, check that it is running by typing `docker --version` i
 
 ```bash
 docker --version
-Docker version 18.03.1-ce, build 9ee9f40
+Docker version 18.09.0, build 4d60db4
 ```
 
 The full `rsm-msba` setup uses Docker Compose so also check this is available by typing `docker-compose --version` in a terminal. This should return something like the below:

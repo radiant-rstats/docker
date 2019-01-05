@@ -1,15 +1,15 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.1.1
+DOCKERHUB_VERSION=1.2.1
 UPLOAD="NO"
 UPLOAD="YES"
 
 build () {
   {
     if [[ "$1" == "NO" ]]; then
-      docker build --build-arg DOCKERHUB_VERSION=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest ./${LABEL}
+      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest ./${LABEL}
     else
-      docker build --build-arg DOCKERHUB_VERSION=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ./${LABEL}
+      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ./${LABEL}
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -44,6 +44,18 @@ launcher () {
     sed_fun "s/$2/$3/" ./launch-${LABEL}.sh
   fi
 }
+
+LABEL=rsm-msba
+build
+
+LABEL=rsm-msba-spark
+build
+launcher "rsm-msba"
+
+LABEL=rsm-jupyterhub
+build
+
+exit 1
 
 LABEL=r-bionic
 build
