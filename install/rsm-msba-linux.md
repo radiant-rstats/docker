@@ -4,19 +4,23 @@ Please follow the instructions below to install the computing environment we wil
 
 Important: You *must* complete the installation before our first class session on 8/6 or you will not be able to work on in-class exercises!
 
-**Step 1**: Install docker using the steps described at the link below. Once you have installed docker make sure it is running. You can can check this by running the following command.
+**Step 1**: Install docker on Ubuntu 18.04 run the following code in a terminal and provide your (sudo) password when requested: 
+
+```bash
+source <(curl -s https://raw.githubusercontent.com/radiant-rstats/docker/master/install/install-docker.sh)
+```
+
+Detailed discussion of the steps involved is available at the link below:
+
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+
+Once you docker is installed, make sure it is running. You can can check this by running the following command.
 
 ```bash
 docker ps -q
 ```
 
-https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
-
 ![](figures/docker-icon.png)
-
-You can also change the (maximum) resources docker is allowed to use on your system. You can set this (close) to the maximum available on your system.
-
-<img src="figures/docker-resources-mac.png" width="500px">
 
 Optional: If you are interested, the linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
@@ -24,7 +28,7 @@ Optional: If you are interested, the linked video gives a brief intro to what Do
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker
-cp ~/git/docker/launch-rsm-msba.sh ~/Desktop
+cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop
 ~/Desktop/launch-rsm-msba.sh
 ```
 
@@ -66,3 +70,7 @@ cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop
 ## Extended functionality with Apache Spark
 
 To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` script to your desktop. Starting up the script will update the computing environment. 
+
+```bash
+cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop
+```
