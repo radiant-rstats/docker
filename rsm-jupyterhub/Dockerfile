@@ -9,9 +9,7 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-RUN pip3 install jupyterhub jupyter-rsession-proxy \
-  && jupyter labextension install jupyterlab-server-proxy \
-  && jupyter labextension install jupyterlab-launcher-shortcuts
+RUN pip3 install jupyterhub==0.9.4
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server"
@@ -34,7 +32,8 @@ RUN groupadd wheel -g 11 && \
   echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
   chmod g+w /etc/passwd && \
   fix-permissions $HOME && \
-  fix-permissions /opt
+  fix-permissions /opt && \
+  fix-permissions /var/lib/shiny-server
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'

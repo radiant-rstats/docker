@@ -55,6 +55,11 @@ RUN R -e 'radiant.update::radiant.update()'
 #  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
 #  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
+## add to requirements file once stabalized
+RUN pip3 install jupyter-rsession-proxy \
+  && jupyter labextension install jupyterlab-server-proxy \
+  && chown ${NB_USER}:shiny -R /var/lib/shiny-server
+
 ## set jupyterlab password based on docker run argument
 ## ARG only leads to conflict with rstudio on alternate port
 ARG JPASSWORD=${JPASSWORD:-jupyter}
