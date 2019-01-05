@@ -2,8 +2,8 @@ FROM vnijs/rsm-msba-spark:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
-ARG DOCKERHUB_VERSION
-ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION}
+ARG DOCKERHUB_VERSION_UPDATE
+ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 
 ## install beakerx
 COPY requirements.txt /home/${NB_USER}/requirements.txt

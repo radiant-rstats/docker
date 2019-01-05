@@ -2,8 +2,8 @@ FROM vnijs/r-bionic:latest
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 
-ARG DOCKERHUB_VERSION
-ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION}
+ARG DOCKERHUB_VERSION_UPDATE
+ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 
 ## installing R-packages from miniCRAN repo
 RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/radiant/ \
