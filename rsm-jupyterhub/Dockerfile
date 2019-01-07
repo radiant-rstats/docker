@@ -64,4 +64,3 @@ ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
 USER ${NB_USER}
-# USER 0
