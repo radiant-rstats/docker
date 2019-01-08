@@ -424,9 +424,9 @@ else
       if [ "${running}" != "" ]; then
         echo "Stopping running containers ..."
         suspend_sessions () {
-          active_session=$(docker exec -t $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}')
-          if [ "${active_session}" != "" ]; then
-            docker exec -t $1 rstudio-server suspend-session ${active_session}
+          active_session=$(docker exec -t $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}' 2>/dev/null)
+          if [ "${active_session}" != "" ] && [ "${active_session}" != "OCI" ]; then
+            docker exec -t $1 rstudio-server suspend-session ${active_session} 2>/dev/null
           fi
         }
         for index in ${running}; do
