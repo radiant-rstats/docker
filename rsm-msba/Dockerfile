@@ -27,7 +27,9 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   ## extension not supported in jupyterlab >= 0.35
   # && jupyter labextension install @jupyterlab/shortcutui \
   && jupyter labextension install @jupyterlab/git \
-  && jupyter serverextension enable --py jupyterlab_git --system
+  && jupyter serverextension enable --py jupyterlab_git --system \
+  && jupyter labextension install @ryantam626/jupyterlab_code_formatter \
+  && jupyter serverextension enable --py jupyterlab_code_formatter
 
 ## install the R kernel for Jupyter Lab
 RUN R -e 'install.packages(c("repr", "IRdisplay", "crayon", "pbdZMQ", "uuid"))' -e 'devtools::install_github("IRkernel/IRkernel")' \
