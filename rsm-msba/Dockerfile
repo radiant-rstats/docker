@@ -13,7 +13,6 @@ RUN apt-get update \
     python3-virtualenv \
     libzmq3-dev \
     gpg-agent
-
 ## install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
 RUN pip3 install -r /home/${NB_USER}/requirements.txt \
@@ -23,13 +22,11 @@ ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm \
-  && jupyter labextension install @jupyter-widgets/jupyterlab-manager \
+  && jupyter labextension install @jupyter-widgets/jupyterlab-manager @jupyterlab/git @ryantam626/jupyterlab_code_formatter \
   ## extension not supported in jupyterlab >= 0.35
   # && jupyter labextension install @jupyterlab/shortcutui \
-  && jupyter labextension install @jupyterlab/git \
   && jupyter serverextension enable --py jupyterlab_git --system \
-  && jupyter labextension install @ryantam626/jupyterlab_code_formatter \
-  && jupyter serverextension enable --py jupyterlab_code_formatter
+  && jupyter serverextension enable --py jupyterlab_code_formatter --system
 
 ## install the R kernel for Jupyter Lab
 RUN R -e 'install.packages(c("repr", "IRdisplay", "crayon", "pbdZMQ", "uuid"))' -e 'devtools::install_github("IRkernel/IRkernel")' \
@@ -57,7 +54,7 @@ RUN R -e 'radiant.update::radiant.update()'
 #  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
 #  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
-## add to requirements file once stabalized
+## add to requirements file once fixed
 RUN pip3 install jupyter-rsession-proxy \
   && jupyter labextension install jupyterlab-server-proxy \
   && chown ${NB_USER}:shiny -R /var/lib/shiny-server \

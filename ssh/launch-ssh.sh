@@ -5,10 +5,10 @@
 ## call script with ./ssh/launch-ssh.sh myid@123.123.123.123
 ## where myid is your userid and 123.... is the ip address of
 ## the server
-## in the example below "mac" is set in ~/.ssh/config as a shortcut
-## to myid@123.123.123.123
+## in the example below "ming" is set in ~/.ssh/config as a shortcut
+## to my server (e.g., myid@123.123.123.123)
 
-UHOST=${1:-mac}
+UHOST=${1:-mini}
 
 clear
 

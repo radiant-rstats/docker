@@ -145,3 +145,5 @@ widgetsnbextension==3.4.2
 xgboost==0.81
 xlrd==1.2.0
 xonsh==0.8.7
+jupyterlab_code_formatter==0.1.1
+black==18.9b0
