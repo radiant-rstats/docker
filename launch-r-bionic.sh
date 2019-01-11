@@ -368,7 +368,7 @@ else
       echo "Updating the ${LABEL} computing container"
       docker stop ${running}
       docker rm ${running}
-      docker network rm ${LABEL}
+      docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
 
       if [ "${port}" == "" ]; then
         echo "Pulling down tag \"latest\""
@@ -401,7 +401,7 @@ else
       running=$(docker ps -q)
       docker stop ${running}
       docker rm ${running}
-      docker network rm ${LABEL}
+      docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
       if [ -d "${HOMEDIR}/Desktop" ]; then
         SCRIPT_DOWNLOAD="${HOMEDIR}/Desktop"
       else
@@ -435,7 +435,7 @@ else
           suspend_sessions $index
         done
         docker stop ${running}
-        docker network rm ${LABEL}
+        docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
       fi
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')
