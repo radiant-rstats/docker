@@ -36,7 +36,7 @@ Again, follow all default settings until the last screen (see image below). Ther
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
-cp C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
+cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
 C:/Users/$USERNAME/Desktop/launch-rsm-msba.sh
 ```
 

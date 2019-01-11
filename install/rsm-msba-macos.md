@@ -28,15 +28,15 @@ xcode-select --install
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker
-cp ~/git/docker/launch-rsm-msba.sh ~/Desktop
-~/Desktop/launch-rsm-msba.sh
+cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop/launch-rsm-msba.command
+~/Desktop/launch-rsm-msba.command
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username and password are both "rstudio". For Jupyter the password is "jupyter"
 
 ![](figures/rsm-msba-menu.png)
 
-The code above also created a copy of the file `launch-rsm-msba.sh` on your Desktop that you can double-click to "fire up" the container again in the future.
+The code above also created a copy of the file `launch-rsm-msba.command` on your Desktop that you can double-click to "fire up" the container again in the future.
 
 **Step 4**: Check that you can launch Rstudio and Jupyter
 
@@ -64,12 +64,12 @@ If for some reason you are having trouble updating either the container or the l
 docker pull vnijs/rsm-msba
 rm -rf ~/git/docker
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker
-cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop
+cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop/launch-rsm-msba.command
 ```
 
 ## Extended functionality with Apache Spark
 
-To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` script to your desktop. Starting up the script will update the computing environment. 
+To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` scrpit from the `git/docker` directory to your desktop and rename it to `launch-rsm-msba-spark.command`. Starting up the script will update the computing environment. 
 
 ## Trouble shooting
 

@@ -35,14 +35,18 @@ fi
 
 ## what os is being used
 ostype=`uname`
-
+if [ "$ostype" == "Darwin" ]; then
+  EXT="command"
+else
+  EXT="sh"
+fi
 if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
   ## check if script is already running
-  nr_running=$(ps | grep "${LABEL}.sh" -c)
+  nr_running=$(ps | grep "${LABEL}.${EXT}" -c)
   if [ "$nr_running" -gt 3 ]; then
     clear
     echo "-----------------------------------------------------------------------"
-    echo "The ${LABEL}.sh launch script is already running (or open)"
+    echo "The ${LABEL}.${EXT} launch script is already running (or open)"
     echo "To close the new session and continue with the old session"
     echo "press q + enter. To continue with the new session and stop"
     echo "the old session press enter"
@@ -197,10 +201,10 @@ else
     fi
     SCRIPT_HOME="$(script_home)"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
-      cp -p "$0" ${ARG_HOME}/launch-${LABEL}.sh
-      sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.sh
+      cp -p "$0" ${ARG_HOME}/launch-${LABEL}.${EXT}
+      sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.${EXT}
       if [ "$2" != "" ]; then
-        sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.sh
+        sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.${EXT}
       fi
     fi
     HOMEDIR=${ARG_HOME}

@@ -345,14 +345,14 @@ else
       fi
     elif [ ${startup} == 4 ]; then
       if [ "${port}" == "" ]; then
-        port=8765
+        port=5432
       fi
       if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
         mkdir -p "${HOMEDIR}/postgresql/data"
       fi
       echo "Starting postgres on port ${port}"
-      docker run --net ${LABEL} -p ${port}:8765 \
-        --name "rsm-postgres" \
+      docker run --net ${LABEL} -p ${port}:5432 \
+        --name postgres \
         -e POSTGRES_USER=${POSTGRES_USER} \
         -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
         -e PGDATA=/var/lib/postgresql/data \
