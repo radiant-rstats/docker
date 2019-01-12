@@ -350,15 +350,20 @@ else
       if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
         mkdir -p "${HOMEDIR}/postgresql/data"
       fi
-      echo "Starting postgres on port ${port}"
-      docker run --net ${LABEL} -p ${port}:5432 \
-        --name postgres \
-        -e POSTGRES_USER=${POSTGRES_USER} \
-        -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-        -e PGDATA=/var/lib/postgresql/data \
-        -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-        -d postgres:${POSTGRES_VERSION}
-      sleep 2s
+      pg_running=$(docker ps --filter "name=postgres" -q)
+      if [ "${pg_running}" == "" ]; then
+        echo "Starting postgres on port ${port}"
+        docker run --net ${LABEL} -p ${port}:5432 \
+          --name postgres \
+          -e POSTGRES_USER=${POSTGRES_USER} \
+          -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+          -e PGDATA=/var/lib/postgresql/data \
+          -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+          -d postgres:${POSTGRES_VERSION}
+        sleep 2s
+      else
+        echo "The postgres container is already running"
+      fi
     elif [ ${startup} == 5 ]; then
       if [ "${port}" == "" ]; then
         port=5050
@@ -366,14 +371,19 @@ else
       if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
         mkdir -p "${HOMEDIR}/postgresql/pgadmin"
       fi
-      echo "Starting pgadmin4 on port ${port}"
-      docker run --net ${LABEL} -p ${port}:80 \
-        --name pgadmin \
-        -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
-        -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
-        -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
-        -d dpage/pgadmin4:${PGADMIN_VERSION}
-      sleep 2s
+      pga_running=$(docker ps --filter "name=pgadmin" -q)
+      if [ "${pga_running}" == "" ]; then
+        echo "Starting pgadmin4 on port ${port}"
+        docker run --net ${LABEL} -p ${port}:80 \
+          --name pgadmin \
+          -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
+          -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
+          -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
+          -d dpage/pgadmin4:${PGADMIN_VERSION}
+        sleep 2s
+      else
+        echo "The pgadmin4 container is already running"
+      fi
       open_browser http://localhost:${port}
     elif [ ${startup} == 6 ]; then
       running=$(docker ps -q)
