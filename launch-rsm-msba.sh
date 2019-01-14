@@ -349,12 +349,12 @@ else
     elif [ ${startup} == 3 ]; then
       if [ "${port}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on port 8989"
-        sleep 2s
+        sleep 4s
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
         docker run --net ${LABEL} -d -p ${port}:8989 -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
-        sleep 2s
+        sleep 5s
         open_browser http://localhost:${port}/lab
       fi
     elif [ ${startup} == 4 ]; then

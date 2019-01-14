@@ -62,7 +62,7 @@ def _get_rserver_cmd(port):
                 executable = op
                 break
         else:
-            raise FileNotFoundError('Can not find rserver in PATH')
+            raise FileNotFoundError('Cannot find rserver in PATH')
 
     return [
         executable,
@@ -76,7 +76,8 @@ c.ServerProxy.servers = {
             'USER': getpass.getuser()
         },
         'launcher_entry': {
-            'title': 'RStudio (via RServer)'
+            'title': 'RStudio',
+            'icon_path': '/opt/radiant/rstudio.svg'
         }
     },
     'radiant': {

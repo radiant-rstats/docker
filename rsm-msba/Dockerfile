@@ -46,16 +46,17 @@ COPY connections/ /etc/${NB_USER}/connections
 
 ## copy logo for use with jupyterlab
 COPY images/logo200.svg /opt/radiant/logo.svg
+COPY images/download.svg /opt/radiant/rstudio.svg
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
 
 ## update radiant to development version
-#RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
-#  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
-#  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
-#  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
-#  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
+RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
 ## add to requirements file once fixed
 #RUN git clone https://github.com/jupyterhub/jupyter-rsession-proxy \
