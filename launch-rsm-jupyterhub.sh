@@ -105,6 +105,14 @@ else
     docker pull ${IMAGE}:${IMAGE_VERSION}
   fi
 
+
+    lnd () {
+     ln -s $1 $2
+  }
+  lnf () {
+    ln -s $1 $2
+  }
+
   ## function is not efficient by alias has scopping issues
   if [[ "$ostype" == "Linux" ]]; then
     HOMEDIR=~
@@ -132,6 +140,12 @@ else
     sed_fun () {
       sed -i $1 $2
     }
+    lnd () {
+      mklink /d $1 $2
+    }
+    lnf () {
+      mklink $1 $2
+    }
   fi
 
   ## change mapping of docker home directory to local directory if specified
@@ -150,51 +164,64 @@ else
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
-      echo "-------------------------------------------------------------------------"
-      echo "Do you want to copy git, ssh, and R configuration to this directory (y/n)"
-      echo "${ARG_HOME}"
-      echo "-------------------------------------------------------------------------"
-      read copy_config
-
       ## make sure no hidden files go into a git repo
       touch ${ARG_HOME}/.gitignore
       sed_fun '/^\.\*/d' ${ARG_HOME}/.gitignore
       echo ".*" >> ${ARG_HOME}/.gitignore
 
-      if [ "${copy_config}" == "y" ]; then
-        if [ -f "${HOMEDIR}/.Rprofile" ] && [ ! -f "${ARG_HOME}/.Rprofile" ]; then
-          cp -p ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
-        fi
-        if [ -f "${HOMEDIR}/.Renviron" ] && [ ! -f "${ARG_HOME}/.Renviron" ]; then
-          cp -p ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
-        fi
-        if [ -f "${HOMEDIR}/.gitconfig" ] && [ ! -f "${ARG_HOME}/.gitconfig" ]; then
-          cp -p ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
-        fi
-        if [ -d "${HOMEDIR}/.ssh" ] && [ ! -d "${ARG_HOME}/.ssh" ]; then
-          ## would prefer to use ln but ... windows
-          cp -r -p ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
-        fi
+      if [ -f "${HOMEDIR}/.Rprofile" ] && [ ! -f "${ARG_HOME}/.Rprofile" ]; then
+        # cp -p ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
+        lnf ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
+      fi
+      if [ -f "${HOMEDIR}/.Renviron" ] && [ ! -f "${ARG_HOME}/.Renviron" ]; then
+        # cp -p ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
+        lnf ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
+      fi
+      if [ -f "${HOMEDIR}/.gitconfig" ] && [ ! -f "${ARG_HOME}/.gitconfig" ]; then
+        # cp -p ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
+        lnf ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
+      fi
+      if [ -d "${HOMEDIR}/.ssh" ] && [ ! -d "${ARG_HOME}/.ssh" ]; then
+        # cp -r -p ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
+        lnd ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
       fi
     fi
 
-    echo "-----------------------------------------------------------------------"
-    echo "Copying Rstudio and JupyterLab settings to:"
-    echo "${ARG_HOME}"
-    echo "-----------------------------------------------------------------------"
-
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
-      cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
-      rm -rf ${ARG_HOME}/.rstudio/sessions
-      rm -rf ${ARG_HOME}/.rstudio/projects
-      rm -rf ${ARG_HOME}/.rstudio/projects_settings
+      echo "-----------------------------------------------------------------------"
+      echo "Copying Rstudio and JupyterLab settings to:"
+      echo "${ARG_HOME}"
+      echo "-----------------------------------------------------------------------"
+
+      {
+        which rsync 2>/dev/null
+        HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
+        AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
+        rsync -a ${HD}/.rstudio ${AH}/ --exclude sessions --exclude projects --exclude projects_settings
+      } ||
+      {
+        cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
+        rm -rf ${ARG_HOME}/.rstudio/sessions
+        rm -rf ${ARG_HOME}/.rstudio/projects
+        rm -rf ${ARG_HOME}/.rstudio/projects_settings
+      }
+
     fi
     if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
-      cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
-      rm -rf ${ARG_HOME}/.rsm-msba/R
-      rm -rf ${ARG_HOME}/.rsm-msba/bin
-      rm -rf ${ARG_HOME}/.rsm-msba/lib
-      rm -rf ${ARG_HOME}/.rsm-msba/share
+
+      {
+        which rsync 2>/dev/null
+        HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
+        AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
+        rsync -a ${HD}/.rsm-msba ${AH}/ --exclude R --exclude bin --exclude lib --exclude share
+      } ||
+      {
+        cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
+        rm -rf ${ARG_HOME}/.rsm-msba/R
+        rm -rf ${ARG_HOME}/.rsm-msba/bin
+        rm -rf ${ARG_HOME}/.rsm-msba/lib
+        rm -rf ${ARG_HOME}/.rsm-msba/share
+      }
     fi
     SCRIPT_HOME="$(script_home)"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then

@@ -52,7 +52,7 @@ CPORT=$(curl -s localhost:8787 2>/dev/null)
 if [ "$CPORT" != "" ]; then
   echo "-----------------------------------------------------------------------"
   echo "A launch script may already be running. To close the new session and"
-  echo "continue with the previous session press q + enter. To continue with" 
+  echo "continue with the previous session press q + enter. To continue with"
   echo "the new session and stop the previous session, press enter"
   echo "-----------------------------------------------------------------------"
   read contd
@@ -163,42 +163,30 @@ else
   if [ "$1" != "${ARG_HOME}" ]; then
     if [ "$1" != "" ]; then
       ARG_HOME="$(cd $1; pwd)"
-      ## replace first occurence of /c/
-      ## https://stackoverflow.com/a/13210909/1974918
-      # ARG_HOME="${ARG_HOME/\/c\//C:/}"
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
-      # ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
-
-      # echo "-------------------------------------------------------------------------"
-      # echo "Do you want to copy git, ssh, and R configuration to this directory (y/n)"
-      # echo "${ARG_HOME}"
-      # echo "-------------------------------------------------------------------------"
-      # read copy_config
+      ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
       ## make sure no hidden files go into a git repo
       touch ${ARG_HOME}/.gitignore
       sed_fun '/^\.\*/d' ${ARG_HOME}/.gitignore
       echo ".*" >> ${ARG_HOME}/.gitignore
 
-      # if [ "${copy_config}" == "y" ]; then
-        if [ -f "${HOMEDIR}/.Rprofile" ] && [ ! -f "${ARG_HOME}/.Rprofile" ]; then
-          # cp -p ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
-          lnf ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
-        fi
-        if [ -f "${HOMEDIR}/.Renviron" ] && [ ! -f "${ARG_HOME}/.Renviron" ]; then
-          # cp -p ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
-          lnf ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
-        fi
-        if [ -f "${HOMEDIR}/.gitconfig" ] && [ ! -f "${ARG_HOME}/.gitconfig" ]; then
-          # cp -p ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
-          lnf ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
-        fi
-        if [ -d "${HOMEDIR}/.ssh" ] && [ ! -d "${ARG_HOME}/.ssh" ]; then
-          ## would prefer to use ln but ... windows
-          # cp -r -p ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
-          lnd ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
-        fi
-      # fi
+      if [ -f "${HOMEDIR}/.Rprofile" ] && [ ! -f "${ARG_HOME}/.Rprofile" ]; then
+        # cp -p ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
+        lnf ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
+      fi
+      if [ -f "${HOMEDIR}/.Renviron" ] && [ ! -f "${ARG_HOME}/.Renviron" ]; then
+        # cp -p ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
+        lnf ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
+      fi
+      if [ -f "${HOMEDIR}/.gitconfig" ] && [ ! -f "${ARG_HOME}/.gitconfig" ]; then
+        # cp -p ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
+        lnf ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
+      fi
+      if [ -d "${HOMEDIR}/.ssh" ] && [ ! -d "${ARG_HOME}/.ssh" ]; then
+        # cp -r -p ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
+        lnd ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
+      fi
     fi
 
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
@@ -207,7 +195,7 @@ else
       echo "${ARG_HOME}"
       echo "-----------------------------------------------------------------------"
 
-      { 
+      {
         which rsync 2>/dev/null
         HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
         AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
@@ -223,7 +211,7 @@ else
     fi
     if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
 
-      { 
+      {
         which rsync 2>/dev/null
         HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
         AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"

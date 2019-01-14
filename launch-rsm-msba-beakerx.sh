@@ -45,22 +45,23 @@ PGADMIN_VERSION=3.6
 
 ## what os is being used
 ostype=`uname`
+if [ "$ostype" == "Darwin" ]; then
+  EXT="command"
+else
+  EXT="sh"
+fi
 
-if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
-  ## check if script is already running
-  nr_running=$(ps | grep "${LABEL}.sh" -c)
-  if [ "$nr_running" -gt 3 ]; then
-    clear
-    echo "-----------------------------------------------------------------------"
-    echo "The ${LABEL}.sh launch script may already be running (or open)"
-    echo "To close the new session and continue with the old session"
-    echo "press q + enter. To continue with the new session and stop"
-    echo "the old session press enter"
-    echo "-----------------------------------------------------------------------"
-    read contd
-    if [ "${contd}" == "q" ]; then
-      exit 1
-    fi
+## check if script is already running and using port 8787
+CPORT=$(curl -s localhost:8787 2>/dev/null)
+if [ "$CPORT" != "" ]; then
+  echo "-----------------------------------------------------------------------"
+  echo "A launch script may already be running. To close the new session and"
+  echo "continue with the previous session press q + enter. To continue with"
+  echo "the new session and stop the previous session, press enter"
+  echo "-----------------------------------------------------------------------"
+  read contd
+  if [ "${contd}" == "q" ]; then
+    exit 1
   fi
 fi
 
@@ -111,6 +112,13 @@ else
     docker pull ${IMAGE}:${IMAGE_VERSION}
   fi
 
+  lnd () {
+     ln -s $1 $2
+  }
+  lnf () {
+    ln -s $1 $2
+  }
+
   ## function is not efficient by alias has scopping issues
   if [[ "$ostype" == "Linux" ]]; then
     HOMEDIR=~
@@ -138,6 +146,12 @@ else
     sed_fun () {
       sed -i $1 $2
     }
+    lnd () {
+      mklink /d $1 $2
+    }
+    lnf () {
+      mklink $1 $2
+    }
   fi
 
   ## change mapping of docker home directory to local directory if specified
@@ -153,64 +167,74 @@ else
   if [ "$1" != "${ARG_HOME}" ]; then
     if [ "$1" != "" ]; then
       ARG_HOME="$(cd $1; pwd)"
-      ## replace first occurence of /c/
-      ## https://stackoverflow.com/a/13210909/1974918
-      # ARG_HOME="${ARG_HOME/\/c\//C:/}"
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
-
-      echo "-------------------------------------------------------------------------"
-      echo "Do you want to copy git, ssh, and R configuration to this directory (y/n)"
-      echo "${ARG_HOME}"
-      echo "-------------------------------------------------------------------------"
-      read copy_config
 
       ## make sure no hidden files go into a git repo
       touch ${ARG_HOME}/.gitignore
       sed_fun '/^\.\*/d' ${ARG_HOME}/.gitignore
       echo ".*" >> ${ARG_HOME}/.gitignore
 
-      if [ "${copy_config}" == "y" ]; then
-        if [ -f "${HOMEDIR}/.Rprofile" ] && [ ! -f "${ARG_HOME}/.Rprofile" ]; then
-          cp -p ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
-        fi
-        if [ -f "${HOMEDIR}/.Renviron" ] && [ ! -f "${ARG_HOME}/.Renviron" ]; then
-          cp -p ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
-        fi
-        if [ -f "${HOMEDIR}/.gitconfig" ] && [ ! -f "${ARG_HOME}/.gitconfig" ]; then
-          cp -p ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
-        fi
-        if [ -d "${HOMEDIR}/.ssh" ] && [ ! -d "${ARG_HOME}/.ssh" ]; then
-          ## would prefer to use ln but ... windows
-          cp -r -p ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
-        fi
+      if [ -f "${HOMEDIR}/.Rprofile" ] && [ ! -f "${ARG_HOME}/.Rprofile" ]; then
+        # cp -p ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
+        lnf ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
+      fi
+      if [ -f "${HOMEDIR}/.Renviron" ] && [ ! -f "${ARG_HOME}/.Renviron" ]; then
+        # cp -p ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
+        lnf ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
+      fi
+      if [ -f "${HOMEDIR}/.gitconfig" ] && [ ! -f "${ARG_HOME}/.gitconfig" ]; then
+        # cp -p ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
+        lnf ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
+      fi
+      if [ -d "${HOMEDIR}/.ssh" ] && [ ! -d "${ARG_HOME}/.ssh" ]; then
+        # cp -r -p ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
+        lnd ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
       fi
     fi
 
-    echo "-----------------------------------------------------------------------"
-    echo "Copying Rstudio and JupyterLab settings to:"
-    echo "${ARG_HOME}"
-    echo "-----------------------------------------------------------------------"
-
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
-      cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
-      rm -rf ${ARG_HOME}/.rstudio/sessions
-      rm -rf ${ARG_HOME}/.rstudio/projects
-      rm -rf ${ARG_HOME}/.rstudio/projects_settings
+      echo "-----------------------------------------------------------------------"
+      echo "Copying Rstudio and JupyterLab settings to:"
+      echo "${ARG_HOME}"
+      echo "-----------------------------------------------------------------------"
+
+      {
+        which rsync 2>/dev/null
+        HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
+        AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
+        rsync -a ${HD}/.rstudio ${AH}/ --exclude sessions --exclude projects --exclude projects_settings
+      } ||
+      {
+        cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
+        rm -rf ${ARG_HOME}/.rstudio/sessions
+        rm -rf ${ARG_HOME}/.rstudio/projects
+        rm -rf ${ARG_HOME}/.rstudio/projects_settings
+      }
+
     fi
     if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
-      cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
-      rm -rf ${ARG_HOME}/.rsm-msba/R
-      rm -rf ${ARG_HOME}/.rsm-msba/bin
-      rm -rf ${ARG_HOME}/.rsm-msba/lib
-      rm -rf ${ARG_HOME}/.rsm-msba/share
+
+      {
+        which rsync 2>/dev/null
+        HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
+        AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
+        rsync -a ${HD}/.rsm-msba ${AH}/ --exclude R --exclude bin --exclude lib --exclude share
+      } ||
+      {
+        cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
+        rm -rf ${ARG_HOME}/.rsm-msba/R
+        rm -rf ${ARG_HOME}/.rsm-msba/bin
+        rm -rf ${ARG_HOME}/.rsm-msba/lib
+        rm -rf ${ARG_HOME}/.rsm-msba/share
+      }
     fi
     SCRIPT_HOME="$(script_home)"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
-      cp -p "$0" ${ARG_HOME}/launch-${LABEL}.sh
-      sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.sh
+      cp -p "$0" ${ARG_HOME}/launch-${LABEL}.${EXT}
+      sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.${EXT}
       if [ "$2" != "" ]; then
-        sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.sh
+        sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.${EXT}
       fi
     fi
     HOMEDIR=${ARG_HOME}
@@ -341,34 +365,50 @@ else
     elif [ ${startup} == 4 ]; then
       if [ "${port}" == "" ]; then
         port=5432
+      else
+        echo "Currently postgres can only run on port 5432"
+        port=5432
       fi
       if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
         mkdir -p "${HOMEDIR}/postgresql/data"
       fi
-      echo "Starting postgres on port ${port}"
-      docker run --net ${LABEL} -p ${port}:5432 \
-        --name postgres \
-        -e POSTGRES_USER=${POSTGRES_USER} \
-        -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-        -e PGDATA=/var/lib/postgresql/data \
-        -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-        -d postgres:${POSTGRES_VERSION}
-      sleep 2s
+      pg_running=$(docker ps --filter "name=postgres" -q)
+      if [ "${pg_running}" == "" ]; then
+        echo "Starting postgres on port ${port}"
+        docker run --net ${LABEL} -p ${port}:5432 \
+          --name postgres \
+          -e POSTGRES_USER=${POSTGRES_USER} \
+          -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+          -e PGDATA=/var/lib/postgresql/data \
+          -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+          -d postgres:${POSTGRES_VERSION}
+        sleep 2s
+      else
+        echo "The postgres container is already running"
+      fi
     elif [ ${startup} == 5 ]; then
       if [ "${port}" == "" ]; then
+        port=5050
+      else
+        echo "Currently pgadmin4 can only run on port 5050"
         port=5050
       fi
       if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
         mkdir -p "${HOMEDIR}/postgresql/pgadmin"
       fi
-      echo "Starting pgadmin4 on port ${port}"
-      docker run --net ${LABEL} -p ${port}:80 \
-        --name pgadmin \
-        -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
-        -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
-        -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
-        -d dpage/pgadmin4:${PGADMIN_VERSION}
-      sleep 2s
+      pga_running=$(docker ps --filter "name=pgadmin" -q)
+      if [ "${pga_running}" == "" ]; then
+        echo "Starting pgadmin4 on port ${port}"
+        docker run --net ${LABEL} -p ${port}:80 \
+          --name pgadmin \
+          -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
+          -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
+          -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
+          -d dpage/pgadmin4:${PGADMIN_VERSION}
+        sleep 2s
+      else
+        echo "The pgadmin4 container is already running"
+      fi
       open_browser http://localhost:${port}
     elif [ ${startup} == 6 ]; then
       running=$(docker ps -q)
@@ -410,15 +450,14 @@ else
       docker stop ${running}
       docker rm ${running}
       docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
-
       if [ -d "${HOMEDIR}/Desktop" ]; then
         SCRIPT_DOWNLOAD="${HOMEDIR}/Desktop"
       else
         SCRIPT_DOWNLOAD=${HOMEDIR}
       fi
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
-      chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
-      ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
+      chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
+      ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
       exit 1
     elif [ ${startup} == 8 ]; then
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
