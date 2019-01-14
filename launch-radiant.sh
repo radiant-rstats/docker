@@ -17,8 +17,8 @@ script_home () {
 
 ## change to some other path to use as default
 # ARG_HOME="~/rady"
-ARG_HOME="$(script_home)"
-# ARG_HOME=""
+# ARG_HOME="$(script_home)"
+ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
 RPASSWORD="rstudio"
@@ -46,21 +46,18 @@ if [ "$ostype" == "Darwin" ]; then
 else
   EXT="sh"
 fi
-if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
-  ## check if script is already running
-  nr_running=$(ps | grep "${LABEL}.${EXT}" -c)
-  if [ "$nr_running" -gt 3 ]; then
-    clear
-    echo "-----------------------------------------------------------------------"
-    echo "The ${LABEL}.${EXT} launch script may already be running (or open)"
-    echo "To close the new session and continue with the old session"
-    echo "press q + enter. To continue with the new session and stop"
-    echo "the old session press enter"
-    echo "-----------------------------------------------------------------------"
-    read contd
-    if [ "${contd}" == "q" ]; then
-      exit 1
-    fi
+
+## check if script is already running and using port 8787
+CPORT=$(curl -s localhost:8787 2>/dev/null)
+if [ "$CPORT" != "" ]; then
+  echo "-----------------------------------------------------------------------"
+  echo "A launch script may already be running. To close the new session and"
+  echo "continue with the previous session press q + enter. To continue with" 
+  echo "the new session and stop the previous session, press enter"
+  echo "-----------------------------------------------------------------------"
+  read contd
+  if [ "${contd}" == "q" ]; then
+    exit 1
   fi
 fi
 
@@ -170,7 +167,7 @@ else
       ## https://stackoverflow.com/a/13210909/1974918
       # ARG_HOME="${ARG_HOME/\/c\//C:/}"
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
-      ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
+      # ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
       # echo "-------------------------------------------------------------------------"
       # echo "Do you want to copy git, ssh, and R configuration to this directory (y/n)"
@@ -210,16 +207,32 @@ else
       echo "${ARG_HOME}"
       echo "-----------------------------------------------------------------------"
 
-      rsync -a ${HOMEDIR}/.rstudio ${ARG_HOME}/ --exclude sessions --exclude projects --exclude projects_settings
-      # cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
-      # rm -rf ${ARG_HOME}/.rstudio/sessions
-      # rm -rf ${ARG_HOME}/.rstudio/projects
-      # rm -rf ${ARG_HOME}/.rstudio/projects_settings
+      { 
+        which rsync 2>/dev/null
+        HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
+        AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
+        rsync -a ${HD}/.rstudio ${AH}/ --exclude sessions --exclude projects --exclude projects_settings
+      } ||
+      {
+        cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
+        rm -rf ${ARG_HOME}/.rstudio/sessions
+        rm -rf ${ARG_HOME}/.rstudio/projects
+        rm -rf ${ARG_HOME}/.rstudio/projects_settings
+      }
+
     fi
     if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
-      rsync -a ${HOMEDIR}/.rsm-msba ${ARG_HOME}/ --exclude R --exclude bin --exclude lib --exclude share
-      # cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
-      # rm -rf ${ARG_HOME}/.rsm-msba/R
+
+      { 
+        which rsync 2>/dev/null
+        HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
+        AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
+        rsync -a ${HD}/.rsm-msba ${AH}/ --exclude R --exclude bin --exclude lib --exclude share
+      } ||
+      {
+        cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
+        rm -rf ${ARG_HOME}/.rsm-msba/R
+      }
     fi
     SCRIPT_HOME="$(script_home)"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
