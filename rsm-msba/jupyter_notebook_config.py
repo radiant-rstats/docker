@@ -8,6 +8,7 @@ import errno
 import stat
 import textwrap
 import getpass
+import shutil
 import tempfile
 
 c = get_config()
@@ -45,11 +46,44 @@ def _get_shiny_cmd(port):
     f.close()
     return ['shiny-server', f.name]
 
+def _get_rserver_cmd(port):
+    # Other paths rsession maybe in
+    other_paths = [
+        # When rstudio-server deb is installed
+        '/usr/lib/rstudio-server/bin/rserver',
+        # When just rstudio deb is installed
+        '/usr/lib/rstudio/bin/rserver',
+    ]
+    if shutil.which('rserver'):
+        executable = 'rserver'
+    else:
+        for op in other_paths:
+            if os.path.exists(op):
+                executable = op
+                break
+        else:
+            raise FileNotFoundError('Can not find rserver in PATH')
+
+    return [
+        executable,
+        '--www-port=' + str(port)
+    ]
+
 c.ServerProxy.servers = {
+    'rstudio-rserver': {
+        'command': _get_rserver_cmd,
+        'environment': {
+            'USER': getpass.getuser()
+        },
+        'launcher_entry': {
+            'title': 'RStudio (via RServer)'
+        }
+    },
     'radiant': {
         'command': _get_shiny_cmd,
         'launcher_entry': {
-            'title': 'Radiant'
+            'title': 'Radiant',
+            'icon_path': '/opt/radiant/logo.svg'
         }
     }
 }
