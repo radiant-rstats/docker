@@ -35,10 +35,13 @@ else
   DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
 fi
 
-## username and password for postgres
+## username and password for postgres and pgadmin4
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
+PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
+PGADMIN_DEFAULT_PASSWORD=pgadmin
 POSTGRES_VERSION=10.6
+PGADMIN_VERSION=3.6
 
 ## what os is being used
 ostype=`uname`
@@ -291,10 +294,11 @@ else
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
     echo "Press (4) to launch postgres server, followed by [ENTER]:"
-    echo "Press (5) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (6) to update the launch script, followed by [ENTER]:"
-    echo "Press (7) to clear Rstudio sessions and packages, followed by [ENTER]:"
-    echo "Press (8) to clear Python packages, followed by [ENTER]:"
+    echo "Press (5) to launch pgadmin4, followed by [ENTER]:"
+    echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (7) to update the launch script, followed by [ENTER]:"
+    echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
+    echo "Press (9) to clear Python packages, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
@@ -345,12 +349,12 @@ else
     elif [ ${startup} == 3 ]; then
       if [ "${port}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on port 8989"
-        sleep 2s
+        sleep 4s
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
         docker run --net ${LABEL} -d -p ${port}:8989 -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
-        sleep 2s
+        sleep 5s
         open_browser http://localhost:${port}/lab
       fi
     elif [ ${startup} == 4 ]; then
@@ -378,6 +382,30 @@ else
         echo "The postgres container is already running"
       fi
     elif [ ${startup} == 5 ]; then
+      if [ "${port}" == "" ]; then
+        port=5050
+      else
+        echo "Currently pgadmin4 can only run on port 5050"
+        port=5050
+      fi
+      if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
+        mkdir -p "${HOMEDIR}/postgresql/pgadmin"
+      fi
+      pga_running=$(docker ps --filter "name=pgadmin" -q)
+      if [ "${pga_running}" == "" ]; then
+        echo "Starting pgadmin4 on port ${port}"
+        docker run --net ${LABEL} -p ${port}:80 \
+          --name pgadmin \
+          -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
+          -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
+          -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
+          -d dpage/pgadmin4:${PGADMIN_VERSION}
+        sleep 2s
+      else
+        echo "The pgadmin4 container is already running"
+      fi
+      open_browser http://localhost:${port}
+    elif [ ${startup} == 6 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing container"
@@ -399,6 +427,10 @@ else
         docker pull postgres:${POSTGRES_VERSION}
       fi
 
+      if [ "$(docker images -q dpage/pgadmin4${PGADMIN_VERSION})" != "" ]; then
+        docker pull dpage/pgadmin4:${PGADMIN_VERSION}
+      fi
+
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
       has_network=$(docker network ls | awk "/ ${LABEL} /" | awk '{print $2}')
@@ -407,7 +439,7 @@ else
       fi
       docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 6 ]; then
+    elif [ ${startup} == 7 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -422,13 +454,13 @@ else
       chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
       ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
       exit 1
-    elif [ ${startup} == 7 ]; then
+    elif [ ${startup} == 8 ]; then
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rstudio/sessions
       rm -rf ${HOMEDIR}/.rstudio/projects
       rm -rf ${HOMEDIR}/.rstudio/projects_settings
       rm -rf ${HOMEDIR}/.rsm-msba/R
-    elif [ ${startup} == 8 ]; then
+    elif [ ${startup} == 9 ]; then
       echo "Removing locally installed Python packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rsm-msba/bin
       rm -rf ${HOMEDIR}/.rsm-msba/lib

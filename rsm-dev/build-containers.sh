@@ -1,15 +1,15 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.2.1
+DOCKERHUB_VERSION=1.3.0
 UPLOAD="NO"
 UPLOAD="YES"
 
 build () {
   {
     if [[ "$1" == "NO" ]]; then
-      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest ./${LABEL}
+      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest .
     else
-      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ./${LABEL}
+      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest .
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -37,7 +37,7 @@ else
 fi
 
 launcher () {
-  cp -p ./launch-$1.sh ./launch-${LABEL}.sh
+  cp -p ../launch-$1.sh ./launch-${LABEL}.sh
   sed_fun "s/^LABEL=\"$1\"/LABEL=\"${LABEL}\"/" ./launch-${LABEL}.sh
   sed_fun "s/launch-$1\.sh/launch-${LABEL}\.sh/" ./launch-${LABEL}.sh
   if [ "$2" != "" ] && [ "$3" != "" ]; then
@@ -47,7 +47,7 @@ launcher () {
 
 LABEL=rsm-dev
 build
-# launcher "rsm-msba"
+launcher "rsm-msba"
 
 # git add .
 # git commit -m "Updating the development version"
