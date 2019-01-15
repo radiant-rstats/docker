@@ -28,11 +28,23 @@ Optional: If you are interested, the linked video gives a brief intro to what Do
 
 https://git-scm.com/download/win 
 
-Again, follow all default settings until the last screen (see image below). There is no need to "View Release Notes" and "Launch Git Bash" will get you started on **step 4**.
+Keep the default settings until you are asked about "Configuring extra options". Set the options as shown in the screen shot below. 
+
+<img src="figures/symlinks.png" width="500px">
+
+There is no is no need to "View Release Notes" on the last screen but do "Launch Git Bash" as this will get you started on **step 4**.
 
 <img src="figures/git-bash.jpg" width="500px">
 
-**Step 4**: Open a bash terminal and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+**Step4**: Open a bash terminal and copy-and-paste the code below to add `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+
+```bash
+curl http://www2.futureware.at/~nickoe/msys2-mirror/msys/x86_64/rsync-3.1.2-2-x86_64.pkg.tar.xz -o rsync.pkg.tar.xz
+tar xvJf rsync.pkg.tar.xz -C /c/Program\ Files/Git/
+rm -rf rsync.pkg.tar.xz
+```
+
+Next, copy-and-paste the code below to clone the launch scripts needed to start the docker container. 
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
@@ -40,7 +52,7 @@ cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Deskto
 C:/Users/$USERNAME/Desktop/launch-rsm-msba.sh
 ```
 
-This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username if "jovyan" and password is "rstudio". For Jupyter the password is "jupyter"
+This step finalizes the installation of the computing environment. The first time you run the launch script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username if "jovyan" and the password is "rstudio". For Jupyter the password is "jupyter"
 
 ![](figures/rsm-msba-menu.png)
 
