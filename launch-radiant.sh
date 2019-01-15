@@ -15,6 +15,18 @@ script_home () {
   echo "$(echo "$( cd "$(dirname "$0")" ; pwd -P )" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 }
 
+## catch arguments
+while getopts ":t:d:" opt; do
+  case $opt in
+    t) ARG_TAG="$OPTARG"
+    ;;
+    d) ARG_DIR="$OPTARG"
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    ;;
+  esac
+done
+
 ## change to some other path to use as default
 # ARG_HOME="~/rady"
 # ARG_HOME="$(script_home)"
@@ -25,8 +37,8 @@ RPASSWORD="rstudio"
 ID="vnijs"
 LABEL="radiant"
 IMAGE=${ID}/${LABEL}
-if [ "$2" != "" ]; then
-  IMAGE_VERSION="$2"
+if [ "$ARG_TAG" != "" ]; then
+  IMAGE_VERSION="$ARG_TAG"
   DOCKERHUB_VERSION=${IMAGE_VERSION}
 else
   ## see https://stackoverflow.com/questions/34051747/get-environment-variable-from-docker-container
@@ -147,9 +159,9 @@ else
     fi
   fi
 
-  if [ "$1" != "${ARG_HOME}" ]; then
-    if [ "$1" != "" ]; then
-      ARG_HOME="$(cd $1; pwd)"
+  if [ "$ARG_DIR" != "${ARG_HOME}" ]; then
+    if [ "$ARG_DIR" != "" ]; then
+      ARG_HOME="$(cd $ARG_DIR; pwd)"
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
@@ -221,7 +233,7 @@ else
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
       cp -p "$0" ${ARG_HOME}/launch-${LABEL}.${EXT}
       sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.${EXT}
-      if [ "$2" != "" ]; then
+      if [ "$ARG_TAG" != "" ]; then
         sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.${EXT}
       fi
     fi

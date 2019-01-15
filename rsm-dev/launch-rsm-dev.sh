@@ -35,32 +35,30 @@ else
   DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
 fi
 
-## username and password for postgres and pgadmin4
+## username and password for postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
-PGADMIN_DEFAULT_PASSWORD=pgadmin
 POSTGRES_VERSION=10.6
-PGADMIN_VERSION=3.6
 
 ## what os is being used
 ostype=`uname`
+if [ "$ostype" == "Darwin" ]; then
+  EXT="command"
+else
+  EXT="sh"
+fi
 
-if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
-  ## check if script is already running
-  nr_running=$(ps | grep "${LABEL}.sh" -c)
-  if [ "$nr_running" -gt 3 ]; then
-    clear
-    echo "-----------------------------------------------------------------------"
-    echo "The ${LABEL}.sh launch script may already be running (or open)"
-    echo "To close the new session and continue with the old session"
-    echo "press q + enter. To continue with the new session and stop"
-    echo "the old session press enter"
-    echo "-----------------------------------------------------------------------"
-    read contd
-    if [ "${contd}" == "q" ]; then
-      exit 1
-    fi
+## check if script is already running and using port 8787
+CPORT=$(curl -s localhost:8787 2>/dev/null)
+if [ "$CPORT" != "" ]; then
+  echo "-----------------------------------------------------------------------"
+  echo "A launch script may already be running. To close the new session and"
+  echo "continue with the previous session press q + enter. To continue with"
+  echo "the new session and stop the previous session, press enter"
+  echo "-----------------------------------------------------------------------"
+  read contd
+  if [ "${contd}" == "q" ]; then
+    exit 1
   fi
 fi
 
@@ -151,53 +149,84 @@ else
   fi
 
   if [ "$1" != "${ARG_HOME}" ]; then
-
     if [ "$1" != "" ]; then
       ARG_HOME="$(cd $1; pwd)"
-      ## replace first occurence of /c/
-      ## https://stackoverflow.com/a/13210909/1974918
-      # ARG_HOME="${ARG_HOME/\/c\//C:/}"
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
-    fi
 
-    echo "-----------------------------------------------------------------------"
-    echo "Copying Rstudio and JupyterLab settings to ${ARG_HOME}"
-    echo "-----------------------------------------------------------------------"
+      echo "-------------------------------------------------------------------------"
+      echo "Do you want to copy git, ssh, and R configuration to this directory (y/n)"
+      echo "${ARG_HOME}"
+      echo "-------------------------------------------------------------------------"
+      read copy_config
 
-    if [ -f "${HOMEDIR}/.Rprofile" ] && [ ! -f "${ARG_HOME}/.Rprofile" ]; then
-      cp -p ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
-    fi
-    if [ -f "${HOMEDIR}/.Renviron" ] && [ ! -f "${ARG_HOME}/.Renviron" ]; then
-      cp -p ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
-    fi
-    if [ -f "${HOMEDIR}/.gitconfig" ] && [ ! -f "${ARG_HOME}/.gitconfig" ]; then
-      cp -p ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
-    fi
-    if [ -d "${HOMEDIR}/.ssh" ] && [ ! -d "${ARG_HOME}/.ssh" ]; then
-      ## would prefer to use ln but ... windows
-      cp -r -p ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
+      ## make sure no hidden files go into a git repo
+      touch ${ARG_HOME}/.gitignore
+      sed_fun '/^\.\*/d' ${ARG_HOME}/.gitignore
+      echo ".*" >> ${ARG_HOME}/.gitignore
+
+      if [ "${copy_config}" == "y" ]; then
+        if [ -f "${HOMEDIR}/.inputrc" ] && [ ! -f "${ARG_HOME}/.inputrc" ]; then
+          cp -p ${HOMEDIR}/.inputrc ${ARG_HOME}/.inputrc
+        fi
+        if [ -f "${HOMEDIR}/.Rprofile" ] && [ ! -f "${ARG_HOME}/.Rprofile" ]; then
+          cp -p ${HOMEDIR}/.Rprofile ${ARG_HOME}/.Rprofile
+        fi
+        if [ -f "${HOMEDIR}/.Renviron" ] && [ ! -f "${ARG_HOME}/.Renviron" ]; then
+          cp -p ${HOMEDIR}/.Renviron ${ARG_HOME}/.Renviron
+        fi
+        if [ -f "${HOMEDIR}/.gitconfig" ] && [ ! -f "${ARG_HOME}/.gitconfig" ]; then
+          cp -p ${HOMEDIR}/.gitconfig ${ARG_HOME}/.gitconfig
+        fi
+        if [ -d "${HOMEDIR}/.ssh" ] && [ ! -d "${ARG_HOME}/.ssh" ]; then
+          ## symlinks won't work because they would point to a non-existent directory
+          cp -r -p ${HOMEDIR}/.ssh ${ARG_HOME}/.ssh
+        fi
+      fi
     fi
 
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
-      cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
-      rm -rf ${ARG_HOME}/.rstudio/sessions
-      rm -rf ${ARG_HOME}/.rstudio/projects
-      rm -rf ${ARG_HOME}/.rstudio/projects_settings
+      echo "-----------------------------------------------------------------------"
+      echo "Copying Rstudio and JupyterLab settings to:"
+      echo "${ARG_HOME}"
+      echo "-----------------------------------------------------------------------"
+
+      {
+        which rsync 2>/dev/null
+        HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
+        AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
+        rsync -a ${HD}/.rstudio ${AH}/ --exclude sessions --exclude projects --exclude projects_settings
+      } ||
+      {
+        cp -r ${HOMEDIR}/.rstudio ${ARG_HOME}/.rstudio
+        rm -rf ${ARG_HOME}/.rstudio/sessions
+        rm -rf ${ARG_HOME}/.rstudio/projects
+        rm -rf ${ARG_HOME}/.rstudio/projects_settings
+      }
+
     fi
     if [ -d "${HOMEDIR}/.rsm-msba" ] && [ ! -d "${ARG_HOME}/.rsm-msba" ]; then
-      cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
-      rm -rf ${ARG_HOME}/.rsm-msba/R
-      rm -rf ${ARG_HOME}/.rsm-msba/bin
-      rm -rf ${ARG_HOME}/.rsm-msba/lib
-      rm -rf ${ARG_HOME}/.rsm-msba/share
+
+      {
+        which rsync 2>/dev/null
+        HD="$(echo "$HOMEDIR" | sed -E "s|^([A-z]):|/\1|")"
+        AH="$(echo "$ARG_HOME" | sed -E "s|^([A-z]):|/\1|")"
+        rsync -a ${HD}/.rsm-msba ${AH}/ --exclude R --exclude bin --exclude lib --exclude share
+      } ||
+      {
+        cp -r ${HOMEDIR}/.rsm-msba ${ARG_HOME}/.rsm-msba
+        rm -rf ${ARG_HOME}/.rsm-msba/R
+        rm -rf ${ARG_HOME}/.rsm-msba/bin
+        rm -rf ${ARG_HOME}/.rsm-msba/lib
+        rm -rf ${ARG_HOME}/.rsm-msba/share
+      }
     fi
     SCRIPT_HOME="$(script_home)"
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
-      cp -p "$0" ${ARG_HOME}/launch-${LABEL}.sh
-      sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.sh
+      cp -p "$0" ${ARG_HOME}/launch-${LABEL}.${EXT}
+      sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.${EXT}
       if [ "$2" != "" ]; then
-        sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.sh
+        sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.${EXT}
       fi
     fi
     HOMEDIR=${ARG_HOME}
@@ -262,11 +291,10 @@ else
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
     echo "Press (4) to launch postgres server, followed by [ENTER]:"
-    echo "Press (5) to launch pgadmin4, followed by [ENTER]:"
-    echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (7) to update the launch script, followed by [ENTER]:"
-    echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
-    echo "Press (9) to clear Python packages, followed by [ENTER]:"
+    echo "Press (5) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (6) to update the launch script, followed by [ENTER]:"
+    echo "Press (7) to clear Rstudio sessions and packages, followed by [ENTER]:"
+    echo "Press (8) to clear Python packages, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
@@ -317,6 +345,7 @@ else
     elif [ ${startup} == 3 ]; then
       if [ "${port}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on port 8989"
+        sleep 2s
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
@@ -327,42 +356,34 @@ else
     elif [ ${startup} == 4 ]; then
       if [ "${port}" == "" ]; then
         port=5432
+      else
+        echo "Currently postgres can only run on port 5432"
+        port=5432
       fi
       if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
         mkdir -p "${HOMEDIR}/postgresql/data"
       fi
-      echo "Starting postgres on port ${port}"
-      docker run --net ${LABEL} -p ${port}:5432 \
-        --name postgres \
-        -e POSTGRES_USER=${POSTGRES_USER} \
-        -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-        -e PGDATA=/var/lib/postgresql/data \
-        -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-        -d postgres:${POSTGRES_VERSION}
-      sleep 2s
+      pg_running=$(docker ps --filter "name=postgres" -q)
+      if [ "${pg_running}" == "" ]; then
+        echo "Starting postgres on port ${port}"
+        docker run --net ${LABEL} -p ${port}:5432 \
+          --name postgres \
+          -e POSTGRES_USER=${POSTGRES_USER} \
+          -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+          -e PGDATA=/var/lib/postgresql/data \
+          -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+          -d postgres:${POSTGRES_VERSION}
+        sleep 2s
+      else
+        echo "The postgres container is already running"
+      fi
     elif [ ${startup} == 5 ]; then
-      if [ "${port}" == "" ]; then
-        port=5050
-      fi
-      if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
-        mkdir -p "${HOMEDIR}/postgresql/pgadmin"
-      fi
-      echo "Starting pgadmin4 on port ${port}"
-      docker run --net ${LABEL} -p ${port}:80 \
-        --name pgadmin \
-        -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
-        -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
-        -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
-        -d dpage/pgadmin4:${PGADMIN_VERSION}
-      sleep 2s
-      open_browser http://localhost:${port}
-    elif [ ${startup} == 6 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing container"
       docker stop ${running}
       docker rm ${running}
-      docker network rm ${LABEL}
+      docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
 
       if [ "${port}" == "" ]; then
         echo "Pulling down tag \"latest\""
@@ -378,10 +399,6 @@ else
         docker pull postgres:${POSTGRES_VERSION}
       fi
 
-      if [ "$(docker images -q dpage/pgadmin4${PGADMIN_VERSION})" != "" ]; then
-        docker pull dpage/pgadmin4:${PGADMIN_VERSION}
-      fi
-
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
       has_network=$(docker network ls | awk "/ ${LABEL} /" | awk '{print $2}')
@@ -390,28 +407,28 @@ else
       fi
       docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 7 ]; then
+    elif [ ${startup} == 6 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
       running=$(docker ps -q)
       docker stop ${running}
       docker rm ${running}
-      docker network rm ${LABEL}
+      docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
       if [ -d "${HOMEDIR}/Desktop" ]; then
         SCRIPT_DOWNLOAD="${HOMEDIR}/Desktop"
       else
         SCRIPT_DOWNLOAD=${HOMEDIR}
       fi
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
-      chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
-      ${SCRIPT_DOWNLOAD}/launch-${LABEL}.sh
+      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
+      chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
+      ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
       exit 1
-    elif [ ${startup} == 8 ]; then
+    elif [ ${startup} == 7 ]; then
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rstudio/sessions
       rm -rf ${HOMEDIR}/.rstudio/projects
       rm -rf ${HOMEDIR}/.rstudio/projects_settings
       rm -rf ${HOMEDIR}/.rsm-msba/R
-    elif [ ${startup} == 9 ]; then
+    elif [ ${startup} == 8 ]; then
       echo "Removing locally installed Python packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rsm-msba/bin
       rm -rf ${HOMEDIR}/.rsm-msba/lib
@@ -425,16 +442,16 @@ else
       if [ "${running}" != "" ]; then
         echo "Stopping running containers ..."
         suspend_sessions () {
-          active_session=$(docker exec -t $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}')
-          if [ "${active_session}" != "" ]; then
-            docker exec -t $1 rstudio-server suspend-session ${active_session}
+          active_session=$(docker exec -t $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}' 2>/dev/null)
+          if [ "${active_session}" != "" ] && [ "${active_session}" != "OCI" ]; then
+            docker exec -t $1 rstudio-server suspend-session ${active_session} 2>/dev/null
           fi
         }
         for index in ${running}; do
           suspend_sessions $index
         done
         docker stop ${running}
-        docker network rm ${LABEL}
+        docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
       fi
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')

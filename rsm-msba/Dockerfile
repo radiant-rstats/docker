@@ -13,6 +13,7 @@ RUN apt-get update \
     python3-virtualenv \
     libzmq3-dev \
     gpg-agent
+
 ## install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
 RUN pip3 install -r /home/${NB_USER}/requirements.txt \
@@ -46,28 +47,16 @@ COPY connections/ /etc/${NB_USER}/connections
 
 ## copy logo for use with jupyterlab
 COPY images/logo200.svg /opt/radiant/logo.svg
-COPY images/download.svg /opt/radiant/rstudio.svg
 
 ## update R-packages
 RUN R -e 'radiant.update::radiant.update()'
 
 ## update radiant to development version
-RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
-
-## add to requirements file once fixed
-#RUN git clone https://github.com/jupyterhub/jupyter-rsession-proxy \
-#  && cd jupyter-rsession-proxy \
-#  && git checkout 66485d0276fbe4928758bfd71596f01ba528a62c \
-#  && pip3 install . \
-#  && jupyter labextension install jupyterlab-server-proxy \
-#  && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
-#  && chown ${NB_USER}:shiny -R /var/log/shiny-server \
-#  && cd - \
-#  && rm -rf jupyter-rsession-proxy
+#RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
 RUN pip3 install jupyter-rsession-proxy \
   && jupyter labextension install jupyterlab-server-proxy \

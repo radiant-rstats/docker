@@ -46,40 +46,7 @@ def _get_shiny_cmd(port):
     f.close()
     return ['shiny-server', f.name]
 
-def _get_rserver_cmd(port):
-    # Other paths rsession maybe in
-    other_paths = [
-        # When rstudio-server deb is installed
-        '/usr/lib/rstudio-server/bin/rserver',
-        # When just rstudio deb is installed
-        '/usr/lib/rstudio/bin/rserver',
-    ]
-    if shutil.which('rserver'):
-        executable = 'rserver'
-    else:
-        for op in other_paths:
-            if os.path.exists(op):
-                executable = op
-                break
-        else:
-            raise FileNotFoundError('Cannot find rserver in PATH')
-
-    return [
-        executable,
-        '--www-port=' + str(port)
-    ]
-
 c.ServerProxy.servers = {
-    'rstudio-rserver': {
-        'command': _get_rserver_cmd,
-        'environment': {
-            'USER': getpass.getuser()
-        },
-        'launcher_entry': {
-            'title': 'RStudio',
-            'icon_path': '/opt/radiant/rstudio.svg'
-        }
-    },
     'radiant': {
         'command': _get_shiny_cmd,
         'launcher_entry': {

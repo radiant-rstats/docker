@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+  rsm-msba-spark:
+    image: "vnijs/rsm-dev"
+    environment:
+      SHELL: bin/bash
+      PYTHONUSERBASE: /home/jovyan/.rsm-msba
+      JUPYTER_PATH: /home/jovyan/.rsm-msba/share/jupyter
+      JUPYTER_RUNTIME_DIR: /home/jovyan/.rsm-msba/share/jupyter/runtime
+      JUPYTER_CONFIG_DIR: /home/jovyan/.rsm-msba/jupyter
+      RPASSWORD: rstudio
+      JPASSWORD: jupyter
+    ports:
+      - 8080:8080
+      - 8787:8787
+      - 8989:8989
+    volumes:
+      - ~:/home/jovyan
+
+  postgres:
+    image: postgres:10.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+       - ~/postgresql/data:/var/lib/postgresql/data
