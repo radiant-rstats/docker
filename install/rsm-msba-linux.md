@@ -34,7 +34,7 @@ cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username is "jovyan" and the password is "rstudio". For Jupyter the password is "jupyter"
 
-![](figures/rsm-msba-menu.png)
+<img src="figures/rsm-msba-menu-linux.png" width="500px">
 
 The code above also created a copy of the file `launch-rsm-msba.sh` on your Desktop that you can use to "fire up" the container again in the future.
 
@@ -56,7 +56,7 @@ As mentioned above, for Rstudio the username and password are both "rstudio". Fo
 
 To update the container use the launch script and press 6 (+ enter). To update the launch script itself, press 7 (+ enter).
 
-![](figures/rsm-msba-menu.png)
+<img src="figures/rsm-msba-menu-linux.png" width="500px">
 
 If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.W
 
@@ -69,8 +69,11 @@ cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop
 
 ## Extended functionality with Apache Spark
 
-To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` script to your desktop. Starting up the script will update the computing environment. 
+Run the code below from a (bash) shell to extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr`. Use the `launch-rsm-msba-spark.sh` script on your desktop to run the container
 
 ```bash
+docker pull vnijs/rsm-msba-spark
+rm -rf ~/git/docker
+git clone https://github.com/radiant-rstats/docker.git ~/git/docker
 cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop
 ```
