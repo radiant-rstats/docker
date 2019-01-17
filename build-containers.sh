@@ -2,7 +2,7 @@ git pull
 docker login
 DOCKERHUB_VERSION=1.3.0
 UPLOAD="NO"
-UPLOAD="YES"
+#UPLOAD="YES"
 
 build () {
   {
