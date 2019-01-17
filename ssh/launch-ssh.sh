@@ -29,11 +29,35 @@ else
   }
 fi
 
+## check if script is already running and using port 8787
+CPORT=$(curl -s localhost:8787 2>/dev/null)
+if [ "$CPORT" != "" ]; then
+  echo "------------------------------------------------------------------------"
+  echo "A docker computing environment may already be running locally. To close"
+  echo "the SSH session and continue with the previous session press q + enter."
+  echo "To continue with the SSH session and stop the local session, press enter"
+  echo "------------------------------------------------------------------------"
+  read contd
+  if [ "${contd}" == "q" ]; then
+    exit 1
+  else
+    ## kill running containers
+    running=$(docker ps -q)
+    if [ "${running}" != "" ]; then
+      echo "-----------------------------------------------------------------------"
+      echo "Stopping running containers"
+      echo "-----------------------------------------------------------------------"
+      docker stop ${running}
+    fi
+  fi
+fi
+
 ## make connection to host running docker trough ssh
 ssh -M -S .tmp-ssh-info -fnNT \
   -L 8080:localhost:8080 \
   -L 8787:localhost:8787 \
   -L 8989:localhost:8989 \
+  -L 5432:localhost:5432 \
   ${UHOST}
 
 show_service () {
