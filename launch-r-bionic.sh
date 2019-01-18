@@ -272,7 +272,17 @@ else
   if [ "${has_network}" == "" ]; then
     docker network create ${LABEL}  # default options are fine
   fi
-  docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+
+  {
+    docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+  } || {
+    echo "-----------------------------------------------------------------------"
+    echo "It seems there was a problem starting the docker container. Please"
+    echo "report the issue and add a screenshot of any messages shown on screen."
+    echo "Press [ENTER] to continue"
+    echo "-----------------------------------------------------------------------"
+    read
+  }
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
