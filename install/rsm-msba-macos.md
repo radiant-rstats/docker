@@ -1,4 +1,4 @@
-## Installing the RSM-MSBA computing environment on macOS
+## [Installing the RSM-MSBA computing environment on macOS](#install-macos)
 
 Please follow the instructions below to install the computing environment we will use in the MSBA program. The environment has R, Rstudio, Python, and Jupyter lab + plus required packages pre-installed. The environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
@@ -21,15 +21,15 @@ Optional: If you are interested, the linked video gives a brief intro to what Do
 You will need the macOS command line developer tools for next steps. Follow the prompts until the software is installed.
 
 ```bash
-xcode-select --install
+xcode-select --install;
 ```
 
 **Step 3**: Now copy-and-paste the code below
 
 ```bash
-git clone https://github.com/radiant-rstats/docker.git ~/git/docker
-cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop/launch-rsm-msba.command
-~/Desktop/launch-rsm-msba.command
+git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
+cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop/launch-rsm-msba.command;
+~/Desktop/launch-rsm-msba.command;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username if "jovyan" and the password "rstudio". For Jupyter the password is "jupyter"
@@ -61,25 +61,25 @@ To update the container use the launch script and press 6 (+ enter). To update t
 If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
 ```bash
-docker pull vnijs/rsm-msba
-rm -rf ~/git/docker
-git clone https://github.com/radiant-rstats/docker.git ~/git/docker
-cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop/launch-rsm-msba.command
+docker pull vnijs/rsm-msba;
+rm -rf ~/git/docker;
+git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
+cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop/launch-rsm-msba.command;
 ```
 
-## Extended functionality with Apache Spark
+## [Extended functionality with Apache Spark](#extend-spark)
 
 To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` scrpit from the `git/docker` directory to your desktop and rename it to `launch-rsm-msba-spark.command`. Starting up the script will update the computing environment. 
 
 Run the code below from a (bash) shell to extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr`. Use the `launch-rsm-msba-spark.command` script on your desktop to run the container
 
 ```bash
-docker pull vnijs/rsm-msba-spark
-rm -rf ~/git/docker
-git clone https://github.com/radiant-rstats/docker.git ~/git/docker
-cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop/launch-rsm-msba-spark.command
+docker pull vnijs/rsm-msba-spark;
+rm -rf ~/git/docker;
+git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
+cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop/launch-rsm-msba-spark.command;
 ```
 
-## Trouble shooting
+## [Trouble shooting](#trouble-shooting)
 
 The only issues we have seen on macOS so far can be "fixed" by restarting docker and/or restarting your computer
