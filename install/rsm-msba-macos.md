@@ -1,6 +1,6 @@
 # Contents
-  - [Installing Installing the RSM-MSBA computing environment on macOS](#install) 
-  - [Updating the RSM-MSBA computing environment on macOS](#updating) 
+  - [Installing the RSM-MSBA computing environment on macOS](#installing-the-rsm-msba-computing-environment-on-macos) 
+  - [Updating the RSM-MSBA computing environment on macOS](#updating-the-rsm-msba-computing-environment-on-macos) 
 
 ## Installing the RSM-MSBA computing environment on macOS
 
