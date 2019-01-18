@@ -1,4 +1,8 @@
-## [Installing the RSM-MSBA computing environment on macOS](#install-macos)
+# Contents
+  - [Installing Installing the RSM-MSBA computing environment on macOS](#install) 
+  - [Updating the RSM-MSBA computing environment on macOS](#updating) 
+
+## Installing the RSM-MSBA computing environment on macOS
 
 Please follow the instructions below to install the computing environment we will use in the MSBA program. The environment has R, Rstudio, Python, and Jupyter lab + plus required packages pre-installed. The environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
