@@ -83,3 +83,12 @@ rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop;
 ```
+
+## Trouble shooting
+
+The only issues we have seen on Linux so far can be "fixed" by restarting docker and/or rebooting. To restart the docker service use:
+
+```{r}
+sudo service docker stop
+sudo service docker start
+```
