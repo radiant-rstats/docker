@@ -1,3 +1,9 @@
+# Contents
+  - [Installing the RSM-MSBA computing environment on Windows](#installing-the-rsm-msba-computing-environment-on-windows) 
+  - [Updating the RSM-MSBA computing environment on Windows](#updating-the-rsm-msba-computing-environment-on-windows) 
+  - [Extended functionality with Apache Spark](#extended-functionality-with-apache-spark)
+  - [Trouble shooting](#trouble-shooting)
+
 ## Installing the RSM-MSBA computing environment on Windows
 
 Please follow the instructions below to install the computing environment we will use in the MSBA program. The environment has R, Rstudio, Python, and Jupyter lab + plus required packages pre-installed. The environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
@@ -39,17 +45,17 @@ There is no is no need to "View Release Notes" on the last screen but do "Launch
 **Step4**: Open a bash terminal and copy-and-paste the code below to add `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal
 
 ```bash
-curl http://www2.futureware.at/~nickoe/msys2-mirror/msys/x86_64/rsync-3.1.2-2-x86_64.pkg.tar.xz -o rsync.pkg.tar.xz
-tar xvJf rsync.pkg.tar.xz -C /c/Program\ Files/Git/
-rm -rf rsync.pkg.tar.xz
+curl http://www2.futureware.at/~nickoe/msys2-mirror/msys/x86_64/rsync-3.1.2-2-x86_64.pkg.tar.xz -o rsync.pkg.tar.xz;
+tar xvJf rsync.pkg.tar.xz -C /c/Program\ Files/Git/;
+rm -rf rsync.pkg.tar.xz;
 ```
 
 Next, copy-and-paste the code below to clone the launch scripts needed to start the docker container. 
 
 ```bash
-git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
-cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
-C:/Users/$USERNAME/Desktop/launch-rsm-msba.sh
+git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker;
+cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop;
+C:/Users/$USERNAME/Desktop/launch-rsm-msba.sh;
 ```
 
 This step finalizes the installation of the computing environment. The first time you run the launch script it will download the latest version of the computing environment. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. You can press 2 (and Enter) to start Rstudio. Press 3 (and Enter) to start Jupyter Lab. Press q to quit. For Rstudio the username if "jovyan" and the password is "rstudio". For Jupyter the password is "jupyter"
@@ -81,10 +87,10 @@ To update the container use the launch script and press 6 (+ enter). To update t
 If for some reason you are having trouble updating either the container or the launch script open a bash terminal and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
 ```bash
-docker pull vnijs/rsm-msba
-rm -rf C:/Users/$USERNAME/git/docker
-git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
-cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop
+docker pull vnijs/rsm-msba;
+rm -rf C:/Users/$USERNAME/git/docker;
+git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker;
+cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Desktop;
 ```
 
 ## Extended functionality with Apache Spark
@@ -92,10 +98,10 @@ cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba.sh C:/Users/$USERNAME/Deskto
 Run the code below from a (bash) shell to extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr`. Use the `launch-rsm-msba-spark.sh` script on your desktop to run the container
 
 ```bash
-docker pull vnijs/rsm-msba-spark
-rm -rf C:/Users/$USERNAME/git/docker
-git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker
-cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh C:/Users/$USERNAME/Desktop
+docker pull vnijs/rsm-msba-spark;
+rm -rf C:/Users/$USERNAME/git/docker;
+git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker;
+cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh C:/Users/$USERNAME/Desktop;
 ```
 
 ## Trouble shooting

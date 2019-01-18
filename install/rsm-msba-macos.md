@@ -1,6 +1,8 @@
 # Contents
   - [Installing the RSM-MSBA computing environment on macOS](#installing-the-rsm-msba-computing-environment-on-macos) 
   - [Updating the RSM-MSBA computing environment on macOS](#updating-the-rsm-msba-computing-environment-on-macos) 
+  - [Extended functionality with Apache Spark](#extended-functionality-with-apache-spark)
+  - [Trouble shooting](#trouble-shooting)
 
 ## Installing the RSM-MSBA computing environment on macOS
 
@@ -71,7 +73,7 @@ git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 cp -p ~/git/docker/launch-rsm-msba.sh ~/Desktop/launch-rsm-msba.command;
 ```
 
-## [Extended functionality with Apache Spark](#extend-spark)
+## Extended functionality with Apache Spark
 
 To extend the functionality of the computing container with `Apache Spark`, `pyspark`, and `sparklyr` copy the `launch-rsm-msba-spark.sh` scrpit from the `git/docker` directory to your desktop and rename it to `launch-rsm-msba-spark.command`. Starting up the script will update the computing environment. 
 
@@ -84,6 +86,6 @@ git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop/launch-rsm-msba-spark.command;
 ```
 
-## [Trouble shooting](#trouble-shooting)
+## Trouble shooting
 
 The only issues we have seen on macOS so far can be "fixed" by restarting docker and/or restarting your computer
