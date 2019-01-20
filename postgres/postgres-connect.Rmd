@@ -121,3 +121,5 @@ To connect to the data base, create a new "server" by right clicking on the `Ser
 ![](images/pgadmin-settings.png)
 
 See the screen shot below to access the `flights` table. Right click on `flights` and select _View/Edit Data > First 100 Rows_ to get a table view of the data. 
+
+![](images/pgadmin-flights.png)
