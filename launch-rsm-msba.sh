@@ -188,6 +188,10 @@ else
       fi
     fi
 
+    if [ -d "${HOMEDIR}/.R" ]; then
+      yes | cp -rf ${HOMEDIR}/.R ${ARG_HOME}/.R
+    fi
+
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Copying Rstudio and JupyterLab settings to:"

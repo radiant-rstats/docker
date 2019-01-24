@@ -114,7 +114,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 ## R-Studio Preview
-ENV RSTUDIO_VERSION 1.2.1226
+ENV RSTUDIO_VERSION 1.2.1244
 
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
@@ -154,12 +154,15 @@ RUN ln -sf /home/${NB_USER}/.Rprofile /home/shiny/.Rprofile \
 RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron
 
 ## installing some basic r-packages
-RUN R -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown"))'
+RUN R -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc"))'
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY userconf.sh /usr/local/bin/userconf.sh
 RUN chmod +x /usr/local/bin/userconf.sh
+
+## copy dbase connections
+COPY connections/ /etc/${NB_USER}/connections
 
 EXPOSE 8080 8787
 

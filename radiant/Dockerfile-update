@@ -1,4 +1,4 @@
-FROM vnijs/radiant:1.2.1
+FROM vnijs/radiant:1.3.0
 
 MAINTAINER Vincent Nijs "radiant@rady.ucsd.edu"
 

@@ -188,6 +188,10 @@ else
       fi
     fi
 
+    if [ -d "${HOMEDIR}/.R" ]; then
+      yes | cp -rf ${HOMEDIR}/.R ${ARG_HOME}/.R
+    fi
+
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Copying Rstudio and JupyterLab settings to:"
@@ -273,7 +277,6 @@ else
     echo "-----------------------------------------------------------------------"
     read
   }
-
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2

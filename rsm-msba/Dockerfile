@@ -42,9 +42,6 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
   && unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/ \
   && rm -rf /tmp/*
 
-## copy dbase connections for use with rsm-msba/docker-rsm-msba-pg.yml
-COPY connections/ /etc/${NB_USER}/connections
-
 ## copy logo for use with jupyterlab
 COPY images/logo200.svg /opt/radiant/logo.svg
 
