@@ -84,6 +84,19 @@ git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop;
 ```
 
+## Installing R and Python packages locally
+
+To install python packages that will persist after restarting the docker container enter code like the below from the terminal in JupyterLab:
+
+`pip3 install --user redis`
+
+To install R packages that will persist after restarting the docker container enter code like the below in Rstudio:
+
+`install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))`
+
+To remove locally installed python packages press 9 + Enter in the docker launcher menu. To remove locally installed R packages press 8 + Enter in the docker launcher menu. 
+
+
 ## Trouble shooting
 
 The only issues we have seen on Linux so far can be "fixed" by restarting docker and/or rebooting. To restart the docker service use:

@@ -104,6 +104,18 @@ git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/do
 cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh C:/Users/$USERNAME/Desktop;
 ```
 
+## Installing R and Python packages locally
+
+To install python packages that will persist after restarting the docker container enter code like the below from the terminal in JupyterLab:
+
+`pip3 install --user redis`
+
+To install R packages that will persist after restarting the docker container enter code like the below in Rstudio:
+
+`install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))`
+
+To remove locally installed python packages press 9 + Enter in the docker launcher menu. To remove locally installed R packages press 8 + Enter in the docker launcher menu. 
+
 ## Trouble shooting
 
 Check if a firewall or VPN is blocking docker access to your home directory. If this is an issue on your system, a warning should show when you check the "C" drive in docker settings and click "Apply". See screen shot below
