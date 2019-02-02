@@ -384,16 +384,26 @@ else
       pg_running=$(docker ps --filter "name=postgres" -q)
       if [ "${pg_running}" == "" ]; then
         echo "Starting postgres on port ${port}"
-        docker run --net ${LABEL} -p ${port}:5432 \
-          --name postgres \
-          -e POSTGRES_USER=${POSTGRES_USER} \
-          -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-          -e PGDATA=/var/lib/postgresql/data \
-          -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-          --user "$(id -u):$(id -g)" \
-          postgres:${POSTGRES_VERSION}
-          # -v /etc/passwd:/etc/passwd:ro \
-          # -d postgres:${POSTGRES_VERSION}
+        if [[ "$ostype" == "Windows" ]]; then
+          ## mounting local directories for postgres doesn't currently work
+          ## see https://github.com/docker/for-win/issues/445
+          docker volume create --driver local pg_data
+          docker run --net ${LABEL} -p ${port}:5432 \
+            --name postgres \
+            -e POSTGRES_USER=${POSTGRES_USER} \
+            -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+            -e PGDATA=/var/lib/postgresql/data \
+            -v pg_data:/var/lib/postgresql/data \
+            -d postgres:${POSTGRES_VERSION}
+        else
+          docker run --net ${LABEL} -p ${port}:5432 \
+            --name postgres \
+            -e POSTGRES_USER=${POSTGRES_USER} \
+            -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+            -e PGDATA=/var/lib/postgresql/data \
+            -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+            -d postgres:${POSTGRES_VERSION}
+        fi
         sleep 2s
       else
         echo "The postgres container is already running"
