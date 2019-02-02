@@ -393,7 +393,7 @@ else
             -e POSTGRES_USER=${POSTGRES_USER} \
             -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
             -e PGDATA=/var/lib/postgresql/data \
-            -v pg_data:/var/lib/postgresql/data \
+            -v pg_data:/var/lib/postgresql/data:Z \
             -d postgres:${POSTGRES_VERSION}
         else
           docker run --net ${LABEL} -p ${port}:5432 \
