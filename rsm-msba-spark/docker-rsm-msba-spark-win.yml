@@ -27,11 +27,7 @@ services:
       - 5432:5432
     restart: always
     volumes:
-       - pg_data:/var/lib/postgresql/data
-
-  volumes:
-    pg_data:
-      external: true
+       - pg_data:/var/lib/postgresql/data:Z
 
   pgadmin:
     image: dpage/pgadmin4
@@ -43,3 +39,7 @@ services:
     restart: always
     volumes:
        - ~/postgresql/pgadmin:/var/lib/pgadmin
+
+volumes:
+  pg_data:
+    external: true

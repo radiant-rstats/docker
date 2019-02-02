@@ -20,3 +20,8 @@ if (!"mtcars" %in% db_tabs) {
 
 dat <- tbl(con, "mtcars")
 dat
+
+
+dbListTables(con)
+db_drop_table(con, table='mtcars')
+dbListTables(con)

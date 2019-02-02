@@ -387,7 +387,7 @@ else
         if [[ "$ostype" == "Windows" ]]; then
           ## mounting local directories for postgres doesn't currently work
           ## see https://github.com/docker/for-win/issues/445
-          docker volume create --driver local pg_data
+          docker volume create -d local --name pg_data
           docker run --net ${LABEL} -p ${port}:5432 \
             --name postgres \
             -e POSTGRES_USER=${POSTGRES_USER} \
