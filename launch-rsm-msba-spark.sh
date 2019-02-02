@@ -391,8 +391,8 @@ else
           -e PGDATA=/var/lib/postgresql/data \
           -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
           --user "$(id -u):$(id -g)" \
-          -v /etc/passwd:/etc/passwd:ro \
           postgres:${POSTGRES_VERSION}
+          # -v /etc/passwd:/etc/passwd:ro \
           # -d postgres:${POSTGRES_VERSION}
         sleep 2s
       else
