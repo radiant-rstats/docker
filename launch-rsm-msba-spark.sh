@@ -390,7 +390,10 @@ else
           -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
           -e PGDATA=/var/lib/postgresql/data \
           -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-          -d postgres:${POSTGRES_VERSION}
+          --user "$(id -u):$(id -g)" \
+          -v /etc/passwd:/etc/passwd:ro \
+          postgres:${POSTGRES_VERSION}
+          # -d postgres:${POSTGRES_VERSION}
         sleep 2s
       else
         echo "The postgres container is already running"
