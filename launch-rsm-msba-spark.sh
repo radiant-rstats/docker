@@ -41,7 +41,7 @@ POSTGRES_PASSWORD=postgres
 PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
 PGADMIN_DEFAULT_PASSWORD=pgadmin
 POSTGRES_VERSION=10.6
-PGADMIN_VERSION=3.6
+PGADMIN_VERSION=latest
 
 ## what os is being used
 ostype=`uname`
