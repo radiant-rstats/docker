@@ -378,25 +378,26 @@ else
         echo "Currently postgres can only run on port 5432"
         port=5432
       fi
-      if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
-        mkdir -p "${HOMEDIR}/postgresql/data"
-      fi
       pg_running=$(docker ps --filter "name=postgres" -q)
       if [ "${pg_running}" == "" ]; then
         echo "Starting postgres on port ${port}"
         if [[ "$ostype" == "Windows" ]]; then
           ## mounting local directories for postgres doesn't currently work
           ## see https://github.com/docker/for-win/issues/445
-          docker volume create -d local --name pg_data
+          ## Solution from https://stackoverflow.com/a/20652410/1974918
+          docker volume create --name pg_data
           docker run --net ${LABEL} -p ${port}:5432 \
             --name postgres \
             -e POSTGRES_USER=${POSTGRES_USER} \
             -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
             -e PGDATA=/var/lib/postgresql/data \
-            -v pg_data:/var/lib/postgresql/data:Z \
+            -v pg_data:/var/lib/postgresql/data \
             -d postgres:${POSTGRES_VERSION}
         else
-          docker run --net ${LABEL} -p ${port}:5432 \
+            # if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
+               # mkdir -p "${HOMEDIR}/postgresql/data"
+            # fi
+            docker run --net ${LABEL} -p ${port}:5432 \
             --name postgres \
             -e POSTGRES_USER=${POSTGRES_USER} \
             -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
@@ -415,18 +416,32 @@ else
         echo "Currently pgadmin4 can only run on port 5050"
         port=5050
       fi
-      if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
-        mkdir -p "${HOMEDIR}/postgresql/pgadmin"
-      fi
+
       pga_running=$(docker ps --filter "name=pgadmin" -q)
       if [ "${pga_running}" == "" ]; then
         echo "Starting pgadmin4 on port ${port}"
-        docker run --net ${LABEL} -p ${port}:80 \
-          --name pgadmin \
-          -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
-          -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
-          -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
-          -d dpage/pgadmin4:${PGADMIN_VERSION}
+        if [[ "$ostype" == "Windows" ]]; then
+          ## mounting local directories for postgres doesn't currently work
+          ## see https://github.com/docker/for-win/issues/445
+          ## Solution from https://stackoverflow.com/a/20652410/1974918
+          docker volume create --name pg_admin
+          docker run --net ${LABEL} -p ${port}:80 \
+            --name pgadmin \
+            -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
+            -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
+            -v pg_admin:/var/lib/pgadmin \
+            -d dpage/pgadmin4:${PGADMIN_VERSION}
+        else
+          # if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
+          #   mkdir -p "${HOMEDIR}/postgresql/pgadmin"
+          # fi
+          docker run --net ${LABEL} -p ${port}:80 \
+            --name pgadmin \
+            -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
+            -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
+            -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
+            -d dpage/pgadmin4:${PGADMIN_VERSION}
+        fi
         sleep 2s
       else
         echo "The pgadmin4 container is already running"
