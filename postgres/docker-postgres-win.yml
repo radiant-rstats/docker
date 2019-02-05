@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+  postgres:
+    image: postgres:10.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: always
+    networks:
+      - rsm-msba-spark
+
+    volumes:
+       - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+    external: true
+
+networks:
+  rsm-msba-spark:
+    external: true
+

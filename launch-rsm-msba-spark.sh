@@ -381,20 +381,34 @@ else
       pg_running=$(docker ps --filter "name=postgres" -q)
       if [ "${pg_running}" == "" ]; then
         echo "Starting postgres on port ${port}"
+
+
         if [[ "$ostype" == "Windows" ]]; then
+          if [ ! -f "C:/Users/$USERNAME/git/docker/launch-postgres-win.sh" ]; then
+            echo "--------------------------------------------------------------------------------"
+            echo "The required script (launch-postgres-win.sh) to start postgres on Windows does"
+            echo "seem to be available. Please visit the link below for information on how to"
+            echo "update the set of launch scripts using git."
+            echo "If you do have the required launch script on your system double-click it to"
+            echo "start postgres on port 5432"
+            echo "https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md"
+            echo "--------------------------------------------------------------------------------"
+          else
+            C:/Users/$USERNAME/git/docker/launch-postgres-win.sh
+          fi
           ## mounting local directories for postgres doesn't currently work
           ## see https://github.com/docker/for-win/issues/445
           ## Solution from https://stackoverflow.com/a/20652410/1974918
-          docker volume create --name pg_data
-          docker run --net ${LABEL} -p ${port}:5432 \
-            --name postgres \
-            -e POSTGRES_USER=${POSTGRES_USER} \
-            -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-            -e PGDATA=/var/lib/postgresql/data \
-            -v pg_data:/var/lib/postgresql/data \
-            -d postgres:${POSTGRES_VERSION}
+          # docker volume create --name pg_data
+          # docker run --net ${LABEL} -p ${port}:5432 \
+          #   --name postgres \
+          #   -e POSTGRES_USER=${POSTGRES_USER} \
+          #   -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+          #   -e PGDATA=/var/lib/postgresql/data \
+          #   -v pg_data:/var/lib/postgresql/data \
+          #   -d postgres:${POSTGRES_VERSION}
         else
-            docker run --net ${LABEL} -p ${port}:5432 \
+          docker run --net ${LABEL} -p ${port}:5432 \
             --name postgres \
             -e POSTGRES_USER=${POSTGRES_USER} \
             -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
