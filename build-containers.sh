@@ -1,8 +1,8 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.3.1
+DOCKERHUB_VERSION=1.3.2
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 build () {
   {
@@ -45,12 +45,18 @@ launcher () {
   fi
 }
 
+LABEL=rsm-msba-spark
+build
+
+exit 1
+
+
 LABEL=r-bionic
 build
 launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
-build
+build NO
 
 LABEL=rsm-msba
 build

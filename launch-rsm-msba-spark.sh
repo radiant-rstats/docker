@@ -394,9 +394,6 @@ else
             -v pg_data:/var/lib/postgresql/data \
             -d postgres:${POSTGRES_VERSION}
         else
-            # if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
-               # mkdir -p "${HOMEDIR}/postgresql/data"
-            # fi
             docker run --net ${LABEL} -p ${port}:5432 \
             --name postgres \
             -e POSTGRES_USER=${POSTGRES_USER} \
@@ -432,9 +429,6 @@ else
             -v pg_admin:/var/lib/pgadmin \
             -d dpage/pgadmin4:${PGADMIN_VERSION}
         else
-          # if [ ! -d "${HOMEDIR}/postgresql/pgadmin" ]; then
-          #   mkdir -p "${HOMEDIR}/postgresql/pgadmin"
-          # fi
           docker run --net ${LABEL} -p ${port}:80 \
             --name pgadmin \
             -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
@@ -442,7 +436,7 @@ else
             -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
             -d dpage/pgadmin4:${PGADMIN_VERSION}
         fi
-        sleep 2s
+        sleep 4s
       else
         echo "The pgadmin4 container is already running"
       fi
