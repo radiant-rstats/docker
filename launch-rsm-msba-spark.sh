@@ -391,8 +391,10 @@ else
             echo "update the set of launch scripts using git."
             echo "If you do have the required launch script on your system double-click it to"
             echo "start postgres on port 5432"
+            echo ""
             echo "https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md"
             echo "--------------------------------------------------------------------------------"
+            sleep 10
           else
             C:/Users/$USERNAME/git/docker/launch-postgres-win.sh
           fi
