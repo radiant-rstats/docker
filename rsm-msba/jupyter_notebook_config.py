@@ -8,7 +8,6 @@ import errno
 import stat
 import textwrap
 import getpass
-import shutil
 import tempfile
 
 c = get_config()

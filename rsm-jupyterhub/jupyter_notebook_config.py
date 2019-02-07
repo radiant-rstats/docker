@@ -18,6 +18,16 @@ c.NotebookApp.open_browser = False
 # https://github.com/jupyter/notebook/issues/3130
 c.FileContentsManager.delete_to_trash = False
 
+# shutdown the server after no activity for an hour
+c.NotebookApp.shutdown_no_activity_timeout = 60 * 60
+
+# shutdown kernels after no activity for 30 minutes
+c.MappingKernelManager.cull_idle_timeout = 30 * 60
+
+# check for idle kernels every two minutes
+c.MappingKernelManager.cull_interval = 2 * 60
+
+## based on @yuvipanda's comments https://github.com/yuvipanda/jupyter-launcher-shortcuts/issues/1
 def _get_shiny_cmd(port):
     conf = textwrap.dedent("""
         run_as {user};
@@ -44,42 +54,12 @@ def _get_shiny_cmd(port):
     f.close()
     return ['shiny-server', f.name]
 
-import shutil
-
-def _get_rserver_cmd(port):
-    # Other paths rsession maybe in
-    other_paths = [
-        # When rstudio-server deb is installed
-        '/usr/lib/rstudio-server/bin/rserver',
-        # When just rstudio deb is installed
-        '/usr/lib/rstudio/bin/rserver',
-    ]
-    if shutil.which('rserver'):
-        executable = 'rserver'
-    else:
-        for op in other_paths:
-            if os.path.exists(op):
-                executable = op
-                break
-        else:
-            raise FileNotFoundError('Can not find rserver in PATH')
-
-    return [
-        executable,
-        '--www-port=' + str(port)
-    ]
-
 c.ServerProxy.servers = {
-    'rstudio-rserver': {
-        'command': _get_rserver_cmd,
-        'launcher_entry': {
-            'title': 'RStudio (via RServer)',
-        }
-    },
     'radiant': {
         'command': _get_shiny_cmd,
         'launcher_entry': {
-            'title': 'Radiant'
+            'title': 'Radiant',
+            'icon_path': '/opt/radiant/logo.svg'
         }
     }
 }

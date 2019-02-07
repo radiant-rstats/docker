@@ -20,8 +20,8 @@ COPY start.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 
-## already added in rsm-msba
-# COPY jupyter_notebook_config.py /etc/jupyter/
+## updating the version added in rsm-msba
+COPY jupyter_notebook_config.py /etc/jupyter/
 
 RUN chmod +x /usr/local/bin/start.sh && \
   chmod +x /usr/local/bin/start-notebook.sh && \
