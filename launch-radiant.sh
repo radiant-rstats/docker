@@ -368,28 +368,37 @@ else
         open_browser http://localhost:${port}
       fi
     elif [ ${startup} == 3 ]; then
-      if [ "${port}" == "" ]; then
-        port=5432
+      if [[ "$ostype" != "Windows" ]]; then
+        echo "-----------------------------------------------------------------------"
+        echo "Due do a longstanding issue in Docker for Windows postrgres will not"
+        echo "persist data after restarting the docker container. We recommend you"
+        echo "install and run Postgres using:"
+        echo ""
+        echo "http://www.postgresqltutorial.com/install-postgresql/"
+        echo "-----------------------------------------------------------------------"
+        sleep 10s
       else
-        echo "Currently postgres can only run on port 5432"
-        port=5432
-      fi
-      if [ ! -d "${HOMEDIR}/postgresql/data" ]; then
-        mkdir -p "${HOMEDIR}/postgresql/data"
-      fi
-      pg_running=$(docker ps --filter "name=postgres" -q)
-      if [ "${pg_running}" == "" ]; then
-        echo "Starting postgres on port ${port}"
-        docker run --net ${LABEL} -p ${port}:5432 \
-          --name postgres \
-          -e POSTGRES_USER=${POSTGRES_USER} \
-          -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-          -e PGDATA=/var/lib/postgresql/data \
-          -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-          -d postgres:${POSTGRES_VERSION}
-        sleep 2s
-      else
-        echo "The postgres container is already running"
+        if [ "${port}" == "" ]; then
+          port=5432
+        else
+          echo "Currently postgres can only run on port 5432"
+          port=5432
+        fi
+        pg_running=$(docker ps --filter "name=postgres" -q)
+        if [ "${pg_running}" == "" ]; then
+          echo "Starting postgres on port ${port}"
+          docker run --net ${LABEL} -p ${port}:5432 \
+            --name postgres \
+            -e POSTGRES_USER=${POSTGRES_USER} \
+            -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+            -e PGDATA=/var/lib/postgresql/data \
+            -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+            -d postgres:${POSTGRES_VERSION}
+          sleep 2s
+        else
+          echo "Postgres already seems to be running on port 5432"
+          sleep 2s
+        fi
       fi
     elif [ ${startup} == 4 ]; then
       running=$(docker ps -q)
