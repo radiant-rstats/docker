@@ -36,6 +36,8 @@ NB_USER="jovyan"
 RPASSWORD="rstudio"
 ID="vnijs"
 LABEL="radiant"
+# NETWORK=${LABEL}
+NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
 if [ "$ARG_TAG" != "" ]; then
   IMAGE_VERSION="$ARG_TAG"
@@ -272,13 +274,13 @@ else
   echo "-----------------------------------------------------------------------"
 
   ## based on https://stackoverflow.com/a/52852871/1974918
-  has_network=$(docker network ls | awk "/ ${LABEL} /" | awk '{print $2}')
+  has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
   if [ "${has_network}" == "" ]; then
-    docker network create ${LABEL}  # default options are fine
+    docker network create ${NETWORK}  # default options are fine
   fi
 
   {
-    docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+    docker run --net ${NETWORK} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
   } || {
     echo "-----------------------------------------------------------------------"
     echo "It seems there was a problem starting the docker container. Please"
@@ -352,7 +354,7 @@ else
         open_browser http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8080 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${NETWORK} -d -p ${port}:8080 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -363,7 +365,7 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run --net ${LABEL} -d -p ${port}:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${NETWORK} -d -p ${port}:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -387,7 +389,7 @@ else
         pg_running=$(docker ps --filter "name=postgres" -q)
         if [ "${pg_running}" == "" ]; then
           echo "Starting postgres on port ${port}"
-          docker run --net ${LABEL} -p ${port}:5432 \
+          docker run --net ${NETWORK} -p ${port}:5432 \
             --name postgres \
             -e POSTGRES_USER=${POSTGRES_USER} \
             -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
@@ -406,7 +408,7 @@ else
       echo "Updating the ${LABEL} computing container"
       docker stop ${running}
       docker rm ${running}
-      docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
+      docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
 
       if [ "${port}" == "" ]; then
         echo "Pulling down tag \"latest\""
@@ -428,18 +430,18 @@ else
 
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
-      has_network=$(docker network ls | awk "/ ${LABEL} /" | awk '{print $2}')
+      has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
       if [ "${has_network}" == "" ]; then
-        docker network create ${LABEL}  # default options are fine
+        docker network create ${NETWORK}  # default options are fine
       fi
-      docker run --net ${LABEL} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
+      docker run --net ${NETWORK} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 5 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
       running=$(docker ps -q)
       docker stop ${running}
       docker rm ${running}
-      docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
+      docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
 
       if [ -d "${HOMEDIR}/Desktop" ]; then
         SCRIPT_DOWNLOAD="${HOMEDIR}/Desktop"
@@ -474,7 +476,7 @@ else
           suspend_sessions $index
         done
         docker stop ${running}
-        docker network rm $(docker network ls | awk "/ ${LABEL} /" | awk '{print $1}')
+        docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
       fi
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')

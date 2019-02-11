@@ -11,7 +11,12 @@ has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
 if [ "${has_volume}" == "" ]; then
   docker volume create --name=pg_data
 fi
-# docker network create "rsm-msba-spark"
+
+NETWORK="rsm-docker"
+has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
+if [ "${has_network}" == "" ]; then
+  docker network create ${NETWORK}  # default options are fine
+fi
 
 ## change to some other path to use as default
 SCRIPT_HOME="$(script_home)"
