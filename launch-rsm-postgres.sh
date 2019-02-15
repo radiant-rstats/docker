@@ -260,17 +260,18 @@ else
   if [ "${has_network}" == "" ]; then
     docker network create ${NETWORK}  # default options are fine
   fi
-  # has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
-  # if [ "${has_volume}" == "" ]; then
-  #   docker volume create --name=pg_data
-  # fi
+  has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
+  if [ "${has_volume}" == "" ]; then
+    docker volume create --name=pg_data
+  fi
   {
     # -v pg_data:/var/lib/postgresql/data \
+    # -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
     docker run --net ${NETWORK} -d \
       -p 8080:8080 -p 8787:8787 -p 8989:8989 -p 5432:5432 \
       -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} \
       -v ${HOMEDIR}:/home/${NB_USER} \
-      -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+      -v pg_data:/var/lib/postgresql/data \
       ${IMAGE}:${IMAGE_VERSION}
   } || {
     echo "-----------------------------------------------------------------------"
