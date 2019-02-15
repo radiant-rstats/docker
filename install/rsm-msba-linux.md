@@ -2,6 +2,7 @@
   - [Installing the RSM-MSBA computing environment on Linux](#installing-the-rsm-msba-computing-environment-on-linux) 
   - [Updating the RSM-MSBA computing environment on Linux](#updating-the-rsm-msba-computing-environment-on-linux) 
   - [Extended functionality with Apache Spark](#extended-functionality-with-apache-spark)
+  - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
   - [Trouble shooting](#trouble-shooting)
 
 ## Installing the RSM-MSBA computing environment on Linux

@@ -2,6 +2,7 @@
   - [Installing the RSM-MSBA computing environment on Windows](#installing-the-rsm-msba-computing-environment-on-windows) 
   - [Updating the RSM-MSBA computing environment on Windows](#updating-the-rsm-msba-computing-environment-on-windows) 
   - [Extended functionality with Apache Spark](#extended-functionality-with-apache-spark)
+  - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
   - [Trouble shooting](#trouble-shooting)
 
 ## Installing the RSM-MSBA computing environment on Windows
