@@ -73,6 +73,10 @@ RUN chmod +x /tini
 ## postgres will be started using start-notebook.sh
 ## reject remote connections to the database
 RUN echo "host all  all    0.0.0.0/0  reject" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+RUN echo "host all  all    127.0.0.1/32   trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+RUN echo "host all  all    ::1/128        trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+
+ENV JUPYTER_ENABLE_LAB=1
 
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
