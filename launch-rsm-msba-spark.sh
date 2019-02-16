@@ -36,7 +36,14 @@ else
   DOCKERHUB_VERSION=$(docker inspect -f '{{range $index, $value := .Config.Env}}{{println $value}} {{end}}' ${IMAGE}:${IMAGE_VERSION} | grep DOCKERHUB_VERSION)
   DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
 fi
-POSTGRES_VERSION=10
+
+## username and password for postgres and pgadmin4
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
+PGADMIN_DEFAULT_PASSWORD=pgadmin
+POSTGRES_VERSION=10.6
+PGADMIN_VERSION=latest
 
 ## what os is being used
 ostype=`uname`
@@ -261,17 +268,9 @@ else
   if [ "${has_network}" == "" ]; then
     docker network create ${NETWORK}  # default options are fine
   fi
-  has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
-  if [ "${has_volume}" == "" ]; then
-    docker volume create --name=pg_data
-  fi
+
   {
-    docker run --net ${NETWORK} -d \
-      -p 8080:8080 -p 8787:8787 -p 8989:8989 -p 5432:5432 \
-      -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} \
-      -v ${HOMEDIR}:/home/${NB_USER} \
-      -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-      ${IMAGE}:${IMAGE_VERSION}
+    docker run --net ${NETWORK} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
   } || {
     echo "-----------------------------------------------------------------------"
     echo "It seems there was a problem starting the docker container. Please"
@@ -310,14 +309,16 @@ else
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (5) to update the launch script, followed by [ENTER]:"
-    echo "Press (6) to clear Rstudio sessions and packages, followed by [ENTER]:"
-    echo "Press (7) to clear Python packages, followed by [ENTER]:"
+    echo "Press (4) to launch postgres server, followed by [ENTER]:"
+    echo "Press (5) to launch pgadmin4, followed by [ENTER]:"
+    echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (7) to update the launch script, followed by [ENTER]:"
+    echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
+    echo "Press (9) to clear Python packages, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
-    echo "Note: To start a specific container version type, e.g., 4 ${DOCKERHUB_VERSION} [ENTER]"
+    echo "Note: To start a specific container version type, e.g., 6 ${DOCKERHUB_VERSION} [ENTER]"
     echo "-----------------------------------------------------------------------"
     read startup port
 
@@ -346,10 +347,7 @@ else
         open_browser http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run --net ${NETWORK} -d \
-          -p ${port}:8080 \
-          -v ${HOMEDIR}:/home/${NB_USER} \
-          ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${NETWORK} -d -p ${port}:8080 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -360,11 +358,7 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run --net ${NETWORK} -d \
-          -p ${port}:8787 \
-          -e RPASSWORD=${RPASSWORD} \
-          -v ${HOMEDIR}:/home/${NB_USER} \
-          ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${NETWORK} -d -p ${port}:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -375,15 +369,80 @@ else
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run --net ${NETWORK} -d \
-          -p ${port}:8989 \
-          -e JPASSWORD=${JPASSWORD} \
-          -v ${HOMEDIR}:/home/${NB_USER}
-          ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${NETWORK} -d -p ${port}:8989 -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
         sleep 5s
         open_browser http://localhost:${port}/lab
       fi
     elif [ ${startup} == 4 ]; then
+      if [ "${port}" == "" ]; then
+        port=5432
+      else
+        echo "Currently postgres can only run on port 5432"
+        port=5432
+      fi
+      pg_running=$(docker ps --filter "name=postgres" -q)
+      if [ "${pg_running}" == "" ]; then
+        echo "Starting postgres on port ${port}"
+        if [[ "$ostype" == "Windows" ]]; then
+          if [ ! -f "C:/Users/$USERNAME/git/docker/launch-postgres-win.sh" ]; then
+            echo "--------------------------------------------------------------------------------"
+            echo "The required script (launch-postgres-win.sh) to start postgres on Windows does"
+            echo "not seem to be available. Please visit the link below for information on how to"
+            echo "update the set of available launch scripts. If you do have the required launch"
+            echo "script on your system double-click it to start postgres on port 5432"
+            echo ""
+            echo "https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md"
+            echo "--------------------------------------------------------------------------------"
+            sleep 10
+          else
+            C:/Users/$USERNAME/git/docker/launch-postgres-win.sh
+          fi
+          ## mounting local directories for postgres doesn't currently work
+          ## see https://github.com/docker/for-win/issues/445
+          ## Solution from https://stackoverflow.com/a/20652410/1974918
+          # docker volume create --name pg_data
+          # docker run --net ${LABEL} -p ${port}:5432 \
+          #   --name postgres \
+          #   -e POSTGRES_USER=${POSTGRES_USER} \
+          #   -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+          #   -e PGDATA=/var/lib/postgresql/data \
+          #   -v pg_data:/var/lib/postgresql/data \
+          #   -d postgres:${POSTGRES_VERSION}
+        else
+          docker run --net ${NETWORK} -p ${port}:5432 \
+            --name postgres \
+            -e POSTGRES_USER=${POSTGRES_USER} \
+            -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+            -e PGDATA=/var/lib/postgresql/data \
+            -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
+            -d postgres:${POSTGRES_VERSION}
+        fi
+        sleep 2s
+      else
+        echo "The postgres container is already running"
+      fi
+    elif [ ${startup} == 5 ]; then
+      if [ "${port}" == "" ]; then
+        port=5050
+      else
+        echo "Currently pgadmin4 can only run on port 5050"
+        port=5050
+      fi
+      pga_running=$(docker ps --filter "name=pgadmin" -q)
+      if [ "${pga_running}" == "" ]; then
+        echo "Starting pgadmin4 on port ${port}"
+        docker run --net ${NETWORK} -p ${port}:80 \
+          --name pgadmin \
+          -e PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} \
+          -e PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} \
+          -v ${HOMEDIR}/postgresql/pgadmin:/var/lib/pgadmin \
+          -d dpage/pgadmin4:${PGADMIN_VERSION}
+        sleep 4s
+      else
+        echo "The pgadmin4 container is already running"
+      fi
+      open_browser http://localhost:${port}
+    elif [ ${startup} == 6 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing container"
@@ -401,22 +460,23 @@ else
 
       docker pull ${IMAGE}:${VERSION}
 
+      if [ "$(docker images -q postgres:${POSTGRES_VERSION})" != "" ]; then
+        docker pull postgres:${POSTGRES_VERSION}
+      fi
+
+      if [ "$(docker images -q dpage/pgadmin4${PGADMIN_VERSION})" != "" ]; then
+        docker pull dpage/pgadmin4:${PGADMIN_VERSION}
+      fi
+
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
       has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
       if [ "${has_network}" == "" ]; then
         docker network create ${NETWORK}  # default options are fine
       fi
-
-      docker run --net ${NETWORK} -d \
-        -p 8080:8080 -p 8787:8787 -p 8989:8989 -p 5432:5432 \
-        -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} \
-        -v ${HOMEDIR}:/home/${NB_USER} \
-        -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-        ${IMAGE}:${IMAGE_VERSION}
-
+      docker run --net ${NETWORK} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 5 ]; then
+    elif [ ${startup} == 7 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -431,13 +491,13 @@ else
       chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
       ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
       exit 1
-    elif [ ${startup} == 6 ]; then
+    elif [ ${startup} == 8 ]; then
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rstudio/sessions
       rm -rf ${HOMEDIR}/.rstudio/projects
       rm -rf ${HOMEDIR}/.rstudio/projects_settings
       rm -rf ${HOMEDIR}/.rsm-msba/R
-    elif [ ${startup} == 7 ]; then
+    elif [ ${startup} == 9 ]; then
       echo "Removing locally installed Python packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rsm-msba/bin
       rm -rf ${HOMEDIR}/.rsm-msba/lib

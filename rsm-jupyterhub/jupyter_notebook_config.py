@@ -54,6 +54,23 @@ def _get_shiny_cmd(port):
     f.close()
     return ['shiny-server', f.name]
 
+# c.ServerProxy.servers = {
+#     'radiant': {
+#         'command': _get_shiny_cmd,
+#         'launcher_entry': {
+#             'title': 'Radiant',
+#             'icon_path': '/opt/radiant/logo.svg'
+#         }
+#     },
+#     'postgres': {
+#         'command': ['/usr/lib/postgresql/10/bin/postgres -c config_file=/etc/postgresql/10/main/postgresql.conf -p {port}'],
+#         'launcher_entry': {
+#             'icon_path': '/opt/radiant/logo.svg',
+#             'title': 'PostgreSQL'
+#         },
+#     }
+# }
+
 c.ServerProxy.servers = {
     'radiant': {
         'command': _get_shiny_cmd,
