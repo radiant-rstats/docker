@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.5'
 services:
   rsm-msba:
     image: "vnijs/rsm-msba"
@@ -14,6 +14,11 @@ services:
       - 8080:8080
       - 8787:8787
       - 8989:8989
+      - 5432:5432
     volumes:
-      # - C:/Users/$USERNAME:/home/jovyan
       - ~:/home/jovyan
+      - pg_data:/var/lib/postgresql/10/main
+
+volumes:
+  pg_data:
+    external: true
