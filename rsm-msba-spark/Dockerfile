@@ -43,6 +43,6 @@ RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "neve
   -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
   -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
-EXPOSE 8080 8787 8989
+EXPOSE 8080 8787 8989 5432
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -317,7 +317,7 @@ else
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
-    echo "Note: To start a specific container version type, e.g., 6 ${DOCKERHUB_VERSION} [ENTER]"
+    echo "Note: To start a specific container version type, e.g., 4 ${DOCKERHUB_VERSION} [ENTER]"
     echo "-----------------------------------------------------------------------"
     read startup port
 
@@ -346,7 +346,10 @@ else
         open_browser http://localhost:8080
       else
         echo "Starting Radiant in the default browser on port ${port}"
-        docker run --net ${NETWORK} -d -p ${port}:8080 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${NETWORK} -d \
+          -p ${port}:8080 \
+          -v ${HOMEDIR}:/home/${NB_USER} \
+          ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -357,7 +360,11 @@ else
       else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${port}"
-        docker run --net ${NETWORK} -d -p ${port}:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${NETWORK} -d \
+          -p ${port}:8787 \
+          -e RPASSWORD=${RPASSWORD} \
+          -v ${HOMEDIR}:/home/${NB_USER} \
+          ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
         open_browser http://localhost:${port}
       fi
@@ -368,7 +375,11 @@ else
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on port ${port}"
-        docker run --net ${NETWORK} -d -p ${port}:8989 -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+        docker run --net ${NETWORK} -d \
+          -p ${port}:8989 \
+          -e JPASSWORD=${JPASSWORD} \
+          -v ${HOMEDIR}:/home/${NB_USER}
+          ${IMAGE}:${IMAGE_VERSION}
         sleep 5s
         open_browser http://localhost:${port}/lab
       fi
@@ -396,7 +407,14 @@ else
       if [ "${has_network}" == "" ]; then
         docker network create ${NETWORK}  # default options are fine
       fi
-      docker run --net ${NETWORK} -d -p 8080:8080 -p 8787:8787 -p 8989:8989 -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
+
+      docker run --net ${NETWORK} -d \
+        -p 8080:8080 -p 8787:8787 -p 8989:8989 -p 5432:5432 \
+        -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} \
+        -v ${HOMEDIR}:/home/${NB_USER} \
+        -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
+        ${IMAGE}:${IMAGE_VERSION}
+
       echo "-----------------------------------------------------------------------"
     elif [ ${startup} == 5 ]; then
       echo "Updating ${ID}/${LABEL} launch script"

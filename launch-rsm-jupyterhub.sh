@@ -15,6 +15,18 @@ script_home () {
   echo "$(echo "$( cd "$(dirname "$0")" ; pwd -P )" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 }
 
+## catch arguments
+while getopts ":t:d:" opt; do
+  case $opt in
+    t) ARG_TAG="$OPTARG"
+    ;;
+    d) ARG_DIR="$OPTARG"
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    ;;
+  esac
+done
+
 ## change to some other path to use as default
 # ARG_HOME="~/rady"
 # ARG_HOME="$(script_home)"
@@ -24,14 +36,15 @@ ID="vnijs"
 LABEL="rsm-jupyterhub"
 IMAGE=${ID}/${LABEL}
 NB_USER="jovyan"
-if [ "$2" != "" ]; then
-  IMAGE_VERSION="$2"
+if [ "$ARG_TAG" != "" ]; then
+  IMAGE_VERSION="$ARG_TAG"
   DOCKERHUB_VERSION=${IMAGE_VERSION}
 else
   ## see https://stackoverflow.com/questions/34051747/get-environment-variable-from-docker-container
   DOCKERHUB_VERSION=$(docker inspect -f '{{range $index, $value := .Config.Env}}{{println $value}} {{end}}' ${IMAGE}:${IMAGE_VERSION} | grep DOCKERHUB_VERSION)
   DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
 fi
+POSTGRES_VERSION=10
 
 ## what os is being used
 ostype=`uname`
@@ -144,9 +157,9 @@ else
     fi
   fi
 
-  if [ "$1" != "${ARG_HOME}" ]; then
-    if [ "$1" != "" ]; then
-      ARG_HOME="$(cd $1; pwd)"
+  if [ "$ARG_DIR" != "${ARG_HOME}" ]; then
+    if [ "$ARG_DIR" != "" ]; then
+      ARG_HOME="$(cd $ARG_DIR; pwd)"
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
@@ -221,7 +234,7 @@ else
     if [ "${SCRIPT_HOME}" != "${ARG_HOME}" ]; then
       cp -p "$0" ${ARG_HOME}/launch-${LABEL}.${EXT}
       sed_fun "s+^ARG_HOME\=\".*\"+ARG_HOME\=\"\$\(script_home\)\"+" ${ARG_HOME}/launch-${LABEL}.${EXT}
-      if [ "$2" != "" ]; then
+      if [ "$ARG_TAG" != "" ]; then
         sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${IMAGE_VERSION}\"/" ${ARG_HOME}/launch-${LABEL}.${EXT}
       fi
     fi
@@ -250,7 +263,16 @@ else
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "-----------------------------------------------------------------------"
 
-  docker run --rm -p 8888:8888 -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${IMAGE_VERSION}
+  has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
+  if [ "${has_volume}" == "" ]; then
+    docker volume create --name=pg_data
+  fi
+
+  docker run --rm -p 8888:8888 -p 5432:5432 \
+    -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 \
+    -v ${HOMEDIR}:/home/${NB_USER} \
+    -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
+    ${IMAGE}:${IMAGE_VERSION}
 
   ## make sure abend is set correctly
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2

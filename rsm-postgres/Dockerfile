@@ -12,7 +12,7 @@ ENV POSTGRES_VERSION=10
 ## adding postgres
 ## mostly from https://docs.docker.com/engine/examples/postgresql_service/
 
-## install PostgreSQL 10
+## install postgres
 RUN apt-get update && apt-get install -y \
   postgresql-${POSTGRES_VERSION} \
   postgresql-client-${POSTGRES_VERSION} \
@@ -21,8 +21,8 @@ RUN apt-get update && apt-get install -y \
 ## Run the rest of the commands as the postgres user
 USER postgres
 
-## create a PostgreSQL role named ${NB_USER} with "postgres" as the password and
-## then create a database "rsm-docker" owned by the ${NB_USER} role.
+## create a postgres role for ${NB_USER} with "postgres" as the password
+## create a database "rsm-docker" owned by the ${NB_USER} role.
 RUN /etc/init.d/postgresql start \
     && psql --command "CREATE USER ${NB_USER} WITH SUPERUSER PASSWORD 'postgres';" \
     && createdb -O ${NB_USER} rsm-docker

@@ -48,11 +48,6 @@ else
   DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
 fi
 
-## username and password for postgres and pgadmin4
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_VERSION=10.6
-
 ## what os is being used
 ostype=`uname`
 if [ "$ostype" == "Darwin" ]; then
@@ -246,25 +241,6 @@ else
     HOMEDIR=${ARG_HOME}
   fi
 
-  ## legacy - moving R/ directory with local installed packages
-  if [ -d "${HOMEDIR}/R" ] && [ ! -d "${HOMEDIR}/.rsm-msba/R" ]; then
-    echo "-----------------------------------------------------------------------"
-    if [ "$ostype" != "Linux" ]; then
-      echo "Moving user installed libraries to .rsm-msba/R"
-      echo "To install additional libraries use:"
-      echo "install.packages('a-package', lib = Sys.getenv('R_LIBS_USER'))"
-
-      cp -r ${HOMEDIR}/R ${HOMEDIR}/.rsm-msba
-      rm -rf ${HOMEDIR}/R
-    fi
-    # else
-    #   echo "User installed libraries should be added to .rsm-msba"
-    #   echo "To install additional R libraries use:"
-    #   echo "install.packages('a-package', lib = Sys.getenv('R_LIBS_USER'))"
-    # fi
-    echo "-----------------------------------------------------------------------"
-  fi
-
   BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
 
   echo "-----------------------------------------------------------------------"
@@ -318,14 +294,13 @@ else
     echo "-----------------------------------------------------------------------"
     echo "Press (1) to show shiny-apps, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
-    echo "Press (3) to launch postgres server, followed by [ENTER]:"
-    echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (5) to update the launch script, followed by [ENTER]:"
-    echo "Press (6) to clear Rstudio sessions and packages, followed by [ENTER]:"
+    echo "Press (3) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (4) to update the launch script, followed by [ENTER]:"
+    echo "Press (5) to clear Rstudio sessions and packages, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
-    echo "Note: To start a specific container version type, e.g., 5 ${DOCKERHUB_VERSION} [ENTER]"
+    echo "Note: To start a specific container version type, e.g., 3 ${DOCKERHUB_VERSION} [ENTER]"
     echo "-----------------------------------------------------------------------"
     read startup port
 
@@ -370,39 +345,6 @@ else
         open_browser http://localhost:${port}
       fi
     elif [ ${startup} == 3 ]; then
-      if [[ "$ostype" != "Windows" ]]; then
-        echo "-----------------------------------------------------------------------"
-        echo "Due do a longstanding issue in Docker for Windows postrgres will not"
-        echo "persist data after restarting the docker container. We recommend you"
-        echo "install and run Postgres using:"
-        echo ""
-        echo "http://www.postgresqltutorial.com/install-postgresql/"
-        echo "-----------------------------------------------------------------------"
-        sleep 10s
-      else
-        if [ "${port}" == "" ]; then
-          port=5432
-        else
-          echo "Currently postgres can only run on port 5432"
-          port=5432
-        fi
-        pg_running=$(docker ps --filter "name=postgres" -q)
-        if [ "${pg_running}" == "" ]; then
-          echo "Starting postgres on port ${port}"
-          docker run --net ${NETWORK} -p ${port}:5432 \
-            --name postgres \
-            -e POSTGRES_USER=${POSTGRES_USER} \
-            -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-            -e PGDATA=/var/lib/postgresql/data \
-            -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
-            -d postgres:${POSTGRES_VERSION}
-          sleep 2s
-        else
-          echo "Postgres already seems to be running on port 5432"
-          sleep 2s
-        fi
-      fi
-    elif [ ${startup} == 4 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing container"
@@ -420,14 +362,6 @@ else
 
       docker pull ${IMAGE}:${VERSION}
 
-      if [ "$(docker images -q postgres:${POSTGRES_VERSION})" != "" ]; then
-        docker pull postgres:${POSTGRES_VERSION}
-      fi
-
-      if [ "$(docker images -q dpage/pgadmin4${PGADMIN_VERSION})" != "" ]; then
-        docker pull dpage/pgadmin4:${PGADMIN_VERSION}
-      fi
-
       echo "-----------------------------------------------------------------------"
       ## based on https://stackoverflow.com/a/52852871/1974918
       has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
@@ -436,7 +370,7 @@ else
       fi
       docker run --net ${NETWORK} -d -p 8080:8080 -p 8787:8787 -e RPASSWORD=${RPASSWORD} -v ${HOMEDIR}:/home/${NB_USER} ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 5 ]; then
+    elif [ ${startup} == 4 ]; then
       echo "Updating ${ID}/${LABEL} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -452,7 +386,7 @@ else
       chmod 755 ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
       ${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}
       exit 1
-    elif [ ${startup} == 6 ]; then
+    elif [ ${startup} == 5 ]; then
       echo "Removing old Rstudio sessions and locally installed R packages from the .rsm-msba directory"
       rm -rf ${HOMEDIR}/.rstudio/sessions
       rm -rf ${HOMEDIR}/.rsm-msba/R

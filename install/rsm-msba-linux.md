@@ -61,7 +61,7 @@ As mentioned above, for Rstudio the username and password are both "rstudio". Fo
 
 ## Updating the RSM-MSBA computing environment on Linux
 
-To update the container use the launch script and press 6 (+ enter). To update the launch script itself, press 7 (+ enter).
+To update the container use the launch script and press 4 (+ enter). To update the launch script itself, press 5 (+ enter).
 
 <img src="figures/rsm-msba-menu-linux.png" width="500px">
 
@@ -95,7 +95,7 @@ To install R packages that will persist after restarting the docker container en
 
 `install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))`
 
-To remove locally installed python packages press 9 + Enter in the docker launcher menu. To remove locally installed R packages press 8 + Enter in the docker launcher menu. 
+To remove locally installed python packages press 7 + Enter in the docker launcher menu. To remove locally installed R packages press 6 + Enter in the docker launcher menu. 
 
 
 ## Trouble shooting

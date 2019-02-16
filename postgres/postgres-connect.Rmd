@@ -16,11 +16,10 @@ library(DBI)
 library(RPostgreSQL)
 con <- dbConnect(
   dbDriver("PostgreSQL"),
-  user = "postgres", 
-  host = "postgres",    ## use when establishing a connection between containers
-  # host = "127.0.0.1", ## use when connection to postgres from local Rstudio
+  user = "jovyan", 
+  host = "127.0.0.1", ## use when connection to postgres from local Rstudio
   port = 5432,
-  dbname = "postgres",
+  dbname = "rsm-docker",
   password = "postgres"
   ## can use the line below in interactive sessions
   # password = rstudioapi::askForPassword("Database password")
@@ -109,17 +108,3 @@ You can specify a SQL code chunk to query the database directly
 ```{sql, connection = con}
 SELECT * FROM flights WHERE dep_time > 2350
 ```
-
-### 6. View the data in pgAdmin4
-
-Press 5 + Enter in the menu to start `pgAdmin4`. It will run on http://localhost:5050/browser/. You can login using `admin@pgadmin.com` as the user id and `pgadmin` as the password. 
-
-To connect to the data base, create a new "server" by right clicking on the `Server` icon and choosing _Create > Server_. In the  `General` and `Connection` tabs provide the information shown in the screen shots below and click on the `Save` icon.
-
-![](images/pgadmin-name.png)
-
-![](images/pgadmin-settings.png)
-
-See the screen shot below to access the `flights` table. Right click on `flights` and select _View/Edit Data > First 100 Rows_ to get a table view of the data. 
-
-![](images/pgadmin-flights.png)

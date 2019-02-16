@@ -9,6 +9,15 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
+## R-Studio Preview
+ENV RSTUDIO_VERSION 1.2.1244
+
+RUN apt-get remove -y --purge rstudio-server
+
+RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
+  && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
+  && rm rstudio-server-*-amd64.deb
+
 RUN pip3 install jupyterhub==0.9.4
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
@@ -59,6 +68,10 @@ ENV PYTHONUSERBASE=${PYBASE} \
 ENV TINI_VERSION v0.18.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
+
+## postgres will be started using start-notebook.sh
+## reject remote connections to the database
+RUN echo "host all  all    0.0.0.0/0  reject" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
