@@ -36,6 +36,7 @@ else
   DOCKERHUB_VERSION=$(docker inspect -f '{{range $index, $value := .Config.Env}}{{println $value}} {{end}}' ${IMAGE}:${IMAGE_VERSION} | grep DOCKERHUB_VERSION)
   DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
 fi
+POSTGRES_VERSION=10
 
 ## what os is being used
 ostype=`uname`
@@ -265,13 +266,11 @@ else
     docker volume create --name=pg_data
   fi
   {
-    # -v pg_data:/var/lib/postgresql/data \
-    # -v ${HOMEDIR}/postgresql/data:/var/lib/postgresql/data \
     docker run --net ${NETWORK} -d \
       -p 8080:8080 -p 8787:8787 -p 8989:8989 -p 5432:5432 \
       -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} \
       -v ${HOMEDIR}:/home/${NB_USER} \
-      -v pg_data:/var/lib/postgresql/data \
+      -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
       ${IMAGE}:${IMAGE_VERSION}
   } || {
     echo "-----------------------------------------------------------------------"
