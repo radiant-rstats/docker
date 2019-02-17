@@ -53,23 +53,23 @@ if [ "$ostype" == "Darwin" ]; then
 else
   EXT="sh"
 fi
-if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
-  ## check if script is already running
-  nr_running=$(ps | grep "${LABEL}.${EXT}" -c)
-  if [ "$nr_running" -gt 3 ]; then
-    clear
-    echo "-----------------------------------------------------------------------"
-    echo "The ${LABEL}.${EXT} launch script is already running (or open)"
-    echo "To close the new session and continue with the old session"
-    echo "press q + enter. To continue with the new session and stop"
-    echo "the old session press enter"
-    echo "-----------------------------------------------------------------------"
-    read contd
-    if [ "${contd}" == "q" ]; then
-      exit 1
-    fi
-  fi
-fi
+# if [ "$ostype" == "Linux" ] || [ "$ostype" == "Darwin" ]; then
+#   ## check if script is already running
+#   nr_running=$(ps | grep "${LABEL}.${EXT}" -c)
+#   if [ "$nr_running" -gt 3 ]; then
+#     clear
+#     echo "-----------------------------------------------------------------------"
+#     echo "The ${LABEL}.${EXT} launch script is already running (or open)"
+#     echo "To close the new session and continue with the old session"
+#     echo "press q + enter. To continue with the new session and stop"
+#     echo "the old session press enter"
+#     echo "-----------------------------------------------------------------------"
+#     read contd
+#     if [ "${contd}" == "q" ]; then
+#       exit 1
+#     fi
+#   fi
+# fi
 
 ## script to start Radiant, Rstudio, and JupyterLab
 clear
