@@ -68,8 +68,8 @@ RUN chmod +x /tini
 # RUN echo "host all  all    ::1/128        trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
 ## allow (remote) access
-RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
-RUN echo "listen_addresses='*'" >> /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
+#RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+RUN echo "listen_addresses='localhost'" >> /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
 
 ENV JUPYTER_ENABLE_LAB=1
 
