@@ -67,13 +67,13 @@ RUN chmod +x /tini
 # RUN echo "host all  all    127.0.0.1/32   trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 # RUN echo "host all  all    ::1/128        trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
-## allow (remote) access
-#RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
-RUN echo "listen_addresses='localhost'" >> /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
+COPY postgresql.conf /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
+COPY pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
 ENV JUPYTER_ENABLE_LAB=1
 
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
+
 
 USER ${NB_USER}
