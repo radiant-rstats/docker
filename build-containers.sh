@@ -1,8 +1,8 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.3.2
+DOCKERHUB_VERSION=1.3.5
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
 
 build () {
   {
@@ -45,18 +45,12 @@ launcher () {
   fi
 }
 
-LABEL=rsm-msba-spark
-build
-
-exit 1
-
-
 LABEL=r-bionic
 build
 launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
-build NO
+build
 
 LABEL=rsm-msba
 build
@@ -68,9 +62,9 @@ launcher "rsm-msba"
 LABEL=rsm-jupyterhub
 build
 
-LABEL=rsm-msba-beakerx
-build
-launcher "rsm-msba"
+# LABEL=rsm-msba-beakerx
+# build
+# launcher "rsm-msba"
 
 # git add .
 # git commit -m "Update to image version ${DOCKERHUB_VERSION}"

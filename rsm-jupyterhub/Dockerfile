@@ -9,15 +9,6 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-## R-Studio Preview
-ENV RSTUDIO_VERSION 1.2.1244
-
-RUN apt-get remove -y --purge rstudio-server
-
-RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
-  && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
-  && rm rstudio-server-*-amd64.deb
-
 RUN pip3 install jupyterhub==0.9.4
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
@@ -52,11 +43,11 @@ RUN groupadd wheel -g 11 && \
 RUN R -e 'radiant.update::radiant.update()'
 
 ## update radiant to development version
-RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
+# RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
+#  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
 ## path for local install of python packages from Rstudio or Jupyter Lab
 ENV PYTHONUSERBASE=${PYBASE} \
@@ -72,9 +63,13 @@ RUN chmod +x /tini
 
 ## postgres will be started using start-notebook.sh
 ## reject remote connections to the database
-RUN echo "host all  all    0.0.0.0/0  reject" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
-RUN echo "host all  all    127.0.0.1/32   trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
-RUN echo "host all  all    ::1/128        trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+# RUN echo "host all  all    0.0.0.0/0  reject" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+# RUN echo "host all  all    127.0.0.1/32   trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+# RUN echo "host all  all    ::1/128        trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+
+## allow (remote) access
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+RUN echo "listen_addresses='*'" >> /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
 
 ENV JUPYTER_ENABLE_LAB=1
 
