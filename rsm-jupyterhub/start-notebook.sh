@@ -4,9 +4,6 @@
 
 set -e
 
-## starting up postgres
-exec sudo -u postgres /usr/lib/postgresql/${POSTGRES_VERSION}/bin/postgres -c config_file=/etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf &
-
 if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
   # launched by JupyterHub, use single-user entrypoint
   exec /usr/local/bin/start-singleuser.sh $*
