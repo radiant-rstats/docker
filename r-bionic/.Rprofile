@@ -1,0 +1,7 @@
+options(radiant.ace_vim.keys = FALSE)
+options(radiant.maxRequestSize = -1)
+# options(radiant.maxRequestSize = 10 * 1024^2)
+options(radiant.report = TRUE)
+# options(radiant.ace_theme = "cobalt")
+options(radiant.ace_theme = "tomorrow")
+# options(radiant.ace_showInvisibles = TRUE)

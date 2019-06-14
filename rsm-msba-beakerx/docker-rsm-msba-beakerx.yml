@@ -1,0 +1,24 @@
+version: '3.5'
+services:
+  rsm-msba-spark:
+    image: "vnijs/rsm-msba-beakerx"
+    environment:
+      SHELL: bin/bash
+      PYTHONUSERBASE: /home/jovyan/.rsm-msba
+      JUPYTER_PATH: /home/jovyan/.rsm-msba/share/jupyter
+      JUPYTER_RUNTIME_DIR: /home/jovyan/.rsm-msba/share/jupyter/runtime
+      JUPYTER_CONFIG_DIR: /home/jovyan/.rsm-msba/jupyter
+      RPASSWORD: rstudio
+      JPASSWORD: jupyter
+    ports:
+      - 8080:8080
+      - 8787:8787
+      - 8989:8989
+      - 8765:8765
+    volumes:
+      - ~:/home/jovyan
+      - pg_data:/var/lib/postgresql/10/main
+
+volumes:
+  pg_data:
+    external: true
