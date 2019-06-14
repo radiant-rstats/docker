@@ -97,7 +97,7 @@ COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
 # latest pre-release version
-ENV CODE_SERVER="1.1119-vsc1.33.1"
+ENV CODE_SERVER="1.1156-vsc1.33.1"
 
 RUN cd /opt \
   && mkdir /opt/code-server \
