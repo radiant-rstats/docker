@@ -91,7 +91,6 @@ RUN apt-get  install -y \
   bzip2 \
   python3-pip \
   python3-setuptools \
-  python3-tk \
   supervisor \
   libc6 \
   libzmq5 \

@@ -45,19 +45,19 @@ launcher () {
   fi
 }
 
-# LABEL=r-bionic
-# build 
-# launcher "radiant" "Radiant" "shiny-apps"
-
-# LABEL=radiant
-# build
-
-# LABEL=rsm-msba
-# build
-
-# LABEL=rsm-msba-spark
-# build
-# launcher "rsm-msba"
+LABEL=r-bionic
+build
+launcher "radiant" "Radiant" "shiny-apps"
+ 
+LABEL=radiant
+build
+ 
+LABEL=rsm-msba
+build
+ 
+LABEL=rsm-msba-spark
+build
+launcher "rsm-msba"
 
 LABEL=rsm-jupyterhub
 build
@@ -73,3 +73,4 @@ build
 # git add .
 # git commit -m "Update to image version ${DOCKERHUB_VERSION}"
 # git push
+

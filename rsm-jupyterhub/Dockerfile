@@ -10,8 +10,7 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-# RUN pip3 install jupyterhub==1.0.0 tensorflow-gpu
-RUN pip3 install jupyterhub==1.0.0
+RUN pip3 install --target='/usr/local/lib/python3.6/dist-packages/' jupyterhub==1.0.0 
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server"
@@ -45,8 +44,7 @@ RUN groupadd wheel -g 11 && \
   fix-permissions /var/lib/shiny-server && \
   fix-permissions /var/log/shiny-server && \
   fix-permissions /var/log/rstudio-server && \
-  fix-permissions /var/lib/rstudio-server && \
-  fix-permissions /var/lib/postgresql
+  fix-permissions /var/lib/rstudio-server
 
 # update R-packages
 RUN R -e 'radiant.update::radiant.update()'
