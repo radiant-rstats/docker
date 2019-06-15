@@ -32,6 +32,19 @@ You should also change the resources docker is allowed to use on your system. Yo
 
 Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
+**Steps 3-4 using the Rady installer**
+
+Please download and run the installer linked below to complete steps 3 and 4 of the install process on Windows. 
+
+https://rady.ucsd.edu/faculty/directory/vnijs/RSM-MSBA-Computing-Environment-Latest.exe
+
+If you see a warning message like the image shown below when you run the installer click on "More info" and then on "Run anyway".
+
+<img src="figures/win-protected.png" width="300px">
+
+<details>
+<summary>Complete steps 3 and 4 manually</summary>
+
 **Step 3**: Install git bash from the link below
 
 <a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a>
@@ -44,7 +57,7 @@ There is no need to "View Release Notes" on the last screen or "Launch Git Bash"
 
 **Step4**: Open a bash terminal **as administrator** and copy-and-paste the code below to add `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal
 
-> Note: To open git bash as administrator, find the app in the Start Menu, right click on the icon, and select 'Run as administrator'.
+> Note: To open git bash as administrator, find the app in the Start Menu and select 'Run as administrator'.
 
 ```bash
 curl http://www2.futureware.at/~nickoe/msys2-mirror/msys/x86_64/rsync-3.1.2-2-x86_64.pkg.tar.xz -o rsync.pkg.tar.xz;
@@ -71,6 +84,7 @@ Copy-and-paste the command below to create a shortcut to the launch script to us
 ```bash
 ln -s C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh /usr/bin/launch;
 ```
+</details>
 
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
@@ -178,7 +192,7 @@ Alternative "fixes" that have worked, are to restart docker by right-clicking on
 
 ## Optional
 
-To install python3 on Windows using **chocolatey**, open a CMD terminal **as administrator** and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+If you did not use the installer above to complete steps 3 and 4 you can install python3 on Windows using **chocolatey**. Open a CMD terminal **as administrator** and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
 
 ```bash
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin";
