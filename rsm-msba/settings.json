@@ -5,7 +5,7 @@
   "python.pythonPath": "/usr/bin/python3",
   "editor.renderWhitespace": "all",
   "python.dataScience.searchForJupyter": false,
-  "git.rebaseWhenSync": true,
+  "git.rebaseWhenSync": false,
   "git.autofetch": true,
   "python.autoComplete.addBrackets": true,
   "python.linting.flake8Enabled": true,
@@ -20,4 +20,5 @@
   "editor.suggestSelection": "first",
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
   "python.jediEnabled": false,
+  "window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
 }
