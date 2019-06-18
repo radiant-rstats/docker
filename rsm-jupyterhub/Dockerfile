@@ -59,6 +59,9 @@ COPY pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
 ENV JUPYTER_ENABLE_LAB=1
 
+RUN echo "HOME=/home/${NB_USER}" >> /etc/R/Renviron.site \
+  && echo "USER=${NB_USER}" >> /etc/R/Renviron.site
+
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
