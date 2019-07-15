@@ -21,7 +21,7 @@ function launch_usage() {
   echo "  -d, --directory   Base directory to use"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 1.4.3 --directory ~/project_1"
+  echo "Example: $0 --tag 1.5.4 --directory ~/project_1"
   echo ""
   exit 1
 }
@@ -136,6 +136,7 @@ else
   ## function is not efficient by alias has scopping issues
   if [[ "$ostype" == "Linux" ]]; then
     HOMEDIR=~
+    ID=$USER
     open_browser () {
       xdg-open $1
     }
@@ -146,6 +147,7 @@ else
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~
+    ID=$USER
     open_browser () {
       open $1
     }
@@ -156,6 +158,7 @@ else
   else
     ostype="Windows"
     HOMEDIR="C:/Users/$USERNAME"
+    ID=$USERNAME
     open_browser () {
       start $1
     }

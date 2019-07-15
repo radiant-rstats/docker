@@ -21,7 +21,7 @@ function launch_usage() {
   echo "  -d, --directory   Base directory to use"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 1.4.3 --directory ~/project_1"
+  echo "Example: $0 --tag 1.5.4 --directory ~/project_1"
   echo ""
   exit 1
 }
@@ -43,7 +43,6 @@ NB_USER="jovyan"
 RPASSWORD="rstudio"
 ID="vnijs"
 LABEL="r-bionic"
-# NETWORK=${LABEL}
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
 if [ "$ARG_TAG" != "" ]; then
@@ -126,6 +125,7 @@ else
 
   if [[ "$ostype" == "Linux" ]]; then
     HOMEDIR=~
+    ID=$USER
     open_browser () {
       xdg-open $1
     }
@@ -135,6 +135,7 @@ else
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~
+    ID=$USER
     open_browser () {
       open $1
     }
@@ -144,6 +145,7 @@ else
   else
     ostype="Windows"
     HOMEDIR="C:/Users/$USERNAME"
+    ID=$USERNAME
     open_browser () {
       start $1
     }
@@ -331,16 +333,18 @@ else
     echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
     echo "Press (5) to update the launch script, followed by [ENTER]:"
     echo "Press (6) to clear Rstudio sessions and packages, followed by [ENTER]:"
+    echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
     echo "Note: To start a specific container version type, e.g., 4 ${DOCKERHUB_VERSION} [ENTER]"
+    echo "Note: To commit changes type, e.g., c myversion [ENTER]"
     echo "-----------------------------------------------------------------------"
-    read startup port
+    read menu_exec menu_arg
 
-    if [ -z "${startup}" ]; then
+    if [ -z "${menu_exec}" ]; then
       echo "Invalid entry. Resetting launch menu ..."
-    elif [ ${startup} == 1 ]; then
+    elif [ ${menu_exec} == 1 ]; then
       RPROF="${HOMEDIR}/.Rprofile"
       touch "${RPROF}"
       if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
@@ -358,34 +362,34 @@ else
           echo '' >> "${RPROF}"
         fi
       fi
-      if [ "${port}" == "" ]; then
+      if [ "${menu_arg}" == "" ]; then
         echo "Starting shiny-apps in the default browser on port 8080"
         open_browser http://localhost:8080
       else
-        echo "Starting shiny-apps in the default browser on port ${port}"
+        echo "Starting shiny-apps in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          -p 127.0.0.1:${port}:8080 \
+          -p 127.0.0.1:${menu_arg}:8080 \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
-        open_browser http://localhost:${port}
+        open_browser http://localhost:${menu_arg}
       fi
-    elif [ ${startup} == 2 ]; then
-      if [ "${port}" == "" ]; then
+    elif [ ${menu_exec} == 2 ]; then
+      if [ "${menu_arg}" == "" ]; then
         echo "Starting Rstudio in the default browser on port 8787"
         open_browser http://localhost:8787
       else
         rstudio_abend
-        echo "Starting Rstudio in the default browser on port ${port}"
+        echo "Starting Rstudio in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          -p 127.0.0.1:${port}:8787 \
+          -p 127.0.0.1:${menu_arg}:8787 \
           -e RPASSWORD=${RPASSWORD} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
-        open_browser http://localhost:${port}
+        open_browser http://localhost:${menu_arg}
       fi
-    elif [ ${startup} == 3 ]; then
+    elif [ ${menu_exec} == 3 ]; then
         running=$(docker ps -q | awk '{print $1}')
         if [ "${running}" != "" ]; then
           clear
@@ -396,7 +400,7 @@ else
           echo ""
           docker exec -it --user ${NB_USER} ${running} /bin/bash
         fi
-    elif [ ${startup} == 4 ]; then
+    elif [ ${menu_exec} == 4 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing environment"
@@ -404,12 +408,12 @@ else
       docker rm ${running}
       docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
 
-      if [ "${port}" == "" ]; then
+      if [ "${menu_arg}" == "" ]; then
         echo "Pulling down tag \"latest\""
         VERSION=${IMAGE_VERSION}
       else
-        echo "Pulling down tag ${port}"
-        VERSION=${port}
+        echo "Pulling down tag ${menu_arg}"
+        VERSION=${menu_arg}
       fi
 
       docker pull ${IMAGE}:${VERSION}
@@ -426,8 +430,8 @@ else
         -v "${HOMEDIR}":/home/${NB_USER} $MNT \
         ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-    elif [ ${startup} == 5 ]; then
-      echo "Updating ${ID}/${LABEL} launch script"
+    elif [ ${menu_exec} == 5 ]; then
+      echo "Updating ${IMAGE} launch script"
       running=$(docker ps -q)
       docker stop ${running}
       docker rm ${running}
@@ -442,7 +446,7 @@ else
       chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
       "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
       exit 1
-    elif [ ${startup} == 6 ]; then
+    elif [ ${menu_exec} == 6 ]; then
       echo "-----------------------------------------------------"
       echo "Clean up Rstudio sessions (y/n)?"
       echo "-----------------------------------------------------"
@@ -464,7 +468,72 @@ else
         echo "Removing locally installed R packages"
         rm -rf "${HOMEDIR}/.rsm-msba/R"
       fi
-    elif [ "${startup}" == "q" ]; then
+    elif [ "${menu_exec}" == "c" ]; then
+      container_id=($(docker ps -a | awk "/${ID}\/${LABEL}/" | awk '{print $1}'))
+      if [ "${menu_arg}" == "" ]; then
+        echo "-----------------------------------------------------------------------"
+        echo "Are you sure you want to over-write the current image (y/n)?"
+        echo "-----------------------------------------------------------------------"
+        read menu_commit
+        if [ "${menu_commit}" == "y" ]; then
+          echo "-----------------------------------------------------------------------"
+          echo "Saving changes to ${IMAGE}"
+          echo "-----------------------------------------------------------------------"
+          docker commit ${container_id[0]} ${IMAGE}:${IMAGE_VERSION}
+        else 
+          return 1
+        fi
+        IMAGE_DHUB=${IMAGE}
+      else
+        menu_arg="${LABEL}-$(echo -e "${menu_arg}" | tr -d '[:space:]')"
+        docker commit ${container_id[0]} $ID/${menu_arg}:${IMAGE_VERSION}
+
+        if [ -d "${HOMEDIR}/Desktop" ]; then
+          SCRIPT_COPY="${HOMEDIR}/Desktop"
+        else
+          SCRIPT_COPY="${HOMEDIR}"
+        fi
+        cp -p "$0" "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
+        sed_fun "s+^ID\=\".*\"+ID\=\"${ID}\"+" "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
+        sed_fun "s+^LABEL\=\".*\"+LABEL\=\"${menu_arg}\"+" "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
+
+        echo "-----------------------------------------------------------------------"
+        echo "Saving changes to ${ID}/${menu_arg}"
+        echo "Use the following script to launch:"
+        echo "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
+        echo "-----------------------------------------------------------------------"
+        IMAGE_DHUB=${ID}/${menu_arg}
+      fi
+
+      echo "-----------------------------------------------------------------------"
+      echo "Do you want to push this image to Docker hub (y/n)?"
+      echo "Note: This requires an account at https://hub.docker.com/"
+      echo "Note: To specify a version tag type, e.g., y 1.0.0"
+      echo "-----------------------------------------------------------------------"
+      read menu_push menu_tag
+      if [ "${menu_push}" == "y" ]; then
+        {
+          docker login
+          if [ "${menu_tag}" == "" ]; then
+            docker push ${IMAGE_DHUB}:latest
+          else
+            if [ "${menu_arg}" == "" ]; then
+              sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${menu_tag}\"/" "$0"
+            else
+              sed_fun "s/^IMAGE_VERSION=\".*\"/IMAGE_VERSION=\"${menu_tag}\"/" "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
+            fi
+            docker commit --change "ENV DOCKERHUB_VERSION=${menu_tag}" ${container_id[0]} ${IMAGE_DHUB}:${menu_tag}
+            docker push ${IMAGE_DHUB}:${menu_tag}
+          fi
+        } || {
+          echo "-----------------------------------------------------------------------"
+          echo "It seems there was a problem with login or pushing to Dockerhub"
+          echo "Please make sure you have an account at https://hub.docker.com/"
+          echo "-----------------------------------------------------------------------"
+          sleep 3s
+        }
+      fi
+    elif [ "${menu_exec}" == "q" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Stopping the ${LABEL} computing environment and cleaning up as needed"
       echo "-----------------------------------------------------------------------"
@@ -500,7 +569,7 @@ else
       echo "Invalid entry. Resetting launch menu ..."
     fi
 
-    if [ "${startup}" == "q" ]; then
+    if [ "${menu_exec}" == "q" ]; then
       if [ "$ARG_HOME" != "" ]; then
         echo "Removing empty files and directories ..."
         find "$ARG_HOME" -empty -type d -delete
