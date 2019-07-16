@@ -530,7 +530,7 @@ else
         read menu_commit
         if [ "${menu_commit}" == "y" ]; then
           echo "-----------------------------------------------------------------------"
-          echo "Saving changes to ${IMAGE}"
+          echo "Committing changes to ${IMAGE}"
           echo "-----------------------------------------------------------------------"
           # echo "docker commit ${container_id[0]} ${IMAGE}:${IMAGE_VERSION}"
           docker commit ${container_id[0]} ${IMAGE}:${IMAGE_VERSION}
@@ -554,7 +554,7 @@ else
         sed_fun "s+^LABEL\=\".*\"+LABEL\=\"${menu_arg}\"+" "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
 
         echo "-----------------------------------------------------------------------"
-        echo "Saving changes to ${ID}/${menu_arg}"
+        echo "Committing changes to ${ID}/${menu_arg}"
         echo "Use the following script to launch:"
         echo "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
         echo "-----------------------------------------------------------------------"
