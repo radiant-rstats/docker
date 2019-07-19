@@ -24,7 +24,7 @@ ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm \
-  && jupyter labextension install @jupyter-widgets/jupyterlab-manager @ryantam626/jupyterlab_code_formatter \
+  && jupyter labextension install @jupyter-widgets/jupyterlab-manager @ryantam626/jupyterlab_code_formatter jupyterlab-jupytext@0.19 \
   && jupyter serverextension enable --py jupyterlab_code_formatter --system
 
 # install the R kernel for Jupyter Lab
