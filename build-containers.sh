@@ -62,10 +62,6 @@ launcher "rsm-msba"
 LABEL=rsm-jupyterhub
 build
 
-# LABEL=rsm-dev
-# build
-# launcher "rsm-msba"
-
 # LABEL=rsm-msba-beakerx
 # build
 # launcher "rsm-msba"

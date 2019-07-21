@@ -3,6 +3,7 @@
   - [Updating the RSM-MSBA computing environment on Linux](#updating-the-rsm-msba-computing-environment-on-linux)
   - [Connecting to postgresql](#connecting-to-postgresql)
   - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
+  - [Committing changes to the computing environment](#committing-changes-to-the-computing-environment)
   - [Cleanup](#cleanup)
   - [Trouble shooting](#trouble-shooting)
 
@@ -132,9 +133,52 @@ After installing a module you will have to restart any running Python kernels to
 
 To remove locally installed R packages press 7 (and Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 8 (and Enter) in the launch menu.
 
+## Committing changes to the computing environment
+
+By default re-starting the docker computing environment will remove any changes you made. This allows you to experiment freely, without having to worry about "breaking" things. However, there are times when you might want to keep changes. 
+
+As shown in the previous section, you can install R and Python packages locally rather than in the container. These packages will still be available after a container restart. 
+
+To install binary R packages for Ubuntu Linux you can use the command below. These packages will *not* be installed locally and would normally not be available after a restart.
+
+```bash
+sudo apt update;
+sudo apt install r-cran-ada;
+```
+
+Similarly, some R-packages have requirements that need to be installed in the container (e.g., the `rgdal` package). The following two linux packages would need to be installed from a terminal in the container as follows:
+
+```bash
+sudo apt update;
+sudo apt install libgdal-dev libproj-dev; 
+```
+
+After completing the step above you can install the `rgdal` R-package locally using the following from Rstudio:
+
+`install.packages("rgdal", lib = Sys.getenv("R_LIBS_USER"))`
+
+To save (or commit) these changes so they *will* be present after a (container) restart type, for example, c myimage (and Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-msba-spark-myimage.sh` that you can use to launch your customized environment in the future.
+
+If you want to share your customized version of the container with others (e.g., team members) you can push it is to Docker Hub <a href="https://hub.docker.com" target="_blank">https://hub.docker.com</a> by following the menu dialog after typing, e.g., c myimage (and Enter). To create an account on Docker Hub go to <a href="https://hub.docker.com/signup" target="_blank">https://hub.docker.com/signup</a>.
+
+If you want to remove specific images from your computer run the commands below from a (bash) terminal. The first command generates a list of the images you have available. 
+
+`docker image ls;`
+
+Select the IMAGE ID for the image you want to remove, e.g., 42b88eb6adf8, and then run the following command with the correct image id:
+
+`docker rmi 42b88eb6adf8;`
+
+For additional resources on developing docker images see the links below:
+
+* https://colinfay.me/docker-r-reproducibility/
+* https://www.fullstackpython.com/docker.html
+
 ## Cleanup
 
 To remove any prior Rstudio sessions, and locally installed R-packages, press 6 (and Enter) in the launch menu. To remove locally installed Python modules press 7 (and Enter) in the launch menu.
+
+> Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
 You should always stop the `rsm-msba-spark` docker container using `q` (and Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python settings, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-spark):
 
