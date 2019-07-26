@@ -43,9 +43,6 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # copy logo for use with jupyterlab
 COPY images/logo200.svg /opt/radiant/logo.svg
 
-# update R-packages
-RUN R -e 'radiant.update::radiant.update()'
-
 RUN pip3 install jupyter-rsession-proxy \
   && jupyter labextension install jupyterlab-server-proxy \
   && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
@@ -122,8 +119,13 @@ RUN chmod +x /usr/local/bin/vscode
 # required for coenraads.bracket-pair-colorizer
 # RUN npm i -g prismjs vscode vscode-uri escape-html
 
-# updating the supervisord.conf file for Jupyter
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# update R-packages
+RUN R -e 'radiant.update::radiant.update()' \
+  # RUN R -e 'radiant.update::radiant.update()' \
+  #   -e 'remotes::install_github("radiant-rstats/radiant.model")'
+
+  # updating the supervisord.conf file for Jupyter
+  COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080 8787 8989 8765
 
