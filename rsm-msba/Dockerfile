@@ -120,12 +120,10 @@ RUN chmod +x /usr/local/bin/vscode
 # RUN npm i -g prismjs vscode vscode-uri escape-html
 
 # update R-packages
-RUN R -e 'radiant.update::radiant.update()' \
-  # RUN R -e 'radiant.update::radiant.update()' \
-  #   -e 'remotes::install_github("radiant-rstats/radiant.model")'
+RUN R -e 'radiant.update::radiant.update()' 
 
-  # updating the supervisord.conf file for Jupyter
-  COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# updating the supervisord.conf file for Jupyter
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080 8787 8989 8765
 
