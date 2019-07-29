@@ -134,6 +134,7 @@ RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
 
 # Shiny
 ENV SHINY_VERSION 1.5.9.923
+# ENV SHINY_VERSION 1.5.12.1
 
 RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${SHINY_VERSION}-amd64.deb \
   && gdebi -n shiny-server-${SHINY_VERSION}-amd64.deb \
