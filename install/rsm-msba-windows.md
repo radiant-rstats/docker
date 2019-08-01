@@ -43,9 +43,8 @@ If you see a warning message like the image shown below when you run the install
 
 <img src="figures/win-protected.png" width="300px">
 <details>
--->
-
 <summary>Complete steps 3 and 4 manually</summary>
+-->
 
 **Step 3**: Install git bash from the link below
 
