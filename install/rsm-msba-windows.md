@@ -33,7 +33,7 @@ You should also change the resources docker is allowed to use on your system. Yo
 
 Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
-<!-- **Steps 3-4 using the Rady installer**
+**Steps 3-4 using the Rady installer**
 
 Please download and run the installer linked below to complete steps 3 and 4 of the install process on Windows. 
 
@@ -42,9 +42,9 @@ https://rady.ucsd.edu/faculty/directory/vnijs/RSM-MSBA-Computing-Environment-Lat
 If you see a warning message like the image shown below when you run the installer click on "More info" and then on "Run anyway".
 
 <img src="figures/win-protected.png" width="300px">
+
 <details>
 <summary>Complete steps 3 and 4 manually</summary>
--->
 
 **Step 3**: Install git bash from the link below
 
@@ -85,7 +85,7 @@ Copy-and-paste the command below to create a shortcut to the launch script to us
 ```bash
 ln -s C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh /usr/bin/launch;
 ```
-<!-- </details> -->
+</details>
 
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
