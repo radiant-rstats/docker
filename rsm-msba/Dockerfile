@@ -110,6 +110,9 @@ ENV CODE_WORKINGDIR="${CODE_WORKINGDIR}" \
   CODE_BUILTIN_EXTENSIONS_DIR="/opt/code-server/extensions" \
   PATH=/opt/code-server:$PATH
 
+# make environment variable available from Rstudio
+RUN echo "CODE_EXTENSIONS_DIR=${CODE_EXTENSIONS_DIR}" >> /etc/R/Renviron.site
+
 # setup for code-server (aka vscode)
 COPY images/vscode.svg /opt/code-server/vscode.svg
 COPY settings.json /opt/code-server/settings.json
