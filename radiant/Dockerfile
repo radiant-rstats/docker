@@ -33,7 +33,6 @@ RUN R -e 'radiant.update::radiant.update()'
 #   -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
 #   -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
 #   -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
-RUN R -e 'remotes::install_github("vnijs/gitgadget", upgrade = "never")'
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 RUN sed -i -e "s/\:HOME_USER\:/${NB_USER}/" /etc/shiny-server/shiny-server.conf
