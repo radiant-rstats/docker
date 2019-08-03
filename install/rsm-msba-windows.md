@@ -17,7 +17,7 @@ Windows users **must** use Microsoft Windows 10 Professional, Education, or Ente
 
 **Step 2**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below in your system tray. If the containers shown in in the image are moving up and down docker hasn't finished starting up yet.
 
-During the install process use *only* the default settings. You may be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer will restart.
+During the install process use *only* the default settings. When prompted make sure to choose "Linux containers" and *not* "Windows containers". You may also be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer will restart.
 
 ![](figures/docker-icon.png)
 
