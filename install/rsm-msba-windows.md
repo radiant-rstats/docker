@@ -25,6 +25,8 @@ https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe
 
 Once the install of the docker application is done, right click on the docker icon, select "Settings", and make sure that "C" is checked as a shared drive as shown in the image below
 
+> Note: If you do not see an option to select shared drives you likely selected "Windows containers" rather than the default "Linux containers" during the docker install. Please re-install docker and make sure to select "Linux containers" when prompted.
+
 <img src="figures/windows-shared-drives.png" width="500px">
 
 You should also change the resources docker is allowed to use on your system. You can set this to approximately 50% of the maximum available on your system.
@@ -224,11 +226,11 @@ docker pull vnijs/rsm-msba-spark;
 
 ## Trouble shooting
 
-Check if a firewall or VPN is blocking docker's access to your home directory. If this is an issue on your system, a warning should be shown when you check the "C" drive in docker settings and click "Apply". See screen shot below:
+Check if a firewall, virus-checker, or VPN is blocking docker's access to your home directory on the C-drive. If this is an issue on your system, a warning should be shown when you check the "C" drive in docker settings and click "Apply". See screen shot below:
 
 <img src="figures/reset-credentials.png" width="500px">
 
-If there is an error related to the firewall, try turning off the firewall to check if you can now start up the container. You should not be without a virus checker or firewall however! We recommend using **Windows Defender**. If you are not sure if Windows Defender is correctly configured, please check with IT.
+If there is an error related to the firewall, antivirus, or VPN, try turning them off to check if you can now start up the container. You should not be without a virus checker or firewall however! We recommend using **Windows Defender**. If you are not sure if Windows Defender is correctly configured, please check with IT.
 
 If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials" or type "docker logout" in a (bash) terminal.
 
@@ -236,7 +238,7 @@ Alternative "fixes" that have worked, are to restart docker by right-clicking on
 
 ## Optional
 
-If you did not use the installer above to complete steps 3 and 4 you can install python3 on Windows using **chocolatey**. Open a CMD terminal **as administrator** and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+If you did *not* use the installer above to complete steps 3 and 4 you can install python3 on Windows using **chocolatey**. Open a CMD terminal **as administrator** and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
 
 ```bash
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin";
