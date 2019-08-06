@@ -101,7 +101,7 @@ con <- dbConnect(
 dbListTables(con)
 ```
 
-For a more extensive example using R see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md</a>
+For a more extensive example using R see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md" target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md</a>
 
 To access postgresql from Jupyter Lab using the code below:
 
@@ -173,7 +173,7 @@ For additional resources on developing docker images see the links below:
 
 ## Cleanup
 
-To remove any prior Rstudio sessions, and locally installed R-packages, press 6 (and Enter) in the launch menu. To remove locally installed Python modules press 7 (and Enter) in the launch menu.
+To remove any prior Rstudio sessions, and locally installed R-packages, press 7 (and Enter) in the launch menu. To remove locally installed Python modules press 8 (and Enter) in the launch menu.
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
