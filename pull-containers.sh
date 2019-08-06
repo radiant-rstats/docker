@@ -1,23 +1,6 @@
-## r-bionic
-IMAGE=r-bionic
-docker pull vnijs/${IMAGE}
+## pull the latest version of all generated from radiant-stats/docker 
+img_list=(r-bionic radiant rsm-msba rsm-msba-spark rsm-jupyterhub)
 
-## radiant
-IMAGE=radiant
-docker pull vnijs/${IMAGE}
-
-## rsm-msba
-IMAGE=rsm-msba
-docker pull vnijs/${IMAGE}
-
-## rsm-msba-spark
-IMAGE=rsm-msba-spark
-docker pull vnijs/${IMAGE}
-
-## rsm-jupyterhub
-IMAGE=rsm-jupyterhub
-docker pull vnijs/${IMAGE}
-
-## rsm-msba-beakerx
-#IMAGE=rsm-msba-beakerx
-#docker pull vnijs/${IMAGE}
+for img in ${img_list[@]}; do
+   docker pull vnijs/${img}
+done
