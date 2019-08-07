@@ -108,17 +108,6 @@ flights_db %>% select(year:day, dep_delay, arr_delay)
 ```
 
 ```
-Warning: `overscope_eval_next()` is deprecated as of rlang 0.2.0.
-Please use `eval_tidy()` with a data mask instead.
-This warning is displayed once per session.
-```
-
-```
-Warning: `overscope_clean()` is deprecated as of rlang 0.2.0.
-This warning is displayed once per session.
-```
-
-```
 # Source:   lazy query [?? x 5]
 # Database: postgres 10.9.0 [jovyan@127.0.0.1:8765/rsm-docker]
     year month   day dep_delay arr_delay
