@@ -3,7 +3,6 @@ title: "Connecting to a postgresql database"
 output: 
   html_document: 
     keep_md: yes
-    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -116,5 +115,5 @@ SELECT * FROM flights WHERE dep_time > 2350
 The variable `flights` now contains the result from the SQL query and will be shown below.
 
 ```{r}
-flights
+head(flights)
 ```
