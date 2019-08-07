@@ -40,8 +40,10 @@ If the database is empty, lets start with the example at <a href="https://db.rst
 ### 1. install the nycflights13 package if not already available
 
 ```{r}
-## un-comment the line below if the nycflights13 package is not available0
-# install.packages("nycflights13", lib = Sys.getenv("R_LIBS_USER"))
+## install nycflights13 package locally if not already available
+if (!require("nycflights13")) {
+  install.packages("nycflights13", lib = Sys.getenv("R_LIBS_USER"))
+}
 ```
 
 ### 2. Push data into the database 
