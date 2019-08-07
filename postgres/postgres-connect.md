@@ -53,7 +53,7 @@ db_tabs
 ```
 
 ```
-character(0)
+[1] "flights"
 ```
 
 If the database is empty, lets start with the example at <a href="https://db.rstudio.com/dplyr/" target="_blank">https://db.rstudio.com/dplyr/</a> and work through the following 6 steps:
@@ -122,16 +122,16 @@ flights_db %>% select(year:day, dep_delay, arr_delay)
 # Database: postgres 10.0.9 [jovyan@127.0.0.1:8765/rsm-docker]
     year month   day dep_delay arr_delay
    <int> <int> <int>     <dbl>     <dbl>
- 1  2013     1     1         2        11
- 2  2013     1     1         4        20
- 3  2013     1     1         2        33
- 4  2013     1     1        -1       -18
- 5  2013     1     1        -6       -25
- 6  2013     1     1        -4        12
- 7  2013     1     1        -5        19
- 8  2013     1     1        -3       -14
- 9  2013     1     1        -3        -8
-10  2013     1     1        -2         8
+ 1  2013     1    24        10       -18
+ 2  2013     1    24         6       -13
+ 3  2013     1    24         4       -16
+ 4  2013     1    24       -11       -19
+ 5  2013     1    24        10        17
+ 6  2013     1    24        15       -18
+ 7  2013     1    24        33        -3
+ 8  2013     1    24         0       -20
+ 9  2013     1    24        66        63
+10  2013     1    24        11         3
 # … with more rows
 ```
 
@@ -144,16 +144,16 @@ flights_db %>% filter(dep_delay > 300)
 # Database: postgres 10.0.9 [jovyan@127.0.0.1:8765/rsm-docker]
     year month   day dep_time sched_dep_time dep_delay arr_time
    <int> <int> <int>    <int>          <int>     <dbl>    <int>
- 1  2013     1     1      848           1835       853     1001
- 2  2013     1     1     2343           1724       379      314
- 3  2013     1     2     1412            838       334     1710
- 4  2013     1     2     1607           1030       337     2003
- 5  2013     1     2     2131           1512       379     2340
- 6  2013     1     5     1344            817       327     1635
- 7  2013     1     7     2021           1415       366     2332
- 8  2013     1     9      641            900      1301     1242
- 9  2013     1    10     1121           1635      1126     1239
-10  2013     1    10     1525            900       385     1713
+ 1  2013     1    24     1953           1435       318     2227
+ 2  2013     1    24     2051           1522       329     2307
+ 3  2013     1    25       15           1815       360      208
+ 4  2013     1    25       26           1850       336      225
+ 5  2013     1    25      123           2000       323      229
+ 6  2013     1    25     2203           1635       328       34
+ 7  2013     1    26     1409            820       349     1528
+ 8  2013    10     1     1342            815       327     1458
+ 9  2013    10     2     2002           1456       306     2113
+10  2013    10     6     2208           1645       323       20
 # … with more rows, and 12 more variables: sched_arr_time <int>,
 #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
 #   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
@@ -288,24 +288,24 @@ head(flights)
 
 ```
   year month day dep_time sched_dep_time dep_delay arr_time sched_arr_time
-1 2013     1  12     2359           2359         0      429            437
-2 2013     1  13     2354           2250        64      100           2359
-3 2013     1  13     2358           2045       193      233           2310
-4 2013     1  13     2359           2130       149      435            218
-5 2013     1  14     2353           2359        -6      429            444
-6 2013     1  15     2356           2359        -3      439            444
+1 2013    10   7     2351           2359        -8      353            350
+2 2013    10   7     2356           2159       117       56           2312
+3 2013    10  10     2353           2159       114       46           2308
+4 2013    10  10     2358           2359        -1      352            350
+5 2013    10  11     2351           1905       286      103           2038
+6 2013    10  11     2353           2100       173      111           2235
   arr_delay carrier flight tailnum origin dest air_time distance hour
-1        -8      B6    727  N509JB    JFK  BQN      185     1576   23
-2        61      B6    608  N334JB    JFK  PWM       42      273   22
-3       203      B6    115  N239JB    JFK  MSY      187     1182   20
-4       137      B6    701  N337JB    JFK  SJU      189     1598   21
-5       -15      B6    739  N775JB    JFK  PSE      193     1617   23
-6        -5      B6    739  N547JB    JFK  PSE      202     1617   23
+1         3      B6    745  N703JB    JFK  PSE      214     1617   23
+2       104      EV   5904  N12924    EWR  BTV       46      266   21
+3        98      9E   3525  N913XJ    LGA  SYR       32      198   21
+4         2      B6    745  N580JB    JFK  PSE      212     1617   23
+5       265      EV   5383  N761ND    LGA  ROC       46      254   19
+6       156      MQ   3317  N507MQ    LGA  RDU       64      431   21
   minute           time_hour
-1     59 2013-01-13 04:00:00
-2     50 2013-01-14 03:00:00
-3     45 2013-01-14 01:00:00
-4     30 2013-01-14 02:00:00
-5     59 2013-01-15 04:00:00
-6     59 2013-01-16 04:00:00
+1     59 2013-10-08 03:00:00
+2     59 2013-10-08 01:00:00
+3     59 2013-10-11 01:00:00
+4     59 2013-10-11 03:00:00
+5      5 2013-10-11 23:00:00
+6      0 2013-10-12 01:00:00
 ```

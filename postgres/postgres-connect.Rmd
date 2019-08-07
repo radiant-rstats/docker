@@ -114,7 +114,7 @@ tail(tailnum_delay)
 
 You can specify a SQL code chunk to query the database directly
 
-```{sql, connection = con, output.var="flights"}
+```{sql, connection = con, output.var = "flights"}
 SELECT * FROM flights WHERE dep_time > 2350
 ```
 
