@@ -42,7 +42,11 @@ If the database is empty, lets start with the example at <a href="https://db.rst
 ```{r}
 ## install nycflights13 package locally if not already available
 if (!require("nycflights13")) {
-  install.packages("nycflights13", lib = Sys.getenv("R_LIBS_USER"))
+  local_r_dir <- Sys.getenv("R_LIBS_USER")
+  if (!dir.exists(local_r_dir)) {
+    dir.create(local_r_dir, recursive = TRUE)
+  }
+  install.packages("nycflights13", lib = local_r_dir)
 }
 ```
 

@@ -27,7 +27,7 @@ dat
 dbListTables(con)
 
 ## drop a table
-db_drop_table(con, table = 'mtcars')
+db_drop_table(con, table = "mtcars")
 
 ## show updated list of tables
 dbListTables(con)

@@ -53,7 +53,7 @@ db_tabs
 ```
 
 ```
-[1] "flights"
+character(0)
 ```
 
 If the database is empty, lets start with the example at <a href="https://db.rstudio.com/dplyr/" target="_blank">https://db.rstudio.com/dplyr/</a> and work through the following 6 steps:
@@ -64,7 +64,11 @@ If the database is empty, lets start with the example at <a href="https://db.rst
 ```r
 ## install nycflights13 package locally if not already available
 if (!require("nycflights13")) {
-  install.packages("nycflights13", lib = Sys.getenv("R_LIBS_USER"))
+  local_r_dir <- Sys.getenv("R_LIBS_USER")
+  if (!dir.exists(local_r_dir)) {
+    dir.create(local_r_dir, recursive = TRUE)
+  }
+  install.packages("nycflights13", lib = local_r_dir)
 }
 ```
 
@@ -115,19 +119,19 @@ flights_db %>% select(year:day, dep_delay, arr_delay)
 
 ```
 # Source:   lazy query [?? x 5]
-# Database: postgres 10.9.0 [jovyan@127.0.0.1:8765/rsm-docker]
+# Database: postgres 10.0.9 [jovyan@127.0.0.1:8765/rsm-docker]
     year month   day dep_delay arr_delay
    <int> <int> <int>     <dbl>     <dbl>
- 1  2013    10    15        -7       -18
- 2  2013    10    15        -7       -12
- 3  2013    10    15        -6       -23
- 4  2013    10    15        -5       -18
- 5  2013    10    15        -5        -4
- 6  2013    10    15        -5       -22
- 7  2013    10    15        -5       -19
- 8  2013    10    15        -5       -32
- 9  2013    10    15        -4        -7
-10  2013    10    15        -3       -17
+ 1  2013     1     1         2        11
+ 2  2013     1     1         4        20
+ 3  2013     1     1         2        33
+ 4  2013     1     1        -1       -18
+ 5  2013     1     1        -6       -25
+ 6  2013     1     1        -4        12
+ 7  2013     1     1        -5        19
+ 8  2013     1     1        -3       -14
+ 9  2013     1     1        -3        -8
+10  2013     1     1        -2         8
 # … with more rows
 ```
 
@@ -137,19 +141,19 @@ flights_db %>% filter(dep_delay > 300)
 
 ```
 # Source:   lazy query [?? x 19]
-# Database: postgres 10.9.0 [jovyan@127.0.0.1:8765/rsm-docker]
+# Database: postgres 10.0.9 [jovyan@127.0.0.1:8765/rsm-docker]
     year month   day dep_time sched_dep_time dep_delay arr_time
    <int> <int> <int>    <int>          <int>     <dbl>    <int>
- 1  2013    10    15     2111           1555       316     2244
- 2  2013    10    17     1848           1248       360     2040
- 3  2013    10    18     2129           1459       390     2351
- 4  2013    10    22     1812           1145       387     2017
- 5  2013    10    23     1343            730       373     1547
- 6  2013    10    25     1753           1135       378     2040
- 7  2013    10    25     2146           1636       310     2314
- 8  2013    10    30     1941           1430       311     2152
- 9  2013    11     2     2217           1655       322      114
-10  2013    11     3      603           1645       798      829
+ 1  2013     1     1      848           1835       853     1001
+ 2  2013     1     1     2343           1724       379      314
+ 3  2013     1     2     1412            838       334     1710
+ 4  2013     1     2     1607           1030       337     2003
+ 5  2013     1     2     2131           1512       379     2340
+ 6  2013     1     5     1344            817       327     1635
+ 7  2013     1     7     2021           1415       366     2332
+ 8  2013     1     9      641            900      1301     1242
+ 9  2013     1    10     1121           1635      1126     1239
+10  2013     1    10     1525            900       385     1713
 # … with more rows, and 12 more variables: sched_arr_time <int>,
 #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
 #   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
@@ -170,7 +174,7 @@ This warning is displayed only once per session.
 
 ```
 # Source:   lazy query [?? x 2]
-# Database: postgres 10.9.0 [jovyan@127.0.0.1:8765/rsm-docker]
+# Database: postgres 10.0.9 [jovyan@127.0.0.1:8765/rsm-docker]
    dest  delay
    <chr> <dbl>
  1 ABQ   2006.
@@ -201,7 +205,7 @@ tailnum_delay_db
 
 ```
 # Source:     lazy query [?? x 3]
-# Database:   postgres 10.9.0 [jovyan@127.0.0.1:8765/rsm-docker]
+# Database:   postgres 10.0.9 [jovyan@127.0.0.1:8765/rsm-docker]
 # Ordered by: desc(delay)
    tailnum delay     n
    <chr>   <dbl> <dbl>
@@ -284,24 +288,24 @@ head(flights)
 
 ```
   year month day dep_time sched_dep_time dep_delay arr_time sched_arr_time
-1 2013    11   4     2357           2359        -2      428            437
-2 2013    11   4     2357           2359        -2      420            440
-3 2013    11   5     2359           2359         0      420            437
-4 2013    11   6     2354           2359        -5      426            440
-5 2013    11   6     2355           2359        -4      425            445
-6 2013    11   7     2354           2359        -5      517            445
+1 2013     1  12     2359           2359         0      429            437
+2 2013     1  13     2354           2250        64      100           2359
+3 2013     1  13     2358           2045       193      233           2310
+4 2013     1  13     2359           2130       149      435            218
+5 2013     1  14     2353           2359        -6      429            444
+6 2013     1  15     2356           2359        -3      439            444
   arr_delay carrier flight tailnum origin dest air_time distance hour
-1        -9      B6    839  N537JB    JFK  BQN      183     1576   23
-2       -20      B6   1503  N789JB    JFK  SJU      184     1598   23
-3       -17      B6    839  N564JB    JFK  BQN      177     1576   23
-4       -14      B6   1503  N509JB    JFK  SJU      186     1598   23
-5       -20      B6    745  N652JB    JFK  PSE      189     1617   23
-6        32      B6    745  N649JB    JFK  PSE      235     1617   23
+1        -8      B6    727  N509JB    JFK  BQN      185     1576   23
+2        61      B6    608  N334JB    JFK  PWM       42      273   22
+3       203      B6    115  N239JB    JFK  MSY      187     1182   20
+4       137      B6    701  N337JB    JFK  SJU      189     1598   21
+5       -15      B6    739  N775JB    JFK  PSE      193     1617   23
+6        -5      B6    739  N547JB    JFK  PSE      202     1617   23
   minute           time_hour
-1     59 2013-11-04 20:00:00
-2     59 2013-11-04 20:00:00
-3     59 2013-11-05 20:00:00
-4     59 2013-11-06 20:00:00
-5     59 2013-11-06 20:00:00
-6     59 2013-11-07 20:00:00
+1     59 2013-01-13 04:00:00
+2     50 2013-01-14 03:00:00
+3     45 2013-01-14 01:00:00
+4     30 2013-01-14 02:00:00
+5     59 2013-01-15 04:00:00
+6     59 2013-01-16 04:00:00
 ```
