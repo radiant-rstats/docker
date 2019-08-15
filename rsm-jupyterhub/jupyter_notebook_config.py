@@ -48,6 +48,7 @@ def _radiant_command(port):
             location / {{
                 site_dir {site_dir};
                 log_dir /var/log/shiny-server;
+                reconnect false;
                 directory_index off;
             }}
         }}
@@ -100,31 +101,12 @@ def _codeserver_command(port):
     ]
 
 
-# generates a 500 error
-# def _radiant_local_command(port):
-#     full_path = shutil.which("R")
-#     if not full_path:
-#         raise FileNotFoundError("Can not find R in $PATH")
-
-#     return """ {full_path} -e "radiant.data::launch(package = 'radiant', run = FALSE, port = {port})" """.format(
-#         full_path=full_path, port=str(port)
-#     )
-
-
 c.ServerProxy.servers = {
     "radiant": {
         "command": _radiant_command,
         "timeout": 20,
         "launcher_entry": {"title": "Radiant", "icon_path": "/opt/radiant/logo.svg"},
     },
-    # "radiant.local": {
-    #     "command": _radiant_local_command,
-    #     "timeout": 20,
-    #     "launcher_entry": {
-    #         "title": "Radiant Local",
-    #         "icon_path": "/opt/radiant/logo.svg",
-    #     },
-    # },
     "vscode": {
         "command": _codeserver_command,
         "timeout": 20,

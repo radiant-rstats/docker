@@ -291,6 +291,27 @@ else
     HOMEDIR="${ARG_HOME}"
   fi
 
+  RPROF="${HOMEDIR}/.Rprofile"
+  touch "${RPROF}"
+  if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
+    echo "Your setup does not allow report generation in Radiant."
+    echo "Would you like to add relevant code to .Rprofile?"
+    echo "Press y or n, followed by [ENTER]:"
+    echo ""
+    read allow_report
+
+    if [ "${allow_report}" == "y" ]; then
+      ## Windows does not reliably use newlines with printf
+      echo 'options(radiant.maxRequestSize = -1)' >> "${RPROF}"
+      echo 'options(radiant.report = TRUE)' >> "${RPROF}"
+      echo 'options(radiant.shinyFiles = TRUE)' >> "${RPROF}"
+      echo '# List specific directories you want to use with radiant' >> "${RPROF}"
+      echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
+      echo '' >> "${RPROF}"
+      echo '' >> "${RPROF}"
+    fi
+  fi
+
   BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
 
   echo "-----------------------------------------------------------------------"
@@ -340,4 +361,6 @@ else
     fi
   }
   rstudio_abend
+
+
 fi

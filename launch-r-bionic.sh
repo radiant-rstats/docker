@@ -345,23 +345,6 @@ else
     if [ -z "${menu_exec}" ]; then
       echo "Invalid entry. Resetting launch menu ..."
     elif [ ${menu_exec} == 1 ]; then
-      RPROF="${HOMEDIR}/.Rprofile"
-      touch "${RPROF}"
-      if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
-        echo "Your setup does not allow report generation in Report > Rmd"
-        echo "or Report > R. Would you like to add relevant code to .Rprofile?"
-        echo "Press y or n, followed by [ENTER]:"
-        echo
-        read allow_report
-
-        if [ "${allow_report}" == "y" ]; then
-          ## Windows does not reliably use newlines with printf
-          echo 'options(radiant.maxRequestSize = -1)' >> "${RPROF}"
-          echo 'options(radiant.report = TRUE)' >> "${RPROF}"
-          echo '' >> "${RPROF}"
-          echo '' >> "${RPROF}"
-        fi
-      fi
       if [ "${menu_arg}" == "" ]; then
         echo "Starting shiny-apps in the default browser on port 8080"
         open_browser http://localhost:8080

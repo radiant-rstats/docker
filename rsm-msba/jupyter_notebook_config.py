@@ -36,6 +36,7 @@ def _radiant_command(port):
             location / {{
                 site_dir {site_dir};
                 log_dir /var/log/shiny-server;
+                reconnect false;
                 directory_index off;
             }}
         }}

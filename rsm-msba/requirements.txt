@@ -60,7 +60,6 @@ jupyter==1.0.0
 jupyter-client==5.2.4
 jupyter-console==6.0.0
 jupyter-core==4.5.0
-jupyter-rsession-proxy==1.0b6
 jupyter-server-proxy==1.1.0
 jupyterlab==0.35.6
 jupyterlab-code-formatter==0.2.1

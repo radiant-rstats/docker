@@ -44,7 +44,8 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # copy logo for use with jupyterlab
 COPY images/logo200.svg /opt/radiant/logo.svg
 
-RUN pip3 install jupyter-rsession-proxy \
+# RUN pip3 install jupyter-rsession-proxy==1.0b6 \
+RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
   && jupyter labextension install jupyterlab-server-proxy \
   && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
   && chown ${NB_USER}:shiny -R /var/log/shiny-server
@@ -117,8 +118,8 @@ RUN echo "CODE_EXTENSIONS_DIR=${CODE_EXTENSIONS_DIR}" >> /etc/R/Renviron.site
 COPY images/vscode.svg /opt/code-server/vscode.svg
 COPY settings.json /opt/code-server/settings.json
 COPY vsix/*.vsix /opt/code-server/extensions/
-COPY vscode-setup.sh /usr/local/bin/vscode
-RUN chmod +x /usr/local/bin/vscode
+COPY setup.sh /usr/local/bin/setup
+RUN chmod +x /usr/local/bin/setup
 
 # required for coenraads.bracket-pair-colorizer
 # RUN npm i -g prismjs vscode vscode-uri escape-html

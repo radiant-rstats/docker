@@ -366,18 +366,26 @@ else
       RPROF="${HOMEDIR}/.Rprofile"
       touch "${RPROF}"
       if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
-        echo "Your setup does not allow report generation in Report > Rmd"
-        echo "or Report > R. Would you like to add relevant code to .Rprofile?"
+        echo "Your setup does not allow report generation in Radiant."
+        echo "Would you like to add relevant code to .Rprofile?"
         echo "Press y or n, followed by [ENTER]:"
-        echo
+        echo ""
         read allow_report
 
         if [ "${allow_report}" == "y" ]; then
           ## Windows does not reliably use newlines with printf
+          sed_fun '/^options(radiant.maxRequestSize/d' "${RPROF}"
+          sed_fun '/^options(radiant.report/d' "${RPROF}" 
+          sed_fun '/^options(radiant.shinyFiles/d' "${RPROF}"
+          sed_fun '/^#.*List.*specific.*directories.*you.*want.*to.*use.*with.*radiant/d' "${RPROF}"
+          sed_fun '/^#.*options(radiant\.sf_volumes.*=.*c(Git.*=.*"\/home\/jovyan\/git"))/d' "${RPROF}"
           echo 'options(radiant.maxRequestSize = -1)' >> "${RPROF}"
           echo 'options(radiant.report = TRUE)' >> "${RPROF}"
+          echo 'options(radiant.shinyFiles = TRUE)' >> "${RPROF}"
+          echo '# List specific directories you want to use with radiant' >> "${RPROF}"
+          echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
           echo '' >> "${RPROF}"
-          echo '' >> "${RPROF}"
+          sed_fun '/^[\s]*$/d' "${RPROF}"
         fi
       fi
       if [ "${menu_arg}" == "" ]; then

@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.5.5
+DOCKERHUB_VERSION=1.5.6
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -46,12 +46,13 @@ launcher () {
 }
 
 LABEL=r-bionic
-build
-launcher "radiant" "Radiant" "shiny-apps"
+build 
+## if you use the line below, manually remove the 'allow' section afterwards
+# launcher "radiant" "Radiant" "shiny-apps"
  
 LABEL=radiant
 build
- 
+
 LABEL=rsm-msba
 build
  

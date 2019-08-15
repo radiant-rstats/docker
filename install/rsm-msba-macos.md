@@ -65,6 +65,12 @@ You will know that the installation was successful if you can start Rstudio and 
 
 <img src="figures/rsm-jupyter.png" width="500px">
 
+To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in either Rstudio or Jupyter lab and run the code below:
+
+```bash
+setup
+```
+
 ## Updating the RSM-MSBA computing environment on macOS
 
 To update the container use the launch script and press 5 (+ enter). To update the launch script itself, press 6 (+ enter).
