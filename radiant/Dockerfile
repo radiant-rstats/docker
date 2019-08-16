@@ -39,6 +39,10 @@ RUN sed -i -e "s/\:HOME_USER\:/${NB_USER}/" /etc/shiny-server/shiny-server.conf
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Copy the launch script into the image
+ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-radiant.sh /opt/launch.sh
+RUN chmod 777 /opt/launch.sh
+
 EXPOSE 8080 8787
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

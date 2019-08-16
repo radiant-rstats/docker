@@ -36,6 +36,10 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
 # update R-packages
 RUN R -e 'radiant.update::radiant.update()'
 
+# Copy the launch script into the image
+ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba-spark.sh /opt/launch.sh
+RUN chmod 777 /opt/launch.sh
+
 EXPOSE 8080 8787 8989 8765
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

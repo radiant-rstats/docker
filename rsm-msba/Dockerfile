@@ -130,6 +130,10 @@ RUN R -e 'radiant.update::radiant.update()'
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Copy the launch script into the image
+ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
+RUN chmod 777 /opt/launch.sh
+
 EXPOSE 8080 8787 8989 8765
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

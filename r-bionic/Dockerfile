@@ -169,6 +169,14 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY userconf.sh /usr/local/bin/userconf.sh
 RUN chmod +x /usr/local/bin/userconf.sh
 
+# Copy the launch script into the image
+ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-r-bionic.sh /opt/launch.sh
+RUN chmod 777 /opt/launch.sh
+
+# Adding a script to copy the launch file to the Desktop
+COPY launch.sh /usr/local/bin/launch
+RUN chmod +x /usr/local/bin/launch
+
 # copy dbase connections
 COPY connections/ /etc/${NB_USER}/connections
 

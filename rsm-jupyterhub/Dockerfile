@@ -62,6 +62,10 @@ ENV JUPYTER_ENABLE_LAB=1
 RUN echo "HOME=/home/${NB_USER}" >> /etc/R/Renviron.site \
   && echo "USER=${NB_USER}" >> /etc/R/Renviron.site
 
+# Copy the launch script into the image
+ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-jupyterhub.sh /opt/launch.sh
+RUN chmod 777 /opt/launch.sh
+
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 

@@ -49,7 +49,7 @@ LABEL=r-bionic
 build 
 ## if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
- 
+
 LABEL=radiant
 build
 
