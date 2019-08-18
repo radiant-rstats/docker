@@ -517,13 +517,17 @@ else
 
       if [ "${cleanup}" == "y" ]; then
         echo "Removing locally installed R packages"
-        rm -rf "${HOMEDIR}/.rsm-msba/R"
+        rm_list=$(ls -d "${HOMEDIR}"/.rsm-msba/R/*/[0-9]\.[0-9])
+        for i in ${rm_list}; do
+          rm -rf "${i}"
+          mkdir "${i}"
+        done
       fi
     elif [ ${menu_exec} == 8 ]; then
       echo "Removing locally installed Python packages"
       rm -rf "${HOMEDIR}/.rsm-msba/bin"
       rm -rf "${HOMEDIR}/.rsm-msba/lib"
-      rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter)
+      rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter | grep -v code-server)
       for i in ${rm_list}; do
          rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
       done
