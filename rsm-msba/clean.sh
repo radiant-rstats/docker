@@ -4,7 +4,7 @@
 ## and remove locally install R and python packages
 ## cleaning up settings is a common requirement for Rstudio
 
-HOMEDIR="/home/${NB_USER}"
+HOMEDIR="/home/$(whoami)"
 
 if [ ! -d "${HOMEDIR}/.rsm-msba" ]; then
   echo "-----------------------------------------------------"

@@ -21,10 +21,6 @@ COPY start.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 
-# Adding a "clean up" script
-COPY clean.sh /usr/local/bin/clean
-RUN chmod +x /usr/local/bin/clean
-
 # updating the version added in rsm-msba
 COPY jupyter_notebook_config.py /etc/jupyter/
 
