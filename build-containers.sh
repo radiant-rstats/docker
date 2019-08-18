@@ -45,8 +45,8 @@ launcher () {
   fi
 }
 
-# LABEL=r-bionic
-# build 
+LABEL=r-bionic
+build 
 ## if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
