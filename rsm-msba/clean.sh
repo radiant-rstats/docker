@@ -63,7 +63,7 @@ else
     echo "Removing locally installed Python packages"
     rm -rf "${HOMEDIR}/.rsm-msba/bin"
     rm -rf "${HOMEDIR}/.rsm-msba/lib"
-    rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter)
+    rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter | grep -v code-server)
     for i in ${rm_list}; do
        rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
     done
