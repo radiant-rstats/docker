@@ -47,7 +47,7 @@ else
 
   if [ "${cleanup}" == "y" ]; then
     echo "Removing locally installed R packages"
-    rm_list=$(ls -d "${HOMEDIR}"/.rsm-msba/R/*/[0-9]\.[0-9])
+    rm_list=$(ls -d "${HOMEDIR}"/.rsm-msba/R/*/[0-9]\.[0-9] 2>/dev/null)
     for i in ${rm_list}; do
       rm -rf "${i}"
       mkdir "${i}"

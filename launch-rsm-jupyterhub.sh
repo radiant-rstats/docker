@@ -299,16 +299,20 @@ else
     echo "Press y or n, followed by [ENTER]:"
     echo ""
     read allow_report
-
     if [ "${allow_report}" == "y" ]; then
       ## Windows does not reliably use newlines with printf
+      sed_fun '/^options(radiant.maxRequestSize/d' "${RPROF}"
+      sed_fun '/^options(radiant.report/d' "${RPROF}" 
+      sed_fun '/^options(radiant.shinyFiles/d' "${RPROF}"
+      sed_fun '/^#.*List.*specific.*directories.*you.*want.*to.*use.*with.*radiant/d' "${RPROF}"
+      sed_fun '/^#.*options(radiant\.sf_volumes.*=.*c(Git.*=.*"\/home\/jovyan\/git"))/d' "${RPROF}"
       echo 'options(radiant.maxRequestSize = -1)' >> "${RPROF}"
       echo 'options(radiant.report = TRUE)' >> "${RPROF}"
       echo 'options(radiant.shinyFiles = TRUE)' >> "${RPROF}"
       echo '# List specific directories you want to use with radiant' >> "${RPROF}"
       echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
       echo '' >> "${RPROF}"
-      echo '' >> "${RPROF}"
+      sed_fun '/^[\s]*$/d' "${RPROF}"
     fi
   fi
 
