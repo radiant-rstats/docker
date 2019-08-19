@@ -274,7 +274,7 @@ else
         rm -rf "${ARG_HOME}/.rsm-msba/R"
         rm -rf "${ARG_HOME}/.rsm-msba/bin"
         rm -rf "${ARG_HOME}/.rsm-msba/lib"
-        rm_list=$(ls "${ARG_HOME}/.rsm-msba/share" | grep -v jupyter)
+        rm_list=$(ls "${ARG_HOME}/.rsm-msba/share" | grep -v jupyter | grep -v code-server)
         for i in ${rm_list}; do
            rm -rf "${ARG_HOME}/.rsm-msba/share/${i}"
         done
