@@ -1,7 +1,7 @@
-Dockerized Business Analytics for RSM MSBA
-===========================================
+Dockerized Business Analytics for RSM MSBA with SPARK
+======================================================
 
-This repo contains information to setup a dockerized instance of R, Rstudio, Shiny, [Radiant](https://radiant-rstats/radiant), Python, and JupyterLab 
+This repo contains information to setup a dockerized instance of R, Rstudio, Shiny, [Radiant](https://radiant-rstats/radiant), Python, JupyterLab, Postgres, Spark, Bash, and VS Code (code-server)
 
 ## Install docker
 
@@ -21,13 +21,14 @@ Docker version 18.06.0-ce, build 0ffa825
 To start all applications in a temporary container use the command below. To map local drives to Rstudio use the `-v` option. For example, the command below would map your home directory the home directory used for Rstudio
 
 ```bash
-docker run --rm -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
+docker run --rm -p 8080:80 -p 8787:8787 -p 8989:8888 -p 8765:8765 \
+  -v ~:/home/jovyan vnijs/rsm-msba-spark
 ```
 
 An alternative approach is to use `docker-compose` and the command below after cloning this repo:
 
 ```bash
-docker-compose -f ./rsm-msba/docker-rsm-msba.yml up
+docker-compose -f ./rsm-msba-spark/docker-rsm-msba-spark.yml up
 ```
 
 The radiant app will be available at <a href="http://127.0.0.1:8080" target="_blank">http://127.0.0.1:8080</a>,  Rstudio will be available at <a href="http://127.0.0.1:8787" target="_blank">http://127.0.0.1:8787</a>, and JupyterLab will be available at 
@@ -38,16 +39,25 @@ The user id and password for Rstudio is `rstudio`. For JupyterLab use `jupyter`.
 To stop a running container use `CTRL+C`. In a real deployment scenario, you will probably want to run the container in detached mode (`-d`):
 
 ```bash
-docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -v ~:/home/rstudio vnijs/rsm-msba
+docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -p 8765:8765 \
+  -v ~:/home/jovyan vnijs/rsm-msba-spark
 ```
 
 The rsm-msba directory also contains a docker-compose file that pulls in a postgres image and database admin tool adminer. To run the full application use the command below. 
 
 ```sh
-docker-compose -f ./rsm-msba/docker-rsm-msba-pg.yml up
+docker-compose -f ./rsm-msba-spark/docker-rsm-msba-spark.yml up
 ```
 
-The `pg-connect.Rmd` file shows how you can connect to the `postgres` data base. The `pg-radiant.state.rda` file illustrates how you can connect to a data base from radiant.
+Information on how to connect to postgres is available in the install instructions for the rsm-msba-spark image:
+
+* https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
+* https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
+* https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-linux.md
+
+For a more extensive example using R see: https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md
+
+For a more extensive example using Python see: https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb
 
 ## Installing R-packages
 
@@ -57,24 +67,18 @@ If you want to install an R-package, e.g., `fortune`, in a way that persists whe
 install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))
 ```
 
-## Customize the rsm-msba container
-
-The rsm-msba container build on the vnijs/radiant container. If you want to make changes to settings for radiant clone and docker repo: https://github.com/radiant-rstats/radiant
-
-The Dockerfile in this repo mainly adds python libraries. Add or delete as needed and re-build the Docker image
-
 ## Building the container
 
 Use the terminal to change the working directory to the location where you cloned the repo. Then build the docker image using:
 
 ```sh
-docker build -t $USER/rsm-msba .
+docker build -t $USER/rsm-msba-spark .
 ```
 
-Note that creating the container may take some time if it has to pull an updated version of vnijs/rsm-msba. If the build fails for some reason you can access the container through the bash shell using to investigate what went wrong:
+Note that creating the container may take some time if it has to pull an updated version of vnijs/rsm-msba-spark. If the build fails for some reason you can access the container through the bash shell using to investigate what went wrong:
 
 ```sh
-docker run -t -i $USER/rsm-msba /bin/bash
+docker run -t -i $USER/rsm-msba-spark /bin/bash
 ```
 
 ## Trademarks
