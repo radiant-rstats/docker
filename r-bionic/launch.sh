@@ -10,8 +10,8 @@ fi
 
 echo "-----------------------------------------------------------------------"
 echo "To copy the launch script for this container to your ${DIR_label}"
-echo "Press (1) to copy to a macOS host, follow by [ENTER]:"
-echo "Press (2) to copy to a Windows or Linux host, follow by [ENTER]:"
+echo "Press (1) to copy to a macOS host, followed by [ENTER]:"
+echo "Press (2) to copy to a Windows or Linux host, followed by [ENTER]:"
 echo "-----------------------------------------------------------------------"
 read menu_exec
 
