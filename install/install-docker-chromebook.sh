@@ -26,4 +26,4 @@ newgrp docker
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 
 ## creating a shortcut to launch the docker container
-ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;

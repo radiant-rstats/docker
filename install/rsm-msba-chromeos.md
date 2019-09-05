@@ -9,6 +9,12 @@
 
 ## Installing the RSM-MSBA computing environment on ChromeOS
 
+Your first step will be to activate linux (beta) on your Chromebook. See the link below for setup instructions. You should run additional commands from the terminal so it will be convenient to "pin" the terminal app to the app "shelf" in ChromeOS.
+
+https://support.google.com/chromebook/answer/9145439?hl=en
+
+> Note: This is a work in progress. Please report any successes or failures through https://github.com/radiant-rstats/docker/issues
+
 Please follow the instructions below to install the rsm-msba-spark computing environment. It has R, Rstudio, Python, Jupyter Lab, and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
 **Step 1**: Install docker on ChromeOS
@@ -34,7 +40,7 @@ Optional: If you are interested, the linked video gives a brief intro to what Do
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
 launch
 ```
 
