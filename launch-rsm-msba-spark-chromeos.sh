@@ -127,6 +127,7 @@ else
   fi
 
   if [[ "$ostype" == "Linux" ]]; then
+    ostype="ChromeOS"
     HOMEDIR=~
     ID=$USER
     open_browser () {
@@ -497,9 +498,16 @@ else
       else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-      chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-      "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+      if [ $ostype == "ChromeOS" ]; then
+        sudo rm /usr/local/bin/launch
+        sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba-spark-chromeos.sh -o "/usr/local/bin/launch"
+        sudo chmod 755 "/usr/local/bin/launch"
+        launch
+      else 
+        curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+        chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+      fi
       exit 1
     elif [ ${menu_exec} == 7 ]; then
       echo "-----------------------------------------------------"
