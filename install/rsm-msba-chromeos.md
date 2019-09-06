@@ -191,7 +191,7 @@ docker pull vnijs/rsm-msba-spark;
 
 ## Trouble shooting
 
-The only issues we have seen on Linux so far can be "fixed" by restarting docker and/or rebooting. To restart the docker service use:
+The only issues we have seen on ChromeOS so far can be "fixed" by restarting docker and/or rebooting. To restart the docker service use:
 
 ```{r}
 sudo service docker stop
