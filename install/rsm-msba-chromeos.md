@@ -1,6 +1,6 @@
 # Contents
   - [Installing the RSM-MSBA computing environment on ChromeOS](#installing-the-rsm-msba-computing-environment-on-chromeos)
-  - [Updating the RSM-MSBA computing environment on ChromeOS](#updating-the-rsm-msba-computing-environment-on-linux)
+  - [Updating the RSM-MSBA computing environment on ChromeOS](#updating-the-rsm-msba-computing-environment-on-chromeos)
   - [Connecting to postgresql](#connecting-to-postgresql)
   - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
   - [Committing changes to the computing environment](#committing-changes-to-the-computing-environment)
@@ -9,11 +9,11 @@
 
 ## Installing the RSM-MSBA computing environment on ChromeOS
 
-Your first step will be to activate linux (beta) on your Chromebook. See the link below for setup instructions. You should run additional commands from the terminal so it will be convenient to "pin" the terminal app to the app "shelf" in ChromeOS.
+Your first step will be to activate linux (beta) on your Chromebook. See the link below for setup instructions. You will run additional commands from the linux terminal so it will be convenient to "pin" the terminal app to the app "shelf" in ChromeOS.
 
 https://support.google.com/chromebook/answer/9145439?hl=en
 
-> Note: This is a work in progress. Please report any successes or failures through https://github.com/radiant-rstats/docker/issues
+> Note: This installation guide for ChromeOS is a work in progress. Please report successes or failures to https://github.com/radiant-rstats/docker/issues
 
 Please follow the instructions below to install the rsm-msba-spark computing environment. It has R, Rstudio, Python, Jupyter Lab, and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
@@ -29,19 +29,19 @@ source <(curl -s https://raw.githubusercontent.com/radiant-rstats/docker/master/
 Once docker is installed, make sure it is running. You can can check this by using the following command. If this produces some output and no errors you are set to continue with the next steps.
 
 ```bash
-docker ps
+docker ps;
 ```
 
 ![](figures/docker-icon.png)
 
 Optional: If you are interested, the linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
-**Step 2**: Open a terminal and copy-and-paste the code below.
+**Step 2**: Open a terminal and copy-and-paste the code below
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
-launch
+launch;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. 
@@ -65,7 +65,7 @@ You will know that the installation was successful if you can start Rstudio and 
 To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in either Rstudio or Jupyter lab and run the code below:
 
 ```bash
-setup
+setup;
 ```
 
 ## Updating the RSM-MSBA computing environment on ChromeOS
@@ -80,7 +80,7 @@ If for some reason you are having trouble updating either the container or the l
 docker pull vnijs/rsm-msba-spark;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
 ```
 
 ## Connecting to postgresql
