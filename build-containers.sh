@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.5.7
+DOCKERHUB_VERSION=1.5.8
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -45,6 +45,7 @@ launcher () {
   fi
 }
 
+
 LABEL=r-bionic
 build 
 ## if you use the line below, manually remove the 'allow' section afterwards
@@ -59,6 +60,10 @@ build
 LABEL=rsm-msba-spark
 build
 launcher "rsm-msba"
+
+## replace 127.0.0.1 by 0.0.0.0 for ChromeOS
+cp -p ./launch-rsm-msba-spark.sh ./launch-rsm-msba-spark-chromeos.sh 
+sed_fun "s/127.0.0.1/0.0.0.0/g" ./launch-rsm-msba-spark-chromeos.sh 
 
 LABEL=rsm-jupyterhub
 build

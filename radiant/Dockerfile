@@ -28,11 +28,12 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
 RUN R -e 'radiant.update::radiant.update()'
 
 # update radiant to development version
-# RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
-#   -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
-#   -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
-#   -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
-#   -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
+RUN R -e 'remotes::install_github("trestletech/shinyAce", upgrade = "never")'
+RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
 RUN R -e 'remotes::install_github("tidyverse/dtplyr", upgrade = "never")'
 

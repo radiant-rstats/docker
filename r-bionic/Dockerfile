@@ -2,7 +2,7 @@ FROM ubuntu:bionic
 
 ARG NB_USER="jovyan"
 ENV NB_USER=${NB_USER}
-ARG NB_UID="1001"
+ARG NB_UID="1000"
 ARG NB_GID="100"
 ARG RPASSWORD=${RPASSWORD:-"rstudio"}
 

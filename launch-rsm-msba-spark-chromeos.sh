@@ -7,7 +7,7 @@
 ## use the command below on macOS or Linux to setup a 'launch'
 ## command. You can then use that command, e.g., launch ., to
 ## launch the container from any directory
-## ln -s ~/git/docker/launch-rsm-msba.sh /usr/local/bin/launch
+## ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch
 
 ## to map the directory where the launch script is located to
 ## the docker home directory call the script_home function
@@ -44,7 +44,7 @@ CODE_WORKINGDIR="/home/${NB_USER}/git"
 RPASSWORD="rstudio"
 JPASSWORD="jupyter"
 ID="vnijs"
-LABEL="rsm-msba"
+LABEL="rsm-msba-spark"
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
 if [ "$ARG_TAG" != "" ]; then
@@ -303,7 +303,7 @@ else
   fi
   {
     docker run --net ${NETWORK} -d \
-      -p 127.0.0.1:8080:8080 -p 127.0.0.1:8787:8787 -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 \
+      -p 0.0.0.0:8080:8080 -p 0.0.0.0:8787:8787 -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 \
       -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -398,7 +398,7 @@ else
       else
         echo "Starting Radiant in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          -p 127.0.0.1:${menu_arg}:8080 \
+          -p 0.0.0.0:${menu_arg}:8080 \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
@@ -413,7 +413,7 @@ else
         rstudio_abend
         echo "Starting Rstudio in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          -p 127.0.0.1:${menu_arg}:8787 \
+          -p 0.0.0.0:${menu_arg}:8787 \
           -e RPASSWORD=${RPASSWORD} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -429,7 +429,7 @@ else
       else
         echo "Starting Jupyter Lab in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          -p 127.0.0.1:${menu_arg}:8989 \
+          -p 0.0.0.0:${menu_arg}:8989 \
           -e JPASSWORD=${JPASSWORD} -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
           -v ${HOMEDIR}:/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -479,7 +479,7 @@ else
       fi
 
       docker run --net ${NETWORK} -d \
-        -p 127.0.0.1:8080:8080 -p 127.0.0.1:8787:8787 -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 \
+        -p 0.0.0.0:8080:8080 -p 0.0.0.0:8787:8787 -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 \
         -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} \
         -v ${HOMEDIR}:/home/${NB_USER} $MNT \
         -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \

@@ -40,7 +40,7 @@ Optional: If you are interested, the linked video gives a brief intro to what Do
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+sudo ln -s ~/git/docker/launch-rsm-msba-spark-chromeos.sh /usr/local/bin/launch;
 launch;
 ```
 
@@ -80,7 +80,7 @@ If for some reason you are having trouble updating either the container or the l
 docker pull vnijs/rsm-msba-spark;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+sudo ln -s ~/git/docker/launch-rsm-msba-spark-chromeos.sh /usr/local/bin/launch;
 ```
 
 ## Connecting to postgresql
