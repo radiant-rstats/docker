@@ -24,8 +24,10 @@ ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm \
-  && jupyter labextension install @jupyter-widgets/jupyterlab-manager @ryantam626/jupyterlab_code_formatter jupyterlab-jupytext@0.19 \
-  && jupyter serverextension enable --py jupyterlab_code_formatter --system
+  && jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.0 jupyterlab-jupytext 
+# @ryantam626/jupyterlab_code_formatter \
+# @jupyterlab/git \
+# && jupyter serverextension enable --py jupyterlab_code_formatter --system
 
 # install the R kernel for Jupyter Lab
 RUN R -e 'install.packages("IRkernel")' \
@@ -45,10 +47,22 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 COPY images/logo200.svg /opt/radiant/logo.svg
 
 # RUN pip3 install jupyter-rsession-proxy==1.0b6 \
+# RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
+# jupyter labextension install jupyterlab-server-proxy \
+# && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
+# && chown ${NB_USER}:shiny -R /var/log/shiny-server
+
 RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
-  && jupyter labextension install jupyterlab-server-proxy \
   && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
   && chown ${NB_USER}:shiny -R /var/log/shiny-server
+
+RUN pip3 install -vvv git+git://github.com/jupyterhub/jupyter-server-proxy@master && \
+  jupyter serverextension enable --py --sys-prefix jupyter_server_proxy
+
+RUN (cd /tmp && \
+  git clone https://github.com/jupyterhub/jupyter-server-proxy && \
+  cd /tmp/jupyter-server-proxy/jupyterlab-server-proxy && \
+  npm install && npm run build && jupyter labextension link . )
 
 COPY jupyter_notebook_config.py /etc/jupyter/
 
@@ -97,11 +111,14 @@ RUN chmod +x /usr/local/bin/svim
 
 # latest pre-release version
 ENV CODE_SERVER="1.1156-vsc1.33.1"
+## not working yet ...
+# ENV CODE_SERVER="2.preview.11-vsc1.37.0"
 
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
   && wget -qO- https://github.com/cdr/code-server/releases/download/${CODE_SERVER}/code-server${CODE_SERVER}-linux-x64.tar.gz | tar zxvf - --strip-components=1
+# && wget -qO- https://github.com/cdr/code-server/releases/download/2.preview.11-vsc1.37.0/code-server2.preview.11-vsc1.37.0-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
 
 # locations to store vscode / code-server settings
 ARG CODE_WORKINGDIR="/home/$NB_USER/git" 

@@ -3,16 +3,12 @@ beautifulsoup4
 black
 bokeh
 bonobo
-cloudpickle
 cython
-dask
-dill
 eli5
 flake8
 ipywidgets
 jupyter
 jupyterlab
-jupyterlab_code_formatter
 jupytext
 keras
 lightgbm
@@ -29,7 +25,6 @@ patsy
 plotly
 protobuf
 pylint
-pystan
 rpy2
 scikit-learn
 scipy
