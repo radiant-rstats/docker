@@ -6,3 +6,5 @@
 .ipynb_checkpoints
 .mypy_cache
 rsm-extend/*
+rsm-msba-update/
+launch-rsm-msba-update.sh
