@@ -23,11 +23,13 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
-  && npm install -g npm \
-  && jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.0 jupyterlab-jupytext 
-# @ryantam626/jupyterlab_code_formatter \
-# @jupyterlab/git \
-# && jupyter serverextension enable --py jupyterlab_code_formatter --system
+  && npm install -g npm
+
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.0 jupyterlab-jupytext @ryantam626/jupyterlab_code_formatter \
+  && jupyter serverextension enable --py jupyterlab_code_formatter --system
+
+RUN jupyter labextension install @jupyterlab/git \
+  && jupyter serverextension enable --py jupyterlab_git --system
 
 # install the R kernel for Jupyter Lab
 RUN R -e 'install.packages("IRkernel")' \
