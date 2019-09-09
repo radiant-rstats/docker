@@ -61,9 +61,9 @@ jupyter-client==5.3.1
 jupyter-console==6.0.0
 jupyter-core==4.5.0
 jupyter-rsession-proxy==1.0b6
-jupyter-server-proxy==1.1.1
+# jupyter-server-proxy==1.1.1
 jupyterlab==1.1.2
-jupyterlab-code-formatter==0.5.0
+jupyterlab-code-formatter==0.5.1
 jupyterlab-git==0.8.1
 jupyterlab-server==1.0.6
 jupytext==1.2.3
