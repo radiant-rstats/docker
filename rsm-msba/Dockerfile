@@ -113,14 +113,11 @@ RUN chmod +x /usr/local/bin/svim
 
 # latest pre-release version
 ENV CODE_SERVER="1.1156-vsc1.33.1"
-## not working yet ...
-# ENV CODE_SERVER="2.preview.11-vsc1.37.0"
 
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
   && wget -qO- https://github.com/cdr/code-server/releases/download/${CODE_SERVER}/code-server${CODE_SERVER}-linux-x64.tar.gz | tar zxvf - --strip-components=1
-# && wget -qO- https://github.com/cdr/code-server/releases/download/2.preview.11-vsc1.37.0/code-server2.preview.11-vsc1.37.0-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
 
 # locations to store vscode / code-server settings
 ARG CODE_WORKINGDIR="/home/$NB_USER/git" 

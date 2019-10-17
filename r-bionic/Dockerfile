@@ -119,7 +119,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 # Official R-Studio 1.2 release
-ENV RSTUDIO_VERSION 1.2.1541
+ENV RSTUDIO_VERSION 1.2.5001
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && rm rstudio-server-*-amd64.deb
@@ -133,8 +133,7 @@ RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
   && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Shiny
-ENV SHINY_VERSION 1.5.9.923
-# ENV SHINY_VERSION 1.5.12.1
+ENV SHINY_VERSION 1.5.12.933
 
 RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${SHINY_VERSION}-amd64.deb \
   && gdebi -n shiny-server-${SHINY_VERSION}-amd64.deb \
