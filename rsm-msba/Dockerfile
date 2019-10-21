@@ -14,6 +14,11 @@ RUN apt-get update \
   libzmq3-dev \
   gpg-agent
 
+# as suggested here: https://stackoverflow.com/a/53168206/1974918
+# newer pip needed to install tensorflow 2.0.0
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+  && python3 get-pip.py
+
 # install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
 RUN pip3 install -r /home/${NB_USER}/requirements.txt \
@@ -25,7 +30,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm
 
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.0 jupyterlab-jupytext @ryantam626/jupyterlab_code_formatter \
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyterlab-jupytext @ryantam626/jupyterlab_code_formatter \
   && jupyter serverextension enable --py jupyterlab_code_formatter --system
 
 RUN jupyter labextension install @jupyterlab/git \
@@ -47,12 +52,6 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 
 # copy logo for use with jupyterlab
 COPY images/logo200.svg /opt/radiant/logo.svg
-
-# RUN pip3 install jupyter-rsession-proxy==1.0b6 \
-# RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
-# jupyter labextension install jupyterlab-server-proxy \
-# && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
-# && chown ${NB_USER}:shiny -R /var/log/shiny-server
 
 RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
   && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
@@ -137,9 +136,6 @@ COPY vsix/*.vsix /opt/code-server/extensions/
 COPY setup.sh /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
 
-# required for coenraads.bracket-pair-colorizer
-# RUN npm i -g prismjs vscode vscode-uri escape-html
-
 # update R-packages
 RUN R -e 'radiant.update::radiant.update()' 
 
@@ -153,7 +149,3 @@ RUN chmod 777 /opt/launch.sh
 EXPOSE 8080 8787 8989 8765
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
-# Does not work with Rstudio server authentication
-# USER ${NB_USER}
-# ENV HOME /home/${NB_USER}

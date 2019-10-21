@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.5.8
+DOCKERHUB_VERSION=1.6.2
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -45,10 +45,15 @@ launcher () {
   fi
 }
 
+## for testing purposes
+# LABEL=rsm-msba-update
+# build
+# launcher "rsm-msba"
+# exit
 
 LABEL=r-bionic
 build 
-## if you use the line below, manually remove the 'allow' section afterwards
+# if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
@@ -56,7 +61,7 @@ build
 
 LABEL=rsm-msba
 build
- 
+
 LABEL=rsm-msba-spark
 build
 launcher "rsm-msba"
@@ -76,4 +81,3 @@ build
 # git add .
 # git commit -m "Update to image version ${DOCKERHUB_VERSION}"
 # git push
-
