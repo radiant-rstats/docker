@@ -58,7 +58,7 @@ joblib==0.14.0
 json5==0.8.5
 jsonschema==3.1.1
 jupyter==1.0.0
-jupyter-client==5.3.4
+jupyter-client==5.3.1
 jupyter-console==6.0.0
 jupyter-core==4.6.0
 jupyter-rsession-proxy==1.0b6
