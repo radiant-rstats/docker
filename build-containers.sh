@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.6.2
+DOCKERHUB_VERSION=1.6.3
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -74,10 +74,8 @@ sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-spark-chrome
 LABEL=rsm-jupyterhub
 build
 
-# LABEL=rsm-msba-beakerx
-# build
-# launcher "rsm-msba"
 
-# git add .
-# git commit -m "Update to image version ${DOCKERHUB_VERSION}"
-# git push
+git add .
+git commit -m "Update to image version ${DOCKERHUB_VERSION}"
+git push
+

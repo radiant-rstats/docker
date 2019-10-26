@@ -98,7 +98,7 @@ USER root
 # settings for local install of python packages 
 ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \
-  JUPYTER_RUNTIME_DIR=${PYBASE}/share/jupyter/runtime \
+  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime \
   JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
   SHELL=/bin/bash
 

@@ -6,7 +6,7 @@ services:
       SHELL: bin/bash
       PYTHONUSERBASE: /home/jovyan/.rsm-msba
       JUPYTER_PATH: /home/jovyan/.rsm-msba/share/jupyter
-      JUPYTER_RUNTIME_DIR: /home/jovyan/.rsm-msba/share/jupyter/runtime
+      JUPYTER_RUNTIME_DIR: /tmp/jupyter/runtime
       JUPYTER_CONFIG_DIR: /home/jovyan/.rsm-msba/jupyter
       RPASSWORD: rstudio
       JPASSWORD: jupyter
