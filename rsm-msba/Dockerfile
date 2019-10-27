@@ -30,12 +30,14 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm
 
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyterlab-jupytext @ryantam626/jupyterlab_code_formatter \
-  && jupyter serverextension enable --py jupyterlab_code_formatter --system \
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyterlab-jupytext \
   && jupyter serverextension enable jupyterlab_sql --py --sys-prefix --system
 
 RUN jupyter labextension install @jupyterlab/git \
   && jupyter serverextension enable --py jupyterlab_git --system
+
+RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter \
+  && jupyter serverextension enable --py jupyterlab_code_formatter --system 
 
 # install the R kernel for Jupyter Lab
 RUN R -e 'install.packages("IRkernel")' \
