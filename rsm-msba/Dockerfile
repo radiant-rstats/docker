@@ -31,7 +31,8 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && npm install -g npm
 
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyterlab-jupytext @ryantam626/jupyterlab_code_formatter \
-  && jupyter serverextension enable --py jupyterlab_code_formatter --system
+  && jupyter serverextension enable --py jupyterlab_code_formatter --system \
+  && jupyter serverextension enable jupyterlab_sql --py --sys-prefix --system
 
 RUN jupyter labextension install @jupyterlab/git \
   && jupyter serverextension enable --py jupyterlab_git --system
@@ -66,6 +67,8 @@ RUN (cd /tmp && \
   npm install && npm run build && jupyter labextension link . )
 
 COPY jupyter_notebook_config.py /etc/jupyter/
+# RUN chown ${NB_USER} /etc/R/Rprofile.site
+# RUN chown ${NB_USER} /etc/R/Renviron.site
 
 # set jupyterlab password based on docker run argument
 # ARG only leads to conflict with rstudio on alternate port
