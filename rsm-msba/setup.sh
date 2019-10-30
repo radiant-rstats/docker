@@ -79,7 +79,8 @@ mkdir -p ~/.rsm-msba/share/code-server/User
 cp /opt/code-server/settings.json ~/.rsm-msba/share/code-server/User/settings.json
 
 # extension available in code-server market place
-extensions="vscode-icons-team.vscode-icons coenraads.bracket-pair-colorizer"
+# extensions="grapecity.gc-excelviewer mechatroner.rainbow-csv"
+extensions="mechatroner.rainbow-csv"
 
 for ext in $extensions; do
   echo "Installing extension: $ext"

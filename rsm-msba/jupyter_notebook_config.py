@@ -46,10 +46,16 @@ def _radiant_command(port):
         port=str(port),
         site_dir="/srv/shiny-server/radiant/inst/app",  # or your path
     )
+    # setting launch dir option to current working directory
+    # fs = open("/etc/R/Renviron.site", "a")
+    # fs.write(f"RADIANT_LAUNCH_DIR='{os.path.realpath('.')}'\n")
+    # fs.close()
 
+    # shiny-server configuration
     f = tempfile.NamedTemporaryFile(mode="w", delete=False)
     f.write(conf)
     f.close()
+
     return ["shiny-server", f.name]
 
 
@@ -72,7 +78,7 @@ def _codeserver_command(port):
         extensions_dir = "--extensions-dir=" + str(extensions_dir)
     builtin_extensions_dir = os.getenv("CODE_BUILTIN_EXTENSIONS_DIR", "")
     if builtin_extensions_dir != "":
-        builtin_extensions_dir = "--builtin-extensions-dir=" + str(
+        builtin_extensions_dir = "--extra-builtin-extensions-dir=" + str(
             builtin_extensions_dir
         )
 
@@ -80,8 +86,8 @@ def _codeserver_command(port):
         full_path,
         "--port=" + str(port),
         "--allow-http",
-        "--no-auth",
-        "--vanilla",
+        "--auth",
+        "none",
         data_dir,
         extensions_dir,
         builtin_extensions_dir,

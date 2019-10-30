@@ -84,7 +84,7 @@ def _codeserver_command(port):
         extensions_dir = "--extensions-dir=" + str(extensions_dir)
     builtin_extensions_dir = os.getenv("CODE_BUILTIN_EXTENSIONS_DIR", "")
     if builtin_extensions_dir != "":
-        builtin_extensions_dir = "--builtin-extensions-dir=" + str(
+        builtin_extensions_dir = "--extra-builtin-extensions-dir=" + str(
             builtin_extensions_dir
         )
 
@@ -92,8 +92,8 @@ def _codeserver_command(port):
         full_path,
         "--port=" + str(port),
         "--allow-http",
-        "--no-auth",
-        "--vanilla",
+        "--auth",
+        "none",
         data_dir,
         extensions_dir,
         builtin_extensions_dir,

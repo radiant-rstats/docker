@@ -115,13 +115,12 @@ RUN chmod +x /usr/local/bin/clean
 COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
-# latest pre-release version
-ENV CODE_SERVER="1.1156-vsc1.33.1"
-
+# codeserver version
+ENV CODE_SERVER="2.1655-vsc1.39.2"
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
-  && wget -qO- https://github.com/cdr/code-server/releases/download/${CODE_SERVER}/code-server${CODE_SERVER}-linux-x64.tar.gz | tar zxvf - --strip-components=1
+  && wget -qO- https://github.com/cdr/code-server/releases/download/${CODE_SERVER}/code-server${CODE_SERVER}-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
 
 # locations to store vscode / code-server settings
 ARG CODE_WORKINGDIR="/home/$NB_USER/git" 
