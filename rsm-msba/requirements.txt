@@ -1,3 +1,4 @@
+setuptools>=41.0.0
 absl-py==0.8.1
 aiohttp==3.6.2
 appdirs==1.4.3

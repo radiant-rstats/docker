@@ -85,7 +85,6 @@ def _codeserver_command(port):
     return [
         full_path,
         "--port=" + str(port),
-        "--allow-http",
         "--auth",
         "none",
         data_dir,

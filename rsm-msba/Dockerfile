@@ -116,7 +116,7 @@ COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
 # codeserver version
-ENV CODE_SERVER="2.1655-vsc1.39.2"
+ENV CODE_SERVER="2.1665-vsc1.39.2"
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
