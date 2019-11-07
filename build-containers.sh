@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.6.3
+DOCKERHUB_VERSION=1.6.4
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -51,8 +51,8 @@ launcher () {
 # launcher "rsm-msba"
 # exit
 
-LABEL=r-bionic
-build 
+# LABEL=r-bionic
+# build 
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
@@ -74,8 +74,7 @@ sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-spark-chrome
 LABEL=rsm-jupyterhub
 build
 
-
-git add .
-git commit -m "Update to image version ${DOCKERHUB_VERSION}"
-git push
+# git add .
+# git commit -m "Update to image version ${DOCKERHUB_VERSION}"
+# git push
 
