@@ -71,6 +71,8 @@ To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in eithe
 setup
 ```
 
+To learn more about using VS Code for writing python code see: https://www.youtube.com/watch?v=06I63_p-2A4
+
 ## Updating the RSM-MSBA computing environment on macOS
 
 To update the container use the launch script and press 5 (+ enter). To update the launch script itself, press 6 (+ enter).
