@@ -1,6 +1,7 @@
 # Contents
   - [Installing the RSM-MSBA computing environment on ChromeOS](#installing-the-rsm-msba-computing-environment-on-chromeos)
   - [Updating the RSM-MSBA computing environment on ChromeOS](#updating-the-rsm-msba-computing-environment-on-chromeos)
+  - [Using VS Code for Python](#using-vs-code-for-python)
   - [Connecting to postgresql](#connecting-to-postgresql)
   - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
   - [Committing changes to the computing environment](#committing-changes-to-the-computing-environment)
@@ -82,6 +83,36 @@ rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 sudo rm /usr/local/bin/launch;
 sudo ln -s ~/git/docker/launch-rsm-msba-spark-chromeos.sh /usr/local/bin/launch;
+```
+
+## Using VS Code for Python
+
+VS Code can be launched from Jupyter and is an excellent, and very popular, editor for python. After running the setup command mentioned above, everything you need for python development will be available. To learn more about using VS Code to write python code see the links and comments below. 
+
+* <a href="https://code.visualstudio.com/docs/python/python-tutorial#_create-a-python-hello-world-source-code-file" target="_blank">VS Code Python Tutorial</a>
+
+Note that you can use `Shift+Enter` to run the current line in a Python Interactive Window:
+
+* <a href="https://code.visualstudio.com/docs/python/jupyter-support-py" target="_blank">Executing Python Code in VS Code</a>
+
+When writing and editing python code you will have access to "Intellisense" for auto-completions. Your code will also be auto-formatted every time you save it using the "black" formatter.
+
+* <a href="https://code.visualstudio.com/docs/python/editing" target="_blank">Editing Python in VS Code Python</a>
+
+VS Code also gives you access to a debugger for your python code. For more information see the link below:
+
+* <a href="https://code.visualstudio.com/docs/python/debugging" target="_blank">Editing Python in VS Code Python</a>
+
+* To convert a python code file to a Jupyter Notebook, use the code from a terminal. You can open a terminal in VS Code by typing CTRL+`
+
+```bash
+jupytext --to notebook your-python-script.py
+```
+
+* To convert a Jupyter Notebook to a python code file, use the code from a terminal. You can open a terminal in VS Code by typing CTRL+`
+
+```bash
+jupytext --to py your-python-script.ipynb
 ```
 
 ## Connecting to postgresql
