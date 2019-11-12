@@ -12,7 +12,8 @@ RUN apt-get update \
   python3-venv \
   python3-virtualenv \
   libzmq3-dev \
-  gpg-agent
+  gpg-agent \
+  graphviz
 
 # as suggested here: https://stackoverflow.com/a/53168206/1974918
 # newer pip needed to install tensorflow 2.0.0
@@ -116,7 +117,7 @@ COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
 # codeserver version
-ENV CODE_SERVER="2.1665-vsc1.39.2"
+ENV CODE_SERVER="2.1688-vsc1.39.2"
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
