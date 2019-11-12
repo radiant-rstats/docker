@@ -6,11 +6,9 @@ ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 
 # install beakerx
-COPY requirements.txt /home/${NB_USER}/requirements.txt
-RUN pip3 install -r /home/${NB_USER}/requirements.txt \
+RUN pip3 install beakerx==1.4.1 \
   && beakerx install \
-  && jupyter labextension install beakerx-jupyterlab \
-  && rm /home/${NB_USER}/requirements.txt
+  && jupyter labextension install beakerx-jupyterlab 
 
 # removing kernels as suggested by JD Long (@CMastication)
 RUN rm -rf /usr/share/jupyter/kernels/clojure \
@@ -21,13 +19,6 @@ RUN rm -rf /usr/share/jupyter/kernels/clojure \
 
 # update R-packages
 RUN R -e 'radiant.update::radiant.update()'
-
-# update radiant to development version
-# RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
-#   -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
-#   -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
-#   -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
-#   -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
 EXPOSE 8080 8787 8989 8765
 
