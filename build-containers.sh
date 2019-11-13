@@ -45,14 +45,15 @@ launcher () {
   fi
 }
 
-## for testing purposes
+# for testing purposes
 # LABEL=rsm-msba-update
+# # LABEL=rsm-msba-beakerx
 # build
 # launcher "rsm-msba"
 # exit
 
-# LABEL=r-bionic
-# build 
+LABEL=r-bionic
+build
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 

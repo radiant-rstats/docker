@@ -34,12 +34,13 @@ RUN R -e 'radiant.update::radiant.update()'
 #   -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
 #   -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
 
-RUN R -e 'remotes::install_github("tidyverse/dtplyr", upgrade = "never")'
-
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 RUN sed -i -e "s/\:HOME_USER\:/${NB_USER}/" /etc/shiny-server/shiny-server.conf
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+RUN R -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")'
+RUN R -e 'radiant.update::radiant.update()'
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-radiant.sh /opt/launch.sh
