@@ -8,3 +8,5 @@
 rsm-extend/*
 rsm-msba-update/
 launch-rsm-msba-update.sh
+build-progress.out
+build-containers.txt
