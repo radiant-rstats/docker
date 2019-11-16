@@ -142,7 +142,7 @@ COPY setup.sh /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
 
 # update R-packages
-RUN R -e 'radiant.update::radiant.update()' 
+RUN R -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

@@ -18,7 +18,7 @@ RUN rm -rf /usr/share/jupyter/kernels/clojure \
   && rm -rf /usr/share/jupyter/kernels/scala
 
 # update R-packages
-RUN R -e 'radiant.update::radiant.update()'
+RUN R -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 EXPOSE 8080 8787 8989 8765
 

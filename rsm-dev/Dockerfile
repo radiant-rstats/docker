@@ -24,14 +24,7 @@ RUN npm --unsafe-perm install -g ijavascript \
   && ijsinstall --install=global
 
 # update R-packages
-RUN R -e 'radiant.update::radiant.update()'
-
-# update radiant to development version
-# RUN R -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
-#  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
-#  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
-#  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
-#  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
+RUN R -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 EXPOSE 8080 8787 8989 8765
 
