@@ -70,8 +70,6 @@ RUN (cd /tmp && \
   npm install && npm run build && jupyter labextension link . )
 
 COPY jupyter_notebook_config.py /etc/jupyter/
-# RUN chown ${NB_USER} /etc/R/Rprofile.site
-# RUN chown ${NB_USER} /etc/R/Renviron.site
 
 # set jupyterlab password based on docker run argument
 # ARG only leads to conflict with rstudio on alternate port
@@ -117,7 +115,7 @@ COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
 # codeserver version
-ENV CODE_SERVER="2.1688-vsc1.39.2"
+ENV CODE_SERVER="2.1692-vsc1.39.2"
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
