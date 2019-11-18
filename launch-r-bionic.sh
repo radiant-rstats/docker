@@ -398,21 +398,10 @@ else
         echo "Pulling down tag ${menu_arg}"
         VERSION=${menu_arg}
       fi
-
       docker pull ${IMAGE}:${VERSION}
-
       echo "-----------------------------------------------------------------------"
-      ## based on https://stackoverflow.com/a/52852871/1974918
-      has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
-      if [ "${has_network}" == "" ]; then
-        docker network create ${NETWORK}  # default options are fine
-      fi
-      docker run --net ${NETWORK} -d \
-        -p 127.0.0.1:8080:8080 -p 127.0.0.1:8787:8787 \
-        -e RPASSWORD=${RPASSWORD} \
-        -v "${HOMEDIR}":/home/${NB_USER} $MNT \
-        ${IMAGE}:${VERSION}
-      echo "-----------------------------------------------------------------------"
+      $0
+      exit 1
     elif [ ${menu_exec} == 5 ]; then
       echo "Updating ${IMAGE} launch script"
       running=$(docker ps -q)
