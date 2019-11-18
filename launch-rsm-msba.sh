@@ -469,11 +469,13 @@ else
         echo "Pulling down tag ${menu_arg}"
         VERSION=${menu_arg}
       fi
-
       docker pull ${IMAGE}:${VERSION}
-
       echo "-----------------------------------------------------------------------"
-      $0
+      if [ "$ARG_DIR" == "" ]
+        $0 -t "${IMAGE_VERSION}"
+      else
+        $0 -t "${IMAGE_VERSION}" -d "${ARG_DIR}"
+      fi
       exit 1
     elif [ ${menu_exec} == 6 ]; then
       echo "Updating ${IMAGE} launch script"
