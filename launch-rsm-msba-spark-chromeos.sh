@@ -471,11 +471,14 @@ else
       fi
       docker pull ${IMAGE}:${VERSION}
       echo "-----------------------------------------------------------------------"
-      if [ "$ARG_DIR" == "" ]
-        $0 -t "${IMAGE_VERSION}"
-      else
-        $0 -t "${IMAGE_VERSION}" -d "${ARG_DIR}"
+      CMD="$0"
+      if [ "${menu_arg}" != "" ]; then
+        CMD="$CMD -t ${menu_arg}"
       fi
+      if [ "$ARG_DIR" != "" ]; then
+        CMD="$CMD -d ${ARG_DIR}"
+      fi
+      $CMD
       exit 1
     elif [ ${menu_exec} == 6 ]; then
       echo "Updating ${IMAGE} launch script"
