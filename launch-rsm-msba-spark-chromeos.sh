@@ -551,8 +551,8 @@ else
       else
         docker run --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
       fi
-      echo "You can access selenium at ip: ${GATEWAY}:${selenium_port} from the ${LABEL}"
-      echo "container or at ip: 0.0.0.0:${selenium_port} from the host OS"
+      echo "You can access selenium at ip: ${GATEWAY}, port: ${selenium_port} from the"
+      echo "${LABEL} container and ip: 0.0.0.0, port: ${selenium_port} from the host OS"
       echo "Press any key to continue"
       echo "-----------------------------------------------------------------------"
       read continue
