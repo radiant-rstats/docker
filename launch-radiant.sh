@@ -273,19 +273,19 @@ else
 
   BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
 
+  ## based on https://stackoverflow.com/a/52852871/1974918
+  has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
+  if [ "${has_network}" == "" ]; then
+    docker network create ${NETWORK}  # default options are fine
+  fi
+  GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' $NETWORK)
+
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing environment on ${ostype}"
   echo "Version   : ${DOCKERHUB_VERSION}"
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "Base dir. : ${HOMEDIR}"
   echo "-----------------------------------------------------------------------"
-
-  ## based on https://stackoverflow.com/a/52852871/1974918
-  has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
-  if [ "${has_network}" == "" ]; then
-    docker network create ${NETWORK}  # default options are fine
-  fi
-
   {
     docker run --net ${NETWORK} -d \
       -p 127.0.0.1:8080:8080 -p 127.0.0.1:8787:8787 \
@@ -333,6 +333,7 @@ else
     echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
     echo "Press (5) to update the launch script, followed by [ENTER]:"
     echo "Press (6) to clear Rstudio sessions and packages, followed by [ENTER]:"
+    echo "Press (7) to start a Selenium container, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
@@ -480,6 +481,23 @@ else
           mkdir "${i}"
         done
       fi
+    elif [ "${menu_exec}" == 7 ]; then
+      selenium_port=4445
+      if [ "${menu_arg}" != "" ]; then
+        selenium_port=${menu_arg}
+      fi
+      CPORT=$(curl -s localhost:${selenium_port} 2>/dev/null)
+      echo "-----------------------------------------------------------------------"
+      if [ "$CPORT" != "" ]; then
+        echo "A Selenium container may already be running on port ${selenium_port}"
+      else
+        docker run --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
+      fi
+      echo "You can access selenium at ip: ${GATEWAY}:${selenium_port} from the ${LABEL}"
+      echo "container or at ip: 127.0.0.1:${selenium_port} from the host OS"
+      echo "Press any key to continue"
+      echo "-----------------------------------------------------------------------"
+      read continue
     elif [ "${menu_exec}" == "c" ]; then
       container_id=($(docker ps -a | awk "/${ID}\/${LABEL}/" | awk '{print $1}'))
       if [ "${menu_arg}" == "" ]; then

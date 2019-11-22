@@ -286,6 +286,13 @@ else
 
   BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
 
+  ## based on https://stackoverflow.com/a/52852871/1974918
+  has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
+  if [ "${has_network}" == "" ]; then
+    docker network create ${NETWORK}  # default options are fine
+  fi
+  GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' ${NETWORK})
+
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing environment on ${ostype}"
   echo "Version   : ${DOCKERHUB_VERSION}"
@@ -293,11 +300,6 @@ else
   echo "Base dir. : ${HOMEDIR}"
   echo "-----------------------------------------------------------------------"
 
-  ## based on https://stackoverflow.com/a/52852871/1974918
-  has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
-  if [ "${has_network}" == "" ]; then
-    docker network create ${NETWORK}  # default options are fine
-  fi
   has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
   if [ "${has_volume}" == "" ]; then
     docker volume create --name=pg_data
@@ -352,6 +354,7 @@ else
     echo "Press (6) to update the launch script, followed by [ENTER]:"
     echo "Press (7) to clear Rstudio sessions and packages, followed by [ENTER]:"
     echo "Press (8) to clear Python packages, followed by [ENTER]:"
+    echo "Press (9) to start a Selenium container, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
@@ -439,21 +442,21 @@ else
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 4 ]; then
-        running=$(docker ps -q | awk '{print $1}')
-        if [ "${running}" != "" ]; then
-          clear
-          echo "------------------------------------------------------------------------------"
-          echo "Bash terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
-          echo "Type 'exit' to return to the launch menu"
-          echo "------------------------------------------------------------------------------"
-          echo ""
-          ## git bash has issues with tty
-          if [[ "$ostype" == "Windows" ]]; then
-            winpty docker exec -it --user ${NB_USER} ${running} sh
-          else
-            docker exec -it --user ${NB_USER} ${running} /bin/bash
-          fi
+      running=$(docker ps -q | awk '{print $1}')
+      if [ "${running}" != "" ]; then
+        clear
+        echo "------------------------------------------------------------------------------"
+        echo "Bash terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
+        echo "Type 'exit' to return to the launch menu"
+        echo "------------------------------------------------------------------------------"
+        echo ""
+        ## git bash has issues with tty
+        if [[ "$ostype" == "Windows" ]]; then
+          winpty docker exec -it --user ${NB_USER} ${running} sh
+        else
+          docker exec -it --user ${NB_USER} ${running} /bin/bash
         fi
+      fi
     elif [ ${menu_exec} == 5 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
@@ -536,10 +539,25 @@ else
       for i in ${rm_list}; do
          rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
       done
+    elif [ "${menu_exec}" == 9 ]; then
+      selenium_port=4445
+      if [ "${menu_arg}" != "" ]; then
+        selenium_port=${menu_arg}
+      fi
+      CPORT=$(curl -s localhost:${selenium_port} 2>/dev/null)
+      echo "-----------------------------------------------------------------------"
+      if [ "$CPORT" != "" ]; then
+        echo "A Selenium container may already be running on port ${selenium_port}"
+      else
+        docker run --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
+      fi
+      echo "You can access selenium at ip: ${GATEWAY}:${selenium_port} from the ${LABEL}"
+      echo "container or at ip: 127.0.0.1:${selenium_port} from the host OS"
+      echo "Press any key to continue"
+      echo "-----------------------------------------------------------------------"
+      read continue
     elif [ "${menu_exec}" == "c" ]; then
-      # container_id=($(docker ps -a -q --filter ancestor=${IMAGE} --format="{{.ID}}"))
       container_id=($(docker ps -a | awk "/${ID}\/${LABEL}/" | awk '{print $1}'))
-      # echo "Container id: ${container_id}"
       if [ "${menu_arg}" == "" ]; then
         echo "-----------------------------------------------------------------------"
         echo "Are you sure you want to over-write the current image (y/n)?"
@@ -549,16 +567,13 @@ else
           echo "-----------------------------------------------------------------------"
           echo "Committing changes to ${IMAGE}"
           echo "-----------------------------------------------------------------------"
-          # echo "docker commit ${container_id[0]} ${IMAGE}:${IMAGE_VERSION}"
           docker commit ${container_id[0]} ${IMAGE}:${IMAGE_VERSION}
-
         else 
           return 1
         fi
         IMAGE_DHUB=${IMAGE}
       else
         menu_arg="${LABEL}-$(echo -e "${menu_arg}" | tr -d '[:space:]')"
-        # echo "docker commit ${container_id[0]} $ID/${menu_arg}:${IMAGE_VERSION}"
         docker commit ${container_id[0]} $ID/${menu_arg}:${IMAGE_VERSION}
 
         if [ -d "${HOMEDIR}/Desktop" ]; then

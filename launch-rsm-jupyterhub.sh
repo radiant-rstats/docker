@@ -317,6 +317,11 @@ else
   fi
 
   BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
+  has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
+  if [ "${has_volume}" == "" ]; then
+    docker volume create --name=pg_data
+  fi
+  GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' $NETWORK)
 
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing environment on ${ostype}"
@@ -324,14 +329,10 @@ else
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "Base dir. : ${HOMEDIR}"
   echo "-----------------------------------------------------------------------"
-
-  has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
-  if [ "${has_volume}" == "" ]; then
-    docker volume create --name=pg_data
-  fi
   {
     docker run --rm -p 127.0.0.1:8888:8888 -p 127.0.0.1:8765:8765 \
-      -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
+      -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 \
+      -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" -e GATEWAY=${GATEWAY} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
       ${IMAGE}:${IMAGE_VERSION}
