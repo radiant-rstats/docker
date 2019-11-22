@@ -158,7 +158,9 @@ RUN ln -sf /home/${NB_USER}/.Rprofile /home/shiny/.Rprofile \
 RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron
 
 # installing some basic r-packages
-RUN R -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv"), repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot"), repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
+RUN R -e 'remotes::install_github("rstudio/renv")'
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

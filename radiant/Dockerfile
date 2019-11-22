@@ -8,7 +8,9 @@ ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 # installing R-packages from miniCRAN repo
 RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/radiant/ \
   && chown shiny:shiny -R /srv/shiny-server \
-  && R -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
+  && R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
+    -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+    -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
 
 # install lightGBM
 RUN git clone --recursive https://github.com/Microsoft/LightGBM \
@@ -25,7 +27,8 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
   && echo "NB_USER=${NB_USER}" >> /etc/R/Renviron.site
 
 ## update R-packages
-RUN R -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 RUN sed -i -e "s/\:HOME_USER\:/${NB_USER}/" /etc/shiny-server/shiny-server.conf
