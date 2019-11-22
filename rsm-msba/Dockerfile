@@ -27,14 +27,14 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && python3 -m bash_kernel.install
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm
 
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyterlab-jupytext \
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager \
   && jupyter serverextension enable jupyterlab_sql --py --sys-prefix --system
 
-RUN jupyter labextension install @jupyterlab/git \
+RUN jupyter labextension install @jupyterlab/git jupyterlab-jupytext \
   && jupyter serverextension enable --py jupyterlab_git --system
 
 RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter \
@@ -140,7 +140,8 @@ COPY setup.sh /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
 
 # update R-packages
-RUN R -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -149,6 +150,6 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
 
-EXPOSE 8080 8787 8989 8765
+EXPOSE 8080 8787 8989 8765 4567
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
