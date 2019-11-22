@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.6.4
+DOCKERHUB_VERSION=1.6.5
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -74,6 +74,9 @@ sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-spark-chrome
 
 LABEL=rsm-jupyterhub
 build
+
+## new containers should be launched using the newest version of the container
+# docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 
 # git add .
 # git commit -m "Update to image version ${DOCKERHUB_VERSION}"
