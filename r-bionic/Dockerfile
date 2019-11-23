@@ -61,6 +61,7 @@ RUN apt-get -y install --no-install-recommends\
   libgsl-dev \
   cmake \
   cargo \
+  libudunits2-dev \
   r-base \
   r-base-dev \
   r-cran-pbdzmq \
