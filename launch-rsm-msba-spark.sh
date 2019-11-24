@@ -289,7 +289,11 @@ else
   ## based on https://stackoverflow.com/a/52852871/1974918
   has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
   if [ "${has_network}" == "" ]; then
-    docker network create ${NETWORK}  # default options are fine
+    docker network create \
+      --subnet=172.0.0.0/16 \
+      --ip-range=172.0.0.0/24 \
+      --gateway=172.0.0.1 \
+      ${NETWORK} 
   fi
   GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' ${NETWORK})
 

@@ -321,7 +321,6 @@ else
   if [ "${has_volume}" == "" ]; then
     docker volume create --name=pg_data
   fi
-  GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' $NETWORK)
 
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing environment on ${ostype}"
@@ -332,7 +331,7 @@ else
   {
     docker run --rm -p 127.0.0.1:8888:8888 -p 127.0.0.1:8765:8765 \
       -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 \
-      -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" -e GATEWAY=${GATEWAY} \
+      -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
       ${IMAGE}:${IMAGE_VERSION}
