@@ -34,7 +34,7 @@ docker-compose -f ./rsm-msba-spark/docker-rsm-msba-spark.yml up
 The radiant app will be available at <a href="http://127.0.0.1:8080" target="_blank">http://127.0.0.1:8080</a>,  Rstudio will be available at <a href="http://127.0.0.1:8787" target="_blank">http://127.0.0.1:8787</a>, and JupyterLab will be available at 
 <a href="http://127.0.0.1:8989" target="_blank">http://127.0.0.1:8989</a>
 
-The user id and password for Rstudio is `rstudio`. For JupyterLab use `jupyter`.
+The user id is `jovyan` and password for Rstudio is `rstudio`. For JupyterLab use `jupyter`.
 
 To stop a running container use `CTRL+C`. In a real deployment scenario, you will probably want to run the container in detached mode (`-d`):
 
