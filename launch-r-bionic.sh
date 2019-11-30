@@ -93,16 +93,27 @@ if [ "${has_docker}" == "" ]; then
   read
 else
 
-  ## check docker is running at all
+  ## check if docker is running at all
   ## based on https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash
   {
-    docker ps -q
+    docker ps -q 2>/dev/null
   } || {
-    echo "-----------------------------------------------------------------------"
-    echo "Docker is not running. Please start docker on your computer"
-    echo "When docker has finished starting up press [ENTER] to continue"
-    echo "-----------------------------------------------------------------------"
-    read
+    if [[ "$ostype" == "Darwin" ]]; then
+      ## from https://stackoverflow.com/a/48843074/1974918
+      # On Mac OS this would be the terminal command to launch Docker
+      open /Applications/Docker.app
+      #Wait until Docker daemon is running and has completed initialisation
+      while (! docker stats --no-stream 2>/dev/null); do
+        echo "Please wait while Docker starts up ..."
+        sleep 1
+      done
+    else
+      echo "-----------------------------------------------------------------------"
+      echo "Docker is not running. Please start docker on your computer"
+      echo "When docker has finished starting up press [ENTER] to continue"
+      echo "-----------------------------------------------------------------------"
+      read
+    fi
   }
 
   ## kill running containers

@@ -99,13 +99,24 @@ else
   ## check docker is running at all
   ## based on https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash
   {
-    docker ps -q
+    docker ps -q 2>/dev/null 
   } || {
-    echo "-----------------------------------------------------------------------"
-    echo "Docker is not running. Please start docker on your computer"
-    echo "When docker has finished starting up press [ENTER] to continue"
-    echo "-----------------------------------------------------------------------"
-    read
+    if [[ "$ostype" == "Darwin" ]]; then
+      ## from https://stackoverflow.com/a/48843074/1974918
+      # On Mac OS this would be the terminal command to launch Docker
+      open /Applications/Docker.app
+      #Wait until Docker daemon is running and has completed initialisation
+      while (! docker stats --no-stream 2>/dev/null); do
+        echo "Please wait while Docker starts up ..."
+        sleep 1
+      done
+    else
+      echo "-----------------------------------------------------------------------"
+      echo "Docker is not running. Please start docker on your computer"
+      echo "When docker has finished starting up press [ENTER] to continue"
+      echo "-----------------------------------------------------------------------"
+      read
+    fi
   }
 
   ## kill running containers
@@ -289,7 +300,11 @@ else
   ## based on https://stackoverflow.com/a/52852871/1974918
   has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
   if [ "${has_network}" == "" ]; then
-    docker network create ${NETWORK}  # default options are fine
+    docker network create \
+      --subnet=172.0.0.0/16 \
+      --ip-range=172.0.0.0/24 \
+      --gateway=172.0.0.1 \
+      ${NETWORK} 
   fi
   GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' ${NETWORK})
 
