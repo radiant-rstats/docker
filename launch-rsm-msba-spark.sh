@@ -108,7 +108,7 @@ else
       #Wait until Docker daemon is running and has completed initialisation
       while (! docker stats --no-stream 2>/dev/null); do
         echo "Please wait while Docker starts up ..."
-        sleep 1
+        sleep 2
       done
     else
       echo "-----------------------------------------------------------------------"

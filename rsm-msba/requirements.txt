@@ -1,10 +1,10 @@
 setuptools>=41.0.0
 absl-py==0.8.1
 aiohttp==3.6.2
-altair==3.3.0
+altair==4.0.0
 appdirs==1.4.3
 asn1crypto==0.24.0
-astor==0.8.0
+astor==0.8.1
 astroid==2.3.3
 async-timeout==3.0.1
 attrs==19.3.0
@@ -30,7 +30,7 @@ cssselect==1.1.0
 cycler==0.10.0
 cymem==2.0.3
 Cython==0.29.14
-dask==2.8.1
+dask==2.9.0
 datatable==0.10.0
 decorator==4.4.1
 defusedxml==0.6.0
@@ -41,7 +41,7 @@ fs==2.4.11
 gast==0.2.2
 gitdb2==2.0.6
 GitPython==3.0.5
-google-auth==1.7.2
+google-auth==1.8.2
 google-auth-oauthlib==0.4.1
 google-pasta==0.1.8
 graphviz==0.8.4
@@ -51,17 +51,17 @@ hyperlink==19.0.0
 idna==2.6
 idna-ssl==1.1.0
 imageio==2.6.1
-importlib-metadata==1.2.0
+importlib-metadata==1.3.0
 incremental==17.5.0
 ipykernel==5.1.3
-ipython==7.10.1
+ipython==7.10.2
 ipython-genutils==0.2.0
 ipython-sql==0.3.9
 ipywidgets==7.5.1
 isort==4.3.21
 jedi==0.15.1
 Jinja2==2.10.3
-joblib==0.14.0
+joblib==0.14.1
 json5==0.8.5
 jsonschema==3.2.0
 jupyter==1.0.0
@@ -69,9 +69,9 @@ jupyter-client==5.3.4
 jupyter-console==6.0.0
 jupyter-core==4.6.1
 jupyter-rsession-proxy==1.0b6
-#jupyter-server-proxy==1.2.0
-jupyterlab==1.2.3
-jupyterlab-code-formatter==1.0.2
+# jupyter-server-proxy==1.2.0
+jupyterlab==1.2.4
+jupyterlab-code-formatter==1.0.3
 jupyterlab-git==0.9.0
 jupyterlab-server==1.0.6
 jupyterlab-sql==0.3.1
@@ -95,7 +95,7 @@ mistune==0.8.4
 mondrian==0.8.0
 more-itertools==8.0.2
 mpmath==1.1.0
-multidict==4.6.1
+multidict==4.7.1
 murmurhash==1.0.2
 mypy==0.750
 mypy-extensions==0.4.3
@@ -114,7 +114,7 @@ packaging==19.2
 pandas==0.25.3
 pandocfilters==1.4.2
 parsel==1.5.2
-parso==0.5.1
+parso==0.5.2
 pathspec==0.6.0
 patsy==0.5.1
 pbr==5.4.4
@@ -122,13 +122,13 @@ pexpect==4.7.0
 pickleshare==0.7.5
 Pillow==6.2.1
 plac==1.1.3
-plotly==4.3.0
+plotly==4.4.1
 pluggy==0.13.1
 preshed==3.0.2
 prettytable==0.7.2
 prometheus-client==0.7.1
 prompt-toolkit==3.0.2
-Protego==0.1.15
+Protego==0.1.16
 protobuf==3.11.1
 psutil==5.6.7
 psycopg2==2.8.4
@@ -149,7 +149,7 @@ pyOpenSSL==19.1.0
 pyparsing==2.4.5
 pyrsistent==0.15.6
 PySocks==1.7.1
-pytest==5.3.1
+pytest==5.3.2
 python-apt==1.6.4
 python-dateutil==2.8.1
 python-debian==0.1.32
@@ -161,11 +161,11 @@ PyYAML==5.2
 pyzmq==18.1.1
 qtconsole==4.6.0
 queuelib==1.5.0
-regex==2019.11.1
+regex==2019.12.9
 requests==2.22.0
 requests-oauthlib==1.3.0
 retrying==1.3.3
-rpy2==3.2.2
+rpy2==3.2.4
 rsa==4.0
 scikit-image==0.16.2
 scikit-learn==0.22
@@ -176,7 +176,7 @@ SecretStorage==2.3.1
 selenium==3.141.0
 Send2Trash==1.5.0
 service-identity==18.1.0
-shap==0.32.1
+shap==0.33.0
 simpervisor==0.3
 simplegeneric==0.8.1
 six==1.13.0
@@ -188,7 +188,7 @@ sqlparse==0.3.0
 srsly==0.2.0
 statsmodels==0.10.2
 stevedore==1.31.0
-sympy==1.4
+sympy==1.5
 tabulate==0.8.6
 tensorboard==2.0.2
 tensorflow==2.0.0
@@ -200,7 +200,7 @@ thinc==7.3.1
 toml==0.10.0
 toolz==0.10.0
 tornado==6.0.3
-tqdm==4.40.1
+tqdm==4.40.2
 traitlets==4.3.3
 tweepy==3.8.0
 Twisted==19.10.0
@@ -224,4 +224,4 @@ xgboost==0.90
 xlrd==1.2.0
 yarl==1.4.2
 zipp==0.6.0
-zope.interface==4.7.1
+zope.interface==4.7.1 

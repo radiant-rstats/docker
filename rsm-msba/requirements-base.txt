@@ -5,10 +5,10 @@
 setuptools>=41.0.0
 six>=1.12
 cryptography>=2.3
+altair
 bash_kernel
 beautifulsoup4
 black
-bokeh
 bonobo
 cython
 datatable
