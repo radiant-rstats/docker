@@ -9,8 +9,8 @@ ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/radiant/ \
   && chown shiny:shiny -R /srv/shiny-server \
   && R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
-    -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-    -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
+  -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
 
 # install lightGBM
 RUN git clone --recursive https://github.com/Microsoft/LightGBM \
@@ -42,3 +42,6 @@ RUN chmod 777 /opt/launch.sh
 EXPOSE 8080 8787
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+# USER ${NB_USER}
+ENV HOME /home/${NB_USER}

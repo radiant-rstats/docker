@@ -407,6 +407,7 @@ else
           echo 'options(radiant.ace_theme = "tomorrow")' >> "${RPROF}"
           echo '# List specific directories you want to use with radiant' >> "${RPROF}"
           echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
+          # echo '# source(file.path(Sys.getenv(if (.Platform$OS.type == "windows") "HOMEPATH" else "HOME"), ".vscode-R", "init.R"))'
           echo '' >> "${RPROF}"
           sed_fun '/^[\s]*$/d' "${RPROF}"
         fi

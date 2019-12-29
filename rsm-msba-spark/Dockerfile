@@ -1,5 +1,4 @@
 FROM vnijs/rsm-msba:latest
-
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
 ARG DOCKERHUB_VERSION_UPDATE
@@ -44,3 +43,6 @@ RUN chmod 777 /opt/launch.sh
 EXPOSE 8080 8787 8989 8765
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+# USER ${NB_USER}
+ENV HOME /home/${NB_USER}

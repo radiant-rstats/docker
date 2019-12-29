@@ -68,3 +68,4 @@ CMD ["start-notebook.sh"]
 
 # set user
 USER ${NB_USER}
+ENV HOME /home/${NB_USER}

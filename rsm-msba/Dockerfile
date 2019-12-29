@@ -1,5 +1,4 @@
 FROM vnijs/radiant:latest
-
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
 ARG DOCKERHUB_VERSION_UPDATE
@@ -142,7 +141,8 @@ RUN chmod +x /usr/local/bin/setup
 # update R-packages
 RUN R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
   -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
+  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")' \
+  -e 'source("https://install-github.me/REditorSupport/languageserver")'
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -154,3 +154,6 @@ RUN chmod 777 /opt/launch.sh
 EXPOSE 8080 8787 8989 8765 4567
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+# USER ${NB_USER}
+ENV HOME /home/${NB_USER}

@@ -120,7 +120,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 # Official R-Studio 1.2 release
-ENV RSTUDIO_VERSION 1.2.5019
+ENV RSTUDIO_VERSION 1.2.5033
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && rm rstudio-server-*-amd64.deb
@@ -161,7 +161,7 @@ RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron
 # installing some basic r-packages
 RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
   -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot"), repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
-RUN R -e 'remotes::install_github("rstudio/renv")'
+RUN R -e 'remotes::install_github("rstudio/renv")' 
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -182,3 +182,6 @@ COPY connections/ /etc/${NB_USER}/connections
 EXPOSE 8080 8787
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+# USER ${NB_USER}
+ENV HOME /home/${NB_USER}

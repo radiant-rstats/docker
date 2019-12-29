@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.6.5
+DOCKERHUB_VERSION=1.6.6
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -46,14 +46,13 @@ launcher () {
 }
 
 # for testing purposes
-# LABEL=rsm-msba-update
-# # LABEL=rsm-msba-beakerx
+#LABEL=rsm-msba-update
 # build
 # launcher "rsm-msba"
 # exit
 
 LABEL=r-bionic
-build
+build 
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
