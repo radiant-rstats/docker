@@ -1,4 +1,6 @@
 FROM ubuntu:bionic
+LABEL Vincent Nijs "radiant@rady.ucsd.edu"
+USER root
 
 ARG NB_USER="jovyan"
 ENV NB_USER=${NB_USER}
@@ -9,7 +11,6 @@ ARG RPASSWORD=${RPASSWORD:-"rstudio"}
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 
-LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
@@ -186,5 +187,5 @@ EXPOSE 8080 8787
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
-# USER ${NB_USER}
+USER ${NB_USER}
 ENV HOME /home/${NB_USER}

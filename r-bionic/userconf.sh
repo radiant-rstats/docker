@@ -8,8 +8,8 @@ RPASSWORD=${RPASSWORD:=rstudio}
 # export JPASSWORD=${JPASSWORD:=jupyter}
 
 if [[ ${DISABLE_AUTH} == "true" ]]; then
-	mv /etc/rstudio/disable_auth_rserver.conf /etc/rstudio/rserver.conf
-	echo "USER=$NB_USER" >> /etc/environment
+  mv /etc/rstudio/disable_auth_rserver.conf /etc/rstudio/rserver.conf
+  echo "USER=$NB_USER" >> /etc/environment
 fi
 
 # add a password for user

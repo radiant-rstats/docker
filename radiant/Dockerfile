@@ -1,6 +1,6 @@
 FROM vnijs/r-bionic:latest
-
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
+USER root
 
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
@@ -43,5 +43,5 @@ EXPOSE 8080 8787
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
-# USER ${NB_USER}
+USER ${NB_USER}
 ENV HOME /home/${NB_USER}
