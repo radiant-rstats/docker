@@ -179,6 +179,9 @@ RUN chmod +x /usr/local/bin/launch
 # copy dbase connections
 COPY connections/ /etc/${NB_USER}/connections
 
+# copy conf file to provide no-auth option
+COPY disable_auth_rserver.conf /etc/rstudio/disable_auth_rserver.conf
+
 EXPOSE 8080 8787
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
