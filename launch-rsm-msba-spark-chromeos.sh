@@ -99,7 +99,7 @@ else
   ## check docker is running at all
   ## based on https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash
   {
-    docker ps -q 2>/dev/null 
+    docker ps -q 2>/dev/null
   } || {
     if [[ "$ostype" == "Darwin" ]]; then
       ## from https://stackoverflow.com/a/48843074/1974918
@@ -108,7 +108,7 @@ else
       #Wait until Docker daemon is running and has completed initialisation
       while (! docker stats --no-stream 2>/dev/null); do
         echo "Please wait while Docker starts up ..."
-        sleep 1
+        sleep 2
       done
     else
       echo "-----------------------------------------------------------------------"
@@ -407,6 +407,7 @@ else
           echo 'options(radiant.ace_theme = "tomorrow")' >> "${RPROF}"
           echo '# List specific directories you want to use with radiant' >> "${RPROF}"
           echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
+          # echo '# source(file.path(Sys.getenv(if (.Platform$OS.type == "windows") "HOMEPATH" else "HOME"), ".vscode-R", "init.R"))'
           echo '' >> "${RPROF}"
           sed_fun '/^[\s]*$/d' "${RPROF}"
         fi

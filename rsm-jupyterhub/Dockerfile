@@ -1,7 +1,7 @@
 # FROM nvidia/cuda:10.1-runtime-ubuntu18.04
 FROM vnijs/rsm-msba-spark:latest
-
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
+USER root
 
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
