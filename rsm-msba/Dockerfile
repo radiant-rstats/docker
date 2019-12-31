@@ -15,12 +15,8 @@ RUN apt-get update \
   gpg-agent \
   graphviz
 
-# as suggested here: https://stackoverflow.com/a/53168206/1974918
-# newer pip needed to install tensorflow 2.0.0
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-  && python3 get-pip.py
-
 # install python packages
+# COPY requirements-base.txt /home/${NB_USER}/requirements.txt
 COPY requirements.txt /home/${NB_USER}/requirements.txt
 RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && rm /home/${NB_USER}/requirements.txt \
@@ -88,10 +84,13 @@ RUN apt-get update && apt-get install -y \
 # Run the rest of the commands as the postgres user
 USER postgres
 
+ARG PGPASSWORD=${PGPASSWORD:-postgres}
+ENV PGPASSWORD=${PGPASSWORD}
+
 # create a postgres role for ${NB_USER} with "postgres" as the password
 # create a database "rsm-docker" owned by the ${NB_USER} role.
 RUN /etc/init.d/postgresql start \
-  && psql --command "CREATE USER ${NB_USER} WITH SUPERUSER PASSWORD 'postgres';" \
+  && psql --command "CREATE USER ${NB_USER} WITH SUPERUSER PASSWORD '${PGPASSWORD}';" \
   && createdb -O ${NB_USER} rsm-docker
 
 COPY postgresql.conf /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
@@ -142,8 +141,7 @@ RUN chmod +x /usr/local/bin/setup
 # update R-packages
 RUN R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
   -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")' \
-  -e 'source("https://install-github.me/REditorSupport/languageserver")'
+  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")' 
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -152,7 +150,7 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
 
-EXPOSE 8080 8787 8989 8765 4567
+EXPOSE 8080 8787 8989 8765 
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 

@@ -237,3 +237,34 @@ To install python3 on macOS using **homebrew**, run the commands below from a te
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)";
 brew install python3;
 ```
+
+
+<!-- 
+# Selenium example that works with docker compose
+# From outside the container access using
+library(RSelenium)
+remDr <- remoteDriver(
+    remoteServerAddr = "127.0.0.1",
+    port = 4444L,
+)
+remDr$open()
+remDr$navigate("http://www.google.com") 
+
+# From inside main computing environment
+library(RSelenium)
+remDr <- remoteDriver(
+    remoteServerAddr = "selenium",
+    port = 4444L,
+)
+remDr$open()
+remDr$navigate("http://www.google.com") 
+
+# If you need multiple selenium containers, just add one 
+# to the docker-compose file
+  # selenium2:
+    # image: 
+      # selenium/standalone-firefox
+    # ports:
+      # - 127.0.0.1:4445:444
+
+-->

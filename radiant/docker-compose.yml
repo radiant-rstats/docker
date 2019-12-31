@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  rsm-msba:
+    image: "vnijs/radiant"
+    environment:
+      SHELL: /bin/bash
+      PYTHONUSERBASE: /home/jovyan/.rsm-msba
+      # RPASSWORD: rstudio ## compose does not support arguments
+    ports:
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:8787:8787
+    volumes:
+      - ~:/home/jovyan
+  selenium_0:
+    image: 
+      selenium/standalone-firefox
+    ports:
+      - 127.0.0.1:4444:4444

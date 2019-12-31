@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.6.6
+DOCKERHUB_VERSION=1.6.7
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -46,7 +46,7 @@ launcher () {
 }
 
 # for testing purposes
-#LABEL=rsm-msba-update
+# LABEL=rsm-msba-update
 # build
 # launcher "rsm-msba"
 # exit

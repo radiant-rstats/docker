@@ -161,8 +161,16 @@ RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron
 
 # installing some basic r-packages
 RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot"), repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
-RUN R -e 'remotes::install_github("rstudio/renv")' 
+  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot"), repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")' \
+  -e 'remotes::install_github("rstudio/renv")'  \
+  -e 'source("https://install-github.me/REditorSupport/languageserver")'
+
+# as suggested here: https://stackoverflow.com/a/53168206/1974918
+# newer pip needed to install tensorflow 2.0.0
+# installing the radian terminal application
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+  && python3 get-pip.py \
+  && pip3 install --upgrade radian
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

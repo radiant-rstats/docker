@@ -287,13 +287,14 @@ else
   ## based on https://stackoverflow.com/a/52852871/1974918
   has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
   if [ "${has_network}" == "" ]; then
-    docker network create \
-      --subnet=172.0.0.0/16 \
-      --ip-range=172.0.0.0/24 \
-      --gateway=172.0.0.1 \
-      ${NETWORK} 
+    # docker network create \
+    #   --subnet=172.0.0.0/16 \
+    #   --ip-range=172.0.0.0/24 \
+    #   --gateway=172.0.0.1 \
+    #   ${NETWORK} 
+    docker network create ${NETWORK} 
   fi
-  GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' $NETWORK)
+  # GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' $NETWORK)
 
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing environment on ${ostype}"
@@ -497,18 +498,22 @@ else
         done
       fi
     elif [ "${menu_exec}" == 7 ]; then
-      selenium_port=4445
       if [ "${menu_arg}" != "" ]; then
         selenium_port=${menu_arg}
+      else 
+        selenium_port=4444
       fi
       CPORT=$(curl -s localhost:${selenium_port} 2>/dev/null)
       echo "-----------------------------------------------------------------------"
+      selenium_nr=($(docker ps -a | awk "/selenium_/" | awk '{print $1}'))
+      selenium_nr=${#selenium_nr[@]}
       if [ "$CPORT" != "" ]; then
         echo "A Selenium container may already be running on port ${selenium_port}"
+        selenium_nr=$((${selenium_nr}-1))
       else
-        docker run --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox 
+        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
       fi
-      echo "You can access selenium at ip: ${GATEWAY}, port: ${selenium_port} from the"
+      echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
       echo "${LABEL} container and ip: 127.0.0.1, port: ${selenium_port} from the host OS"
       echo "Press any key to continue"
       echo "-----------------------------------------------------------------------"
