@@ -72,6 +72,8 @@ To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in eithe
 setup
 ```
 
+<!-- ssh-copy-id -i ~/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
+
 ## Updating the RSM-MSBA computing environment on macOS
 
 To update the container use the launch script and press 5 (+ enter). To update the launch script itself, press 6 (+ enter).

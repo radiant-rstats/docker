@@ -122,7 +122,7 @@ jupytext --to notebook your-python-script.py
 jupytext --to py your-python-script.ipynb
 ```
 
-
+<!-- ssh-copy-id -i ~/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
 
 ## Connecting to postgresql
 
