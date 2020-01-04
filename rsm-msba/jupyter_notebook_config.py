@@ -28,8 +28,8 @@ def _radiant_command(port):
         """
         run_as {user};
         # make debugging easier
-        # sanitize_errors false;
-        # preserve_logs true;
+        sanitize_errors false;
+        preserve_logs true;
         # access_log /var/log/shiny-server/access.log dev;
         server {{
             listen {port};
@@ -50,6 +50,40 @@ def _radiant_command(port):
     # fs = open("/etc/R/Renviron.site", "a")
     # fs.write(f"RADIANT_LAUNCH_DIR='{os.path.realpath('.')}'\n")
     # fs.close()
+
+    # shiny-server configuration
+    f = tempfile.NamedTemporaryFile(mode="w", delete=False)
+    f.write(conf)
+    f.close()
+
+    return ["shiny-server", f.name]
+
+
+def _gitgadget_command(port):
+    # based on @yuvipanda's comments
+    # https://github.com/yuvipanda/jupyter-launcher-shortcuts/issues/1
+    conf = textwrap.dedent(
+        """
+        run_as {user};
+        # make debugging easier
+        sanitize_errors false;
+        preserve_logs true;
+        # access_log /var/log/shiny-server/access.log dev;
+        server {{
+            listen {port};
+            location / {{
+                site_dir {site_dir};
+                log_dir /var/log/shiny-server;
+                reconnect false;
+                directory_index off;
+            }}
+        }}
+    """
+    ).format(
+        user=getpass.getuser(),
+        port=str(port),
+        site_dir="/srv/shiny-server/gitgadget/inst/app",  # or your path
+    )
 
     # shiny-server configuration
     f = tempfile.NamedTemporaryFile(mode="w", delete=False)
@@ -99,6 +133,14 @@ c.ServerProxy.servers = {
         "command": _radiant_command,
         "timeout": 20,
         "launcher_entry": {"title": "Radiant", "icon_path": "/opt/radiant/logo.svg"},
+    },
+    "gitgadget": {
+        "command": _gitgadget_command,
+        "timeout": 20,
+        "launcher_entry": {
+            "title": "Git Gadget",
+            "icon_path": "/opt/gitgadget/gitgadget.svg",
+        },
     },
     "vscode": {
         "command": _codeserver_command,

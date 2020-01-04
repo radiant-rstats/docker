@@ -65,8 +65,6 @@ RUN (cd /tmp && \
   cd /tmp/jupyter-server-proxy/jupyterlab-server-proxy && \
   npm install && npm run build && jupyter labextension link . )
 
-COPY jupyter_notebook_config.py /etc/jupyter/
-
 # set jupyterlab password based on docker run argument
 # ARG only leads to conflict with rstudio on alternate port
 ARG JPASSWORD=${JPASSWORD:-jupyter}
@@ -141,7 +139,7 @@ RUN chmod +x /usr/local/bin/setup
 # update R-packages
 RUN R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
   -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")' 
+  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -153,6 +151,13 @@ RUN chmod 777 /opt/launch.sh
 EXPOSE 8080 8787 8989 8765 
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+COPY jupyter_notebook_config.py /etc/jupyter/
+
+RUN git clone https://github.com/vnijs/gitgadget.git /srv/shiny-server/gitgadget/ \
+  && chown shiny:shiny -R /srv/shiny-server
+
+COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
 
 USER ${NB_USER}
 ENV HOME /home/${NB_USER}
