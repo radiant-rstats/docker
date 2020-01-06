@@ -1,12 +1,15 @@
 # Contents
-  - [Installing the RSM-MSBA computing environment on ChromeOS](#installing-the-rsm-msba-computing-environment-on-chromeos)
-  - [Updating the RSM-MSBA computing environment on ChromeOS](#updating-the-rsm-msba-computing-environment-on-chromeos)
-  - [Using VS Code for Python](#using-vs-code-for-python)
-  - [Connecting to postgresql](#connecting-to-postgresql)
-  - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
-  - [Committing changes to the computing environment](#committing-changes-to-the-computing-environment)
-  - [Cleanup](#cleanup)
-  - [Trouble shooting](#trouble-shooting)
+
+- [Installing the RSM-MSBA computing environment on ChromeOS](#installing-the-rsm-msba-computing-environment-on-chromeos)
+- [Updating the RSM-MSBA computing environment on ChromeOS](#updating-the-rsm-msba-computing-environment-on-chromeos)
+- [Using VS Code for Python](#using-vs-code-for-python)
+- [Connecting to postgresql](#connecting-to-postgresql)
+- [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
+- [Committing changes to the computing environment](#committing-changes-to-the-computing-environment)
+- [Cleanup](#cleanup)
+- [Trouble shooting](#trouble-shooting)
+
+<!-- markdownlint-disable MD033 MD034 -->
 
 ## Installing the RSM-MSBA computing environment on ChromeOS
 
@@ -33,7 +36,7 @@ Once docker is installed, make sure it is running. You can can check this by usi
 docker ps;
 ```
 
-![](figures/docker-icon.png)
+![docker](figures/docker-icon.png)
 
 Optional: If you are interested, the linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
@@ -45,7 +48,7 @@ sudo ln -s ~/git/docker/launch-rsm-msba-spark-chromeos.sh /usr/local/bin/launch;
 launch;
 ```
 
-This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below. 
+This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
 <img src="figures/rsm-msba-menu-linux.png" width="500px">
 
@@ -89,29 +92,29 @@ sudo ln -s ~/git/docker/launch-rsm-msba-spark-chromeos.sh /usr/local/bin/launch;
 
 Microsoft's open-source integrated development environment (IDE), VS Code or Visual Studio Code, was the most popular development environment in according to a [Stack Overflow developer survey](https://insights.stackoverflow.com/survey/2018#development-environments-and-tools). VS Code is widely used by Google developers and is the [default development environment at Facebook](https://www.zdnet.com/article/facebook-microsofts-visual-studio-code-is-now-our-default-development-platform/).
 
-VS Code can be launched from Jupyter and is an excellent, and very popular, editor for python. After running the setup command mentioned above, everything you need for python development will be available. To learn more about using VS Code to write python code see the links and comments below. 
+VS Code can be launched from Jupyter and is an excellent, and very popular, editor for python. After running the setup command mentioned above, everything you need for python development will be available. To learn more about using VS Code to write python code see the links and comments below.
 
-* <a href="https://code.visualstudio.com/docs/python/python-tutorial#_create-a-python-hello-world-source-code-file" target="_blank">VS Code Python Tutorial</a>
+- <a href="https://code.visualstudio.com/docs/python/python-tutorial#_create-a-python-hello-world-source-code-file" target="_blank">VS Code Python Tutorial</a>
 
 Note that you can use `Shift+Enter` to run the current line in a Python Interactive Window:
 
-* <a href="https://code.visualstudio.com/docs/python/jupyter-support-py" target="_blank">Executing Python Code in VS Code</a>
+- <a href="https://code.visualstudio.com/docs/python/jupyter-support-py" target="_blank">Executing Python Code in VS Code</a>
 
 When writing and editing python code you will have access to "Intellisense" for auto-completions. Your code will also be auto-formatted every time you save it using the "black" formatter.
 
-* <a href="https://code.visualstudio.com/docs/python/editing" target="_blank">Editing Python in VS Code Python</a>
+- <a href="https://code.visualstudio.com/docs/python/editing" target="_blank">Editing Python in VS Code Python</a>
 
 VS Code also gives you access to a debugger for your python code. For more information see the link below:
 
-* <a href="https://code.visualstudio.com/docs/python/debugging" target="_blank">Editing Python in VS Code Python</a>
+- <a href="https://code.visualstudio.com/docs/python/debugging" target="_blank">Editing Python in VS Code Python</a>
 
-* To convert a python code file to a Jupyter Notebook, use the code from a terminal. You can open a terminal in VS Code by typing CTRL+`
+- To convert a python code file to a Jupyter Notebook, use the code below from a terminal. You can open a terminal in VS Code by typing CTRL+`
 
 ```bash
 jupytext --to notebook your-python-script.py
 ```
 
-* To convert a Jupyter Notebook to a python code file, use the code from a terminal. You can open a terminal in VS Code by typing CTRL+`
+- To convert a Jupyter Notebook to a python code file, use the code below from a terminal. You can open a terminal in VS Code by typing CTRL+`
 
 ```bash
 jupytext --to py your-python-script.ipynb
@@ -157,23 +160,30 @@ For a more extensive example using Python see: <a href="https://github.com/radia
 
 ## Installing R and Python packages locally
 
-To install R packages that will persist after restarting the docker container, enter code like the below in Rstudio and follow any prompts:
+To install the latest version of R-packages you need, add the line below to `~/.Rprofile`
 
-`install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))`
+`options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest", CRAN = "https://cloud.r-project.org"))`
 
-To install Python modules that will persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
+This will be done for you automatically if you run the `setup` command from a terminal inside the docker container. To install R packages that will persist after restarting the docker container, enter code like the below in Rstudio and follow any prompts. After doing this once, you can use `install.packages("some-other-package")` in the future.
 
-`pip3 install --user redis`
+```r
+fs::dir_create(Sys.getenv("R_LIBS_USER"), recurse = TRUE)
+install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))
+```
+
+To install Python modules that will persist after restarting the docker container, enter code like the below from the terminal in Rstudio or Jupyter Lab:
+
+`pip3 install --user pyrsm`
 
 After installing a module you will have to restart any running Python kernels to `import` the module in your code.
 
-To remove locally installed R packages press 7 (and Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 8 (and Enter) in the launch menu.
+To remove locally installed R packages press 7 (and Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 8 (and Enter) in the launch menu
 
 ## Committing changes to the computing environment
 
-By default re-starting the docker computing environment will remove any changes you made. This allows you to experiment freely, without having to worry about "breaking" things. However, there are times when you might want to keep changes. 
+By default re-starting the docker computing environment will remove any changes you made. This allows you to experiment freely, without having to worry about "breaking" things. However, there are times when you might want to keep changes.
 
-As shown in the previous section, you can install R and Python packages locally rather than in the container. These packages will still be available after a container restart. 
+As shown in the previous section, you can install R and Python packages locally rather than in the container. These packages will still be available after a container restart.
 
 To install binary R packages for Ubuntu Linux you can use the command below. These packages will *not* be installed locally and would normally not be available after a restart.
 
@@ -186,29 +196,29 @@ Similarly, some R-packages have requirements that need to be installed in the co
 
 ```bash
 sudo apt update;
-sudo apt install libgdal-dev libproj-dev; 
+sudo apt install libgdal-dev libproj-dev;
 ```
 
 After completing the step above you can install the `rgdal` R-package locally using the following from Rstudio:
 
 `install.packages("rgdal", lib = Sys.getenv("R_LIBS_USER"))`
 
-To save (or commit) these changes so they *will* be present after a (container) restart type, for example, c myimage (and Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-msba-spark-myimage.sh` that you can use to launch your customized environment in the future.
+To save (or commit) these changes so they *will* be present after a (container) restart type, for example, `c myimage` (and Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-msba-spark-myimage.sh` that you can use to launch your customized environment in the future.
 
-If you want to share your customized version of the container with others (e.g., team members) you can push it is to Docker Hub <a href="https://hub.docker.com" target="_blank">https://hub.docker.com</a> by following the menu dialog after typing, e.g., c myimage (and Enter). To create an account on Docker Hub go to <a href="https://hub.docker.com/signup" target="_blank">https://hub.docker.com/signup</a>.
+If you want to share your customized version of the container with others (e.g., team members) you can push it is to Docker Hub <a href="https://hub.docker.com" target="_blank">https://hub.docker.com</a> by following the menu dialog after typing, e.g., `c myimage` (and Enter). To create an account on Docker Hub go to <a href="https://hub.docker.com/signup" target="_blank">https://hub.docker.com/signup</a>.
 
-If you want to remove specific images from your computer run the commands below from a (bash) terminal. The first command generates a list of the images you have available. 
+If you want to remove specific images from your computer run the commands below from a (bash) terminal. The first command generates a list of the images you have available.
 
 `docker image ls;`
 
-Select the IMAGE ID for the image you want to remove, e.g., 42b88eb6adf8, and then run the following command with the correct image id:
+Select the IMAGE ID for the image you want to remove, e.g., `42b88eb6adf8`, and then run the following command with the correct image id:
 
 `docker rmi 42b88eb6adf8;`
 
 For additional resources on developing docker images see the links below:
 
-* https://colinfay.me/docker-r-reproducibility/
-* https://www.fullstackpython.com/docker.html
+- <https://colinfay.me/docker-r-reproducibility>
+- <https://www.fullstackpython.com/docker.html>
 
 ## Cleanup
 
