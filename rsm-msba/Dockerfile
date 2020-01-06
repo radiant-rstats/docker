@@ -141,6 +141,9 @@ RUN R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
   -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
   -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
+# update pyrsm
+RUN pip3 install --upgrade pyrsm
+
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
