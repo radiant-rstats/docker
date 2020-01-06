@@ -1,8 +1,8 @@
 {
+  "python.pythonPath": "/usr/bin/python3",
   // "python.dataScience.jupyterServerURI": "http://localhost:8989/?token=jupyter",
   // "python.dataScience.jupyterServerURI": "https://rsm-compute-01.ucsd.edu/user/vnijs/?token=INSERT TOKEN FROM https://server-url/hub/token
   "python.dataScience.sendSelectionToInteractiveWindow": true,
-  "python.pythonPath": "/usr/bin/python3",
   "python.dataScience.searchForJupyter": false,
   "python.dataScience.useDefaultConfigForJupyter": true,
   "python.autoComplete.addBrackets": true,
@@ -20,7 +20,7 @@
   "editor.renderWhitespace": "all",
   "editor.formatOnSave": true,
   "editor.suggestSelection": "first",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  // "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
   "window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
   "r.sessionWatcher": true,
   "r.alwaysUseActiveTerminal": true,
