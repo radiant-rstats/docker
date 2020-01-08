@@ -2,7 +2,7 @@ git pull
 docker login
 DOCKERHUB_VERSION=1.6.7
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 build () {
   {
@@ -44,6 +44,11 @@ launcher () {
     sed_fun "s/$2/$3/" ./launch-${LABEL}.sh
   fi
 }
+
+LABEL=rsm-msba
+build
+
+exit
 
 # for testing purposes
 # LABEL=rsm-msba-update
