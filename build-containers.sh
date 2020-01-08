@@ -75,7 +75,7 @@ LABEL=rsm-jupyterhub
 build
 
 ## new containers should be launched using the newest version of the container
-# docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 
 # git add .
 # git commit -m "Update to image version ${DOCKERHUB_VERSION}"
