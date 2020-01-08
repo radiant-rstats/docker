@@ -54,8 +54,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 COPY images/logo200.svg /opt/radiant/logo.svg
 
 RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
-  && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
-  && chown ${NB_USER}:shiny -R /var/log/shiny-server
+  && chown ${NB_USER}:shiny -R /var/lib/shiny-server 
 
 RUN pip3 install -vvv git+git://github.com/jupyterhub/jupyter-server-proxy@master && \
   jupyter serverextension enable --py --sys-prefix jupyter_server_proxy
