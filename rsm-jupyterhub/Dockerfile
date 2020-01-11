@@ -66,6 +66,11 @@ RUN chmod 777 /opt/launch.sh
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
+# remove sudo privileges for security 
+RUN passwd --delete ${NB_USER}
+RUN deluser ${NB_USER} sudo
+
 # set user
 USER ${NB_USER}
 ENV HOME /home/${NB_USER}
+
