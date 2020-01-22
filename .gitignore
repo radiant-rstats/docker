@@ -12,5 +12,5 @@ launch-rsm-msba-update.sh
 build-progress.out
 build-containers.txt
 rsm-vscode/*.sh
-rsm-vscode/*.conf
+rsm-vscode/p*.conf
 rsm-vscode/*.txt
