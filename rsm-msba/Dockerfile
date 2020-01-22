@@ -111,11 +111,13 @@ COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
 # codeserver version
-ENV CODE_SERVER="2.1692-vsc1.39.2"
+# ENV CODE_SERVER="2.1692-vsc1.39.2"
+ENV CODE_SERVER="2.1698-vsc1.41.1"
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
-  && wget -qO- https://github.com/cdr/code-server/releases/download/${CODE_SERVER}/code-server${CODE_SERVER}-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
+  && wget -qO- https://github.com/cdr/code-server/releases/download/2.1698/code-server2.1698-vsc1.41.1-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
+# && wget -qO- https://github.com/cdr/code-server/releases/download/${CODE_SERVER}/code-server${CODE_SERVER}-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
 
 # locations to store vscode / code-server settings
 ARG CODE_WORKINGDIR="/home/$NB_USER/git" 
@@ -147,7 +149,15 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
 
-EXPOSE 8080 8787 8989 8765 
+# EXPOSE 8080 8787 8989 9898 8765 21000-21010
+EXPOSE 8080 8787 8989 9898 8765
+
+# required in rsm-vscode image
+# RUN chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
+#   && chmod -R 0700 /var/lib/postgresql/${POSTGRES_VERSION}/ \ 
+#   && addgroup ${NB_USER} postgres
+
+RUN addgroup ${NB_USER} postgres
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 

@@ -7,6 +7,10 @@
 .mypy_cache
 rsm-extend/*
 rsm-msba-update/
+.vscode
 launch-rsm-msba-update.sh
 build-progress.out
 build-containers.txt
+rsm-vscode/*.sh
+rsm-vscode/*.conf
+rsm-vscode/*.txt

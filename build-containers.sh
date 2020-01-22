@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.6.7
+DOCKERHUB_VERSION=1.6.8
 UPLOAD="NO"
 # UPLOAD="YES"
 
@@ -45,11 +45,6 @@ launcher () {
   fi
 }
 
-LABEL=rsm-msba
-build
-
-exit
-
 # for testing purposes
 # LABEL=rsm-msba-update
 # build
@@ -71,6 +66,7 @@ LABEL=rsm-msba-spark
 build
 launcher "rsm-msba"
 
+
 ## replace 127.0.0.1 by 0.0.0.0 for ChromeOS
 cp -p ./launch-rsm-msba-spark.sh ./launch-rsm-msba-spark-chromeos.sh 
 sed_fun "s/127.0.0.1/0.0.0.0/g" ./launch-rsm-msba-spark-chromeos.sh 
@@ -81,6 +77,17 @@ build
 
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+
+cp r-bionic/userconf.sh rsm-vscode/userconf.sh
+cp r-bionic/launch.sh rsm-vscode/launch.sh
+cp rsm-msba/requirements.txt rsm-vscode/requirements.txt
+cp rsm-msba/clean.sh rsm-vscode/clean.sh
+cp rsm-msba/pg_hba.conf rsm-vscode/pg_hba.conf
+cp rsm-msba/postgresql.conf rsm-vscode/postgresql.conf
+cp rsm-msba-spark/requirements.txt rsm-vscode/requirements_spark.txt
+
+LABEL=rsm-vscode
+build
 
 # git add .
 # git commit -m "Update to image version ${DOCKERHUB_VERSION}"

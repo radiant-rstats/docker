@@ -80,7 +80,13 @@ FROM vnijs:rsm-msba-spark
 
 This image builds on rsm-msba-spark and is set up to be accessible from a server running jupyter hub.
 
-## Trouble shooting 
+## rsm-vscode
+
+This image contains all R and Python libraries found in `rsm-msba-spark` and `rsm-jupterlab` but does not include Jupyter Lab, Shiny server, Rstudio server, or VS Code (codeserver). It is intended to be used with a local install of [VS Code](https://code.visualstudio.com/download). Once you start the container using `launch-rsm-vscode` you can use "Remote-Containers: Attach to Running Container" from VS Code to connect. Recommended extensions to use with the container are shown in the screenshot below:
+
+![vscode extension](rsm-vscode/images/vscode-extensions.png)
+
+## Trouble shooting
 
 To stop (all) running containers use:
 
@@ -126,4 +132,4 @@ Jupyter is distributed under the BSD 3-Clause license (Copyright (c) 2017, Proje
 
 ## Acknowledgements
 
-Thanks to Ajar Vashisth for helping me get started with Docker and Docker Compose 
+Thanks to Ajar Vashisth for helping me get started with Docker and Docker Compose
