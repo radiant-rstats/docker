@@ -322,7 +322,7 @@ else
   fi
   {
     docker run --net ${NETWORK} -d \
-      -p 127.0.0.1:8080:8080 -p 127.0.0.1:8787:8787 -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 \
+      -p 127.0.0.1:8080:8080 -p 127.0.0.1:8787:8787 -p 127.0.0.1:8989:8989 -p 127.0.0.1:9898:9898 -p 127.0.0.1:8765:8765 \
       -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -365,17 +365,18 @@ else
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (4) to show a (bash) terminal, followed by [ENTER]:"
-    echo "Press (5) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (6) to update the launch script, followed by [ENTER]:"
-    echo "Press (7) to clear Rstudio sessions and packages, followed by [ENTER]:"
-    echo "Press (8) to clear Python packages, followed by [ENTER]:"
-    echo "Press (9) to start a Selenium container, followed by [ENTER]:"
+    echo "Press (4) to show VS Code, followed by [ENTER]:"
+    echo "Press (5) to show a (bash) terminal, followed by [ENTER]:"
+    echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (7) to update the launch script, followed by [ENTER]:"
+    echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
+    echo "Press (9) to clear Python packages, followed by [ENTER]:"
+    echo "Press (10) to start a Selenium container, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
     echo "Note: To start, e.g., Rstudio on a different port type 2 8788 [ENTER]"
-    echo "Note: To start a specific container version type, e.g., 5 ${DOCKERHUB_VERSION} [ENTER]"
+    echo "Note: To start a specific container version type, e.g., 6 ${DOCKERHUB_VERSION} [ENTER]"
     echo "Note: To commit changes type, e.g., c myversion [ENTER]"
     echo "-----------------------------------------------------------------------"
     read menu_exec menu_arg
@@ -384,7 +385,9 @@ else
       echo "Invalid entry. Resetting launch menu ..."
     elif [ ${menu_exec} == 1 ]; then
       RPROF="${HOMEDIR}/.Rprofile"
-      touch "${RPROF}"
+      if [ ! -f "${RPROF}" ]; then
+        touch "${RPROF}"
+      fi
       if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
         echo "Your setup does not allow report generation in Radiant."
         echo "Would you like to add relevant code to .Rprofile?"
@@ -459,6 +462,39 @@ else
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 4 ]; then
+      RPROF="${HOMEDIR}/.Rprofile"
+      if [ ! -f "${RPROF}" ]; then
+        touch "${RPROF}"
+      fi
+      if ! grep -q '".vscode-R"' ${RPROF}; then
+        echo "Your setup does not provide full support for coding in R."
+        echo "Would you like to add relevant settings to .Rprofile?"
+        echo "Press y or n, followed by [ENTER]:"
+        echo ""
+        read update_rprofile
+
+        if [ "${update_rprofile}" == "y" ]; then
+          echo 'rvscode_file <- file.path(Sys.getenv(if (.Platform$OS.type == "windows") "HOMEPATH" else "HOME"), ".vscode-R", "init.R")' >> "${RPROF}"
+          echo 'if (file.exists(rvscode_file)) source(rvscode_file)' >> "${RPROF}"
+          echo 'rm(rvscode_file)' >> "${RPROF}"
+          # echo 'options(help.ports = 21000:21010)' >> "${RPROF}"
+          echo '' >> "${RPROF}"
+        fi
+      fi
+      if [ "${menu_arg}" == "" ]; then
+        echo "Starting VS Code in the default browser on port 9898"
+        open_browser http://localhost:9898
+      else
+        echo "Starting VS Code in the default browser on port ${menu_arg}"
+        docker run --net ${NETWORK} -d \
+          -p 127.0.0.1:${menu_arg}:9898 \
+          -v "${HOMEDIR}":/home/${NB_USER} $MNT \
+          -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
+          ${IMAGE}:${IMAGE_VERSION}
+        sleep 2s
+        open_browser http://localhost:${menu_arg}
+      fi
+    elif [ ${menu_exec} == 5 ]; then
       running=$(docker ps -q | awk '{print $1}')
       if [ "${running}" != "" ]; then
         clear
@@ -474,7 +510,7 @@ else
           docker exec -it --user ${NB_USER} ${running} /bin/bash
         fi
       fi
-    elif [ ${menu_exec} == 5 ]; then
+    elif [ ${menu_exec} == 6 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing environment"
@@ -500,7 +536,7 @@ else
       fi
       $CMD
       exit 1
-    elif [ ${menu_exec} == 6 ]; then
+    elif [ ${menu_exec} == 7 ]; then
       echo "Updating ${IMAGE} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -522,7 +558,7 @@ else
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
       fi
       exit 1
-    elif [ ${menu_exec} == 7 ]; then
+    elif [ ${menu_exec} == 8 ]; then
       echo "-----------------------------------------------------"
       echo "Clean up Rstudio sessions (y/n)?"
       echo "-----------------------------------------------------"
@@ -548,7 +584,7 @@ else
           mkdir "${i}"
         done
       fi
-    elif [ ${menu_exec} == 8 ]; then
+    elif [ ${menu_exec} == 9 ]; then
       echo "Removing locally installed Python packages"
       rm -rf "${HOMEDIR}/.rsm-msba/bin"
       rm -rf "${HOMEDIR}/.rsm-msba/lib"
@@ -556,7 +592,7 @@ else
       for i in ${rm_list}; do
          rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
       done
-    elif [ "${menu_exec}" == 9 ]; then
+    elif [ "${menu_exec}" == 10 ]; then
       if [ "${menu_arg}" != "" ]; then
         selenium_port=${menu_arg}
       else 
