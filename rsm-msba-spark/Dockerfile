@@ -61,8 +61,9 @@ COPY hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 RUN chmod 777 -R $HADOOP_HOME
 
 # install iframe
-RUN jupyter labextension install --debug jupyterlab_iframe
-RUN jupyter serverextension enable --debug --py jupyterlab_iframe
+# RUN pip install jupyterlab_iframe
+# RUN jupyter labextension install jupyterlab_iframe
+# RUN jupyter serverextension enable --py jupyterlab_iframe
 
 EXPOSE 8080 8787 8989 8765
 
