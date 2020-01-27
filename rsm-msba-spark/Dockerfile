@@ -27,9 +27,21 @@ RUN curl -sL --retry 3 \
   && rm -rf $HADOOP_HOME/share/doc \
   && chown -R root:root $HADOOP_HOME
 
-# don't upgrade to 2.4.0 yet as it requires mesos and there is no repo for ubuntu 18.04 yet
-ENV SPARK_VERSION=2.3.2 \
+# Spark
+ENV SPARK_VERSION=2.4.0 \
   BUILT_FOR_HADOOP_VERSION=2.7
+ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}
+ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
+ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*"
+ENV PATH $PATH:${SPARK_HOME}/bin
+RUN curl -sL --retry 3 \
+  "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}.tgz" \
+  | gunzip \
+  | tar x -C /usr/ \
+  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
+  && chown -R root:root $SPARK_HOME
+ENV PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/build:$PYTHONPATH"
+ENV PYTHONPATH="$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$PYTHONPATH"
 
 # install the R kernel for Jupyter Lab
 RUN R -e 'options(spark.install.dir = "/opt")' \
@@ -56,14 +68,13 @@ ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-ms
 RUN chmod 777 /opt/launch.sh
 
 # Configure Hadoop 
-COPY hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
-COPY hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+COPY core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
+COPY hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 RUN chmod 777 -R $HADOOP_HOME
 
 # install iframe
-# RUN pip install jupyterlab_iframe
-# RUN jupyter labextension install jupyterlab_iframe
-# RUN jupyter serverextension enable --py jupyterlab_iframe
+# RUN jupyter labextension install --debug jupyterlab_iframe
+# RUN jupyter serverextension enable --debug --py jupyterlab_iframe
 
 EXPOSE 8080 8787 8989 8765
 
