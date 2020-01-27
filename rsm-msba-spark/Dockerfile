@@ -68,8 +68,8 @@ ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-ms
 RUN chmod 777 /opt/launch.sh
 
 # Configure Hadoop 
-COPY core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
-COPY hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+COPY ./hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
+COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 RUN chmod 777 -R $HADOOP_HOME
 
 # install iframe
