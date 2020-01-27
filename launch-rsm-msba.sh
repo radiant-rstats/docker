@@ -42,7 +42,8 @@ IMAGE_VERSION="latest"
 NB_USER="jovyan"
 CODE_WORKINGDIR="/home/${NB_USER}/git"
 RPASSWORD="rstudio"
-JPASSWORD="jupyter"
+# JPASSWORD="jupyter"
+JPASSWORD=""
 ID="vnijs"
 LABEL="rsm-msba"
 NETWORK="rsm-docker"
@@ -300,14 +301,8 @@ else
   ## based on https://stackoverflow.com/a/52852871/1974918
   has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
   if [ "${has_network}" == "" ]; then
-    # docker network create \
-    #   --subnet=172.0.0.0/16 \
-    #   --ip-range=172.0.0.0/24 \
-    #   --gateway=172.0.0.1 \
-    #   ${NETWORK} 
     docker network create ${NETWORK} 
   fi
-  # GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' ${NETWORK})
 
   echo "-----------------------------------------------------------------------"
   echo "Starting the ${LABEL} computing environment on ${ostype}"
