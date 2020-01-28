@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.6.8
+DOCKERHUB_VERSION=1.6.9
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -45,7 +45,6 @@ launcher () {
   fi
 }
 
-# for testing purposes
 # LABEL=rsm-msba-update
 # build
 # launcher "rsm-msba"
@@ -57,7 +56,7 @@ build
 # launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
-build
+build NO
 
 LABEL=rsm-msba
 build
