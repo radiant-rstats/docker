@@ -14,18 +14,34 @@ RUN apt-get -y update \
   && R CMD javareconf
 
 ENV SPARK_VERSION=2.4.3 \
-  HADOOP_VERSION=2.7
+  BUILT_FOR_HADOOP_VERSION=2.7 \
+  HADOOP_VERSION=2.7.7 \ 
+  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 
+ENV HADOOP_HOME="/opt/hadoop-${HADOOP_VERSION}"
+ENV HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop" \
+  PATH=$PATH:"$HADOOP_HOME/bin" \
+  SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}" \
+  SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*" 
+ENV SPARK_HOME="/opt/spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}" \
+  PYSPARK_PYTHON=/usr/bin/python3 \
+  PYSPARK_DRIVER_PYTHON=jupyter \
+  PYSPARK_DRIVER_PYTHON_OPTS=lab
+ENV PATH=$PATH:${SPARK_HOME}/bin \
+  PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/build:$PYTHONPATH \
+  PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH
+
+RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site
+
+RUN mkdir $HADOOP_HOME \
+  && cd $HADOOP_HOME \
+  && wget -qO- "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" | tar zxvf - --strip-components=1 \
+  && rm -rf $HADOOP_HOME/share/doc \
+  && chown -R root:root $HADOOP_HOME  \
+  && rm -rf *.tar.gz
 
 # install the R kernel for Jupyter Lab
 RUN R -e 'options(spark.install.dir = "/opt")' \
-  -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("HADOOP_VERSION"))' 
-
-# setting environment variables for pyspark
-ENV PYSPARK_PYTHON=/usr/bin/python3 \
-  PYSPARK_DRIVER_PYTHON=jupyter \
-  PYSPARK_DRIVER_PYTHON_OPTS=lab \
-  SPARK_HOME=/opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
-RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site
+  -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("BUILT_FOR_HADOOP_VERSION"))'
 
 # install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
@@ -39,6 +55,11 @@ RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(ge
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba-spark.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
+
+# Configure Hadoop 
+COPY ./hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
+COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+RUN chmod 777 -R $HADOOP_HOME
 
 EXPOSE 8080 8787 8989 8765
 
