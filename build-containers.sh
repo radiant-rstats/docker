@@ -2,7 +2,7 @@ git pull
 docker login
 DOCKERHUB_VERSION=1.6.8
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 build () {
   {
@@ -49,15 +49,23 @@ launcher () {
 # LABEL=rsm-msba-update
 # build
 # launcher "rsm-msba"
-# exit
 
-LABEL=r-bionic
-build 
+# LABEL=rsm-msba
+# build
+
+LABEL=rsm-msba-spark
+build
+launcher "rsm-msba"
+
+exit
+
+# LABEL=r-bionic
+# build 
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
-LABEL=radiant
-build
+# LABEL=radiant
+# build
 
 LABEL=rsm-msba
 build
@@ -65,7 +73,6 @@ build
 LABEL=rsm-msba-spark
 build
 launcher "rsm-msba"
-
 
 ## replace 127.0.0.1 by 0.0.0.0 for ChromeOS
 cp -p ./launch-rsm-msba-spark.sh ./launch-rsm-msba-spark-chromeos.sh 
