@@ -140,7 +140,9 @@ RUN chmod +x /usr/local/bin/setup
 # update R-packages
 RUN R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
   -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
+  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")' 
+
+RUN R -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -158,10 +160,9 @@ EXPOSE 8080 8787 8989 9898 8765
 #   && addgroup ${NB_USER} postgres
 
 RUN addgroup ${NB_USER} postgres
+COPY jupyter_notebook_config.py /etc/jupyter/
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
-COPY jupyter_notebook_config.py /etc/jupyter/
 
 RUN git clone https://github.com/vnijs/gitgadget.git /srv/shiny-server/gitgadget/ \
   && chown shiny:shiny -R /srv/shiny-server

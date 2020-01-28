@@ -13,13 +13,12 @@ RUN apt-get -y update \
   && rm -rf /var/lib/apt/lists/* \
   && R CMD javareconf
 
-# don't upgrade to 2.4.0 yet as it requires mesos and there is no repo for ubuntu 18.04 yet
-ENV SPARK_VERSION=2.3.2 \
+ENV SPARK_VERSION=2.4.3 \
   HADOOP_VERSION=2.7
 
 # install the R kernel for Jupyter Lab
 RUN R -e 'options(spark.install.dir = "/opt")' \
-  -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("HADOOP_VERSION"))'
+  -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("HADOOP_VERSION"))' 
 
 # setting environment variables for pyspark
 ENV PYSPARK_PYTHON=/usr/bin/python3 \
