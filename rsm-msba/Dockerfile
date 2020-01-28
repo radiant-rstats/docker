@@ -111,13 +111,11 @@ COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
 # codeserver version
-# ENV CODE_SERVER="2.1692-vsc1.39.2"
 ENV CODE_SERVER="2.1698-vsc1.41.1"
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
   && wget -qO- https://github.com/cdr/code-server/releases/download/2.1698/code-server2.1698-vsc1.41.1-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
-# && wget -qO- https://github.com/cdr/code-server/releases/download/${CODE_SERVER}/code-server${CODE_SERVER}-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
 
 # locations to store vscode / code-server settings
 ARG CODE_WORKINGDIR="/home/$NB_USER/git" 
@@ -141,8 +139,6 @@ RUN chmod +x /usr/local/bin/setup
 RUN R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
   -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
   -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")' 
-
-RUN R -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

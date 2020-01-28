@@ -1,8 +1,8 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.6.8
+DOCKERHUB_VERSION=1.6.9
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
 
 build () {
   {
@@ -45,27 +45,13 @@ launcher () {
   fi
 }
 
-# for testing purposes
-# LABEL=rsm-msba-update
-# build
-# launcher "rsm-msba"
-
-# LABEL=rsm-msba
-# build
-
-LABEL=rsm-msba-spark
-build
-launcher "rsm-msba"
-
-exit
-
-# LABEL=r-bionic
-# build 
+LABEL=r-bionic
+build 
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
-# LABEL=radiant
-# build
+LABEL=radiant
+build
 
 LABEL=rsm-msba
 build
@@ -84,6 +70,8 @@ build
 
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+
+exit
 
 cp r-bionic/userconf.sh rsm-vscode/userconf.sh
 cp r-bionic/launch.sh rsm-vscode/launch.sh

@@ -152,7 +152,7 @@ pyparsing==2.4.6
 pyrsistent==0.15.6
 PySocks==1.7.1
 pytest==5.3.2
-python-apt==1.6.4
+# python-apt==1.6.4
 python-dateutil==2.8.1
 python-debian==0.1.32
 python-slugify==1.2.6
@@ -195,7 +195,7 @@ stevedore==1.31.0
 sympy==1.5
 tabulate==0.8.6
 tensorboard==2.0.2
-tensorflow==2.0.0
+tensorflow==2.0.1
 tensorflow-estimator==2.0.1
 termcolor==1.1.0
 terminado==0.8.3
