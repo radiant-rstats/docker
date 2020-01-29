@@ -131,7 +131,7 @@ RUN echo "CODE_EXTENSIONS_DIR=${CODE_EXTENSIONS_DIR}" >> /etc/R/Renviron.site
 # setup for code-server (aka vscode)
 COPY images/vscode.svg /opt/code-server/vscode.svg
 COPY settings.json /opt/code-server/settings.json
-COPY vsix/*.vsix /opt/code-server/extensions/
+# COPY vsix/*.vsix /opt/code-server/extensions/
 COPY setup.sh /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
 
@@ -147,16 +147,12 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
 
-# EXPOSE 8181 8787 8989 9898 8765 21000-21010
 EXPOSE 8181 8787 8989 9898 8765
-
-# required in rsm-vscode image
-# RUN chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
-#   && chmod -R 0700 /var/lib/postgresql/${POSTGRES_VERSION}/ \ 
-#   && addgroup ${NB_USER} postgres
 
 RUN addgroup ${NB_USER} postgres
 COPY jupyter_notebook_config.py /etc/jupyter/
+
+
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 

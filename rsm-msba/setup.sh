@@ -82,7 +82,6 @@ mkdir -p ~/.rsm-msba/share/code-server/User
 cp /opt/code-server/settings.json ~/.rsm-msba/share/code-server/User/settings.json
 
 # extension available in code-server market place
-# extensions="grapecity.gc-excelviewer mechatroner.rainbow-csv"
 extensions="mechatroner.rainbow-csv"
 
 for ext in $extensions; do
@@ -90,11 +89,17 @@ for ext in $extensions; do
   code-server --extensions-dir  $CODE_EXTENSIONS_DIR --install-extension "$ext" > /dev/null 2>&1
 done
 
-for file in /opt/code-server/extensions/*.vsix; do
+# avoid including (large) vscode extensions
+wget https://raw.githubusercontent.com/radiant-rstats/docker/master/rsm-msba/vsix/vsix_list.txt
+wget -i vsix_list.txt
+
+for file in *.vsix; do
   f=$(basename "$file" .vsix)
   echo "Installing extension: $f"
   code-server --extensions-dir  $CODE_EXTENSIONS_DIR --install-extension "$file" > /dev/null 2>&1
 done
+rm -f *.vsix
+rm -f vsix_list.txt
 
 echo "-----------------------------------------------------------------------"
 echo "Setup complete"
