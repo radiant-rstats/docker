@@ -317,7 +317,7 @@ else
   fi
   {
     docker run --net ${NETWORK} -d \
-      -p 0.0.0.0:8080:8080 -p 0.0.0.0:8787:8787 -p 0.0.0.0:8989:8989 -p 0.0.0.0:9898:9898 -p 0.0.0.0:8765:8765 \
+      -p 0.0.0.0:8181:8181 -p 0.0.0.0:8787:8787 -p 0.0.0.0:8989:8989 -p 0.0.0.0:9898:9898 -p 0.0.0.0:8765:8765 \
       -e RPASSWORD=${RPASSWORD} -e JPASSWORD=${JPASSWORD} -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -412,12 +412,12 @@ else
         fi
       fi
       if [ "${menu_arg}" == "" ]; then
-        echo "Starting Radiant in the default browser on port 8080"
-        open_browser http://localhost:8080
+        echo "Starting Radiant in the default browser on port 8181"
+        open_browser http://localhost:8181
       else
         echo "Starting Radiant in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          -p 0.0.0.0:${menu_arg}:8080 \
+          -p 0.0.0.0:${menu_arg}:8181 \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}

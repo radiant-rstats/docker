@@ -11,7 +11,7 @@ services:
       RPASSWORD: rstudio
       JPASSWORD: jupyter
     ports:
-      - 8080:8080
+      - 8181:8181
       - 8787:8787
       - 8989:8989
       - 8765:8765

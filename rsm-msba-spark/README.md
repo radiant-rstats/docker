@@ -21,7 +21,7 @@ Docker version 18.06.0-ce, build 0ffa825
 To start all applications in a temporary container use the command below. To map local drives to Rstudio use the `-v` option. For example, the command below would map your home directory the home directory used for Rstudio
 
 ```bash
-docker run --rm -p 8080:80 -p 8787:8787 -p 8989:8888 -p 8765:8765 \
+docker run --rm -p 8181:80 -p 8787:8787 -p 8989:8888 -p 8765:8765 \
   -v ~:/home/jovyan vnijs/rsm-msba-spark
 ```
 
@@ -31,7 +31,7 @@ An alternative approach is to use `docker-compose` and the command below after c
 docker-compose -f ./rsm-msba-spark/docker-rsm-msba-spark.yml up
 ```
 
-The radiant app will be available at <a href="http://127.0.0.1:8080" target="_blank">http://127.0.0.1:8080</a>,  Rstudio will be available at <a href="http://127.0.0.1:8787" target="_blank">http://127.0.0.1:8787</a>, and JupyterLab will be available at 
+The radiant app will be available at <a href="http://127.0.0.1:8181" target="_blank">http://127.0.0.1:8181</a>,  Rstudio will be available at <a href="http://127.0.0.1:8787" target="_blank">http://127.0.0.1:8787</a>, and JupyterLab will be available at 
 <a href="http://127.0.0.1:8989" target="_blank">http://127.0.0.1:8989</a>
 
 The user id is `jovyan` and password for Rstudio is `rstudio`. For JupyterLab use `jupyter`.
@@ -39,7 +39,7 @@ The user id is `jovyan` and password for Rstudio is `rstudio`. For JupyterLab us
 To stop a running container use `CTRL+C`. In a real deployment scenario, you will probably want to run the container in detached mode (`-d`):
 
 ```bash
-docker run -d -p 8080:80 -p 8787:8787 -p 8989:8888 -p 8765:8765 \
+docker run -d -p 8181:80 -p 8787:8787 -p 8989:8888 -p 8765:8765 \
   -v ~:/home/jovyan vnijs/rsm-msba-spark
 ```
 

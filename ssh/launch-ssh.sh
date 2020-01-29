@@ -54,7 +54,7 @@ fi
 
 ## make connection to host running docker trough ssh
 ssh -M -S .tmp-ssh-info -fnNT \
-  -L 127.0.0.1:8080:localhost:8080 \
+  -L 127.0.0.1:8181:localhost:8181 \
   -L 127.0.0.1:8787:localhost:8787 \
   -L 127.0.0.1:8989:localhost:8989 \
   -L 127.0.0.1:8765:localhost:8765 \
@@ -70,8 +70,8 @@ show_service () {
   read startup
 
   if [ ${startup} == 1 ]; then
-    echo "Starting Radiant in the default browser on port 8080"
-    open_browser http://localhost:8080
+    echo "Starting Radiant in the default browser on port 8181"
+    open_browser http://localhost:8181
   elif [ ${startup} == 2 ]; then
     echo "Starting Rstudio in the default browser on port 8787"
     open_browser http://localhost:8787

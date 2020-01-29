@@ -147,8 +147,8 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
 
-# EXPOSE 8080 8787 8989 9898 8765 21000-21010
-EXPOSE 8080 8787 8989 9898 8765
+# EXPOSE 8181 8787 8989 9898 8765 21000-21010
+EXPOSE 8181 8787 8989 9898 8765
 
 # required in rsm-vscode image
 # RUN chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \

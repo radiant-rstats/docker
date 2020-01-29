@@ -304,7 +304,7 @@ else
   echo "-----------------------------------------------------------------------"
   {
     docker run --net ${NETWORK} -d \
-      -p 127.0.0.1:8080:8080 -p 127.0.0.1:8787:8787 \
+      -p 127.0.0.1:8181:8181 -p 127.0.0.1:8787:8787 \
       -e RPASSWORD=${RPASSWORD} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       ${IMAGE}:${IMAGE_VERSION}
@@ -392,12 +392,12 @@ else
         fi
       fi
       if [ "${menu_arg}" == "" ]; then
-        echo "Starting Radiant in the default browser on port 8080"
-        open_browser http://localhost:8080
+        echo "Starting Radiant in the default browser on port 8181"
+        open_browser http://localhost:8181
       else
         echo "Starting Radiant in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          -p 127.0.0.1:${menu_arg}:8080 \
+          -p 127.0.0.1:${menu_arg}:8181 \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
