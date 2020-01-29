@@ -53,6 +53,14 @@ build
 LABEL=radiant
 build
 
+## making list of vsix files to install using "setup"
+rm -f ./rsm-msba/vsix/vsix_list.txt
+touch ./rsm-msba/vsix/vsix_list.txt
+vsix_list=$(ls -d ./rsm-msba/vsix/*.vsix 2>/dev/null)
+for i in ${vsix_list}; do
+  echo "https://github.com/radiant-rstats/docker/raw/master/${i}" >> ./rsm-msba/vsix/vsix_list.txt
+done
+
 LABEL=rsm-msba
 build
 

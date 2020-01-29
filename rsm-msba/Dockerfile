@@ -152,8 +152,6 @@ EXPOSE 8181 8787 8989 9898 8765
 RUN addgroup ${NB_USER} postgres
 COPY jupyter_notebook_config.py /etc/jupyter/
 
-
-
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 RUN git clone https://github.com/vnijs/gitgadget.git /srv/shiny-server/gitgadget/ \
