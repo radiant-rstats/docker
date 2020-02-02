@@ -15,12 +15,19 @@ RUN apt-get update \
   gpg-agent \
   graphviz
 
+## updating pip to latest
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+  && python3 get-pip.py
+
 # install python packages
 # COPY requirements-base.txt /home/${NB_USER}/requirements.txt
 COPY requirements.txt /home/${NB_USER}/requirements.txt
 RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && rm /home/${NB_USER}/requirements.txt \
   && python3 -m bash_kernel.install
+
+# requires seperate install for some reason
+RUN pip3 install pyrsm>=0.1.9
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
