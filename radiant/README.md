@@ -21,21 +21,21 @@ Docker version 18.09.0, build 4d60db4
 To start Radiant (and shiny-server) in a temporary container on port 80 and rstudio-server on port 8787 use the command below: 
 
 ```bash
-docker run --rm -p 80:80 -p 8787:8787 vnijs/radiant
+docker run --rm -p 8181:8181 -p 8787:8787 vnijs/radiant
 ```
 
-The radiant app will be available at <a href="http://127.0.0.1" target="_blank">http://127.0.0.1</a> and Rstudio will be available at <a href="http://127.0.0.1:8787" target="_blank">http://127.0.0.1:8787</a>. The userid and password to Rstudio is `rstudio`
+The radiant app will be available at <a href="http://127.0.0.1:8181" target="_blank">http://127.0.0.1:8181</a> and Rstudio will be available at <a href="http://127.0.0.1:8787" target="_blank">http://127.0.0.1:8787</a>. The userid and password to Rstudio is `rstudio`
 
 To map local drives to Rstudio use the `-v` option. For example, the command below would map your home directory to the home directory used for Rstudio
 
 ```bash
-docker run --rm -p 80:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
+docker run --rm -p 8181:8181 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
 ```
 
 To stop a running container use `CTRL+C`. In a real deployment scenario, you will probably want to run the container in detached mode (`-d`):
 
 ```bash
-docker run -d -p 80:80 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
+docker run -d -p 8181:8181 -p 8787:8787 -v ~:/home/rstudio vnijs/radiant
 ```
 
 ## Customize the radiant container
