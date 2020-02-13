@@ -45,13 +45,13 @@ launcher () {
   fi
 }
 
-LABEL=r-bionic
-build 
+# LABEL=r-bionic
+# build 
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
-LABEL=radiant
-build
+# LABEL=radiant
+# build
 
 ## making list of vsix files to install using "setup"
 rm -f ./rsm-msba/vsix/vsix_list.txt
