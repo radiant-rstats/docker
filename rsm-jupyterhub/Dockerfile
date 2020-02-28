@@ -53,11 +53,21 @@ RUN chmod +x /tini
 
 COPY postgresql.conf /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
 COPY pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
+# COPY profiles /etc/rstudio/
 
 ENV JUPYTER_ENABLE_LAB=1
 
+ARG OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS:-8}
+ENV OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS
+ARG OMP_NUM_THREADS=${OMP_NUM_THREADS:-8}
+ENV OMP_NUM_THREADS=$OMP_NUM_THREADS
+
 RUN echo "HOME=/home/${NB_USER}" >> /etc/R/Renviron.site \
-  && echo "USER=${NB_USER}" >> /etc/R/Renviron.site
+  && echo "USER=${NB_USER}" >> /etc/R/Renviron.site \ 
+  && echo "OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS" >> /etc/R/Renviron.site \
+  && echo "OMP_NUM_THREADS=$OMP_NUM_THREADS" >> /etc/R/Renviron.site \
+  && echo 'RhpcBLASctl::blas_set_num_threads(Sys.getenv("OPENBLAS_NUM_THREADS"))' >> /etc/R/Rprofile.site \
+  && echo 'RhpcBLASctl::omp_set_num_threads(Sys.getenv("OMP_NUM_THREADS"))' >> /etc/R/Rprofile.site
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-jupyterhub.sh /opt/launch.sh
