@@ -483,6 +483,7 @@ else
         echo "Starting VS Code in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
           -p 127.0.0.1:${menu_arg}:9898 \
+          -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
