@@ -17,7 +17,7 @@ backcall==0.1.0
 bash-kernel==0.7.2
 beautifulsoup4==4.8.2
 black==19.10b0
-bleach==3.1.0
+bleach==3.1.2
 blessed==1.16.1
 blis==0.4.1
 bonobo==0.6.4
