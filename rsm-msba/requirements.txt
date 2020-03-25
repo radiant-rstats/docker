@@ -3,6 +3,7 @@ prompt-toolkit>=2.0.0,<2.1.0
 pdpbox>=0.2.0
 sklearn-gbmi>=1.0.0
 keras-tuner
+# twine
 absl-py==0.9.0
 aiohttp==3.6.2
 altair==4.0.0
