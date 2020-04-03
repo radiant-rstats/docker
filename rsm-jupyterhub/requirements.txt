@@ -1,0 +1,7 @@
+oauthlib==3.1.0
+async-generator
+requests==2.22.0
+prometheus-client==0.7.1
+Jinja2==2.10.3
+SQLAlchemy==1.3.12
+jupyterhub==1.0.0 

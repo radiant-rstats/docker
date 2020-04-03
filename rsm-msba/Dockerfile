@@ -27,7 +27,7 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && python3 -m bash_kernel.install
 
 # requires seperate install for some reason
-RUN pip3 install 'pyrsm>=0.2.3'
+RUN pip3 install 'pyrsm>=0.2.8'
 # RUN pip3 install -vvv git+git://github.com/vnijs/pyrsm@master
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
@@ -145,10 +145,11 @@ RUN chmod +x /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
 
 # update R-packages
-
 RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 
-  -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
-  -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'remotes::install_github("bmschmidt/wordVectors", upgrade = "never")' \
+  -e 'install.packages("igraph", repos = "https://cran.rstudio.com")'
+
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
   -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
 
 # updating the supervisord.conf file for Jupyter

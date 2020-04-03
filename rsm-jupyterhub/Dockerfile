@@ -10,7 +10,9 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-RUN pip3 install --target='/usr/local/lib/python3.6/dist-packages/' jupyterhub==1.0.0 
+# RUN pip3 install jupyterhub==1.0.0 
+COPY requirements.txt /home/${NB_USER}/requirements.txt
+RUN pip3 install --target='/usr/local/lib/python3.6/dist-packages/' -r /home/${NB_USER}/requirements.txt 
 
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server"
