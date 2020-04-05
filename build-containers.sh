@@ -48,7 +48,7 @@ launcher () {
 LABEL=r-bionic
 build
 # if you use the line below, manually remove the 'allow' section afterwards
-launcher "radiant" "Radiant" "shiny-apps"
+# launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
 build
@@ -76,9 +76,10 @@ sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-spark-chrome
 LABEL=rsm-jupyterhub
 build
 
-exit
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+
+exit
 
 cp r-bionic/userconf.sh rsm-vscode/userconf.sh
 cp r-bionic/launch.sh rsm-vscode/launch.sh
