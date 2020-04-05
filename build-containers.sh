@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.7.0
+DOCKERHUB_VERSION=1.7.2
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -45,13 +45,13 @@ launcher () {
   fi
 }
 
-# LABEL=r-bionic
-# build 
+LABEL=r-bionic
+build
 # if you use the line below, manually remove the 'allow' section afterwards
-# launcher "radiant" "Radiant" "shiny-apps"
+launcher "radiant" "Radiant" "shiny-apps"
 
-# LABEL=radiant
-# build
+LABEL=radiant
+build
 
 ## making list of vsix files to install using "setup"
 rm -f ./rsm-msba/vsix/vsix_list.txt
@@ -76,10 +76,9 @@ sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-spark-chrome
 LABEL=rsm-jupyterhub
 build
 
+exit
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
-
-exit
 
 cp r-bionic/userconf.sh rsm-vscode/userconf.sh
 cp r-bionic/launch.sh rsm-vscode/launch.sh
