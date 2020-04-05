@@ -119,7 +119,7 @@ COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
 # codeserver version
-ENV CODE_SERVER="2.1698-vsc1.41.1"
+# ENV CODE_SERVER="2.1698-vsc1.41.1"
 # ENV CODE_SERVER="3.0.2"
 # && wget -qO- https://github.com/cdr/code-server/releases/download/3.0.2/code-server-3.0.2-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
 # && wget -qO- https://github.com/cdr/code-server/releases/download/{$CODE_SERVER}/code-server-{$CODE_SERVER}-linux-x86_64.tar.gz | tar zxvf - --strip-components=1
