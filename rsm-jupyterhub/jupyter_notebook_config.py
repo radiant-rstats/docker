@@ -127,6 +127,7 @@ def _codeserver_command(port):
         "--port=" + str(port),
         "--auth",
         "none",
+        "--disable-updates",
         data_dir,
         extensions_dir,
         builtin_extensions_dir,
