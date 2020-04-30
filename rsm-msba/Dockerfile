@@ -13,7 +13,7 @@ RUN apt-get update \
   python3-virtualenv \
   libzmq3-dev \
   gpg-agent \
-  graphviz
+  graphviz 
 
 ## updating pip to latest
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
@@ -119,7 +119,7 @@ COPY spacevim/spacevim.sh /usr/local/bin/svim
 RUN chmod +x /usr/local/bin/svim
 
 # codeserver version
-ENV CODE_SERVER="3.1.0"
+ENV CODE_SERVER="3.2.0"
 
 RUN cd /opt \
   && mkdir /opt/code-server \

@@ -77,7 +77,6 @@ RUN apt-get install -y \
 RUN apt-get -y install --no-install-recommends\
     apt-transport-https \
     gdebi-core \
-    libapparmor1 \
     libcurl4-openssl-dev \
     libopenmpi-dev \
     libpq-dev \
