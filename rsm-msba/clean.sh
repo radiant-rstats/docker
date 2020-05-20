@@ -19,9 +19,9 @@ else
 
   if [ "${cleanup}" == "y" ]; then
     echo "Cleaning up Rstudio sessions and settings"
-    sudo rm -rf "${HOMEDIR}/.rstudio/sessions"
-    sudo rm -rf "${HOMEDIR}/.rstudio/projects"
-    sudo rm -rf "${HOMEDIR}/.rstudio/projects_settings"
+    rm -rf "${HOMEDIR}/.rstudio/sessions"
+    rm -rf "${HOMEDIR}/.rstudio/projects"
+    rm -rf "${HOMEDIR}/.rstudio/projects_settings"
 
     ## make sure abend is set correctly
     ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
