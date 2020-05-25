@@ -106,7 +106,7 @@ When writing and editing python code you will have access to "Intellisense" for 
 
 VS Code also gives you access to a debugger for your python code. For more information see the link below:
 
-- <a href="https://code.visualstudio.com/docs/python/debugging" target="_blank">Editing Python in VS Code Python</a>
+- <a href="https://code.visualstudio.com/docs/python/debugging" target="_blank">Debugging Python in VS Code Python</a>
 
 - To convert a python code file to a Jupyter Notebook, use the code below from a terminal. You can open a terminal in VS Code by typing CTRL+`
 
