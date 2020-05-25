@@ -11,11 +11,11 @@
 
 <!-- markdownlint-disable MD033 MD034 -->
 
-## Installing the RSM-MSBA computing environment on Linux (Ubuntu 18.04)
+## Installing the RSM-MSBA computing environment on Linux (Ubuntu 20.04)
 
 Please follow the instructions below to install the rsm-msba-spark computing environment. It has R, Rstudio, Python, Jupyter Lab, and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
-**Step 1**: Install docker on Ubuntu 18.04
+**Step 1**: Install docker on Ubuntu 20.04
 
 Run the following code in a terminal and provide your (sudo) password when requested:
 
@@ -111,7 +111,7 @@ When writing and editing python code you will have access to "Intellisense" for 
 
 VS Code also gives you access to a debugger for your python code. For more information see the link below:
 
-- <a href="https://code.visualstudio.com/docs/python/debugging" target="_blank">Editing Python in VS Code Python</a>
+- <a href="https://code.visualstudio.com/docs/python/debugging" target="_blank">Debugging Python in VS Code Python</a>
 
 - To convert a python code file to a Jupyter Notebook, use the code below from a terminal. You can open a terminal in VS Code by typing CTRL+`
 
