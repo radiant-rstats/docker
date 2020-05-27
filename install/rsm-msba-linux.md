@@ -26,7 +26,7 @@ source <(curl -s https://raw.githubusercontent.com/radiant-rstats/docker/master/
 
 Detailed discussion of the steps involved is available at the link below:
 
-https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
 
 Once docker is installed, make sure it is running. You can can check this by using the following command. If this produces some output and no errors you are set to continue with the next steps.
 
