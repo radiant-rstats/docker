@@ -19,6 +19,7 @@ function launch_usage() {
   echo "Usage: $0 [-t tag (version)] [-d directory]"
   echo "  -t, --tag         Docker image tag (version) to use"
   echo "  -d, --directory   Base directory to use"
+  echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
   echo "Example: $0 --tag 1.5.4 --directory ~/project_1"
@@ -30,6 +31,7 @@ function launch_usage() {
 while [[ "$#" > 0 ]]; do case $1 in
   -t|--tag) ARG_TAG="$2"; shift;shift;;
   -d|--directory) ARG_DIR="$2";shift;shift;;
+  -s|--show) ARG_SHOW="show";shift;shift;;
   -h|--help) launch_usage;shift; shift;;
   *) echo "Unknown parameter passed: $1"; echo ""; launch_usage; shift; shift;;
 esac; done
@@ -77,13 +79,15 @@ if [ "$CPORT" != "" ]; then
 fi
 
 ## script to start shiny-apps, Rstudio, and JupyterLab
-clear
+if [ "$ARG_SHOW" != "show" ]; then
+  clear
+fi
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then
   echo "-----------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
   if [[ "$ostype" == "Linux" ]]; then
-    echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04"
+    echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
   elif [[ "$ostype" == "Darwin" ]]; then
     echo "https://download.docker.com/mac/stable/Docker.dmg"
   else
@@ -386,7 +390,9 @@ else
     elif [ ${menu_exec} == 3 ]; then
         running=$(docker ps -q | awk '{print $1}')
         if [ "${running}" != "" ]; then
-          clear
+          if [ "$ARG_SHOW" != "show" ]; then
+            clear
+          fi
           echo "------------------------------------------------------------------------------"
           echo "Bash terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
           echo "Type 'exit' to return to the launch menu"
@@ -603,7 +609,9 @@ else
   ## keep asking until quit
   while [ $ret -ne 2 ]; do
     sleep 2s
-    clear
+    if [ "$ARG_SHOW" != "show" ]; then
+      clear
+    fi
     show_service
     ret=$?
   done
