@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:focal
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 USER root
 
@@ -9,14 +9,18 @@ ARG DOCKERHUB_VERSION_UPDATE
 ARG RPASSWORD=${RPASSWORD:-rstudio}
 ARG PGPASSWORD=${PGPASSWORD:-postgres}
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
+# ARG SPARK_VERSION=2.3.2
+ARG SPARK_VERSION=2.4.5
+# ARG HADOOP_VERSION=2.7
+ARG HADOOP_VERSION=3.1.1
 # don't upgrade to 2.4.0 yet as it requires mesos and there is no repo for ubuntu 18.04 yet
 ENV NB_USER=${NB_USER} \
     DEBIAN_FRONTEND=noninteractive \
     DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE} \
     POSTGRES_VERSION=10 \
     PGPASSWORD=${PGPASSWORD} \
-    SPARK_VERSION=2.3.2 \
-    HADOOP_VERSION=2.7 \ 
+    SPARK_VERSION=${SPARK_VERSION} \
+    HADOOP_VERSION=${HADOOP_VERSION} \ 
     PYSPARK_PYTHON=/usr/bin/python3 \
     PYSPARK_DRIVER_PYTHON=jupyter \
     PYSPARK_DRIVER_PYTHON_OPTS=lab \
@@ -197,8 +201,8 @@ RUN mkdir -p /var/log/supervisor \
 # as suggested here: https://stackoverflow.com/a/53168206/1974918
 # newer pip needed to install tensorflow 2.0.0
 # installing the radian terminal application
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-    && python3 get-pip.py 
+# RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+#     && python3 get-pip.py 
 
 # install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
