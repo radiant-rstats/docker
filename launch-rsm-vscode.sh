@@ -55,7 +55,7 @@ else
   DOCKERHUB_VERSION=$(docker inspect -f '{{range $index, $value := .Config.Env}}{{println $value}} {{end}}' ${IMAGE}:${IMAGE_VERSION} | grep DOCKERHUB_VERSION)
   DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
 fi
-POSTGRES_VERSION=10
+POSTGRES_VERSION=12
 
 ## what os is being used
 ostype=`uname`
