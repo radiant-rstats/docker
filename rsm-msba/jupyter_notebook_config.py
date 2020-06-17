@@ -121,7 +121,6 @@ def _codeserver_command(port):
         "--bind-addr=0.0.0.0:" + str(port),
         "--auth",
         "none",
-        "--disable-updates",
         data_dir,
         extensions_dir,
         builtin_extensions_dir,
