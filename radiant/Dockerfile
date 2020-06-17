@@ -1,4 +1,4 @@
-FROM vnijs/r-bionic:latest
+FROM vnijs/r-focal:latest
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 USER root
 
@@ -11,13 +11,6 @@ RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/ra
   && R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
   -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
   -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
-
-# install lightGBM
-RUN git clone --recursive https://github.com/Microsoft/LightGBM \
-  && cd LightGBM \
-  && Rscript build_r.R \
-  && cd .. \
-  && rm -rf LightGBM
 
 # path for local install of python packages from Rstudio or Jupyter Lab
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
