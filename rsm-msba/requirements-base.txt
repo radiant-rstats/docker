@@ -50,5 +50,3 @@ tweepy
 vincent
 xgboost
 xlrd
-radian
-pyrsm

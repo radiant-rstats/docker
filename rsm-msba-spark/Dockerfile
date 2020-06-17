@@ -13,7 +13,7 @@ RUN apt-get -y update \
   && rm -rf /var/lib/apt/lists/* \
   && R CMD javareconf
 
-ENV SPARK_VERSION=2.4.3 \
+ENV SPARK_VERSION=2.4 \
   BUILT_FOR_HADOOP_VERSION=2.7 \
   HADOOP_VERSION=2.7.7 \ 
   JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 

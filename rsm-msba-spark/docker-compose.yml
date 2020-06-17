@@ -20,7 +20,7 @@ services:
       - 127.0.0.1:8765:8765
     volumes:
       - ~:/home/jovyan
-      - pg_data:/var/lib/postgresql/10/main
+      - pg_data:/var/lib/postgresql/12/main
   selenium_0:
     image: 
       selenium/standalone-firefox

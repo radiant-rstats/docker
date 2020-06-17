@@ -1,6 +1,6 @@
 git pull
 docker login
-DOCKERHUB_VERSION=1.7.2
+DOCKERHUB_VERSION=1.8.0
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -45,7 +45,13 @@ launcher () {
   fi
 }
 
-LABEL=r-bionic
+LABEL=rsm-msba
+build
+
+exit
+
+# LABEL=r-bionic
+LABEL=r-focal
 build
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
@@ -64,6 +70,8 @@ done
 LABEL=rsm-msba
 build
 
+exit
+
 LABEL=rsm-msba-spark
 build
 launcher "rsm-msba"
@@ -76,21 +84,34 @@ sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-spark-chrome
 LABEL=rsm-jupyterhub
 build
 
+exit
+
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 
-exit
+## new containers should be launched using the newest version of the container
+# docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
 
-cp r-bionic/userconf.sh rsm-vscode/userconf.sh
-cp r-bionic/launch.sh rsm-vscode/launch.sh
+# testing for Rstudio Preview
+# docker tag jupyterhub-test-user vnijs/jupyterhub-test-user
+# docker push vnijs/jupyterhub-test-user:latest
+
+cp r-focal/userconf.sh rsm-vscode/userconf.sh
+cp r-focal/launch.sh rsm-vscode/launch.sh
 cp rsm-msba/requirements.txt rsm-vscode/requirements.txt
+# cp rsm-msba/requirements-base.txt rsm-vscode/requirements.txt
 cp rsm-msba/clean.sh rsm-vscode/clean.sh
 cp rsm-msba/pg_hba.conf rsm-vscode/pg_hba.conf
 cp rsm-msba/postgresql.conf rsm-vscode/postgresql.conf
 cp rsm-msba-spark/requirements.txt rsm-vscode/requirements_spark.txt
+cp rsm-msba-spark/hadoop-config/core-site.xml rsm-vscode/hadoop-config/core-site.xml 
+cp rsm-msba-spark/hadoop-config/hdfs-site.xml rsm-vscode/hadoop-config/hdfs-site.xml 
 
 LABEL=rsm-vscode
 build
+
+## to connec on a server use
+# ssh -t vnijs@rsm-compute-01.ucsd.edu docker run -it -v ~:/home/jovyan vnijs/rsm-vscode /bin/bash;
 
 # git add .
 # git commit -m "Update to image version ${DOCKERHUB_VERSION}"

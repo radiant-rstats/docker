@@ -1,4 +1,5 @@
-FROM ubuntu:focal
+# FROM ubuntu:focal
+FROM rocker/r-ver
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 USER root
 
@@ -9,23 +10,28 @@ ARG DOCKERHUB_VERSION_UPDATE
 ARG RPASSWORD=${RPASSWORD:-rstudio}
 ARG PGPASSWORD=${PGPASSWORD:-postgres}
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
-# ARG SPARK_VERSION=2.3.2
-ARG SPARK_VERSION=2.4.5
-# ARG HADOOP_VERSION=2.7
-ARG HADOOP_VERSION=3.1.1
-# don't upgrade to 2.4.0 yet as it requires mesos and there is no repo for ubuntu 18.04 yet
+ENV SPARK_VERSION=2.4 \
+  BUILT_FOR_HADOOP_VERSION=2.7 \
+  HADOOP_VERSION=2.7.7 \ 
+  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 
 ENV NB_USER=${NB_USER} \
     DEBIAN_FRONTEND=noninteractive \
     DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE} \
-    POSTGRES_VERSION=10 \
+    POSTGRES_VERSION=12 \
     PGPASSWORD=${PGPASSWORD} \
-    SPARK_VERSION=${SPARK_VERSION} \
-    HADOOP_VERSION=${HADOOP_VERSION} \ 
-    PYSPARK_PYTHON=/usr/bin/python3 \
-    PYSPARK_DRIVER_PYTHON=jupyter \
-    PYSPARK_DRIVER_PYTHON_OPTS=lab \
-    SPARK_HOME=/opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} \
     SHELL=/bin/bash 
+
+ENV HADOOP_HOME="/opt/hadoop-${HADOOP_VERSION}"
+ENV HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop" \
+  PATH=$PATH:"$HADOOP_HOME/bin" \
+  SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}" \
+  SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*" 
+ENV SPARK_HOME="/opt/spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}" \
+  PYSPARK_PYTHON=/usr/bin/python3 \
+  PYSPARK_DRIVER_PYTHON=jupyter \
+  PYSPARK_DRIVER_PYTHON_OPTS=lab
+ENV PATH=$PATH:${SPARK_HOME}/bin \
+  PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/build:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH"
 
 RUN apt-get update \
     && apt-get -y upgrade \
@@ -39,12 +45,12 @@ RUN apt-get update \
     gsfonts \
     libblas-dev \
     libbz2-1.0 \
-    libcurl3 \
+    libcurl4 \
     libopenblas-dev \
     libpangocairo-1.0-0 \
     libpcre3 \
     libpng16-16 \
-    libreadline7 \
+    libreadline8 \
     libtiff5 \
     liblzma5 \
     locales \
@@ -54,8 +60,6 @@ RUN apt-get update \
     zlib1g \
     wget \
     software-properties-common \
-    && add-apt-repository --enable-source --yes "ppa:marutter/rrutter3.5" \
-    && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
     && add-apt-repository --yes "ppa:jonathonf/vim" \
     && apt-get update
 
@@ -149,6 +153,13 @@ RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
     && addgroup ${NB_USER} staff \
     && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+RUN mkdir $HADOOP_HOME \
+  && cd $HADOOP_HOME \
+  && wget -qO- "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" | tar zxvf - --strip-components=1 \
+  && rm -rf $HADOOP_HOME/share/doc \
+  && chown -R root:root $HADOOP_HOME  \
+  && rm -rf *.tar.gz
+
 # Run the rest of the commands as the postgres user
 USER postgres
 
@@ -178,16 +189,18 @@ RUN R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
     -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
     -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")' \
     -e 'remotes::install_github("rstudio/renv")' \
+    -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 
+    -e 'remotes::install_github("bmschmidt/wordVectors", upgrade = "never")' \
     -e 'source("https://install-github.me/REditorSupport/languageserver")' \ 
     -e 'options(spark.install.dir = "/opt")' \
-    -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("HADOOP_VERSION"))'
+    -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("BUILT_FOR_HADOOP_VERSION"))'
 
 # install lightGBM
-RUN git clone --recursive https://github.com/Microsoft/LightGBM \
-    && cd LightGBM \
-    && Rscript build_r.R \
-    && cd .. \
-    && rm -rf LightGBM
+# RUN git clone --recursive https://github.com/Microsoft/LightGBM \
+#     && cd LightGBM \
+#     && Rscript build_r.R \
+#     && cd .. \
+#     && rm -rf LightGBM
 
 COPY clean.sh /usr/local/bin/clean
 COPY userconf.sh /usr/local/bin/userconf.sh
@@ -197,12 +210,6 @@ RUN mkdir -p /var/log/supervisor \
     && chmod +x /usr/local/bin/clean \
     && chmod +x /usr/local/bin/launch \ 
     && chmod +x /usr/local/bin/userconf.sh
-
-# as suggested here: https://stackoverflow.com/a/53168206/1974918
-# newer pip needed to install tensorflow 2.0.0
-# installing the radian terminal application
-# RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-#     && python3 get-pip.py 
 
 # install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
@@ -227,8 +234,17 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
 EXPOSE 8765
 
 # required in rsm-vscode image
-# RUN chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
-#     && chmod -R 0700 /var/lib/postgresql/${POSTGRES_VERSION}/
+RUN chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
+    && chmod -R 0700 /var/lib/postgresql/${POSTGRES_VERSION}/
+
+# Configure Hadoop 
+COPY ./hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
+COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+RUN chmod 777 -R $HADOOP_HOME
+RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site
+
+# requires seperate install for some reason
+RUN pip3 install 'pyrsm>=0.2.8'
 
 RUN addgroup ${NB_USER} postgres
 
