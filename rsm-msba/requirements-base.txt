@@ -16,7 +16,7 @@ jupyter
 jupyterlab
 jupyterlab_code_formatter
 jupyterlab-git
-jupyterlab_sql
+# jupyterlab_sql
 jupytext
 keras
 lightgbm

@@ -70,10 +70,6 @@ RUN apt-get -y install --no-install-recommends \
   r-base \
   r-base-dev=4.0.0* 
 
-  # r-cran-pbdzmq \
-  # r-cran-catools \
-  # r-cran-bitops
-
 # setting up odbc for connections
 RUN apt-get -y install \
   unixodbc \

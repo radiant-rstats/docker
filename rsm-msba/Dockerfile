@@ -30,8 +30,10 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm
 
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager \
-  && jupyter serverextension enable jupyterlab_sql --py --sys-prefix --system
+# RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager \
+#   && jupyter serverextension enable jupyterlab_sql --py --sys-prefix --system
+
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager 
 
 RUN jupyter labextension install @jupyterlab/git jupyterlab-jupytext \
   && jupyter serverextension enable --py jupyterlab_git --system
@@ -56,16 +58,25 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # copy logo for use with jupyterlab
 COPY images/logo200.svg /opt/radiant/logo.svg
 
-RUN pip3 install jupyter-server-proxy==1.5.0 \ 
-  && jupyter serverextension enable --py --sys-prefix jupyter_server_proxy
+# RUN pip3 install jupyter-server-proxy==1.5.0 \ 
+#   && jupyter serverextension enable --py --sys-prefix jupyter_server_proxy
 
 # RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
-  # && chown ${NB_USER}:shiny -R /var/lib/shiny-server 
+#   && chown ${NB_USER}:shiny -R /var/lib/shiny-server 
 
-RUN pip3 install jupyter-rsession-proxy==1.2 
+# RUN pip3 install jupyter-rsession-proxy jupyter-shiny-proxy
 
 # RUN pip3 install -vvv git+git://github.com/jupyterhub/jupyter-server-proxy@master && \
 #   jupyter serverextension enable --py --sys-prefix jupyter_server_proxy
+
+# RUN pip3 install -vvv git+git://github.com/jupyterhub/jupyter-server-proxy@master \
+# RUN pip3 install jupyter-server-proxy==1.5.0 jupyter-rsession-proxy \
+
+# RUN pip3 install jupyter-server-proxy==1.5.0 \
+#   && jupyter labextension install @jupyterlab/server-proxy
+
+# RUN pip3 install jupyter-rsession-proxy \
+#   && jupyter labextension install @jupyterlab/server-proxy
 
 # RUN (cd /tmp && \
 #   git clone https://github.com/jupyterhub/jupyter-server-proxy && \
@@ -103,29 +114,17 @@ COPY pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
 USER root
 
-# settings for local install of python packages 
-ENV PYTHONUSERBASE=${PYBASE} \
-  JUPYTER_PATH=${PYBASE}/share/jupyter \
-  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime \
-  JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
-  SHELL=/bin/bash
-
 # Adding a "clean up" script
 COPY clean.sh /usr/local/bin/clean
 RUN chmod +x /usr/local/bin/clean
 
-# install script for spacevim
-COPY spacevim/spacevim.sh /usr/local/bin/svim
-RUN chmod +x /usr/local/bin/svim
-
 # codeserver version
-ENV CODE_SERVERV="v3.4.1"
 ENV CODE_SERVER="3.4.1"
 
 RUN cd /opt \
   && mkdir /opt/code-server \
   && cd /opt/code-server \
-  && wget -qO- https://github.com/cdr/code-server/releases/download/${CODE_SERVERV}/code-server-${CODE_SERVER}-linux-amd64.tar.gz | tar zxvf - --strip-components=1
+  && wget -qO- https://github.com/cdr/code-server/releases/download/v${CODE_SERVERV}/code-server-${CODE_SERVER}-linux-amd64.tar.gz | tar zxvf - --strip-components=1
 
 # locations to store vscode / code-server settings
 ARG CODE_WORKINGDIR="/home/$NB_USER/git" 
@@ -141,32 +140,9 @@ RUN echo "CODE_EXTENSIONS_DIR=${CODE_EXTENSIONS_DIR}" >> /etc/R/Renviron.site
 # setup for code-server (aka vscode)
 COPY images/vscode.svg /opt/code-server/vscode.svg
 COPY settings.json /opt/code-server/settings.json
-# COPY vsix/*.vsix /opt/code-server/extensions/
 COPY setup.sh /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
-
-
-## testing
-
-RUN pip3 install jupyter-rsession-proxy==1.2 
-
-RUN pip3 install jupyter-server-proxy==1.5.0 \ 
-  && jupyter serverextension enable --py --sys-prefix jupyter_server_proxy
-
-
-
-
-# RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
-  # && chown ${NB_USER}:shiny -R /var/lib/shiny-server 
-
-
-
-
-
-
-
-
 
 # update R-packages
 # RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 
@@ -175,6 +151,18 @@ RUN pip3 install jupyter-server-proxy==1.5.0 \
 
 # RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
 #   -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/bionic/latest")'
+
+# RUN pip3 install git+https://github.com/vnijs/jupyter-rsession-proxy \
+RUN pip3 install jupyter-server-proxy==1.5.0 jupyter-shiny-proxy==1.1 \
+  && chown ${NB_USER}:shiny -R /var/lib/shiny-server \
+  && jupyter labextension install @jupyterlab/server-proxy
+
+# settings for local install of python packages 
+ENV PYTHONUSERBASE=${PYBASE} \
+  JUPYTER_PATH=${PYBASE}/share/jupyter \
+  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime \
+  JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
+  SHELL=/bin/bash
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

@@ -46,10 +46,6 @@ def _radiant_command(port):
         port=str(port),
         site_dir="/srv/shiny-server/radiant/inst/app",  # or your path
     )
-    # setting launch dir option to current working directory
-    # fs = open("/etc/R/Renviron.site", "a")
-    # fs.write(f"RADIANT_LAUNCH_DIR='{os.path.realpath('.')}'\n")
-    # fs.close()
 
     # shiny-server configuration
     f = tempfile.NamedTemporaryFile(mode="w", delete=False)
