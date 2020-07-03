@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+.ipynb_checkpoints
+.mypy_cache
+.vscode
+rsm-vscode/*.sh
+rsm-vscode/p*.conf
+rsm-vscode/*.txt
