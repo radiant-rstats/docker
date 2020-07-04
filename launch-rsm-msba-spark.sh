@@ -22,7 +22,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 1.5.4 --directory ~/project_1"
+  echo "Example: $0 --tag 1.8.0 --directory ~/project_1"
   echo ""
   exit 1
 }
@@ -43,8 +43,6 @@ ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
 CODE_WORKINGDIR="/home/${NB_USER}/git"
-RPASSWORD="rstudio"
-# JPASSWORD="jupyter"
 JPASSWORD=""
 ID="vnijs"
 LABEL="rsm-msba-spark"
@@ -58,7 +56,7 @@ else
   DOCKERHUB_VERSION=$(docker inspect -f '{{range $index, $value := .Config.Env}}{{println $value}} {{end}}' ${IMAGE}:${IMAGE_VERSION} | grep DOCKERHUB_VERSION)
   DOCKERHUB_VERSION="${DOCKERHUB_VERSION#*=}"
 fi
-POSTGRES_VERSION=10
+POSTGRES_VERSION=12
 
 ## what os is being used
 ostype=`uname`
@@ -372,6 +370,7 @@ else
     echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
     echo "Press (9) to clear Python packages, followed by [ENTER]:"
     echo "Press (10) to start a Selenium container, followed by [ENTER]:"
+    echo "Press (h) to show help in the terminal and browser, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "-----------------------------------------------------------------------"
@@ -459,7 +458,7 @@ else
         echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
         docker run --net ${NETWORK} -d \
           -p 127.0.0.1:${menu_arg}:8989 \
-          -e JPASSWORD=${JPASSWORD} -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
+          -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
           -v ${HOMEDIR}:/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
@@ -618,6 +617,24 @@ else
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
       echo "${LABEL} container and ip: 127.0.0.1, port: ${selenium_port} from the host OS"
+      echo "Press any key to continue"
+      echo "-----------------------------------------------------------------------"
+      read continue
+    elif [ "${menu_exec}" == "h" ]; then
+      echo "-----------------------------------------------------------------------"
+      echo "Showing help for your OS in the default browser"
+      echo "Showing help to start the docker container from the command line"
+      echo ""
+      if [[ "$ostype" == "macOS" ]]; then
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
+      elif [[ "$ostype" == "Windows" ]]; then
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
+      elif [[ "$ostype" == "ChromeOS" ]]; then
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-chromeos.md
+      else
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-linux.md
+      fi
+      $0 --help
       echo "Press any key to continue"
       echo "-----------------------------------------------------------------------"
       read continue

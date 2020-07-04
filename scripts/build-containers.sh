@@ -2,7 +2,7 @@
 docker login
 DOCKERHUB_VERSION=1.8.0
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
 
 build () {
   {
@@ -44,13 +44,6 @@ launcher () {
     sed_fun "s/$2/$3/" ./launch-${LABEL}.sh
   fi
 }
-
-LABEL=rsm-jupyterhub
-build
-
-exit
-
-
 
 # LABEL=r-bionic
 LABEL=r-focal

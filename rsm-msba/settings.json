@@ -1,7 +1,8 @@
 {
-  "python.pythonPath": "/usr/bin/python3",
   // "python.dataScience.jupyterServerURI": "http://localhost:8989/?token=jupyter",
   // "python.dataScience.jupyterServerURI": "https://rsm-compute-01.ucsd.edu/user/vnijs/?token=INSERT TOKEN FROM https://server-url/hub/token
+  // "remote.SSH.configFile": "~/.vscode/setting.json",
+  "python.pythonPath": "/usr/bin/python3",
   "python.dataScience.sendSelectionToInteractiveWindow": true,
   "python.dataScience.searchForJupyter": false,
   "python.dataScience.useDefaultConfigForJupyter": true,
@@ -14,15 +15,26 @@
   "python.formatting.blackArgs": [
     "--line-length=88"
   ],
-  // "python.jediEnabled": false,
   "git.rebaseWhenSync": false,
   "git.autofetch": true,
   "editor.renderWhitespace": "all",
   "editor.formatOnSave": true,
   "editor.suggestSelection": "first",
-  // "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "editor.fontFamily": "JetBrainsMono-Regular",
+  "editor.fontLigatures": true,
   "window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
   "r.sessionWatcher": true,
   "r.alwaysUseActiveTerminal": true,
-  "r.bracketedPaste": true
+  "r.bracketedPaste": true,
+  "python.languageServer": "Microsoft",
+  "extensions.autoCheckUpdates": false,
+  "extensions.autoUpdate": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "workbench.panel.defaultLocation": "right",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "remote.extensionKind": {
+    "alefragnani.project-manager": [
+      "workspace"
+    ]
+  }
 }
