@@ -27,7 +27,7 @@ Run the following code in a terminal and provide your (sudo) password when reque
 
 ```bash
 sudo apt install curl;
-source <(curl -s https://raw.githubusercontent.com/radiant-rstats/docker/master/install/install-docker-chromebook.sh);
+source <(curl -s https://raw.githubusercontent.com/radiant-rstats/docker/master/install/install-docker-chromeos.sh);
 ```
 
 Once docker is installed, make sure it is running. You can can check this by using the following command. If this produces some output and no errors you are set to continue with the next steps.
@@ -231,6 +231,7 @@ You should always stop the `rsm-msba-spark` docker container using `q` (and Ente
 ```bash
 rm -rf ~/.rstudio;
 rm -rf ~/.rsm-msba;
+rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-msba-spark;
 ```
