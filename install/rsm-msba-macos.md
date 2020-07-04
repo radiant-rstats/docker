@@ -233,6 +233,7 @@ You should always stop the `rsm-msba-spark` docker container using `q` (and Ente
 ```bash
 rm -rf ~/.rstudio;
 rm -rf ~/.rsm-msba;
+rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-msba-spark;
 ```
