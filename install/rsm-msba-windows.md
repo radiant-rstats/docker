@@ -66,7 +66,7 @@ Open the Windows Terminal and click on the down-caret to open a bash shell into 
 
 <img src="figures/windows-terminal.png" width="500px">
 
-Next, copy-and-paste the code below to add `ssh` and `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+Next, copy-and-paste the code below to add `ssh` and `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal and will need to provide your system password to install the listed tools
 
 ```bash
 sudo apt install git rsync openssh-client
