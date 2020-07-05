@@ -22,7 +22,7 @@ Windows users **must** use Microsoft Windows 10 Professional, Education, or Ente
 
 > Note: After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, continue with step **#2**. Else, use the install instructions in the document linked below:
 
-<https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md>
+<https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md>
 
 <img src="figures/windows-version.png" width="300px">
 
