@@ -20,19 +20,11 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 
 Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students will likely be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="blank">https://youtu.be/p0gcRbatO0w</a>.
 
-**Step 2**: Install Windows Subsystem for Linux (WSL2)
+**Step 2**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down docker hasn't finished starting up yet.
 
-Although not strictly required, installing WSL2 is **highly** recommended and can have a big impact of performance. Follow the instructions on the Microsoft webpage linked below step-by-step to install WSL2 and Ubuntu 20.04.
-
-<a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10" target="_blank">https://docs.microsoft.com/en-us/windows/wsl/install-win10</a>
-
-**Step 3**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down docker hasn't finished starting up yet.
-
-During the install process use *only* the default settings. If prompted, make sure to choose "Linux containers" and *not* "Windows containers". You may also be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer should restart. Finally, you should be prompted to "Enable WSL 2 Windows Features". If so, make sure the appropriate box is checked.
+During the install process use *only* the default settings. If prompted, make sure to choose "Linux containers" and *not* "Windows containers". You may also be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer should restart.
 
 ![docker](figures/docker-icon.png)
-
-<img src="figures/wsl2-windows-docker-install.png" width="400px">
 
 <https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe>
 
@@ -50,24 +42,43 @@ Next click on _Resources > FILE SHARING_ and then click on the + sign to share t
 
 Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
-**Step 4**: Install the Windows Terminal
+**Steps 3-4 using the Rady installer**: Download and run the installer linked below to complete steps 3 and 4 of the install process on Windows
 
-Visit the Windows Store to install <a href="https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701" target="_blank">Windows Terminal</a>
+https://rady.ucsd.edu/faculty/directory/vnijs/RSM-MSBA-Computing-Environment-Latest.exe
 
-**Step 5**: Install linux tools
+If you see a warning message like the image shown below when you run the installer click on "More info" and then on "Run anyway".
 
-Open a bash terminal **as administrator** and copy-and-paste the code below to add `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+<img src="figures/win-protected.png" width="300px">
+
+<details>
+<summary>Complete steps 3 and 4 manually</summary>
+
+**Step 3**: Install git bash from the link below
+
+<a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a>
+
+Keep the default settings until you are asked about "Configuring extra options". Set the options as shown in the screen shot below.
+
+<img src="figures/symlinks.png" width="500px">
+
+There is no need to "View Release Notes" on the last screen or "Launch Git Bash" just yet.
+
+**Step4**: Open a bash terminal **as administrator** and copy-and-paste the code below to add `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+
+> Note: To open git bash as administrator, find the app in the Start Menu and select 'Run as administrator'.
 
 ```bash
-sudo apt install git rsync openssh-client
+curl http://www2.futureware.at/~nickoe/msys2-mirror/msys/x86_64/rsync-3.1.2-2-x86_64.pkg.tar.xz -o rsync.pkg.tar.xz;
+tar xvJf rsync.pkg.tar.xz -C /c/Program\ Files/Git/;
+rm -rf rsync.pkg.tar.xz;
 ```
 
 Next, copy-and-paste the code below to clone the launch scripts needed to start the docker container.
 
 ```bash
-git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-msba-spark.sh /mnt/c/Users/$USER/Desktop;
-/mnt/c/Users/$USER/launch-rsm-msba-spark.sh;
+git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker;
+cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh C:/Users/$USERNAME/Desktop;
+C:/Users/$USERNAME/Desktop/launch-rsm-msba-spark.sh;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
@@ -262,7 +273,6 @@ You should always stop the `rsm-msba-spark` docker container using `q` (and Ente
 ```bash
 rm -rf C:/Users/$USERNAME/.rstudio;
 rm -rf C:/Users/$USERNAME/.rsm-msba;
-rm -rf C:/Users/$USERNAME/.local/share/jupyter;
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-msba-spark;
 ```
@@ -280,6 +290,7 @@ Note that the launch script can also be started from the command line (i.e., a b
 
 <img src="figures/docker-help.png" width="500px"
 
+> Note: If you do not see the option to show help, please upgrade the launch script using 
 
 ## Trouble shooting
 
