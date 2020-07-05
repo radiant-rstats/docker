@@ -11,14 +11,9 @@ services:
       JUPYTER_RUNTIME_DIR: /tmp/jupyter/runtime
       JUPYTER_CONFIG_DIR: /home/jovyan/.rsm-msba/jupyter
       CODE_WORKINGDIR: /home/jovyan/git
-      # RPASSWORD: rstudio ## compose does not support arguments
-      # JPASSWORD: jupyter
       # PGPASSWORD: postgres
     ports:
-      - 127.0.0.1:8181:8181
-      - 127.0.0.1:8787:8787
       - 127.0.0.1:8989:8989
-      - 127.0.0.1:9898:9898
       - 127.0.0.1:8765:8765
     volumes:
       - ~:/home/jovyan

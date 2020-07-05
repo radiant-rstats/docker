@@ -55,7 +55,7 @@ This step will clone and start up a script that will finalize the installation o
 
 **Step 3**: Check that you can launch Rstudio and Jupyter
 
-You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. For Rstudio the username is "jovyan" and the password is "rstudio". For Jupyter the password is "jupyter".
+You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. If you are asked for a password the username is "jovyan" and the password is "jupyter"
 
 > Important: Always use q (and Enter) to shutdown the computing environment
 

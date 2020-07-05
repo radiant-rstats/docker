@@ -7,13 +7,13 @@ ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 ARG DOCKERHUB_VERSION_UPDATE
-ARG RPASSWORD=${RPASSWORD:-rstudio}
+ARG PASSWORD=${PASSWORD:-rstudio}
 ARG PGPASSWORD=${PGPASSWORD:-postgres}
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV SPARK_VERSION=2.4 \
-  BUILT_FOR_HADOOP_VERSION=2.7 \
-  HADOOP_VERSION=2.7.7 \ 
-  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 
+    BUILT_FOR_HADOOP_VERSION=2.7 \
+    HADOOP_VERSION=2.7.7 \ 
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 
 ENV NB_USER=${NB_USER} \
     DEBIAN_FRONTEND=noninteractive \
     DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE} \
@@ -23,15 +23,15 @@ ENV NB_USER=${NB_USER} \
 
 ENV HADOOP_HOME="/opt/hadoop-${HADOOP_VERSION}"
 ENV HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop" \
-  PATH=$PATH:"$HADOOP_HOME/bin" \
-  SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}" \
-  SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*" 
+    PATH=$PATH:"$HADOOP_HOME/bin" \
+    SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}" \
+    SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*" 
 ENV SPARK_HOME="/opt/spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION}" \
-  PYSPARK_PYTHON=/usr/bin/python3 \
-  PYSPARK_DRIVER_PYTHON=jupyter \
-  PYSPARK_DRIVER_PYTHON_OPTS=lab
+    PYSPARK_PYTHON=/usr/bin/python3 \
+    PYSPARK_DRIVER_PYTHON=jupyter \
+    PYSPARK_DRIVER_PYTHON_OPTS=lab
 ENV PATH=$PATH:${SPARK_HOME}/bin \
-  PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/build:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH"
+    PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/build:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH"
 
 RUN apt-get update \
     && apt-get -y upgrade \
@@ -149,16 +149,16 @@ RUN apt-get -y install --no-install-recommends\
     && R CMD javareconf
 
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
-    && echo "${NB_USER}:${RPASSWORD}" | chpasswd \
+    && echo "${NB_USER}:${PASSWORD}" | chpasswd \
     && addgroup ${NB_USER} staff \
     && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 RUN mkdir $HADOOP_HOME \
-  && cd $HADOOP_HOME \
-  && wget -qO- "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" | tar zxvf - --strip-components=1 \
-  && rm -rf $HADOOP_HOME/share/doc \
-  && chown -R root:root $HADOOP_HOME  \
-  && rm -rf *.tar.gz
+    && cd $HADOOP_HOME \
+    && wget -qO- "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" | tar zxvf - --strip-components=1 \
+    && rm -rf $HADOOP_HOME/share/doc \
+    && chown -R root:root $HADOOP_HOME  \
+    && rm -rf *.tar.gz
 
 # Run the rest of the commands as the postgres user
 USER postgres

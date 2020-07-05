@@ -58,11 +58,6 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # copy logo for use with jupyterlab
 COPY images/logo200.svg /opt/radiant/logo.svg
 
-# set jupyterlab password based on docker run argument
-# ARG only leads to conflict with rstudio on alternate port
-ARG JPASSWORD=${JPASSWORD:-jupyter}
-ENV JPASSWORD=${JPASSWORD}
-
 # adding postgres
 # mostly from https://docs.docker.com/engine/examples/postgresql_service/
 ENV POSTGRES_VERSION=12
