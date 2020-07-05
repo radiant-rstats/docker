@@ -5,7 +5,6 @@ services:
     environment:
       SHELL: /bin/bash
       PYTHONUSERBASE: /home/jovyan/.rsm-msba
-      # RPASSWORD: rstudio ## compose does not support arguments
     ports:
       - 127.0.0.1:8181:8181
       - 127.0.0.1:8787:8787

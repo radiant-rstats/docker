@@ -7,7 +7,7 @@ ARG NB_USER="jovyan"
 ENV NB_USER=${NB_USER}
 ARG NB_UID="1000"
 ARG NB_GID="100"
-ARG RPASSWORD=${RPASSWORD:-"rstudio"}
+ARG PASSWORD=${PASSWORD:-"rstudio"}
 
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
@@ -133,7 +133,7 @@ RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-
 RUN ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin/pandoc
 
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
-  && echo "${NB_USER}:${RPASSWORD}" | chpasswd \
+  && echo "${NB_USER}:${PASSWORD}" | chpasswd \
   && addgroup ${NB_USER} staff \
   && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 

@@ -42,7 +42,7 @@ esac; done
 ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
-RPASSWORD="rstudio"
+PASSWORD="rstudio"
 ID="vnijs"
 LABEL="radiant"
 NETWORK="rsm-docker"
@@ -309,7 +309,7 @@ else
   {
     docker run --net ${NETWORK} -d \
       -p 127.0.0.1:8181:8181 -p 127.0.0.1:8787:8787 \
-      -e RPASSWORD=${RPASSWORD} \
+      -e PASSWORD=${PASSWORD} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       ${IMAGE}:${IMAGE_VERSION}
   } || {
@@ -416,7 +416,7 @@ else
         echo "Starting Rstudio in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
           -p 127.0.0.1:${menu_arg}:8787 \
-          -e RPASSWORD=${RPASSWORD} \
+          -e PASSWORD=${PASSWORD} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
