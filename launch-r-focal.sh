@@ -42,7 +42,7 @@ esac; done
 ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
-PASSWORD="rstudio"
+PASSWORD="jupyter"
 ID="vnijs"
 LABEL="r-focal"
 NETWORK="rsm-docker"

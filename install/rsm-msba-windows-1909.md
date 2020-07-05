@@ -97,7 +97,7 @@ ln -s C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh /usr/bin/launch;
 
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
-You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. For Rstudio, the username is "jovyan" and the password is "rstudio". For Jupyter the password is "jupyter"
+You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. If you are asked for a password the username is "jovyan" and the password is "jupyter"
 
 > Important: Always use q (and Enter) to shutdown the computing environment
 
@@ -117,7 +117,7 @@ setup
 
 ## Updating the RSM-MSBA computing environment on Windows
 
-To update the container use the launch script and press 4 (+ enter). To update the launch script itself, press 5 (+ enter).
+To update the container use the launch script and press 6 (+ enter). To update the launch script itself, press 7 (+ enter).
 
 <img src="figures/rsm-msba-menu-windows.png" width="500px">
 
@@ -273,24 +273,23 @@ You should always stop the `rsm-msba-spark` docker container using `q` (and Ente
 ```bash
 rm -rf C:/Users/$USERNAME/.rstudio;
 rm -rf C:/Users/$USERNAME/.rsm-msba;
+rm -rf C:/Users/$USERNAME/.local/share/jupyter;
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-msba-spark;
 ```
 
 ## Getting help
 
-Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (and Enter) in the launch menu. 
+Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (and Enter) in the launch menu. Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
 
-Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
-
-* `launch -t 1.7.2` would ensure a specific version of the docker container is used. Suppose you used version 1.7.2 for a project. Using `-t 1.7.2` will ensure your code still runs without modification years after you last touched it
+* `launch -t 1.7.2` ensures a specific version of the docker container is used. Suppose you used version 1.7.2 for a project. Running the launch script with `-t 1.7.2` from the command line will ensure your code still runs, without modification, years after you last touched it!
 * `launch -d C:/Users/$USERNAME/project_1` will treat the `project_1` directory on the host system (i.e., your macOS computer) as the home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
-* `launch -s` show additional output in the launch terminal that can be useful to debug any problems
-* `launch -h` print the help shown in the screenshot below
+* `launch -s` show additional output in the terminal that can be useful to debug any problems
+* `launch -h` prints the help shown in the screenshot below
 
 <img src="figures/docker-help.png" width="500px"
 
-> Note: If you do not see the option to show help, please upgrade the launch script using 
+> Note: If you do not see the option to show help, please upgrade the launch script by pressing 7 (and Enter)
 
 ## Trouble shooting
 

@@ -81,7 +81,7 @@ setup
 
 ## Updating the RSM-MSBA computing environment on Linux
 
-To update the container use the launch script and press 4 (+ enter). To update the launch script itself, press 5 (+ enter).
+To update the container use the launch script and press 6 (and Enter). To update the launch script itself, press 7 (and Enter).
 
 <img src="figures/rsm-msba-menu-linux.png" width="500px">
 
@@ -183,7 +183,7 @@ To install Python modules that will persist after restarting the docker containe
 
 After installing a module you will have to restart any running Python kernels to `import` the module in your code.
 
-To remove locally installed R packages press 7 (and Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 8 (and Enter) in the launch menu
+To remove locally installed R packages press 8 (and Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 9 (and Enter) in the launch menu
 
 ## Committing changes to the computing environment
 
@@ -228,7 +228,7 @@ For additional resources on developing docker images see the links below:
 
 ## Cleanup
 
-To remove any prior Rstudio sessions, and locally installed R-packages, press 7 (and Enter) in the launch menu. To remove locally installed Python modules press 8 (and Enter) in the launch menu.
+To remove any prior Rstudio sessions, and locally installed R-packages, press 8 (and Enter) in the launch menu. To remove locally installed Python modules press 9 (and Enter) in the launch menu.
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
@@ -244,16 +244,16 @@ docker pull vnijs/rsm-msba-spark;
 
 ## Getting help
 
-Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (and Enter) in the launch menu. 
+Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (and Enter) in the launch menu. Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
 
-Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
-
-* `launch -t 1.7.2` would ensure a specific version of the docker container is used. Suppose you used version 1.7.2 for a project. Using `-t 1.7.2` will ensure your code still runs without modification years after you last touched it
-* `launch -d ~/project_1` will treat the `project_1` directory on the host system (i.e., your macOS computer) as the home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
-* `launch -s` show additional output in the launch terminal that can be useful to debug any problems
-* `launch -h` print the help shown in the screenshot below
+* `launch -t 1.7.2` ensures a specific version of the docker container is used. Suppose you used version 1.7.2 for a project. Running the launch script with `-t 1.7.2` from the command line will ensure your code still runs, without modification, years after you last touched it!
+* `launch -d C:/Users/$USERNAME/project_1` will treat the `project_1` directory on the host system (i.e., your macOS computer) as the home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
+* `launch -s` show additional output in the terminal that can be useful to debug any problems
+* `launch -h` prints the help shown in the screenshot below
 
 <img src="figures/docker-help.png" width="500px"
+
+> Note: If you do not see the option to show help, please upgrade the launch script by pressing 7 (and Enter)
 
 ## Trouble shooting
 

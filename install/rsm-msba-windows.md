@@ -20,6 +20,12 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 
 Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students will likely be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="blank">https://youtu.be/p0gcRbatO0w</a>.
 
+> Note: After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, continue with step **#2**. Else, use the install instructions in the document linked below:
+
+<https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md>
+
+<img src="figures/windows-version.png" width="300px">
+
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
 Although not strictly required, installing WSL2 is **highly** recommended and can have a big impact of performance. Follow the instructions on the Microsoft webpage linked below step-by-step to install WSL2 and Ubuntu 20.04.
@@ -52,11 +58,15 @@ Optional: If you are interested, this linked video gives a brief intro to what D
 
 **Step 4**: Install the Windows Terminal
 
-Visit the Windows Store to install <a href="https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701" target="_blank">Windows Terminal</a>
+Visit the Windows Store to install the new <a href="https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701" target="_blank">Windows Terminal</a>
 
 **Step 5**: Install linux tools
 
-Open a bash terminal **as administrator** and copy-and-paste the code below to add `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+Open the Windows Terminal and click on the down-caret to open a bash shell into Ubuntu 20.04 as shown in the screenshot below.
+
+<img src="figures/windows-terminal.png" width="500px">
+
+Next, copy-and-paste the code below to add `ssh` and `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal
 
 ```bash
 sudo apt install git rsync openssh-client
@@ -79,7 +89,7 @@ The code above also creates a copy of the file `launch-rsm-msba-spark.sh` on you
 Copy-and-paste the command below to create a shortcut to the launch script to use from the command line.
 
 ```bash
-ln -s C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh /usr/bin/launch;
+ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/bin/launch;
 ```
 
 </details>
@@ -106,7 +116,7 @@ setup
 
 ## Updating the RSM-MSBA computing environment on Windows
 
-To update the container use the launch script and press 4 (+ enter). To update the launch script itself, press 5 (+ enter).
+To update the container use the launch script and press 6 (and Enter). To update the launch script itself, press 7 (and Enter).
 
 <img src="figures/rsm-msba-menu-windows.png" width="500px">
 
@@ -114,9 +124,9 @@ If for some reason you are having trouble updating either the container or the l
 
 ```bash
 docker pull vnijs/rsm-msba-spark;
-rm -rf C:/Users/$USERNAME/git/docker;
-git clone https://github.com/radiant-rstats/docker.git C:/Users/$USERNAME/git/docker;
-cp -p C:/Users/$USERNAME/git/docker/launch-rsm-msba-spark.sh C:/Users/$USERNAME/Desktop;
+rm -rf ~/git/docker;
+git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
+cp -p ~/git/docker/launch-rsm-msba-spark.sh /mnt/c/Users/$USER/Desktop;
 ```
 
 ## Using VS Code for Python
@@ -151,7 +161,7 @@ jupytext --to notebook your-python-script.py
 jupytext --to py your-python-script.ipynb
 ```
 
-<!-- ssh-copy-id -i C:/Users/$USERNAME/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
+<!-- ssh-copy-id -i ~/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
 
 ## Connecting to postgresql
 
@@ -208,7 +218,7 @@ To install Python modules that will persist after restarting the docker containe
 
 After installing a module you will have to restart any running Python kernels to `import` the module in your code.
 
-To remove locally installed R packages press 7 (and Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 8 (and Enter) in the launch menu
+To remove locally installed R packages press 8 (and Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 9 (and Enter) in the launch menu
 
 ## Committing changes to the computing environment
 
@@ -253,33 +263,32 @@ For additional resources on developing docker images see the links below:
 
 ## Cleanup
 
-To remove any prior Rstudio sessions, and locally installed R-packages, press 7 (and Enter) in the launch menu. To remove locally installed Python packages press 8 (and Enter) in the launch menu.
+To remove any prior Rstudio sessions, and locally installed R-packages, press 8 (and Enter) in the launch menu. To remove locally installed Python packages press 9 (and Enter) in the launch menu.
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
 You should always stop the `rsm-msba-spark` docker container using `q` (and Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python settings, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-spark):
 
 ```bash
-rm -rf C:/Users/$USERNAME/.rstudio;
-rm -rf C:/Users/$USERNAME/.rsm-msba;
-rm -rf C:/Users/$USERNAME/.local/share/jupyter;
+rm -rf ~/.rstudio;
+rm -rf ~/.rsm-msba;
+rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-msba-spark;
 ```
 
 ## Getting help
 
-Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (and Enter) in the launch menu. 
+Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (and Enter) in the launch menu. Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
 
-Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
-
-* `launch -t 1.7.2` would ensure a specific version of the docker container is used. Suppose you used version 1.7.2 for a project. Using `-t 1.7.2` will ensure your code still runs without modification years after you last touched it
-* `launch -d C:/Users/$USERNAME/project_1` will treat the `project_1` directory on the host system (i.e., your macOS computer) as the home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
-* `launch -s` show additional output in the launch terminal that can be useful to debug any problems
-* `launch -h` print the help shown in the screenshot below
+* `launch -t 1.7.2` ensures a specific version of the docker container is used. Suppose you used version 1.7.2 for a project. Running the launch script with `-t 1.7.2` from the command line will ensure your code still runs, without modification, years after you last touched it!
+* `launch -d ~/project_1` will treat the `project_1` directory on the host system (i.e., your macOS computer) as the home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
+* `launch -s` show additional output in the terminal that can be useful to debug any problems
+* `launch -h` prints the help shown in the screenshot below
 
 <img src="figures/docker-help.png" width="500px"
 
+> Note: If you do not see the option to show help, please upgrade the launch script by pressing 7 (and Enter)
 
 ## Trouble shooting
 
