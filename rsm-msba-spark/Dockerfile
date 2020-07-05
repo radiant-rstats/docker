@@ -60,7 +60,7 @@ COPY ./hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
 COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 RUN chmod 777 -R $HADOOP_HOME
 
-EXPOSE 8989 8765
+EXPOSE 8989 8765 22
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 

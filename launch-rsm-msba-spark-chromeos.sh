@@ -319,7 +319,7 @@ else
   fi
   {
     docker run --net ${NETWORK} -d \
-      -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 \
+      -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 -p 0.0.0.0:2222:22 \
       -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \

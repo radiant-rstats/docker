@@ -142,6 +142,7 @@ RUN apt-get -y install --no-install-recommends\
     postgresql-${POSTGRES_VERSION} \
     postgresql-client-${POSTGRES_VERSION} \
     postgresql-contrib-${POSTGRES_VERSION} \
+    openssh-server \
     && apt-get -y autoremove \
     && apt-get update \
     && apt-get clean \
@@ -151,7 +152,8 @@ RUN apt-get -y install --no-install-recommends\
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
     && echo "${NB_USER}:${PASSWORD}" | chpasswd \
     && addgroup ${NB_USER} staff \
-    && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+    && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
+    && mkdir -p /var/run/sshd
 
 RUN mkdir $HADOOP_HOME \
     && cd $HADOOP_HOME \
@@ -231,7 +233,7 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
     && echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site \
     && sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron
 
-EXPOSE 8765
+EXPOSE 8765 22
 
 # required in rsm-vscode image
 RUN chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
@@ -247,6 +249,8 @@ RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site
 RUN pip3 install 'pyrsm>=0.2.8'
 
 RUN addgroup ${NB_USER} postgres
+
+EXPOSE 8765 22
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

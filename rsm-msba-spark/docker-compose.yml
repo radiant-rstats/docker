@@ -13,6 +13,7 @@ services:
     ports:
       - 127.0.0.1:8989:8989
       - 127.0.0.1:8765:8765
+      - 127.0.0.1:2222:22
     volumes:
       - ~:/home/jovyan
       - pg_data:/var/lib/postgresql/12/main

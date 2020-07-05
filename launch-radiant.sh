@@ -291,11 +291,6 @@ else
   ## based on https://stackoverflow.com/a/52852871/1974918
   has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
   if [ "${has_network}" == "" ]; then
-    # docker network create \
-    #   --subnet=172.0.0.0/16 \
-    #   --ip-range=172.0.0.0/24 \
-    #   --gateway=172.0.0.1 \
-    #   ${NETWORK} 
     docker network create ${NETWORK} 
   fi
   # GATEWAY=$(docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' $NETWORK)
@@ -308,7 +303,7 @@ else
   echo "-----------------------------------------------------------------------"
   {
     docker run --net ${NETWORK} -d \
-      -p 127.0.0.1:8181:8181 -p 127.0.0.1:8787:8787 \
+      -p 127.0.0.1:8181:8181 -p 127.0.0.1:8787:8787 -p 127.0.0.1:2222:22 \
       -e PASSWORD=${PASSWORD} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       ${IMAGE}:${IMAGE_VERSION}

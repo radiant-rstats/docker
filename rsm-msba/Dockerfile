@@ -136,7 +136,7 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
 
-EXPOSE 8989 8765
+EXPOSE 8989 8765 22
 
 RUN addgroup ${NB_USER} postgres
 COPY jupyter_notebook_config.py /etc/jupyter/

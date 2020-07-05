@@ -266,6 +266,16 @@ To install python3 on macOS using **homebrew**, run the commands below from a te
 brew install python3;
 ```
 
+If you have VSCode installed locally on your host OS (https://code.visualstudio.com/download), you can connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
+
+```bash
+Host docker_local
+    User jovyan
+    HostName 127.0.0.1
+    StrictHostKeyChecking no
+    Port 2222
+```
+
 <!-- 
 # Selenium example that works with docker compose
 # From outside the container access using

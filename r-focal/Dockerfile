@@ -42,13 +42,15 @@ RUN apt-get update \
   wget \
   software-properties-common \
   dirmngr \
-  gpg-agent
+  gpg-agent \
+  openssh-server
 
 RUN echo "deb http://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" >> /etc/apt/sources.list \ 
   && gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
   && gpg -a --export E298A3A825C0D65DFD57CBB651716619E084DAB9 | apt-key add - \
   && add-apt-repository --yes "ppa:jonathonf/vim" \
-  && apt-get update
+  && apt-get update \
+  && mkdir -p /var/run/sshd
 
 RUN apt-get -y install --no-install-recommends \
   apt-transport-https \
@@ -195,8 +197,7 @@ COPY ./fonts/*.ttf /usr/share/fonts/ligature
 RUN chmod 644 /usr/share/fonts/ligature/*
 RUN fc-cache -fv
 
-EXPOSE 8181 8787
-
+EXPOSE 8181 8787 22
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 

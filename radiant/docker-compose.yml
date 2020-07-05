@@ -8,6 +8,7 @@ services:
     ports:
       - 127.0.0.1:8181:8181
       - 127.0.0.1:8787:8787
+      - 127.0.0.1:2222:22
     volumes:
       - ~:/home/jovyan
   selenium_0:

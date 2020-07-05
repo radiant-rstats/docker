@@ -263,3 +263,15 @@ The only issues we have seen on Linux so far can be "fixed" by restarting docker
 sudo service docker stop
 sudo service docker start
 ```
+
+## Optional
+
+If you have VSCode installed locally on your host OS (https://code.visualstudio.com/download), you can connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
+
+```bash
+Host docker_local
+    User jovyan
+    HostName 127.0.0.1
+    StrictHostKeyChecking no
+    Port 2222
+```

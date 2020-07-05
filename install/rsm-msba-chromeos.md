@@ -27,7 +27,7 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 Run the following code in a terminal and provide your (sudo) password when requested:
 
 ```bash
-sudo apt install curl;
+sudo apt install curl openssh-client;
 source <(curl -s https://raw.githubusercontent.com/radiant-rstats/docker/master/install/install-docker-chromeos.sh);
 ```
 
@@ -257,4 +257,16 @@ The only issues we have seen on ChromeOS so far can be "fixed" by restarting doc
 ```{r}
 sudo service docker stop
 sudo service docker start
+```
+
+## Optional
+
+If you have VSCode installed you should be able to connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
+
+```bash
+Host docker_local
+    User jovyan
+    HostName 0.0.0.0
+    StrictHostKeyChecking no
+    Port 2222
 ```

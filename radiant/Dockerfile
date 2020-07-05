@@ -33,7 +33,7 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-radiant.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
 
-EXPOSE 8181 8787
+EXPOSE 8181 8787 22
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 

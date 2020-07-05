@@ -7,7 +7,8 @@ sudo apt-get install \
   ca-certificates \
   curl \
   software-properties-common \
-  wget
+  wget \
+  openssh-client
 
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo add-apt-repository \
