@@ -415,7 +415,7 @@ else
         fi
       fi
       if [ "${menu_arg}" == "" ]; then
-        echo "Starting Radiant in the default browser on locahost:8989/radiant"
+        echo "Starting Radiant in the default browser on localhost:8989/radiant"
         open_browser http://localhost:8989/radiant
       else
         echo "Starting Radiant in the default browser on localhost:${menu_arg}/radiant"
@@ -432,7 +432,7 @@ else
       fi
     elif [ ${menu_exec} == 2 ]; then
       if [ "${menu_arg}" == "" ]; then
-        echo "Starting Rstudio in the default browser on locahost:8989/rstudio"
+        echo "Starting Rstudio in the default browser on localhost:8989/rstudio"
         open_browser http://localhost:8989/rstudio
       else
         echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
@@ -450,7 +450,7 @@ else
       fi
     elif [ ${menu_exec} == 3 ]; then
       if [ "${menu_arg}" == "" ]; then
-        echo "Starting Jupyter Lab in the default browser on locahost:8989/lab"
+        echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
         sleep 4s
         open_browser http://localhost:8989/lab
       else
