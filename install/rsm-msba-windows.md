@@ -324,4 +324,28 @@ Host docker_local
     HostName 127.0.0.1
     StrictHostKeyChecking no
     Port 2222
+Host sc1
+    User your-user-id
+    HostName rsm-compute-01.ucsd.edu
 ```
+
+<!-- 
+
+After setting up keys for git and gitlab, user should be able to use the below to avoid (multiple) logins for Remote SSH
+
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+You may also need the below: 
+
+```
+eval `ssh-agent`
+ssh-add
+``` 
+
+Copying over the public key to the MSBA server
+
+```
+ssh-copy-id -i ~/.ssh/id_rsa.pub sc1
+```
+
+-->
