@@ -89,16 +89,14 @@ docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
 
-exit
-
 # testing for Rstudio Preview
 # docker tag jupyterhub-test-user vnijs/jupyterhub-test-user
 # docker push vnijs/jupyterhub-test-user:latest
 
 cp r-focal/userconf.sh rsm-vscode/userconf.sh
 cp r-focal/launch.sh rsm-vscode/launch.sh
-cp rsm-msba/requirements.txt rsm-vscode/requirements.txt
-# cp rsm-msba/requirements-base.txt rsm-vscode/requirements.txt
+# cp rsm-msba/requirements.txt rsm-vscode/requirements.txt
+cp rsm-msba/requirements-base.txt rsm-vscode/requirements.txt
 cp rsm-msba/clean.sh rsm-vscode/clean.sh
 cp rsm-msba/pg_hba.conf rsm-vscode/pg_hba.conf
 cp rsm-msba/postgresql.conf rsm-vscode/postgresql.conf

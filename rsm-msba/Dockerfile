@@ -112,7 +112,6 @@ COPY images/vscode.svg /opt/code-server/vscode.svg
 COPY settings.json /opt/code-server/settings.json
 COPY setup.sh /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
-RUN chmod +x /usr/local/bin/setup
 
 # update R-packages
 RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 

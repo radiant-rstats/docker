@@ -22,7 +22,7 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
 ## update R-packages
 RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
   -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 
-  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")' 
+  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")'
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 RUN sed -i -e "s/\:HOME_USER\:/${NB_USER}/" /etc/shiny-server/shiny-server.conf
