@@ -286,7 +286,7 @@ Please bookmark this page in your browser for easy access in the future. You can
 * `launch -s` show additional output in the terminal that can be useful to debug any problems
 * `launch -h` prints the help shown in the screenshot below
 
-<img src="figures/docker-help.png" width="500px"
+<img src="figures/docker-help.png" width="500px">
 
 > Note: If you do not see the option to show help, please upgrade the launch script by pressing 7 (and Enter)
 
