@@ -28,13 +28,34 @@ Windows users **must** use Microsoft Windows 10 Professional, Education, or Ente
 
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
-Although not strictly required, installing WSL2 is **highly** recommended and can have a big impact of performance. Follow the instructions on the Microsoft webpage linked below step-by-step to install WSL2 and Ubuntu 20.04.
+Follow the instructions on the Microsoft webpage linked below step-by-step to install WSL2 and Ubuntu 20.04.
 
 <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10" target="_blank">https://docs.microsoft.com/en-us/windows/wsl/install-win10</a>
 
+After you are done with the install 
+
+```bash
+wsl --list --verbose
+```
+
+The output should look something like the below. It is **key** that the VERSION for Ubuntu is set to 2.
+
+```bash
+  NAME                   STATE           VERSION
+* Ubuntu-20.04           Running         2
+  docker-desktop-data    Running         2
+  docker-desktop         Running         2
+```
+
+If VERSION is set to 1 make sure to run the command below from PowerShell before proceeding. Double check the setting are now as expected by using the `wsl --list --verbose` command again.
+
+```
+wsl --set-version Ubuntu-20.04 2
+```
+
 **Step 3**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down docker hasn't finished starting up yet.
 
-During the install process use *only* the default settings. If prompted, make sure to choose "Linux containers" and *not* "Windows containers". You may also be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer should restart. Finally, you should be prompted to "Enable WSL 2 Windows Features". If so, make sure the appropriate box is checked.
+During the install process you may be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer should restart.You should be prompted to "Enable WSL 2 Windows Features". If so, make sure the appropriate box is checked.
 
 ![docker](figures/docker-icon.png)
 
@@ -42,23 +63,15 @@ During the install process use *only* the default settings. If prompted, make su
 
 <https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe>
 
-Once the docker application has been installed, right click on the docker icon and select "Settings".
-
-Start by clicking on _Resources > ADVANCED_ to change the resources docker is allowed to use on your system. You can set this to approximately 50% of the maximum available on your system.
-
-<img src="figures/docker-resources.png" width="500px">
-
-Next click on _Resources > FILE SHARING_ and then click on the + sign to share the "C" drive as shown in the image below
-
-> Note: If you do not see an option to select shared drives you likely selected "Windows containers" rather than the default "Linux containers" during the docker install. Please re-install docker and make sure to select "Linux containers" when prompted.
-
-<img src="figures/windows-shared-drives.png" width="500px">
-
 Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
-**Step 4**: Install the Windows Terminal
+**Step 4**: Install Windows Tools
 
-Visit the Windows Store to install the new <a href="https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701" target="_blank">Windows Terminal</a>
+Visit the Windows Store to install <a href="https://www.microsoft.com/en-us/p/app-installer/9nblggh4nns1" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
+
+```bash
+winget install Microsoft.WindowsTerminalPreview
+```
 
 **Step 5**: Install linux tools
 
@@ -66,18 +79,12 @@ Open the Windows Terminal and click on the down-caret to open a bash shell into 
 
 <img src="figures/windows-terminal.png" width="500px">
 
-Next, copy-and-paste the code below to add `ssh` and `rsync` functionality. Note: You may have to right-click to get a copy-and-paste menu for the terminal and will need to provide your system password to install the listed tools
-
-```bash
-sudo apt install git rsync openssh-client
-```
-
-Next, copy-and-paste the code below to clone the launch scripts needed to start the docker container.
+Next, copy-and-paste the code below to clone the launch scripts needed to start the docker container. Note: You may have to right-click to get a copy-and-paste menu for the terminal and will need to provide your system password to install the listed tools
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 cp -p ~/git/docker/launch-rsm-msba-spark.sh /mnt/c/Users/$USER/Desktop;
-/mnt/c/Users/$USER/launch-rsm-msba-spark.sh;
+/mnt/c/Users/$USER/Desktop/launch-rsm-msba-spark.sh;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
@@ -304,16 +311,10 @@ Alternative "fixes" that have worked, are to restart docker by right-clicking on
 
 ## Optional
 
-If you did *not* use the installer above to complete steps 3 and 4 you can install python3 on Windows using **chocolatey**. Open a CMD terminal **as administrator** and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+You can install python3 on Windows using **winget**. Open a Windows Termial (PowerShell) and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
 
 ```bash
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin";
-```
-
-Now close the terminal and open a new CMD terminal **as administrator** and copy-and-paste the code below:
-
-```bash
-choco install python3;
+winget install Python.Python;
 ```
 
 If you have VSCode installed locally on your host OS (https://code.visualstudio.com/download), you can connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
