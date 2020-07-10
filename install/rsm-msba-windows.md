@@ -26,6 +26,15 @@ Windows users **must** use Microsoft Windows 10 Professional, Education, or Ente
 
 <img src="figures/windows-version.png" width="300px">
 
+**Step 2**: Install Windows Tools
+
+Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
+
+```bash
+winget install Microsoft.WindowsTerminalPreview
+winget install Ubuntu
+```
+
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
 Follow the instructions on the Microsoft webpage linked below step-by-step to install WSL2 and Ubuntu 20.04.
