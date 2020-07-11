@@ -10,8 +10,6 @@
 - [Getting help](#getting-help)
 - [Trouble shooting](#trouble-shooting)
 
-<!-- markdownlint-disable MD033 MD034 -->
-
 ## Installing the RSM-MSBA computing environment on Windows
 
 Please follow the instructions below to install the rsm-msba-spark computing environment. It has R, Rstudio, Python, Jupyter Lab, Postgres, VS Code, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
@@ -19,6 +17,12 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 **Step 1**: Upgrade Windows if you are currently using Windows Home Edition
 
 Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students will likely be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="blank">https://youtu.be/p0gcRbatO0w</a>.
+
+Check if there are any updates available for your system by clicking on the Start icon and typing "Check for Updates". After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, use the install instructions in the document linked below:
+
+<https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md>
+
+<img src="figures/windows-version.png" width="300px">
 
 **Step 2**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down docker hasn't finished starting up yet.
 

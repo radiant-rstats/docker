@@ -14,11 +14,11 @@
 
 Please follow the instructions below to install the rsm-msba-spark computing environment. It has R, Rstudio, Python, Jupyter Lab, Postgres, VS Code, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
-**Step 1**: Upgrade Windows 
+**Step 1**: Upgrade Windows
 
 Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students should be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="_blank">https://youtu.be/p0gcRbatO0w</a>.
 
-Check if there are any updates available for your system by clicking on the Start icon and typing "Check for Updates". After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, continue with step **#2**. Else, use the install instructions shown in the document linked below:
+Check if there are any updates available for your system by clicking on the Start icon and typing "Check for Updates". After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, continue with step **#2**. If you are having issues upgrading your Windows version, please reach out your IT support staff. If upgrading is not feasible for some reason, use the install instructions shown in the document linked below:
 
 <https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md>
 
@@ -36,15 +36,11 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 
 Next, restart your computer and re-open PowerShell and set the default version of WSL to "2" using the code below
 
-```
+```bash
 wsl --set-default-version 2
 ```
 
-If you see a message that "WSL 2 requires and update to its kernel component, download and run the installer linked below:
-
-```
-https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
-```
+If you see a message that "WSL 2 requires an update to its kernel component", download and run the <a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" target="_blank">kernel installer</a> 
 
 **Step 3**: Install Windows Tools
 
@@ -56,15 +52,13 @@ winget install -e Canonical.Ubuntu
 winget install -e Docker.DockerDesktop
 ```
 
-This will install the "Windows Terminal", Ubuntu 20.04, and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly. 
+This will install the "Windows Terminal", Ubuntu 20.04, and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
 
-Logout and back into Windows and then start Docker by clicking on the Whale icon (see below) that was added to your desktop.
+Next, logout and back into Windows and then start Docker by clicking on the Whale icon that was added to your desktop (see image below).
 
 ![docker](figures/docker-icon.png)
 
-You will know if Docker is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down, docker hasn't finished starting up yet. 
-
-Once the docker application is running, right click on the docker icon and select "Settings".
+You will know if Docker is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down, docker hasn't finished starting up yet. Once the docker application is running, right click on the docker icon in the system tray and select "Settings".
 
 Start by clicking on _General_ to ensure "Use the WSL 2 based engine" is checked as in the screenshot below.
 
@@ -74,9 +68,9 @@ Next click on _Resources > WSL INTEGRATION_ and ensure integration with Ubuntu i
 
 <img src="figures/docker-resources-wsl2-integration.png" width="500px">
 
-Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv2
+Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
-**Step 4**: Open an Ubuntu terminal to download the RSM-MSBA-SPARK computing environment
+**Step 4**: Open an Ubuntu terminal to complete RSM-MSBA-SPARK computing environment setup
 
 Start a Windows Terminal and enter:
 
@@ -84,7 +78,7 @@ Start a Windows Terminal and enter:
 wsl -u root
 ```
 
-Then type `passwd` and provide a password for your. It is probably easiest to use the same password you used for your windows machine but that is not required. Once you have set the password, click on the down-caret to start an Ubuntu terminal as shown in the screenshot below.
+Then type `passwd` and provide a password. It is probably easiest to use the same password you used for your windows machine but that is not required. Once you have set the password, click on the down-caret at the top of the terminal window to start an Ubuntu terminal as shown in the screenshot below.
 
 <img src="figures/start-ubuntu-terminal.png" width="500px">
 
@@ -97,11 +91,16 @@ sudo apt -y upgrade;
 sudo apt -y install xdg-utils;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+echo "Powershell.exe -noexit -command \"wsl launch\"" > /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
+sudo chmod 755 /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
+/mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
 ```
 
-The last step is the type `launch` in the Ubuntu terminal to start up a script that will finalize the installation of the computing environment. The first time you run the launch command it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
+This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
-<img src="figures/rsm-msba-menu-linux.png" width="500px">
+<img src="figures/rsm-msba-menu-wsl2.png" width="500px">
+
+The code above also creates a file `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container again in the future.
 
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
@@ -129,7 +128,7 @@ To update the container use the launch script and press 6 (and Enter). To update
 
 <img src="figures/rsm-msba-menu-windows.png" width="500px">
 
-If for some reason you are having trouble updating either the container or the launch script open a bash terminal and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
+If for some reason you are having trouble updating either the container or the launch script open an Ubuntu terminal and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
 ```bash
 docker pull vnijs/rsm-msba-spark;
@@ -301,25 +300,20 @@ Please bookmark this page in your browser for easy access in the future. You can
 
 ## Trouble shooting
 
-Check if a firewall, virus-checker, or VPN is blocking docker's access to your home directory on the C-drive. If this is an issue on your system, a warning should be shown when you check the "C" drive in docker settings and click "Apply". See screen shot below:
-
-<img src="figures/reset-credentials.png" width="500px">
-
 If there is an error related to the firewall, antivirus, or VPN, try turning them off to check if you can now start up the container. You should not be without a virus checker or firewall however! We recommend using **Windows Defender**. If you are not sure if Windows Defender is correctly configured, please check with IT.
-
-If you are able to select the C drive and no error is shown after clicking "Apply", try clicking on "Reset Credentials" or type "docker logout" in a (bash) terminal.
 
 Alternative "fixes" that have worked, are to restart docker by right-clicking on the "whale" icon in the system tray and/or restart your computer. It is best to quit any running process before you restart your computer (i.e., press q and Enter in the launch menu)
 
 ## Optional
 
-You can install python3 on Windows using **winget**. Open a Windows Termial (PowerShell) and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+You can install python3 and VS Code using **winget**. Open a Windows Terminal (PowerShell) and copy-and-paste the code below. Note: You may have to right-click to copy-and-paste the code into the terminal
 
 ```bash
-winget install Python.Python;
+winget install -e Python.Python;
+winget install -e Microsoft.VisualStudioCode;
 ```
 
-If you have VSCode installed locally on your host OS (https://code.visualstudio.com/download), you can connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
+With VSCode installed locally on your host OS, you can connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
 
 ```bash
 Host docker_local

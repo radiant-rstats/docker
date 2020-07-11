@@ -89,7 +89,12 @@ if [ "${has_docker}" == "" ]; then
   echo "-----------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
   if [[ "$ostype" == "Linux" ]]; then
-    echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
+    is_wsl = $(which explorer.exe)
+    if [[ "$is_wsl" != "" ]]; then
+      echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
+    else
+      echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
+    fi
   elif [[ "$ostype" == "Darwin" ]]; then
     echo "https://download.docker.com/mac/stable/Docker.dmg"
   else
@@ -152,9 +157,10 @@ else
     }
     MNT="-v /media:/media"
 
-    is_wsl = ${which explorer.exe}
-    if [[ "$is_wsl" == "" ]]; then
+    is_wsl = $(which explorer.exe)
+    if [[ "$is_wsl" != "" ]]; then
       ostype="WSL2"
+      HOMEDIR="/mnt/c/Users/$USER"
       MNT="$MNT -v /mnt:/mnt"
     fi
   elif [[ "$ostype" == "Darwin" ]]; then
@@ -559,9 +565,14 @@ else
       else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
-      if [ $ostype == "ChromeOS" || $ostype == "WSL2" ]; then
+      if [ $ostype == "ChromeOS" ]; then
         sudo rm /usr/local/bin/launch
         sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}-chromeos.sh -o "/usr/local/bin/launch"
+        sudo chmod 755 "/usr/local/bin/launch"
+        launch
+      elif [ $ostype == "WSL2" ]; then
+        sudo rm /usr/local/bin/launch
+        sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "/usr/local/bin/launch"
         sudo chmod 755 "/usr/local/bin/launch"
         launch
       else 
@@ -632,7 +643,9 @@ else
       echo ""
       if [[ "$ostype" == "macOS" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
-      elif [[ "$ostype" == "Windows" || "$ostype" == "WSL2" ]]; then
+      elif [[ "$ostype" == "Windows" ]]; then
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md
+      elif [[ "$ostype" == "WSL2" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
       elif [[ "$ostype" == "ChromeOS" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-chromeos.md
