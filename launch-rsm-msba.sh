@@ -151,6 +151,12 @@ else
       sed -i $1 "$2"
     }
     MNT="-v /media:/media"
+
+    is_wsl = ${which explorer.exe}
+    if [[ "$is_wsl" == "" ]]; then
+      ostype="WSL2"
+      MNT="$MNT -v /mnt:/mnt"
+    fi
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~
@@ -553,7 +559,7 @@ else
       else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
-      if [ $ostype == "ChromeOS" ]; then
+      if [ $ostype == "ChromeOS" || $ostype == "WSL2" ]; then
         sudo rm /usr/local/bin/launch
         sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}-chromeos.sh -o "/usr/local/bin/launch"
         sudo chmod 755 "/usr/local/bin/launch"
@@ -626,7 +632,7 @@ else
       echo ""
       if [[ "$ostype" == "macOS" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
-      elif [[ "$ostype" == "Windows" ]]; then
+      elif [[ "$ostype" == "Windows" || "$ostype" == "WSL2" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
       elif [[ "$ostype" == "ChromeOS" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-chromeos.md

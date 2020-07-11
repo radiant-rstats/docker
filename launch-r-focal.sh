@@ -147,6 +147,12 @@ else
     sed_fun () {
       sed -i $1 "$2"
     }
+
+    is_wsl = $(which explorer.exe)
+    if [[ "$is_wsl" == "" ]]; then
+      ostype="WSL2"
+      MNT="$MNT -v /mnt:/mnt"
+    fi
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~

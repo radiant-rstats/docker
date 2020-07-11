@@ -10,105 +10,98 @@
 - [Getting help](#getting-help)
 - [Trouble shooting](#trouble-shooting)
 
-<!-- markdownlint-disable MD033 MD034 -->
-
 ## Installing the RSM-MSBA computing environment on Windows
 
 Please follow the instructions below to install the rsm-msba-spark computing environment. It has R, Rstudio, Python, Jupyter Lab, Postgres, VS Code, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
-**Step 1**: Upgrade Windows if you are currently using Windows Home Edition
+**Step 1**: Upgrade Windows 
 
-Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students will likely be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="blank">https://youtu.be/p0gcRbatO0w</a>.
+Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students should be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="_blank">https://youtu.be/p0gcRbatO0w</a>.
 
-> Note: After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, continue with step **#2**. Else, use the install instructions in the document linked below:
+Check if there are any updates available for your system by clicking on the Start icon and typing "Check for Updates". After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, continue with step **#2**. Else, use the install instructions shown in the document linked below:
 
 <https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md>
 
 <img src="figures/windows-version.png" width="300px">
 
-**Step 2**: Install Windows Tools
-
-Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
-
-```bash
-winget install Microsoft.WindowsTerminalPreview
-winget install Ubuntu
-```
-
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
-Follow the instructions on the Microsoft webpage linked below step-by-step to install WSL2 and Ubuntu 20.04.
+<!-- Set-VMProcessor "Docker Testing" -ExposeVirtualizationExtensions $true -->
 
-<a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10" target="_blank">https://docs.microsoft.com/en-us/windows/wsl/install-win10</a>
-
-After you are done with the install 
+To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
 
 ```bash
-wsl --list --verbose
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 ```
 
-The output should look something like the below. It is **key** that the VERSION for Ubuntu is set to 2.
+Next, restart your computer and re-open PowerShell and set the default version of WSL to "2" using the code below
+
+```
+wsl --set-default-version 2
+```
+
+If you see a message that "WSL 2 requires and update to its kernel component, download and run the installer linked below:
+
+```
+https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+```
+
+**Step 3**: Install Windows Tools
+
+Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install the Windows Terminal and Ubuntu-20.04:
 
 ```bash
-  NAME                   STATE           VERSION
-* Ubuntu-20.04           Running         2
-  docker-desktop-data    Running         2
-  docker-desktop         Running         2
+winget install -e Microsoft.WindowsTerminal
+winget install -e Canonical.Ubuntu
+winget install -e Docker.DockerDesktop
 ```
 
-If VERSION is set to 1 make sure to run the command below from PowerShell before proceeding. Double check the setting are now as expected by using the `wsl --list --verbose` command again.
+This will install the "Windows Terminal", Ubuntu 20.04, and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly. 
 
-```
-wsl --set-version Ubuntu-20.04 2
-```
-
-**Step 3**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down docker hasn't finished starting up yet.
-
-During the install process you may be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer should restart.You should be prompted to "Enable WSL 2 Windows Features". If so, make sure the appropriate box is checked.
+Logout and back into Windows and then start Docker by clicking on the Whale icon (see below) that was added to your desktop.
 
 ![docker](figures/docker-icon.png)
 
-<img src="figures/wsl2-windows-docker-install.png" width="400px">
+You will know if Docker is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down, docker hasn't finished starting up yet. 
 
-<https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe>
+Once the docker application is running, right click on the docker icon and select "Settings".
 
-Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
+Start by clicking on _General_ to ensure "Use the WSL 2 based engine" is checked as in the screenshot below.
 
-**Step 4**: Install Windows Tools
+<img src="figures/docker-general-wsl2-based-engine.png" width="500px">
 
-Visit the Windows Store to install <a href="https://www.microsoft.com/en-us/p/app-installer/9nblggh4nns1" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
+Next click on _Resources > WSL INTEGRATION_ and ensure integration with Ubuntu is enabled as in the screenshot below
+
+<img src="figures/docker-resources-wsl2-integration.png" width="500px">
+
+Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv2
+
+**Step 4**: Open an Ubuntu terminal to download the RSM-MSBA-SPARK computing environment
+
+Start a Windows Terminal and enter:
 
 ```bash
-winget install Microsoft.WindowsTerminalPreview
+wsl -u root
 ```
 
-**Step 5**: Install linux tools
+Then type `passwd` and provide a password for your. It is probably easiest to use the same password you used for your windows machine but that is not required. Once you have set the password, click on the down-caret to start an Ubuntu terminal as shown in the screenshot below.
 
-Open the Windows Terminal and click on the down-caret to open a bash shell into Ubuntu 20.04 as shown in the screenshot below.
+<img src="figures/start-ubuntu-terminal.png" width="500px">
 
-<img src="figures/windows-terminal.png" width="500px">
-
-Next, copy-and-paste the code below to clone the launch scripts needed to start the docker container. Note: You may have to right-click to get a copy-and-paste menu for the terminal and will need to provide your system password to install the listed tools
+Then copy-and-paste the code below into the Ubuntu terminal and provide your password when prompted.
 
 ```bash
+cd;
+sudo apt -y update;
+sudo apt -y upgrade;
+sudo apt -y install xdg-utils;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-msba-spark.sh /mnt/c/Users/$USER/Desktop;
-/mnt/c/Users/$USER/Desktop/launch-rsm-msba-spark.sh;
+sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
 ```
 
-This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
+The last step is the type `launch` in the Ubuntu terminal to start up a script that will finalize the installation of the computing environment. The first time you run the launch command it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
-<img src="figures/rsm-msba-menu-windows.png" width="500px">
-
-The code above also creates a copy of the file `launch-rsm-msba-spark.sh` on your Desktop that you can double-click to start the container again in the future.
-
-Copy-and-paste the command below to create a shortcut to the launch script to use from the command line.
-
-```bash
-ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/bin/launch;
-```
-
-</details>
+<img src="figures/rsm-msba-menu-linux.png" width="500px">
 
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
