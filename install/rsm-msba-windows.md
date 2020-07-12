@@ -88,17 +88,23 @@ git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
 ```
 
+Next, determine your Windows username by running the code below from an Ubuntu terminal:
+
+```bash
+USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r')
+```
+
 Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future.
 
 ```bash
-USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r');
-echo "Powershell.exe -noexit -command \"wsl launch\"" > /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
+echo "Powershell.exe -command \"wsl launch\"" > /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 chmod 755 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 ```
 
 <!-- 
 # breaks if USER (Ubuntu) and USERNAME (Windows) are different
+# note that the USERNAME code HAS to be in a separate chunk for some reason
 ```bash
 echo "Powershell.exe -noexit -command \"wsl launch\"" >> /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat;
 chmod 755 /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat;
