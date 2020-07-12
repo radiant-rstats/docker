@@ -2,7 +2,7 @@
 docker login
 DOCKERHUB_VERSION=1.8.0
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 build () {
   {
@@ -47,12 +47,12 @@ launcher () {
 
 # LABEL=r-bionic
 LABEL=r-focal
-build
+# build
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
-build
+# build
 
 ## making list of vsix files to install using "setup"
 rm -f ../docker-vsix/vsix_list.txt
@@ -65,10 +65,10 @@ for i in ${vsix_list}; do
 done
 
 LABEL=rsm-msba
-build
+# build
 
 LABEL=rsm-msba-spark
-build
+# build
 launcher "rsm-msba"
 
 ## replace 127.0.0.1 by 0.0.0.0 for ChromeOS
@@ -77,7 +77,9 @@ sed_fun "s/127.0.0.1/0.0.0.0/g" ./launch-rsm-msba-spark-chromeos.sh
 sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-spark-chromeos.sh 
 
 LABEL=rsm-jupyterhub
-build
+# build
+
+exit
 
 ## new containers should be launched using the newest version of the container
 # docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user

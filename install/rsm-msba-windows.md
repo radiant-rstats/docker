@@ -85,8 +85,7 @@ Then type `passwd $USER` and provide a password. It is probably easiest to use t
 Then copy-and-paste the code below into the Ubuntu terminal and provide your password when prompted.
 
 ```bash
-cd;
-sudo -- sh -c 'apt -y update; apt -y upgrade; apt -y install xdg-utils;'
+cd; sudo -- sh -c 'apt -y update; apt -y upgrade; apt -y install xdg-utils;'
 ```
 
 Now Ubuntu should be up to date and ready to accept commands to clone the docker repo with documentation and launch scripts. Again, provide your password if prompted.
@@ -99,9 +98,9 @@ sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
 Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future.
 
 ```
-echo "Powershell.exe -noexit -command \"wsl launch\"" > /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
-chmod 755 /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
-/mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
+echo "Powershell.exe -noexit -command \"wsl launch\"" > /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat;
+chmod 755 /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat;
+/mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat;
 ```
 
 The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
@@ -132,7 +131,7 @@ setup
 
 To update the container use the launch script and press 6 (and Enter). To update the launch script itself, press 7 (and Enter).
 
-<img src="figures/rsm-msba-menu-windows.png" width="500px">
+<img src="figures/rsm-msba-menu-wsl2.png" width="500px">
 
 If for some reason you are having trouble updating either the container or the launch script open an Ubuntu terminal and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
@@ -140,7 +139,7 @@ If for some reason you are having trouble updating either the container or the l
 docker pull vnijs/rsm-msba-spark;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-msba-spark.sh /mnt/c/Users/$USER/Desktop;
+sudo -- sh -c 'rm -rf /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;'
 ```
 
 ## Using VS Code for Python

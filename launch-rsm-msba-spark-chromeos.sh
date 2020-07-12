@@ -18,7 +18,8 @@ script_home () {
 function launch_usage() {
   echo "Usage: $0 [-t tag (version)] [-d directory]"
   echo "  -t, --tag         Docker image tag (version) to use"
-  echo "  -d, --directory   Base directory to use"
+  echo "  -d, --directory   Project directory to use"
+  echo "  -v, --volume      Volume to mount as home directory"
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
@@ -31,6 +32,7 @@ function launch_usage() {
 while [[ "$#" > 0 ]]; do case $1 in
   -t|--tag) ARG_TAG="$2"; shift;shift;;
   -d|--directory) ARG_DIR="$2";shift;shift;;
+  -v|--volume) ARG_VOLUME="$2";shift;shift;;
   -s|--show) ARG_SHOW="show";shift;shift;;
   -h|--help) launch_usage;shift; shift;;
   *) echo "Unknown parameter passed: $1"; echo ""; launch_usage; shift; shift;;
@@ -89,7 +91,7 @@ if [ "${has_docker}" == "" ]; then
   echo "-----------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
   if [[ "$ostype" == "Linux" ]]; then
-    is_wsl = $(which explorer.exe)
+    is_wsl=$(which explorer.exe)
     if [[ "$is_wsl" != "" ]]; then
       echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
     else
@@ -157,7 +159,7 @@ else
     }
     MNT="-v /media:/media"
 
-    is_wsl = $(which explorer.exe)
+    is_wsl=$(which explorer.exe)
     if [[ "$is_wsl" != "" ]]; then
       ostype="WSL2"
       HOMEDIR="/mnt/c/Users/$USER"
@@ -185,6 +187,10 @@ else
       sed -i $1 "$2"
     }
     MNT=""
+  fi
+
+  if [ "$ARG_VOLUME" != "" ]; then
+    HOMEDIR="$ARG_VOLUME"
   fi
 
   if [ "$ARG_DIR" != "" ] || [ "$ARG_HOME" != "" ]; then
@@ -749,10 +755,12 @@ else
         docker rmi -f ${imgs}
       fi
 
-      procs=$(docker ps -a -q --no-trunc)
-      if [ "${procs}" != "" ]; then
-        echo "Stopping docker processes ..."
-        docker rm ${procs}
+      if [ "$ostype" != "WSL2" ]; then
+        procs=$(docker ps -a -q --no-trunc)
+        if [ "${procs}" != "" ]; then
+          echo "Stopping docker processes ..."
+          docker rm ${procs}
+        fi
       fi
     else
       echo "Invalid entry. Resetting launch menu ..."
