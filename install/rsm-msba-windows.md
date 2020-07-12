@@ -78,7 +78,7 @@ Start a Windows Terminal and enter:
 wsl -u root
 ```
 
-Then type `passwd` and provide a password. It is probably easiest to use the same password you used for your windows machine but that is not required. Once you have set the password, click on the down-caret at the top of the terminal window to start an Ubuntu terminal as shown in the screenshot below.
+Then type `passwd $USER` and provide a password. It is probably easiest to use the same password you used for your windows machine but that is not required. Once you have set the password, click on the down-caret at the top of the terminal window to start an Ubuntu terminal as shown in the screenshot below.
 
 <img src="figures/start-ubuntu-terminal.png" width="500px">
 
@@ -86,21 +86,27 @@ Then copy-and-paste the code below into the Ubuntu terminal and provide your pas
 
 ```bash
 cd;
-sudo apt -y update;
-sudo apt -y upgrade;
-sudo apt -y install xdg-utils;
+sudo -- sh -c 'apt -y update; apt -y upgrade; apt -y install xdg-utils;'
+```
+
+Now Ubuntu should be up to date and ready to accept commands to clone the docker repo with documentation and launch scripts. Again, provide your password if prompted.
+
+```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+```
+
+Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future.
+
+```
 echo "Powershell.exe -noexit -command \"wsl launch\"" > /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
-sudo chmod 755 /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
+chmod 755 /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
 /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat
 ```
 
-This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
+The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
 <img src="figures/rsm-msba-menu-wsl2.png" width="500px">
-
-The code above also creates a file `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container again in the future.
 
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
