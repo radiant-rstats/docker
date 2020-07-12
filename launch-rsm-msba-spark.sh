@@ -89,7 +89,7 @@ if [ "${has_docker}" == "" ]; then
   echo "-----------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
   if [[ "$ostype" == "Linux" ]]; then
-    is_wsl = $(which explorer.exe)
+    is_wsl=$(which explorer.exe)
     if [[ "$is_wsl" != "" ]]; then
       echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
     else
@@ -157,7 +157,7 @@ else
     }
     MNT="-v /media:/media"
 
-    is_wsl = $(which explorer.exe)
+    is_wsl=$(which explorer.exe)
     if [[ "$is_wsl" != "" ]]; then
       ostype="WSL2"
       HOMEDIR="/mnt/c/Users/$USER"
