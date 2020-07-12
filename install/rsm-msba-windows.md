@@ -42,17 +42,18 @@ wsl --set-default-version 2
 
 If you see a message that "WSL 2 requires an update to its kernel component", download and run the <a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" target="_blank">kernel installer</a> 
 
+Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx71" target="_blank">Ubuntu 20.04</a> from the Windows Store. You will be asked to provide a username and password. Make sure to enter the same username and password you use to login to your computer.
+
 **Step 3**: Install Windows Tools
 
 Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install the Windows Terminal and Ubuntu-20.04:
 
 ```bash
 winget install -e Microsoft.WindowsTerminal
-winget install -e Canonical.Ubuntu
 winget install -e Docker.DockerDesktop
 ```
 
-This will install the "Windows Terminal", Ubuntu 20.04, and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
+This will install the "Windows Terminal" and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
 
 Next, logout and back into Windows and then start Docker by clicking on the Whale icon that was added to your desktop (see image below).
 
@@ -72,17 +73,9 @@ Optional: If you are interested, this linked video gives a brief intro to what D
 
 **Step 4**: Open an Ubuntu terminal to complete RSM-MSBA-SPARK computing environment setup
 
-Start a Windows Terminal and enter:
-
-```bash
-wsl -u root
-```
-
-Then type `passwd $USER` and provide a password. It is probably easiest to use the same password you used for your windows machine but that is not required. Once you have set the password, click on the down-caret at the top of the terminal window to start an Ubuntu terminal as shown in the screenshot below.
+Click on the down-caret at the top of the terminal window to start an Ubuntu terminal as shown in the screenshot below. Then copy-and-paste the code below into the Ubuntu terminal and provide your password when prompted.
 
 <img src="figures/start-ubuntu-terminal.png" width="500px">
-
-Then copy-and-paste the code below into the Ubuntu terminal and provide your password when prompted.
 
 ```bash
 cd; sudo -- sh -c 'apt -y update; apt -y upgrade; apt -y install xdg-utils;'
@@ -109,7 +102,7 @@ The created and launched script will finalize the installation of the computing 
 
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
-You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. If you are asked for a password the username is "jovyan" and the password is "jupyter"
+You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. If you are asked for login credentials, the username is "jovyan" and the password is "jupyter"
 
 > Important: Always use q (and Enter) to shutdown the computing environment
 
@@ -173,8 +166,6 @@ jupytext --to notebook your-python-script.py
 ```bash
 jupytext --to py your-python-script.ipynb
 ```
-
-<!-- ssh-copy-id -i ~/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
 
 ## Connecting to postgresql
 
@@ -350,5 +341,6 @@ Copying over the public key to the MSBA server
 ```
 ssh-copy-id -i ~/.ssh/id_rsa.pub sc1
 ```
-
 -->
+
+<!-- ssh-copy-id -i ~/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
