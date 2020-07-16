@@ -469,7 +469,7 @@ else
     elif [ ${menu_exec} == 3 ]; then
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
-        sleep 4s
+        sleep 2s
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
@@ -479,7 +479,7 @@ else
           -v ${HOMEDIR}:/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
-        sleep 5s
+        sleep 2s
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 4 ]; then
