@@ -100,10 +100,11 @@ Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your 
 echo "REM Powershell.exe -command \"wsl launch\"" > /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 echo "Powershell.exe -command \"wsl launch -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 chmod 755 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
-ln -s /mnt/c/Users/"$USERNAME"/Desktop Desktop;
-ln -s /mnt/c/Users/"$USERNAME"/Dropbox Dropbox;
-ln -s "/mnt/c/Users/$USERNAME/Google Drive" "Google Drive";
-ln -s /mnt/c/Users/"$USERNAME"/OneDrive OneDrive;
+cd ~;
+ln -s /mnt/c/Users/"$USERNAME"/Desktop ./Desktop;
+ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
+ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
+ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 ```
 
