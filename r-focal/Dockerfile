@@ -190,13 +190,6 @@ RUN chmod +x /usr/local/bin/launch
 # copy dbase connections
 COPY connections/ /etc/${NB_USER}/connections
 
-# adding a ligature font
-# from https://www.jetbrains.com/lp/mono/
-RUN mkdir -p /usr/share/fonts/ligature
-COPY ./fonts/*.ttf /usr/share/fonts/ligature
-RUN chmod 644 /usr/share/fonts/ligature/*
-RUN fc-cache -fv
-
 EXPOSE 8181 8787 22
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
