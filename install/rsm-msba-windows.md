@@ -59,7 +59,7 @@ Next, logout and back into Windows and then start Docker by clicking on the Whal
 
 ![docker](figures/docker-icon.png)
 
-You will know if Docker is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down, docker hasn't finished starting up yet. Once the docker application is running, right click on the docker icon in the system tray and select "Settings".
+You will know if Docker is running if you see the icon above in your system tray. If the containers shown in the image are moving up and down, docker hasn't finished starting up yet. Once the docker application is running, right click on the docker icon in the system tray and select "Settings".
 
 Start by clicking on _General_ to ensure "Use the WSL 2 based engine" is checked as in the screenshot below.
 
@@ -78,7 +78,7 @@ Click on the down-caret at the top of the terminal window to start an Ubuntu ter
 <img src="figures/start-ubuntu-terminal.png" width="500px">
 
 ```bash
-cd; sudo -- sh -c 'apt -y update; apt -y upgrade; apt -y install xdg-utils;'
+cd ~; sudo -- sh -c 'apt -y update; apt -y upgrade; apt -y install xdg-utils;'
 ```
 
 Now Ubuntu should be up to date and ready to accept commands to clone the docker repo with documentation and launch scripts. Again, provide your password if prompted.
