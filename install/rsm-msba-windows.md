@@ -97,19 +97,16 @@ USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r')
 Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future.
 
 ```bash
-echo "Powershell.exe -command \"wsl launch\"" > /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
+echo "REM Powershell.exe -command \"wsl launch\"" > /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
+echo "Powershell.exe -command \"wsl launch -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 chmod 755 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
+cd ~;
+ln -s /mnt/c/Users/"$USERNAME"/Desktop ./Desktop;
+ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
+ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
+ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 ```
-
-<!-- 
-# breaks if USER (Ubuntu) and USERNAME (Windows) are different
-# note that the USERNAME code HAS to be in a separate chunk for some reason
-```bash
-echo "Powershell.exe -noexit -command \"wsl launch\"" >> /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat;
-chmod 755 /mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat;
-/mnt/c/Users/"$USER"/Desktop/launch-rsm-msba-spark.bat;
-``` -->
 
 The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 

@@ -12,7 +12,8 @@ RUN apt-get update \
   python3-venv \
   python3-virtualenv \
   libzmq3-dev \
-  graphviz 
+  graphviz \
+  fonts-firacode
 
 # install python packages
 COPY requirements-base.txt /home/${NB_USER}/requirements.txt
@@ -135,6 +136,13 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
 RUN chmod 777 /opt/launch.sh
 
+# adding a ligature font
+# from https://www.jetbrains.com/lp/mono/
+RUN mkdir -p /usr/share/fonts/ligature
+COPY ./fonts/*.ttf /usr/share/fonts/ligature
+RUN chmod 644 /usr/share/fonts/ligature/*
+RUN fc-cache -fv
+
 EXPOSE 8989 8765 22
 
 RUN addgroup ${NB_USER} postgres
@@ -146,6 +154,11 @@ RUN git clone https://github.com/vnijs/gitgadget.git /srv/shiny-server/gitgadget
   && chown shiny:shiny -R /srv/shiny-server
 
 COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
+
+# RUN echo "# Server Configuration File" > /etc/rstudio/rserver.conf \
+#   && echo "rsession-which-r=/usr/local/bin/R" >> /etc/rstudio/rserver.conf \
+#   && echo "auth-none=1" >> /etc/rstudio/rserver.conf \
+#   && echo "USER=$NB_USER" >> /etc/environment
 
 USER ${NB_USER}
 ENV HOME /home/${NB_USER}

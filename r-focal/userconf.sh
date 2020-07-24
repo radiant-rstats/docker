@@ -5,7 +5,9 @@ NB_USER=${NB_USER:=jovyan}
 PASSWORD=${PASSWORD:=jupyter}
 
 if [[ ${DISABLE_AUTH} == "true" ]]; then
-  mv /etc/rstudio/disable_auth_rserver.conf /etc/rstudio/rserver.conf
+  echo "# Server Configuration File" > /etc/rstudio/rserver.conf
+  echo "rsession-which-r=/usr/local/bin/R" >> /etc/rstudio/rserver.conf
+  echo "auth-none=1" >> /etc/rstudio/rserver.conf
   echo "USER=$NB_USER" >> /etc/environment
 fi
 
