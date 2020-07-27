@@ -163,7 +163,12 @@ else
     if [[ "$is_wsl" != "" ]]; then
       ostype="WSL2"
       HOMEDIR="/mnt/c/Users/$USER"
-      MNT="$MNT -v /mnt:/mnt"
+      if [ -d "/mnt/c" ]; then
+        MNT="$MNT -v /mnt/c:/mnt/c"
+      fi
+      if [ -d "/mnt/d" ]; then
+        MNT="$MNT -v /mnt/d:/mnt/d"
+      fi
     fi
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
@@ -755,12 +760,10 @@ else
         docker rmi -f ${imgs}
       fi
 
-      if [ "$ostype" != "WSL2" ]; then
-        procs=$(docker ps -a -q --no-trunc)
-        if [ "${procs}" != "" ]; then
-          echo "Stopping docker processes ..."
-          docker rm ${procs}
-        fi
+      procs=$(docker ps -a -q --no-trunc)
+      if [ "${procs}" != "" ]; then
+        echo "Stopping docker processes ..."
+        docker rm ${procs}
       fi
     else
       echo "Invalid entry. Resetting launch menu ..."
