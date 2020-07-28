@@ -163,7 +163,12 @@ else
     if [[ "$is_wsl" != "" ]]; then
       ostype="WSL2"
       HOMEDIR="/mnt/c/Users/$USER"
-      MNT="$MNT -v /mnt:/mnt"
+      if [ -d "/mnt/c" ]; then
+        MNT="$MNT -v /mnt/c:/mnt/c"
+      fi
+      if [ -d "/mnt/d" ]; then
+        MNT="$MNT -v /mnt/d:/mnt/d"
+      fi
     fi
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
@@ -575,17 +580,19 @@ else
         sudo rm /usr/local/bin/launch
         sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}-chromeos.sh -o "/usr/local/bin/launch"
         sudo chmod 755 "/usr/local/bin/launch"
-        launch
+        launch "${@:1}"
       elif [ $ostype == "WSL2" ]; then
         sudo rm /usr/local/bin/launch
         sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "/usr/local/bin/launch"
         sudo chmod 755 "/usr/local/bin/launch"
-        launch
+        launch "${@:1}"
       else 
         curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT} ${@:1}"
       fi
+      echo "launch ${@:1}"
+      read wait
       exit 1
     elif [ ${menu_exec} == 8 ]; then
       echo "-----------------------------------------------------"
@@ -755,12 +762,10 @@ else
         docker rmi -f ${imgs}
       fi
 
-      if [ "$ostype" != "WSL2" ]; then
-        procs=$(docker ps -a -q --no-trunc)
-        if [ "${procs}" != "" ]; then
-          echo "Stopping docker processes ..."
-          docker rm ${procs}
-        fi
+      procs=$(docker ps -a -q --no-trunc)
+      if [ "${procs}" != "" ]; then
+        echo "Stopping docker processes ..."
+        docker rm ${procs}
       fi
     else
       echo "Invalid entry. Resetting launch menu ..."
