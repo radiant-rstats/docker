@@ -25,6 +25,10 @@ Check if there are any updates available for your system by clicking on the Star
 
 <img src="figures/windows-version.png" width="300px">
 
+If you are having issues upgrading your Windows version, please reach out your IT support staff. If upgrading is not feasible for some reason you will see a message like the screenshot below and should continue with **Step 2**.
+
+<img src="figures/win-update-message.png" width="300px">
+
 **Step 2**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down docker hasn't finished starting up yet.
 
 During the install process use *only* the default settings. If prompted, make sure to choose "Linux containers" and *not* "Windows containers". You may also be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer should restart.
