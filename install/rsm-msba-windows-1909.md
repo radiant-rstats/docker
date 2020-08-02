@@ -9,6 +9,7 @@
 - [Cleanup](#cleanup)
 - [Getting help](#getting-help)
 - [Trouble shooting](#trouble-shooting)
+- [Optional](#optional)
 
 ## Installing the RSM-MSBA computing environment on Windows
 
@@ -292,7 +293,7 @@ Please bookmark this page in your browser for easy access in the future. You can
 * `launch -s` show additional output in the terminal that can be useful to debug any problems
 * `launch -h` prints the help shown in the screenshot below
 
-<img src="figures/docker-help.png" width="500px"
+<img src="figures/docker-help.png" width="500px">
 
 > Note: If you do not see the option to show help, please upgrade the launch script by pressing 7 (and Enter)
 
@@ -310,14 +311,24 @@ Alternative "fixes" that have worked, are to restart docker by right-clicking on
 
 ## Optional
 
-If you did *not* use the installer above to complete steps 3 and 4 you can install python3 on Windows using **chocolatey**. Open a CMD terminal **as administrator** and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal
+Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and copy-and-paste the code below to install Python3 and VSCode. Note: You may have to right-click to copy-and-paste the code into the terminal
 
 ```bash
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin";
+winget install -e Python.Python;
+winget install -e Microsoft.VisualStudioCode;
 ```
 
-Now close the terminal and open a new CMD terminal **as administrator** and copy-and-paste the code below:
+With VSCode installed locally on your host OS, you can connect to a running container by adding the below to `C:/Users/your-user-id/.ssh/config` and `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
+
+> Note: You still have to replace `your-user-id` in the text below to your usedname on the server
 
 ```bash
-choco install python3;
+Host docker_local
+    User jovyan
+    HostName 127.0.0.1
+    StrictHostKeyChecking no
+    Port 2222
+Host sc1
+    User your-user-id
+    HostName rsm-compute-01.ucsd.edu
 ```

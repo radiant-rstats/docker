@@ -9,6 +9,7 @@
 - [Cleanup](#cleanup)
 - [Getting help](#getting-help)
 - [Trouble shooting](#trouble-shooting)
+- [Optional](#optional)
 
 ## Installing the RSM-MSBA computing environment on Windows
 
@@ -46,7 +47,7 @@ Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx7
 
 **Step 3**: Install Windows Tools
 
-Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install the Windows Terminal and Ubuntu-20.04:
+Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install the Windows Terminal and Docker:
 
 ```bash
 winget install -e Microsoft.WindowsTerminal
@@ -322,7 +323,9 @@ winget install -e Python.Python;
 winget install -e Microsoft.VisualStudioCode;
 ```
 
-With VSCode installed locally on your host OS, you can connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
+With VSCode installed locally on your host OS, you can connect to a running container by adding the below to `C:/Users/your-user-id/.ssh/config` and `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
+
+> Note: You still have to replace `your-user-id` in the text below to your usedname on the server
 
 ```bash
 Host docker_local
