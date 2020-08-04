@@ -28,6 +28,7 @@ networkx
 nltk
 numba
 numexpr
+numpy<1.19.0,>=1.16.0
 pandas
 patsy
 plotly
