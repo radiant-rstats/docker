@@ -27,25 +27,27 @@ Check if there are any updates available for your system by clicking on the Star
 
 If you are having issues upgrading your Windows version, please reach out your IT support staff. If upgrading is not feasible for some reason you will see a message like the screenshot below and should continue with **Step 2**.
 
-<img src="figures/win-update-message.png" width="300px">
+<img src="figures/win-update-message.png" width="600px">
 
-**Step 2**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below in your system tray. If the containers shown in the image are moving up and down docker hasn't finished starting up yet.
+**Step 2**: Install Windows Tools
 
-During the install process use *only* the default settings. If prompted, make sure to choose "Linux containers" and *not* "Windows containers". You may also be prompted to enable virtualization ("Hyper-V"). If so, click OK and your computer should restart.
+Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.42101-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install Docker:
+
+```bash
+winget install -e Docker.DockerDesktop
+```
+
+Next, logout and back into Windows and then start Docker by clicking on the Whale icon that was added to your desktop (see image below).
 
 ![docker](figures/docker-icon.png)
 
-<https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe>
-
-Once the docker application has been installed, right click on the docker icon and select "Settings".
+You will know if Docker is running if you see the icon above in your system tray. If the containers shown in the image are moving up and down, docker hasn't finished starting up yet. Once the docker application is running, click on the docker icon in the system tray and select "Settings".
 
 Start by clicking on _Resources > ADVANCED_ to change the resources docker is allowed to use on your system. You can set this to approximately 50% of the maximum available on your system.
 
 <img src="figures/docker-resources.png" width="500px">
 
 Next click on _Resources > FILE SHARING_ and then click on the + sign to share the "C" drive as shown in the image below
-
-> Note: If you do not see an option to select shared drives you likely selected "Windows containers" rather than the default "Linux containers" during the docker install. Please re-install docker and make sure to select "Linux containers" when prompted.
 
 <img src="figures/windows-shared-drives.png" width="500px">
 
@@ -61,6 +63,8 @@ If you see a warning message like the image shown below when you run the install
 
 <details>
 <summary>Complete steps 3 and 4 manually</summary>
+
+You should only complete steps 3 and 4 manually if, for some reason, the installer didn't work on your system.
 
 **Step 3**: Install git bash from the link below
 
@@ -315,7 +319,7 @@ Alternative "fixes" that have worked, are to restart docker by right-clicking on
 
 ## Optional
 
-Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and copy-and-paste the code below to install Python3 and VSCode. Note: You may have to right-click to copy-and-paste the code into the terminal
+Open PowerShell and copy-and-paste the code below to install Python3 and VSCode. Note: You may have to right-click to copy-and-paste the code into PowerShell
 
 ```bash
 winget install -e Python.Python;
@@ -324,7 +328,7 @@ winget install -e Microsoft.VisualStudioCode;
 
 With VSCode installed locally on your host OS, you can connect to a running container by adding the below to `C:/Users/your-user-id/.ssh/config` and `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
 
-> Note: You still have to replace `your-user-id` in the text below to your usedname on the server
+> Note: You still have to replace `your-user-id` in the text below to your username on the server
 
 ```bash
 Host docker_local

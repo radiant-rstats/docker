@@ -591,8 +591,6 @@ else
         chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT} ${@:1}"
       fi
-      echo "launch ${@:1}"
-      read wait
       exit 1
     elif [ ${menu_exec} == 8 ]; then
       echo "-----------------------------------------------------"

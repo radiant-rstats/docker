@@ -163,7 +163,12 @@ else
     if [[ "$is_wsl" != "" ]]; then
       ostype="WSL2"
       HOMEDIR="/mnt/c/Users/$USER"
-      MNT="$MNT -v /mnt:/mnt"
+      if [ -d "/mnt/c" ]; then
+        MNT="$MNT -v /mnt/c:/mnt/c"
+      fi
+      if [ -d "/mnt/d" ]; then
+        MNT="$MNT -v /mnt/d:/mnt/d"
+      fi
     fi
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
@@ -469,7 +474,7 @@ else
     elif [ ${menu_exec} == 3 ]; then
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
-        sleep 4s
+        sleep 2s
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
@@ -479,7 +484,7 @@ else
           -v ${HOMEDIR}:/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
-        sleep 5s
+        sleep 2s
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 4 ]; then
@@ -575,16 +580,16 @@ else
         sudo rm /usr/local/bin/launch
         sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}-chromeos.sh -o "/usr/local/bin/launch"
         sudo chmod 755 "/usr/local/bin/launch"
-        launch
+        launch "${@:1}"
       elif [ $ostype == "WSL2" ]; then
         sudo rm /usr/local/bin/launch
         sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "/usr/local/bin/launch"
         sudo chmod 755 "/usr/local/bin/launch"
-        launch
+        launch "${@:1}"
       else 
         curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT} ${@:1}"
       fi
       exit 1
     elif [ ${menu_exec} == 8 ]; then
@@ -755,12 +760,10 @@ else
         docker rmi -f ${imgs}
       fi
 
-      if [ "$ostype" != "WSL2" ]; then
-        procs=$(docker ps -a -q --no-trunc)
-        if [ "${procs}" != "" ]; then
-          echo "Stopping docker processes ..."
-          docker rm ${procs}
-        fi
+      procs=$(docker ps -a -q --no-trunc)
+      if [ "${procs}" != "" ]; then
+        echo "Stopping docker processes ..."
+        docker rm ${procs}
       fi
     else
       echo "Invalid entry. Resetting launch menu ..."

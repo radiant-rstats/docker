@@ -25,7 +25,7 @@ Check if there are any updates available for your system by clicking on the Star
 
 If you are having issues upgrading your Windows version, please reach out your IT support staff. If upgrading is not feasible for some reason you will see a message like the screenshot below, and should use the install instructions shown in the document linked below:
 
-<img src="figures/win-update-message.png" width="300px">
+<img src="figures/win-update-message.png" width="600px">
 
 <https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md>
 
@@ -52,7 +52,7 @@ Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx7
 
 **Step 3**: Install Windows Tools
 
-Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.41821-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install the Windows Terminal and Docker:
+Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.42101-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install Windows Terminal and Docker:
 
 ```bash
 winget install -e Microsoft.WindowsTerminal
@@ -65,7 +65,7 @@ Next, logout and back into Windows and then start Docker by clicking on the Whal
 
 ![docker](figures/docker-icon.png)
 
-You will know if Docker is running if you see the icon above in your system tray. If the containers shown in the image are moving up and down, docker hasn't finished starting up yet. Once the docker application is running, right click on the docker icon in the system tray and select "Settings".
+You will know if Docker is running if you see the icon above in your system tray. If the containers shown in the image are moving up and down, docker hasn't finished starting up yet. Once the docker application is running, click on the docker icon in the system tray and select "Settings".
 
 Start by clicking on _General_ to ensure "Use the WSL 2 based engine" is checked as in the screenshot below.
 
@@ -330,7 +330,7 @@ winget install -e Microsoft.VisualStudioCode;
 
 With VSCode installed locally on your host OS, you can connect to a running container by adding the below to `C:/Users/your-user-id/.ssh/config` and `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
 
-> Note: You still have to replace `your-user-id` in the text below to your usedname on the server
+> Note: You still have to replace `your-user-id` in the text below to your username on the server
 
 ```bash
 Host docker_local
