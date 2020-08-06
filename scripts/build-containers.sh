@@ -2,7 +2,7 @@
 docker login
 DOCKERHUB_VERSION=1.8.0
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
 
 build () {
   {
@@ -45,11 +45,6 @@ launcher () {
   fi
 }
 
-LABEL=rsm-msba
-build
-
-exit
-
 LABEL=r-focal
 build
 # if you use the line below, manually remove the 'allow' section afterwards
@@ -84,7 +79,7 @@ LABEL=rsm-jupyterhub
 build
 
 ## new containers should be launched using the newest version of the container
-# docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
