@@ -18,7 +18,8 @@ script_home () {
 function launch_usage() {
   echo "Usage: $0 [-t tag (version)] [-d directory]"
   echo "  -t, --tag         Docker image tag (version) to use"
-  echo "  -d, --directory   Base directory to use"
+  echo "  -d, --directory   Project directory to use"
+  echo "  -v, --volume      Volume to mount as home directory"
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
@@ -31,6 +32,7 @@ function launch_usage() {
 while [[ "$#" > 0 ]]; do case $1 in
   -t|--tag) ARG_TAG="$2"; shift;shift;;
   -d|--directory) ARG_DIR="$2";shift;shift;;
+  -v|--volume) ARG_VOLUME="$2";shift;shift;;
   -s|--show) ARG_SHOW="show";shift;shift;;
   -h|--help) launch_usage;shift; shift;;
   *) echo "Unknown parameter passed: $1"; echo ""; launch_usage; shift; shift;;
@@ -87,7 +89,12 @@ if [ "${has_docker}" == "" ]; then
   echo "-----------------------------------------------------------------------"
   echo "Docker is not installed. Download and install Docker from"
   if [[ "$ostype" == "Linux" ]]; then
-    echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
+    is_wsl=$(which explorer.exe)
+    if [[ "$is_wsl" != "" ]]; then
+      echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
+    else
+      echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
+    fi
   elif [[ "$ostype" == "Darwin" ]]; then
     echo "https://download.docker.com/mac/stable/Docker.dmg"
   else
@@ -147,6 +154,19 @@ else
     sed_fun () {
       sed -i $1 "$2"
     }
+    MNT="-v /media:/media"
+
+    is_wsl=$(which explorer.exe)
+    if [[ "$is_wsl" != "" ]]; then
+      ostype="WSL2"
+      HOMEDIR="/mnt/c/Users/$USER"
+      if [ -d "/mnt/c" ]; then
+        MNT="$MNT -v /mnt/c:/mnt/c"
+      fi
+      if [ -d "/mnt/d" ]; then
+        MNT="$MNT -v /mnt/d:/mnt/d"
+      fi
+    fi
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~
@@ -157,6 +177,7 @@ else
     sed_fun () {
       sed -i '' -e $1 "$2"
     }
+    MNT="-v /Volumes:/media/Volumes"
   else
     ostype="Windows"
     HOMEDIR="C:/Users/$USERNAME"
@@ -166,7 +187,8 @@ else
     }
     sed_fun () {
       sed -i $1 "$2"
-    }
+    }     
+    MNT=""
   fi
 
   if [ "$ARG_DIR" != "" ] || [ "$ARG_HOME" != "" ]; then
@@ -468,9 +490,16 @@ else
       else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
-      curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-      chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-      "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+      if [ $ostype == "WSL2" ]; then
+        sudo rm /usr/local/bin/launch
+        sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "/usr/local/bin/launch"
+        sudo chmod 755 "/usr/local/bin/launch"
+        launch
+      else
+        curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+        chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+      fi
       exit 1
     elif [ ${menu_exec} == 6 ]; then
       echo "-----------------------------------------------------"
@@ -516,6 +545,26 @@ else
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
       echo "${LABEL} container and ip: 127.0.0.1, port: ${selenium_port} from the host OS"
+      echo "Press any key to continue"
+      echo "-----------------------------------------------------------------------"
+      read continue
+    elif [ "${menu_exec}" == "h" ]; then
+      echo "-----------------------------------------------------------------------"
+      echo "Showing help for your OS in the default browser"
+      echo "Showing help to start the docker container from the command line"
+      echo ""
+      if [[ "$ostype" == "macOS" ]]; then
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
+      elif [[ "$ostype" == "Windows" ]]; then
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md
+      elif [[ "$ostype" == "WSL2" ]]; then
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
+      elif [[ "$ostype" == "ChromeOS" ]]; then
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-chromeos.md
+      else
+        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-linux.md
+      fi
+      $0 --help
       echo "Press any key to continue"
       echo "-----------------------------------------------------------------------"
       read continue
@@ -611,10 +660,12 @@ else
         docker rmi -f ${imgs}
       fi
 
-      procs=$(docker ps -a -q --no-trunc)
-      if [ "${procs}" != "" ]; then
-        echo "Stopping docker processes ..."
-        docker rm ${procs}
+      if [ "$ostype" != "WSL2" ]; then
+        procs=$(docker ps -a -q --no-trunc)
+        if [ "${procs}" != "" ]; then
+          echo "Stopping docker processes ..."
+          docker rm ${procs}
+        fi
       fi
     else
       echo "Invalid entry. Resetting launch menu ..."
