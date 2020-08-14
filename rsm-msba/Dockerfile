@@ -30,11 +30,11 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm
 
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager \
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@2.0 \
   @jupyterlab/git \
   jupyterlab-jupytext \
   @ryantam626/jupyterlab_code_formatter \
-  @jupyterlab/server-proxy 
+  @jupyterlab/server-proxy
 
 RUN jupyter serverextension enable \
   --py jupyterlab_code_formatter --system \
