@@ -37,13 +37,14 @@ If you are having issues upgrading your Windows version, please reach out your I
 To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
 
 ```bash
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart;
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart;
 ```
 
 Next, restart your computer and re-open PowerShell and set the default version of WSL to "2" using the code below
 
 ```bash
-wsl --set-default-version 2
+wsl --set-default-version 2;
 ```
 
 If you see a message that "WSL 2 requires an update to its kernel component", download and run the <a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" target="_blank">kernel installer</a> 
@@ -55,8 +56,8 @@ Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx7
 Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.42101-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install Windows Terminal and Docker:
 
 ```bash
-winget install -e Microsoft.WindowsTerminal
-winget install -e Docker.DockerDesktop
+winget install -e Microsoft.WindowsTerminal;
+winget install -e Docker.DockerDesktop;
 ```
 
 This will install the "Windows Terminal" and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
