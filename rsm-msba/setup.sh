@@ -18,6 +18,12 @@ else
   sed_fun () {
     sed -i $1 "$2"
   }
+
+  is_wsl=$(which explorer.exe)
+  if [[ "$is_wsl" != "" ]]; then
+    ostype="WSL2"
+    HOMEDIR=~
+  fi
 fi
 
 ## make sure abend is set correctly
@@ -79,6 +85,7 @@ echo "Setup extensions for VS Code"
 echo "-----------------------------------------------------------------------"
 
 mkdir -p ~/.rsm-msba/share/code-server/User
+# rm -rf ~/.rsm-msba/share/code-server/User
 cp /opt/code-server/settings.json ~/.rsm-msba/share/code-server/User/settings.json
 
 # extension available in code-server market place
