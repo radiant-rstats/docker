@@ -1,17 +1,25 @@
 ## Setup oh-my-zsh
 
-Set zsh as the default shell
+Set zsh as the default shell. On macOS start with the command below from a terminal and answer "y" if prompted to change your default shell to zsh
 
 `chsh -s $(which zsh)`
 
-On macOS start with the command below from a terminal and answer "y" if prompted to change your default shell to zsh
+Run the commands below to install some useful plugins.
 
 ```
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
 git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions;
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions;
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting;
+git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k;
+git clone git://github.com/wting/autojump.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/autojump;
+sudo ln -s /usr/bin/python3 /usr/bin/python;
+cd ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/autojump;
+./install.py
+cd -
 ```
+
+Use VSCode, or another text editor, to make a few changes to the `.zshrc` file
 
 ```
 code ~/.zshrc
@@ -25,6 +33,8 @@ plugins=(
   zsh-completions
   zsh-autosuggestions
   zsh-syntax-highlighting
+  autojump
+  k
 )
 ```
 
