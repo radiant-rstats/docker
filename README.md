@@ -1,7 +1,7 @@
 Dockerized Business Analytics
 ==================================
 
-This repo contains information to setup a docker image with R, Rstudio, Shiny, [Radiant](https://radiant-rstats/radiant), Python, Postgres, JupyterLab, and Code-Server (aka VS Code)
+This repo contains information to setup a docker image with R, Rstudio, Shiny, [Radiant](https://radiant-rstats/radiant), Python, Postgres, JupyterLab, and Code-Server (aka VSCode)
 
 ## Install Docker
 
@@ -26,33 +26,33 @@ For detailed install instructions on Windows see [install/rsm-msba-windows.md](i
 
 For detailed install instructions on macOS see [install/rsm-msba-macos.md](install/rsm-msba-macos.md)
 
-## r-bionic
+## r-focal
 
-You probably don't want to _run_ this image by itself. It is used in the `radiant`, `rsm-msba-spark`, and `rsm-jupyterhub`, application (see below). To build a new container based on `r-bionic` add the following at the top of your Dockerfile
+You probably don't want to _run_ this image by itself. It is used in the `radiant`, `rsm-msba-spark`, and `rsm-jupyterhub`, application (see below). To build a new container based on `r-focal` add the following at the top of your Dockerfile
 
 ```
-FROM vnijs:docker-bionic
+FROM vnijs/r-focal:latest
 ```
 
-To build r-bionic yourself use:
+To build r-focal yourself use:
 
 ```sh
-docker build -t $USER/r-bionic ./r-bionic
+docker build -t $USER/r-focal ./r-focal
 ```
 
 To push to docker hub use:
 
 ```bash
 sudo docker login 
-docker push $USER/r-bionic
+docker push $USER/r-focal
 ```
 
 ## radiant
 
-The second image builds on `r-bionic` and adds [radiant](https://github.com/radiant-rstats/radiant) and required R-packages. To build a new container based on `radiant` add the following at the top of your Dockerfile
+The second image builds on `r-focal` and adds [radiant](https://github.com/radiant-rstats/radiant) and required R-packages. To build a new container based on `radiant` add the following at the top of your Dockerfile
 
 ```
-FROM vnijs:radiant
+FROM vnijs/radiant:latest
 ```
 
 To allow execution of R-code in _Report > Rmd_ and _Report > R_ in Radiant add the following to .Rprofile in your home directory
@@ -68,12 +68,12 @@ options(radiant.ace_theme = "tomorrow")
 # options(radiant.ace_showInvisibles = TRUE)
 ```
 
-## rsm-msba-spark
+## rsm-msba and rsm-msba-spark
 
-The third image builds on the radiant image and adds python, jupyter lab, and spark. To build a new container based on `rsm-msba-spark` add the following at the top of your Dockerfile
+The third and forth images build on the radiant image and adds python, jupyter lab, postgresql, spark, and Code-Server (aka VSCode). To build a new container based on `rsm-msba-spark` add the following at the top of your Dockerfile
 
 ```
-FROM vnijs:rsm-msba-spark
+FROM vnijs/rsm-msba-spark:latest
 ```
 
 ## rsm-jupyterlab
@@ -82,7 +82,7 @@ This image builds on rsm-msba-spark and is set up to be accessible from a server
 
 ## rsm-vscode
 
-This image contains all R and Python libraries found in `rsm-msba-spark` and `rsm-jupterlab` but does not include Jupyter Lab, Shiny server, Rstudio server, or VS Code (codeserver). It is intended to be used with a local install of [VS Code](https://code.visualstudio.com/download). Once you start the container using `launch-rsm-vscode` you can use "Remote-Containers: Attach to Running Container" from VS Code to connect. Recommended extensions to use with the container are shown in the screenshot below:
+This image contains all R and Python libraries found in `rsm-msba-spark` and `rsm-jupterlab` but does not include Jupyter Lab, Shiny server, Rstudio server, or VSCode (codeserver). It is intended to be used with a local install of [VSCode](https://code.visualstudio.com/download). Once you start the container using `launch-rsm-vscode` you can use "Remote-Containers: Attach to Running Container" from VSCode to connect. Recommended extensions to use with the container are shown in the screenshot below:
 
 ![vscode extension](rsm-vscode/images/vscode-extensions.png)
 
@@ -109,7 +109,7 @@ docker rmi --force $USER/rsm-msba-spark
 To remove stop all running containers, remove unused images, and errand docker processes use the `dclean.sh` script
 
 ```sh
-./dclean.sh
+./scripts/dclean.sh
 ```
 
 ## General docker related commands

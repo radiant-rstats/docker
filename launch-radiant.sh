@@ -154,8 +154,11 @@ else
     sed_fun () {
       sed -i $1 "$2"
     }
-    MNT="-v /media:/media"
-
+    if [ -d "/media" ]; then
+      MNT="-v /media:/media"
+    else
+      MNT=""
+    fi
     is_wsl=$(which explorer.exe)
     if [[ "$is_wsl" != "" ]]; then
       ostype="WSL2"
@@ -325,7 +328,7 @@ else
   echo "-----------------------------------------------------------------------"
   {
     docker run --net ${NETWORK} -d \
-      -p 127.0.0.1:8181:8181 -p 127.0.0.1:8787:8787 -p 127.0.0.1:2222:22 \
+      -p 127.0.0.1:8181:8181 -p 127.0.0.1:8787:8787 -p 127.0.0.1:2121:22 \
       -e PASSWORD=${PASSWORD} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       ${IMAGE}:${IMAGE_VERSION}
@@ -490,11 +493,12 @@ else
       else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
-      if [ $ostype == "WSL2" ]; then
-        sudo rm /usr/local/bin/launch
-        sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "/usr/local/bin/launch"
-        sudo chmod 755 "/usr/local/bin/launch"
-        launch
+      if [ $ostype == "ChromeOS" ]; then
+        sudo -- bash -c "rm -f /usr/local/bin/launch; curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-$LABEL-chromeos.sh -o /usr/local/bin/launch; chmod 755 /usr/local/bin/launch";
+        /usr/local/bin/launch "${@:1}"
+      elif [ $ostype == "WSL2" ]; then
+        sudo -- bash -c "rm -f /usr/local/bin/launch; curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-$LABEL.sh -o /usr/local/bin/launch; chmod 755 /usr/local/bin/launch";
+        /usr/local/bin/launch "${@:1}"
       else
         curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"

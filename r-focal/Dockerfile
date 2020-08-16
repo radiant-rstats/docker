@@ -1,4 +1,3 @@
-# FROM rocker/r-ver:4.0.0
 FROM ubuntu:focal
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 USER root
@@ -21,6 +20,7 @@ RUN apt-get update \
   ca-certificates \
   file \
   fonts-texgyre \
+  fonts-powerline \
   g++ \
   gfortran \
   gsfonts \

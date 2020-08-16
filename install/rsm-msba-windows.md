@@ -53,7 +53,7 @@ Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx7
 
 **Step 3**: Install Windows Tools
 
-Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.42101-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below to install Windows Terminal and Docker:
+Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.42101-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
 
 ```bash
 winget install -e Microsoft.WindowsTerminal;
@@ -298,6 +298,7 @@ rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-msba-spark;
+sudo -- bash -c 'rm -f /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch; chmod 755 /usr/local/bin/launch';
 ```
 
 ## Getting help
@@ -338,7 +339,7 @@ Host docker_local
     User jovyan
     HostName 127.0.0.1
     StrictHostKeyChecking no
-    Port 2222
+    Port 2121
 Host sc1
     User your-user-id
     HostName rsm-compute-01.ucsd.edu

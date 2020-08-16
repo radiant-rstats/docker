@@ -19,6 +19,7 @@ function launch_usage() {
   echo "Usage: $0 [-t tag (version)] [-d directory]"
   echo "  -t, --tag         Docker image tag (version) to use"
   echo "  -d, --directory   Base directory to use"
+  echo "  -v, --volume      Volume to mount as home directory"
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
@@ -31,6 +32,7 @@ function launch_usage() {
 while [[ "$#" > 0 ]]; do case $1 in
   -t|--tag) ARG_TAG="$2"; shift;shift;;
   -d|--directory) ARG_DIR="$2";shift;shift;;
+  -v|--volume) ARG_VOLUME="$2";shift;shift;;
   -s|--show) ARG_SHOW="show";shift;shift;;
   -h|--help) launch_usage;shift; shift;;
   *) echo "Unknown parameter passed: $1"; echo ""; launch_usage; shift; shift;;
@@ -150,7 +152,22 @@ else
     sed_fun () {
       sed -i $1 "$2"
     }
-    MNT="-v /media:/media"
+    if [ -d "/media" ]; then
+      MNT="-v /media:/media"
+    else
+      MNT=""
+    fi
+    is_wsl=$(which explorer.exe)
+    if [[ "$is_wsl" != "" ]]; then
+      ostype="WSL2"
+      HOMEDIR="/mnt/c/Users/$USER"
+      if [ -d "/mnt/c" ]; then
+        MNT="$MNT -v /mnt/c:/mnt/c"
+      fi
+      if [ -d "/mnt/d" ]; then
+        MNT="$MNT -v /mnt/d:/mnt/d"
+      fi
+    fi
   elif [[ "$ostype" == "Darwin" ]]; then
     ostype="macOS"
     HOMEDIR=~
@@ -173,6 +190,9 @@ else
       sed -i $1 "$2"
     }
     MNT=""
+  fi
+  if [ "$ARG_VOLUME" != "" ]; then
+    HOMEDIR="$ARG_VOLUME"
   fi
 
   if [ "$ARG_DIR" != "" ] || [ "$ARG_HOME" != "" ]; then
@@ -298,7 +318,7 @@ else
   fi
   {
     docker run --net ${NETWORK} -d \
-      -p 127.0.0.1:8765:8765 -p 127.0.0.1:2222:22 \
+      -p 127.0.0.1:8765:8765 -p 127.0.0.1:2121:22 \
       -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -410,14 +430,15 @@ else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
       if [ $ostype == "ChromeOS" ]; then
-        sudo rm /usr/local/bin/launch
-        sudo curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba-spark-chromeos.sh -o "/usr/local/bin/launch"
-        sudo chmod 755 "/usr/local/bin/launch"
-        launch
+        sudo -- bash -c "rm -f /usr/local/bin/launch; curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-$LABEL-chromeos.sh -o /usr/local/bin/launch; chmod 755 /usr/local/bin/launch";
+        /usr/local/bin/launch "${@:1}"
+      elif [ $ostype == "WSL2" ]; then
+        sudo -- bash -c "rm -f /usr/local/bin/launch; curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-$LABEL.sh -o /usr/local/bin/launch; chmod 755 /usr/local/bin/launch";
+        /usr/local/bin/launch "${@:1}"
       else 
         curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT} ${@:1}"
       fi
       exit 1
     elif [ ${menu_exec} == 4 ]; then

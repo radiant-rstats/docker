@@ -239,6 +239,7 @@ rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-msba-spark;
+sudo -- bash -c 'rm -f /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch; chmod 755 /usr/local/bin/launch';
 ```
 
 ## Getting help
@@ -277,7 +278,7 @@ Host docker_local
     User jovyan
     HostName 127.0.0.1
     StrictHostKeyChecking no
-    Port 2222
+    Port 2121
 Host sc1
     User your-user-id
     HostName rsm-compute-01.ucsd.edu
