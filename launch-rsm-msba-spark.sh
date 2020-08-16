@@ -536,6 +536,11 @@ else
         if [[ "$ostype" == "Windows" ]]; then
           winpty docker exec -it --user ${NB_USER} ${running} sh
         else
+          # default_shell=$SHELL
+          # if [ $default_shell == "" ]; then
+          #   default_shell=/bin/bash
+          # fi
+          # docker exec -it --user ${NB_USER} ${running} $default_shell
           docker exec -it --user ${NB_USER} ${running} /bin/bash
         fi
       fi
