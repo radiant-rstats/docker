@@ -1,6 +1,8 @@
+#!/bin/bash
+
 # git pull
 docker login
-DOCKERHUB_VERSION=1.8.0
+DOCKERHUB_VERSION=1.8.1
 UPLOAD="NO"
 UPLOAD="YES"
 
