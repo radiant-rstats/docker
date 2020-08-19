@@ -268,6 +268,12 @@ sudo service docker start
 
 ## Optional
 
+If you want to make your terminal look nicer and add syntax highlighting, auto-completion, etc. consider following the install instructions linked below:
+
+<https://github.com/radiant-rstats/docker/blob/master/install/setup-ohmyzsh.md>
+
+<img src="figures/ohmyzsh-powerlevel10k.png" width="500px">
+
 If you have VSCode installed locally on your host OS (https://code.visualstudio.com/download), you can connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
 
 ```bash
