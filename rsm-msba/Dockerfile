@@ -127,7 +127,7 @@ ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \
   JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime \
   JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
-  SHELL=/bin/bash
+  SHELL=/bin/zsh
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -138,9 +138,10 @@ RUN chmod 777 /opt/launch.sh
 
 # adding a ligature font
 # from https://www.jetbrains.com/lp/mono/
-RUN mkdir -p /usr/share/fonts/ligature
-COPY ./fonts/*.ttf /usr/share/fonts/ligature
-RUN chmod 644 /usr/share/fonts/ligature/*
+RUN mkdir -p /usr/share/fonts/truetype/ligature
+COPY ./fonts/*.ttf /usr/share/fonts/truetype/ligature
+RUN chmod 644 /usr/share/fonts/truetype/ligature/*
+RUN wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
 RUN fc-cache -fv
 
 EXPOSE 8989 8765 22

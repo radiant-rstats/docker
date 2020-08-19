@@ -3,7 +3,7 @@ services:
   rsm-msba-spark:
     image: "vnijs/rsm-msba-spark"
     environment:
-      SHELL: /bin/bash
+      SHELL: /bin/zsh
       PYTHONUSERBASE: /home/jovyan/.rsm-msba
       JUPYTER_PATH: /home/jovyan/.rsm-msba/share/jupyter
       JUPYTER_RUNTIME_DIR: /tmp/jupyter/runtime
