@@ -355,7 +355,7 @@ else
     echo "-----------------------------------------------------------------------"
     echo "${LABEL}:${DOCKERHUB_VERSION} computing environment on ${ostype} (${BUILD_DATE//T*/})"
     echo "-----------------------------------------------------------------------"
-    echo "Press (1) to show a (bash) terminal, followed by [ENTER]:"
+    echo "Press (1) to show a (ZSH) terminal, followed by [ENTER]:"
     echo "Press (2) to update the ${LABEL} container, followed by [ENTER]:"
     echo "Press (3) to update the launch script, followed by [ENTER]:"
     echo "Press (4) to clear R packages, followed by [ENTER]:"
@@ -381,7 +381,7 @@ else
           clear
         fi
         echo "------------------------------------------------------------------------------"
-        echo "Bash terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
+        echo "ZSH terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
         echo "Type 'exit' to return to the launch menu"
         echo "------------------------------------------------------------------------------"
         echo ""
@@ -389,7 +389,7 @@ else
         if [[ "$ostype" == "Windows" ]]; then
           winpty docker exec -it --user ${NB_USER} ${running} sh
         else
-          docker exec -it --user ${NB_USER} ${running} /bin/bash
+          docker exec -it --user ${NB_USER} ${running} /bin/zsh
         fi
       fi
     elif [ ${menu_exec} == 2 ]; then

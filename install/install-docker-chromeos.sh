@@ -8,7 +8,8 @@ sudo apt-get install \
   curl \
   software-properties-common \
   wget \
-  openssh-client
+  openssh-client \
+  zsh
 
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo add-apt-repository \

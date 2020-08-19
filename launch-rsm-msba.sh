@@ -390,7 +390,7 @@ else
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
     echo "Press (4) to show VS Code, followed by [ENTER]:"
-    echo "Press (5) to show a (bash) terminal, followed by [ENTER]:"
+    echo "Press (5) to show a (ZSH) terminal, followed by [ENTER]:"
     echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
     echo "Press (7) to update the launch script, followed by [ENTER]:"
     echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
@@ -532,7 +532,7 @@ else
           clear
         fi
         echo "------------------------------------------------------------------------------"
-        echo "Bash terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
+        echo "ZSH terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
         echo "Type 'exit' to return to the launch menu"
         echo "------------------------------------------------------------------------------"
         echo ""
@@ -540,7 +540,7 @@ else
         if [[ "$ostype" == "Windows" ]]; then
           winpty docker exec -it --user ${NB_USER} ${running} sh
         else
-          docker exec -it --user ${NB_USER} ${running} /bin/bash
+          docker exec -it --user ${NB_USER} ${running} /bin/zsh
         fi
       fi
     elif [ ${menu_exec} == 6 ]; then

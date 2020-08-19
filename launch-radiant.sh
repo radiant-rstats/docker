@@ -369,7 +369,7 @@ else
     echo "-----------------------------------------------------------------------"
     echo "Press (1) to show Radiant, followed by [ENTER]:"
     echo "Press (2) to show Rstudio, followed by [ENTER]:"
-    echo "Press (3) to show a (bash) terminal, followed by [ENTER]:"
+    echo "Press (3) to show a (ZSH) terminal, followed by [ENTER]:"
     echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
     echo "Press (5) to update the launch script, followed by [ENTER]:"
     echo "Press (6) to clear Rstudio sessions and packages, followed by [ENTER]:"
@@ -449,11 +449,11 @@ else
             clear
           fi
           echo "------------------------------------------------------------------------------"
-          echo "Bash terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
+          echo "ZSH terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
           echo "Type 'exit' to return to the launch menu"
           echo "------------------------------------------------------------------------------"
           echo ""
-          docker exec -it --user ${NB_USER} ${running} /bin/bash
+          docker exec -it --user ${NB_USER} ${running} /bin/zsh
         fi
     elif [ ${menu_exec} == 4 ]; then
       running=$(docker ps -q)
