@@ -89,7 +89,7 @@ Click on the down-caret at the top of the terminal window to start an Ubuntu ter
 <img src="figures/start-ubuntu-terminal.png" width="500px">
 
 ```bash
-cd ~; sudo -- sh -c 'apt -y update; apt -y upgrade; apt -y install xdg-utils zsh;'
+cd ~; sudo -- sh -c 'apt -y update; apt -y upgrade; apt -y install xdg-utils zsh ntpdate python-is-python3; ntpdate pool.ntp.org'
 ```
 
 Now Ubuntu should be up to date and ready to accept commands to clone the docker repo with documentation and launch scripts. Again, provide your password if prompted.

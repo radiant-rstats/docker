@@ -8,7 +8,7 @@ Set zsh as the default shell. On macOS start with the command below from a termi
 
 Follow instructions at the link below:
 
-https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k
+<a href="https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k" target="_blank">Install Meslo Nerd Font</a>
 
 Run the commands below to install some useful plugins.
 
@@ -49,4 +49,22 @@ plugins=(
 )
 ```
 
-Then set `ZSH_THEME="powerlevel10k/powerlevel10k" in ~/.zshrc and type ` source ~/.zshrc` in the terminal to start the configuration wizard. 
+Then set `ZSH_THEME="powerlevel10k/powerlevel10k"` in ~/.zshrc and type `source ~/.zshrc` in the terminal to start the configuration wizard. Follow the prompts and select the setup you prefer. You can always update and change the configuration by using `p10k configure`. 
+
+<!--
+Use the below if you want this to work with the terminal from the docker menu as well
+
+export ZSH="$HOME/.oh-my-zsh"
+-->
+
+For macOS, <a href="https://releases.hyper.is/download/mac" target="_blank">Hyper</a> is a very nice terminal. To use fonts and icons in the Hyper terminal with ZSH, change the terminal settings as follows: 
+
+> Hyper: Open Hyper → Edit → Preferences and change the value of fontFamily under module.exports.config to "MesloLGS NF".
+
+To use fonts and icons in the Windows Terminal change the terminal settings as follows: 
+
+> Windows Terminal: Open Settings (Ctrl+,), search for fontFace and set value to MesloLGS NF for every profile.
+
+If you want to have access to the same icons in the terminal in VSCode change the settings as follows:
+
+> Visual Studio Code: Open File → Preferences → Settings, enter terminal.integrated.fontFamily in the search box and set the value to "MesloLGS NF".
