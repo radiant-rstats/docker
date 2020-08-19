@@ -5,7 +5,7 @@ services:
     environment:
       USER: jovyan
       HOME: /home/jovyan
-      SHELL: /bin/bash
+      SHELL: /bin/zsh
       PYTHONUSERBASE: /home/jovyan/.rsm-msba
       JUPYTER_PATH: /home/jovyan/.rsm-msba/share/jupyter
       JUPYTER_RUNTIME_DIR: /tmp/jupyter/runtime

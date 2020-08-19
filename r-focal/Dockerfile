@@ -103,7 +103,8 @@ RUN apt-get  install -y \
   ed \
   rsync \
   vifm \
-  zsh
+  zsh \
+  python-is-python3
 
 # TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN apt-get install -y \
@@ -189,6 +190,24 @@ RUN chmod +x /usr/local/bin/launch
 
 # copy dbase connections
 COPY connections/ /etc/${NB_USER}/connections
+
+# install oh-my-zsh
+RUN sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)" \
+  && mv /root/.oh-my-zsh /usr/share/oh-my-zsh \ 
+  && cd /usr/share/oh-my-zsh/ \
+  && cp templates/zshrc.zsh-template zshrc \
+  && wget https://aur.archlinux.org/cgit/aur.git/plain/0001-zshrc.patch\?h\=oh-my-zsh-git -O zshrc.patch && patch -p1 < zshrc.patch \
+  && sudo ln /usr/share/oh-my-zsh/zshrc /etc/skel/.zshrc  \
+  && sed -i 's/DSHELL=\/bin\/bash/DSHELL=\/bin\/zsh/g' /etc/adduser.conf
+
+# adding a ligature font
+# from https://www.jetbrains.com/lp/mono/
+RUN mkdir -p /usr/share/fonts/truetype/meslo/
+COPY ./fonts/*.ttf /usr/share/fonts/truetype/meslo/
+RUN chmod 644 /usr/share/fonts/truetype/meslo/* \
+  && fc-cache -fv
+
+ENV SHELL=/bin/zsh
 
 EXPOSE 8181 8787 22
 
