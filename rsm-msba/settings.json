@@ -20,7 +20,7 @@
   "editor.renderWhitespace": "all",
   "editor.formatOnSave": true,
   "editor.suggestSelection": "first",
-  "editor.fontFamily": "JetBrainsMono-Regular, Consolas, monospace, 'Courier new'",
+  "editor.fontFamily": "'JetBrains Mono', 'MesloLGS NF', Consolas, monospace, 'Courier new'",
   "editor.fontLigatures": true,
   "window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
   "r.sessionWatcher": true,
