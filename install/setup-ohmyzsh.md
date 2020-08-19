@@ -52,6 +52,10 @@ For macOS, <a href="https://releases.hyper.is/download/mac" target="_blank">Hype
 
 > Hyper: Open Hyper → Edit → Preferences and change the value of fontFamily under module.exports.config to "MesloLGS NF".
 
+To use fonts and icons in the Standard macOS terminal with ZSH, change the terminal settings as follows: 
+
+> Apple Terminal Open Terminal → Preferences → Profiles → Text, click Change under Font and select MesloLGS NF family.
+
 To use fonts and icons in the Windows Terminal change the terminal settings as follows: 
 
 > Windows Terminal: Open Settings (Ctrl+,), search for fontFace and set value to "MesloLGS NF" for every profile.
