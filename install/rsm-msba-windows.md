@@ -32,7 +32,11 @@ If you are having issues upgrading your Windows version, please reach out your I
 
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
-<!-- Set-VMProcessor "Docker Testing" -ExposeVirtualizationExtensions $true -->
+<!-- 
+For Hyper-V VMs to allow nested virtualization:
+
+Set-VMProcessor "Docker Testing" -ExposeVirtualizationExtensions $true 
+-->
 
 To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
 
