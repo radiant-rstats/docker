@@ -49,6 +49,9 @@ ID="vnijs"
 LABEL="r-focal"
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
+# Choose your timezon https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# TIMEZONE="Europe/Amsterdam"
+TIMEZONE="America/Los_Angeles"
 if [ "$ARG_TAG" != "" ]; then
   IMAGE_VERSION="$ARG_TAG"
   DOCKERHUB_VERSION=${IMAGE_VERSION}
@@ -328,6 +331,7 @@ else
     docker run --net ${NETWORK} -d \
       -p 127.0.0.1:8181:8181 -p 127.0.0.1:8787:8787 -p 127.0.0.1:2121:22 \
       -e PASSWORD=${PASSWORD} \
+      -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       --name test_ssh \
       ${IMAGE}:${IMAGE_VERSION}
@@ -393,6 +397,7 @@ else
         echo "Starting shiny-apps in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
           -p 127.0.0.1:${menu_arg}:8181 \
+          -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
@@ -408,6 +413,7 @@ else
         docker run --net ${NETWORK} -d \
           -p 127.0.0.1:${menu_arg}:8787 \
           -e PASSWORD=${PASSWORD} \
+          -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 2s
