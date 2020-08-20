@@ -104,7 +104,8 @@ RUN apt-get  install -y \
   rsync \
   vifm \
   zsh \
-  python-is-python3
+  python-is-python3 \
+  tzdata
 
 # TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN apt-get install -y \

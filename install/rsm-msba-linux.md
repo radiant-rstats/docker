@@ -282,9 +282,6 @@ Host docker_local
     HostName 127.0.0.1
     StrictHostKeyChecking no
     Port 2121
-Host sc1
-    User your-user-id
-    HostName rsm-compute-01.ucsd.edu
 ```
 
 <!-- 

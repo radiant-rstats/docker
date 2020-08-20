@@ -49,7 +49,7 @@ ID="vnijs"
 LABEL="r-focal"
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
-# Choose your timezon https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# Choose your timezone https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 # TIMEZONE="Europe/Amsterdam"
 TIMEZONE="America/Los_Angeles"
 if [ "$ARG_TAG" != "" ]; then

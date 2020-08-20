@@ -49,6 +49,9 @@ ID="vnijs"
 LABEL="rsm-msba-spark"
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
+# Choose your timezone https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# TIMEZONE="Europe/Amsterdam"
+TIMEZONE="America/Los_Angeles"
 if [ "$ARG_TAG" != "" ]; then
   IMAGE_VERSION="$ARG_TAG"
   DOCKERHUB_VERSION=${IMAGE_VERSION}
@@ -348,6 +351,7 @@ else
     docker run --net ${NETWORK} -d \
       -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 -p 0.0.0.0:2121:22 \
       -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
+      -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
       ${IMAGE}:${IMAGE_VERSION}
@@ -450,6 +454,7 @@ else
           docker run --net ${NETWORK} -d \
             -p 0.0.0.0:${menu_arg}:8989 \
             -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
+            -e TZ=${TIMEZONE} \
             -v "${HOMEDIR}":/home/${NB_USER} $MNT \
             -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
             ${IMAGE}:${IMAGE_VERSION} 2>/dev/nul
@@ -467,6 +472,7 @@ else
           docker run --net ${NETWORK} -d \
             -p 0.0.0.0:${menu_arg}:8989 \
             -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
+            -e TZ=${TIMEZONE} \
             -v "${HOMEDIR}":/home/${NB_USER} $MNT \
             -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
             ${IMAGE}:${IMAGE_VERSION} 2>/dev/nul
@@ -485,6 +491,7 @@ else
         docker run --net ${NETWORK} -d \
           -p 0.0.0.0:${menu_arg}:8989 \
           -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
+          -e TZ=${TIMEZONE} \
           -v ${HOMEDIR}:/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
@@ -519,6 +526,7 @@ else
         docker run --net ${NETWORK} -d \
           -p 0.0.0.0:${menu_arg}:8989 \
           -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
+          -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}

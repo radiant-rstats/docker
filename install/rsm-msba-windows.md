@@ -338,7 +338,7 @@ If you want to make your terminal look nicer and add syntax highlighting, auto-c
 
 <https://github.com/radiant-rstats/docker/blob/master/install/setup-ohmyzsh.md>
 
-<img src="figures/ohmyzsh-powerlevel10k.png" width="500px"
+<img src="figures/ohmyzsh-powerlevel10k.png" width="500px">
 
 With VSCode installed locally on your host OS, you can connect to a running container by adding the below to `C:/Users/your-user-id/.ssh/config` and `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
 
@@ -350,9 +350,6 @@ Host docker_local
     HostName 127.0.0.1
     StrictHostKeyChecking no
     Port 2121
-Host sc1
-    User your-user-id
-    HostName rsm-compute-01.ucsd.edu
 ```
 
 <!-- 

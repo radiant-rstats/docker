@@ -1,12 +1,12 @@
 ## Setup oh-my-zsh
 
-Set zsh as the default shell. On macOS start with the command below from a terminal and answer "y" if prompted to change your default shell to zsh. The same thing should work in an Ubuntu shell in WSL2
+Set `ZSH` as the default shell. On macOS start with the command below from a terminal and answer "y" if prompted to change your default shell to zsh. The same command work on Linux or in an Ubuntu shell in WSL2 (Windows).
 
 `chsh -s $(which zsh)`
 
 ## Install Meslo Nerd Font 
 
-Follow linke instructions to install the <a href="https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k" target="_blank">Install Meslo Nerd Font</a>. The run the commands below to install some useful plugins and the `powerlevel10k` theme:
+Follow the linked instructions to install the <a href="https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k" target="_blank">Meslo Nerd Font</a>. Then run the commands below to install some useful plugins and the `powerlevel10k` theme:
 
 ```
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
@@ -21,7 +21,7 @@ cd -;
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k;
 ```
 
-Now use VSCode, or any another text editor, to make a few changes to the `.zshrc` file. Using VSCode from a macOS terminal or Windows Terminal type: 
+Now use VSCode, or another text editor, to make a few changes to the `.zshrc` file. For example, if you have VSCode installed you can use it from a macOS or Windows Terminal by typing: 
 
 ```
 code ~/.zshrc
@@ -40,7 +40,7 @@ plugins=(
 )
 ```
 
-Then set `ZSH_THEME="powerlevel10k/powerlevel10k"` in ~/.zshrc and type `source ~/.zshrc` in the terminal to start the configuration wizard. Follow the prompts and select the setup you prefer. You can always update and change the configuration by using `p10k configure`. 
+Then replace `ZSH_THEME="robbyrussell"` with `ZSH_THEME="powerlevel10k/powerlevel10k"` in `~/.zshrc`. Save the changes and type `source ~/.zshrc` in the terminal to start the configuration wizard. Follow the prompts and select the setup you prefer. You can always update and change the configuration by running `p10k configure` in a terminal. 
 
 <!--
 Use the below if you want this to work with the terminal from the docker menu as well
@@ -54,7 +54,7 @@ For macOS, <a href="https://releases.hyper.is/download/mac" target="_blank">Hype
 
 To use fonts and icons in the Standard macOS terminal with ZSH, change the terminal settings as follows: 
 
-> Apple Terminal Open Terminal → Preferences → Profiles → Text, click Change under Font and select MesloLGS NF family.
+> Apple Terminal: Open Terminal → Preferences → Profiles → Text, click Change under Font and select MesloLGS NF family.
 
 To use fonts and icons in the Windows Terminal change the terminal settings as follows: 
 
