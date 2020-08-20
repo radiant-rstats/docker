@@ -342,8 +342,6 @@ If you want to make your terminal look nicer and add syntax highlighting, auto-c
 
 With VSCode installed locally on your host OS, you can connect to a running container by adding the below to `C:/Users/your-user-id/.ssh/config` and `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
 
-> Note: You still have to replace `your-user-id` in the text below to your username on the server
-
 ```bash
 Host docker_local
     User jovyan
