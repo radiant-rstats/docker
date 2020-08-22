@@ -31,7 +31,7 @@ sudo apt install curl openssh-client;
 source <(curl -s https://raw.githubusercontent.com/radiant-rstats/docker/master/install/install-docker-chromeos.sh);
 ```
 
-Once docker is installed, make sure it is running. You can can check this by using the following command. If this produces some output and no errors you are set to continue with the next steps.
+Once docker is installed, make sure it is running. You can can check this by using the following command. If this produces some output and no errors you are set to continue with the next steps. If you see any "permission" errors you may need to restart your system.
 
 ```bash
 docker ps;
@@ -262,6 +262,10 @@ sudo service docker start
 ```
 
 ## Optional
+
+If you want to make your terminal look nicer and add syntax highlighting, auto-completion, etc. consider following the install instructions linked below:
+
+<https://github.com/radiant-rstats/docker/blob/master/install/setup-ohmyzsh.md
 
 If you have VSCode installed you should be able to connect to a running container by adding the below to `~/.ssh/config` and selecting `docker_local` from the options listed by `Remote SSH: Connect to Host...`
 

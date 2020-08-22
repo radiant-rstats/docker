@@ -29,7 +29,7 @@ Detailed discussion of the steps involved is available at the link below:
 
 https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
 
-Once docker is installed, make sure it is running. You can can check this by using the following command. If this produces some output and no errors you are set to continue with the next steps.
+Once docker is installed, make sure it is running. You can can check this by using the following command. If this produces some output and no errors you are set to continue with the next steps. If you see any "permission" errors you may need to restart your system.
 
 ```bash
 docker ps
@@ -56,7 +56,7 @@ The code above also creates a copy of the file `launch-rsm-msba-spark.sh` on you
 Copy-and-paste the command below to create a shortcut to the launch script to use from the command line.
 
 ```bash
-ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+sudo ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
 ```
 
 **Step 3**: Check that you can launch Rstudio and Jupyter

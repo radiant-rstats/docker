@@ -2,14 +2,15 @@
 
 ## setup for docker on ChromeOS using linux (beta)
 sudo apt-get update
-sudo apt-get install \
-  apt-transport-https \
+sudo apt-get install apt-transport-https \
   ca-certificates \
   curl \
   software-properties-common \
   wget \
   openssh-client \
-  zsh
+  zsh \
+  ntpdate \
+  python-is-python3 
 
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo add-apt-repository \

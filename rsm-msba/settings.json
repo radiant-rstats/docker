@@ -40,5 +40,6 @@
   "files.associations": {
     "*.rmd": "markdown"
   },
-  "terminal.integrated.fontFamily": "'MesloLGS NF', monospace"
+  "terminal.integrated.fontFamily": "'MesloLGS NF', monospace",
+  "terminal.integrated.shell.linux": "/bin/zsh"
 }

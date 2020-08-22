@@ -27,7 +27,7 @@ Now use VSCode, or another text editor, to make a few changes to the `.zshrc` fi
 code ~/.zshrc
 ```
 
-Replace the `plugins` section in the .zshrc file with the code below
+Replace the `plugins` section in the `.zshrc` file with the code below
 
 ```
 plugins=(
@@ -38,6 +38,12 @@ plugins=(
   autojump
   k
 )
+```
+
+and add the line below at the bottom of `.zshrc`.
+
+```
+[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOMEp/etc/profile.d/autojump.sh
 ```
 
 Then replace `ZSH_THEME="robbyrussell"` with `ZSH_THEME="powerlevel10k/powerlevel10k"` in `~/.zshrc`. Save the changes and type `source ~/.zshrc` in the terminal to start the configuration wizard. Follow the prompts and select the setup you prefer. You can always update and change the configuration by running `p10k configure` in a terminal. 
