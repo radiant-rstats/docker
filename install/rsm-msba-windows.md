@@ -116,6 +116,7 @@ ln -s /mnt/c/Users/"$USERNAME"/Desktop ./Desktop;
 ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
 ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
 ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
+ln -s /mnt/c/Users/"$USERNAME" ./win_home;
 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 ```
 
