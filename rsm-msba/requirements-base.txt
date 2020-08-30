@@ -12,8 +12,7 @@ ipywidgets
 jupyter
 jupyterlab==2.2.4
 jupyterlab_code_formatter
-# jupyterlab-git==0.20.0
-jupyterlab-git==0.21.0a0
+jupyterlab-git==0.21.0rc0
 # jupyterlab_sql
 jupyter-server-proxy
 # jupyter-shiny-proxy
@@ -57,3 +56,4 @@ pdpbox
 # sklearn-gbmi
 keras-tuner
 
+colorama==0.3.7
