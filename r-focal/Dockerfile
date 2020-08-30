@@ -128,7 +128,7 @@ ENV LANG en_US.UTF-8
 
 ENV RSTUDIO_VERSION 1.3.959
 # R-Studio 1.3 preview release
-# ENV RSTUDIO_VERSION 1.3.1075
+# ENV RSTUDIO_VERSION 1.3.1081
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && rm rstudio-server-*-amd64.deb
