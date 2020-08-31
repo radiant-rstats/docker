@@ -457,8 +457,8 @@ else
             -e TZ=${TIMEZONE} \
             -v "${HOMEDIR}":/home/${NB_USER} $MNT \
             -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-            ${IMAGE}:${IMAGE_VERSION} 2>/dev/nul
-          sleep 2s
+            ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
+          sleep 4s
         }
         open_browser http://localhost:${menu_arg}/radiant
       fi
@@ -475,9 +475,9 @@ else
             -e TZ=${TIMEZONE} \
             -v "${HOMEDIR}":/home/${NB_USER} $MNT \
             -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-            ${IMAGE}:${IMAGE_VERSION} 2>/dev/nul
+            ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
           rstudio_abend
-          sleep 2s
+          sleep 4s
         }
         open_browser http://localhost:${menu_arg}/rstudio
       fi
@@ -495,7 +495,7 @@ else
           -v ${HOMEDIR}:/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
-        sleep 2s
+        sleep 3s
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 4 ]; then
@@ -530,7 +530,7 @@ else
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
-        sleep 2s
+        sleep 4s
         open_browser http://localhost:${menu_arg}/vscode
       fi
     elif [ ${menu_exec} == 5 ]; then
