@@ -90,7 +90,8 @@ COPY clean.sh /usr/local/bin/clean
 RUN chmod +x /usr/local/bin/clean
 
 # codeserver version
-ENV CODE_SERVER="3.4.1"
+# ENV CODE_SERVER="3.4.1"
+ENV CODE_SERVER="3.5.0"
 
 RUN cd /opt \
   && mkdir /opt/code-server \
