@@ -164,9 +164,22 @@ For a more extensive example using Python see: <a href="https://github.com/radia
 
 ## Installing R and Python packages locally
 
-To install the latest version of R-packages you need, add the line below to `~/.Rprofile`
+To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into the Rstudio console.
 
-`options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))`
+```
+if (Sys.info()["sysname"] == "Linux") {
+  options(repos = c(
+    RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest",
+    RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest",
+    CRAN = "https://cloud.r-project.org"
+  ))
+} else {
+  options(repos = c(
+    RSM = "https://radiant-rstats.github.io/minicran",
+    CRAN = "https://cloud.r-project.org"
+  ))
+}
+```
 
 This will be done for you automatically if you run the `setup` command from a terminal inside the docker container. To install R packages that will persist after restarting the docker container, enter code like the below in Rstudio and follow any prompts. After doing this once, you can use `install.packages("some-other-package")` in the future.
 

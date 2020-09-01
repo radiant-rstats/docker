@@ -84,7 +84,7 @@ Optional: If you are interested, this linked video gives a brief intro to what D
 
 **Step 4**: Open an Ubuntu terminal to complete RSM-MSBA-SPARK computing environment setup
 
-Click on the down-caret at the top of the terminal window to start an Ubuntu terminal as shown in the screenshot below. Then copy-and-paste the code below into the Ubuntu terminal and provide your password when prompted.
+If you are using Windows Terminal you can click on the down-caret at the top of the window to start an Ubuntu terminal as shown in the screenshot below. Alternatively, you can click on the Windows Start icon and type "ubuntu" to start an Ubuntu terminal. Copy-and-paste the code below into the Ubuntu terminal and provide your password when prompted.
 
 <img src="figures/start-ubuntu-terminal.png" width="500px">
 
@@ -105,7 +105,7 @@ Next, determine your Windows username by running the code below from an Ubuntu t
 USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r')
 ```
 
-Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future.
+Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future. Copy-and-paste the code below into an Ubuntu terminal.
 
 ```bash
 echo "REM Powershell.exe -command \"wsl launch\"" > /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
@@ -120,13 +120,13 @@ ln -s /mnt/c/Users/"$USERNAME" ./win_home;
 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 ```
 
-The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
+The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the image to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
 <img src="figures/rsm-msba-menu-wsl2.png" width="500px">
 
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
-You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. If you are asked for login credentials, the username is "jovyan" and the password is "jupyter". Have your browser remember the username and password so you won't be asked for it again. 
+You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. If you are asked for login credentials, the **username is "jovyan"** and the **password is "jupyter"**. Have your browser remember the username and password so you won't be asked for it again. 
 
 > Important: Always use q (and Enter) to shutdown the computing environment
 
@@ -229,9 +229,22 @@ For a more extensive example using Python see: <a href="https://github.com/radia
 
 ## Installing R and Python packages locally
 
-To install the latest version of R-packages you need, add the line below to `~/.Rprofile`
+To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into the Rstudio console.
 
-`options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))`
+```
+if (Sys.info()["sysname"] == "Linux") {
+  options(repos = c(
+    RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest",
+    RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest",
+    CRAN = "https://cloud.r-project.org"
+  ))
+} else {
+  options(repos = c(
+    RSM = "https://radiant-rstats.github.io/minicran",
+    CRAN = "https://cloud.r-project.org"
+  ))
+}
+```
 
 This will be done for you automatically if you run the `setup` command from a terminal inside the docker container. To install R packages that will persist after restarting the docker container, enter code like the below in Rstudio and follow any prompts. After doing this once, you can use `install.packages("some-other-package")` in the future.
 

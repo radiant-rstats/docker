@@ -73,7 +73,18 @@ echo 'options(radiant.shinyFiles = TRUE)' >> "${RPROF}"
 echo 'options(radiant.ace_autoComplete = "live")' >> "${RPROF}"
 echo 'options(radiant.ace_theme = "tomorrow")' >> "${RPROF}"
 if ! grep -q 'options(\s*repos\s*' ${RPROF}; then
-  echo 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", CRAN = "https://cran.rstudio.com/"))' >> "${RPROF}"
+  echo 'if (Sys.info()["sysname"] == "Linux") {
+    options(repos = c(
+      RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest",
+      RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest",
+      CRAN = "https://cloud.r-project.org"
+    ))
+  } else {
+    options(repos = c(
+      RSM = "https://radiant-rstats.github.io/minicran",
+      CRAN = "https://cloud.r-project.org"
+    ))
+  }' >> "${RPROF}"
 fi
 echo '# List specific directories you want to use with radiant' >> "${RPROF}"
 echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
