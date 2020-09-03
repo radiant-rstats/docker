@@ -41,5 +41,6 @@
     "*.rmd": "markdown"
   },
   "terminal.integrated.fontFamily": "'MesloLGS NF', monospace",
-  "terminal.integrated.shell.linux": "/bin/zsh"
+  "terminal.integrated.shell.linux": "/bin/zsh",
+  "workbench.colorTheme": "Default Dark+"
 }
