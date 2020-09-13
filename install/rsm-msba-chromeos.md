@@ -71,6 +71,7 @@ To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in eithe
 
 ```bash
 setup;
+source ~/.zshrc;
 ```
 
 ## Updating the RSM-MSBA computing environment on ChromeOS

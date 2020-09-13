@@ -125,7 +125,8 @@ You will know that the installation was successful if you can start Rstudio and 
 To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in either Rstudio or Jupyter lab and run the code below:
 
 ```bash
-setup
+setup;
+source ~/.zshrc;
 ```
 
 ## Updating the RSM-MSBA computing environment on Windows

@@ -73,8 +73,11 @@ You will know that the installation was successful if you can start Rstudio and 
 
 To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in either Rstudio or Jupyter lab and run the code below:
 
+To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in either Rstudio or Jupyter lab and run the code below:
+
 ```bash
-setup
+setup;
+source ~/.zshrc;
 ```
 
 <!-- ssh-copy-id -i ~/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
