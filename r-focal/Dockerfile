@@ -129,9 +129,13 @@ ENV LANG en_US.UTF-8
 ENV RSTUDIO_VERSION 1.3.959
 # R-Studio 1.3 preview release
 # ENV RSTUDIO_VERSION 1.3.1081
+# ENV RSTUDIO_VERSION 1.3.1087
+# ENV RSTUDIO_VERSION 1.4.781
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && rm rstudio-server-*-amd64.deb
+
+# https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-server-1.4.781-amd64.deb
 
 # link to Rstudio's pandoc
 RUN ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin/pandoc

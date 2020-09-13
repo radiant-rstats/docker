@@ -6,6 +6,11 @@ if [[ "$ostype" == "Linux" ]]; then
   sed_fun () {
     sed -i $1 "$2"
   }
+  is_wsl=$(which explorer.exe)
+  if [[ "$is_wsl" != "" ]]; then
+    ostype="WSL2"
+    HOMEDIR=~
+  fi
 elif [[ "$ostype" == "Darwin" ]]; then
   ostype="macOS"
   HOMEDIR=~
@@ -18,12 +23,6 @@ else
   sed_fun () {
     sed -i $1 "$2"
   }
-
-  is_wsl=$(which explorer.exe)
-  if [[ "$is_wsl" != "" ]]; then
-    ostype="WSL2"
-    HOMEDIR=~
-  fi
 fi
 
 ## make sure abend is set correctly
@@ -118,6 +117,54 @@ for file in *.vsix; do
 done
 rm -f *.vsix
 rm -f vsix_list.txt
+
+echo "-----------------------------------------------------------------------"
+echo "Setting up oh-my-zsh shell"
+echo "-----------------------------------------------------------------------"
+
+if [ ! -f "${HOMEDIR}/.p10k.zsh" ]; then
+  cp /etc/skel/.p10k.zsh "${HOMEDIR}/.p10k.zsh"
+else
+  echo "-----------------------------------------------------"
+  echo "You have an existing .p10k.zsh file. Do you want to"
+  echo "replace it with the recommended version for this docker"
+  echo "container (y/n)?"
+  echo "-----------------------------------------------------"
+  read overwrite
+  if [ "${overwrite}" == "y" ]; then
+    \cp /etc/skel/.p10k.zsh "${HOMEDIR}/.p10k.zsh"
+  fi
+fi
+
+if [ ! -d "${HOMEDIR}/.oh-my-zsh" ]; then
+  cp -r /etc/skel/.oh-my-zsh "${HOMEDIR}/.oh-my-zsh"
+else
+  echo "-----------------------------------------------------"
+  echo "You have an existing .oh-my-zsh directory. Do you"
+  echo "want to replace it with the recommended version for"
+  echo "this docker container (y/n)?"
+  echo "-----------------------------------------------------"
+  read overwrite
+  if [ "${overwrite}" == "y" ]; then
+    \cp -r /etc/skel/.oh-my-zsh "${HOMEDIR}/.oh-my-zsh"
+  fi
+fi
+
+if [ ! -f "${HOMEDIR}/.zshrc" ]; then
+  cp /etc/skel/.zshrc "${HOMEDIR}/.zshrc"
+  source ~/.zshrc 2>/dev/null
+else
+  echo "---------------------------------------------------"
+  echo "You have an existing .zshrc file. Do you want to"
+  echo "with the recommended version for this docker"
+  echo "container (y/n)?"
+  echo "---------------------------------------------------"
+  read overwrite
+  if [ "${overwrite}" == "y" ]; then
+    \cp /etc/skel/.zshrc "${HOMEDIR}/.zshrc"
+    source ~/.zshrc 2>/dev/null
+  fi
+fi
 
 echo "-----------------------------------------------------------------------"
 echo "Setup complete"

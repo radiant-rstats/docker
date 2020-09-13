@@ -36,9 +36,17 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@2.0 \
   @ryantam626/jupyterlab_code_formatter \
   @jupyterlab/server-proxy
 
+# RUN jupyter serverextension enable \
+#   --py jupyterlab_code_formatter --system \
+#   --py jupyterlab_git --system \
+#   --py --sys-prefix jupyter_server_proxy --system \
+#   && chown ${NB_USER}:shiny -R /var/lib/shiny-server 
+
 RUN jupyter serverextension enable \
   --py jupyterlab_code_formatter --system \
+  && jupyter serverextension enable \
   --py jupyterlab_git --system \
+  && jupyter serverextension enable \
   --py --sys-prefix jupyter_server_proxy --system \
   && chown ${NB_USER}:shiny -R /var/lib/shiny-server 
 
@@ -90,8 +98,8 @@ COPY clean.sh /usr/local/bin/clean
 RUN chmod +x /usr/local/bin/clean
 
 # codeserver version
-# ENV CODE_SERVER="3.4.1"
-ENV CODE_SERVER="3.5.0"
+ENV CODE_SERVER="3.4.1"
+# ENV CODE_SERVER="3.5.0"
 
 RUN cd /opt \
   && mkdir /opt/code-server \
@@ -156,6 +164,18 @@ RUN git clone https://github.com/vnijs/gitgadget.git /srv/shiny-server/gitgadget
   && chown shiny:shiny -R /srv/shiny-server
 
 COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
+
+# oh-my-zsh
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+  && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
+  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
+  && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
+  && git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k \
+  && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k \
+  && cp -R /home/jovyan/.oh-my-zsh /etc/skel/.oh-my-zsh
+
+COPY zshrc /etc/skel/.zshrc
+COPY p10k.zsh /etc/skel/.p10k.zsh
 
 # RUN echo "# Server Configuration File" > /etc/rstudio/rserver.conf \
 #   && echo "rsession-which-r=/usr/local/bin/R" >> /etc/rstudio/rserver.conf \

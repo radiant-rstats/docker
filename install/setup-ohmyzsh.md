@@ -1,6 +1,6 @@
 ## Setup oh-my-zsh
 
-Set `ZSH` as the default shell. On macOS start with the command below from a terminal and answer "y" if prompted to change your default shell to zsh. The same command work on Linux or in an Ubuntu shell in WSL2 (Windows).
+Start by setting `ZSH` as the default shell instead of `BASH`. On macOS, Linux, and Windows (WSL2) use the command below from a terminal and answer "y" if prompted.
 
 `chsh -s $(which zsh)`
 
