@@ -137,7 +137,7 @@ else
 fi
 
 if [ ! -d "${HOMEDIR}/.oh-my-zsh" ]; then
-  cp -r /etc/skel/.oh-my-zsh "${HOMEDIR}/.oh-my-zsh"
+  cp -r /etc/skel/.oh-my-zsh "${HOMEDIR}/"
 else
   echo "-----------------------------------------------------"
   echo "You have an existing .oh-my-zsh directory. Do you"
@@ -146,7 +146,7 @@ else
   echo "-----------------------------------------------------"
   read overwrite
   if [ "${overwrite}" == "y" ]; then
-    \cp -r /etc/skel/.oh-my-zsh "${HOMEDIR}/.oh-my-zsh"
+    \cp -r /etc/skel/.oh-my-zsh "${HOMEDIR}/"
   fi
 fi
 
