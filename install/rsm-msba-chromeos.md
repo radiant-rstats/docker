@@ -94,7 +94,11 @@ sudo ln -s ~/git/docker/launch-rsm-msba-spark-chromeos.sh /usr/local/bin/launch;
 
 Microsoft's open-source integrated development environment (IDE), VS Code or Visual Studio Code, was the most popular development environment in according to a [Stack Overflow developer survey](https://insights.stackoverflow.com/survey/2018#development-environments-and-tools). VS Code is widely used by Google developers and is the [default development environment at Facebook](https://www.zdnet.com/article/facebook-microsofts-visual-studio-code-is-now-our-default-development-platform/).
 
-VS Code can be launched from Jupyter and is an excellent, and very popular, editor for python. After running the setup command mentioned above, everything you need for python development will be available. To learn more about using VS Code to write python code see the links and comments below.
+VS Code can be launched from Jupyter and is an excellent, and very popular, editor for python. The video linked below will walk you through how to activate some key extensions for R and Python in VS Code.
+
+<a href="https://youtu.be/VyauXgMuq18" target="_blank">https://youtu.be/VyauXgMuq18</a>
+
+After running the setup command mentioned above, everything you need for python development will be available. To learn more about using VS Code to write python code see the links and comments below.
 
 - <a href="https://code.visualstudio.com/docs/python/python-tutorial#_create-a-python-hello-world-source-code-file" target="_blank">VS Code Python Tutorial</a>
 
