@@ -105,7 +105,9 @@ RUN apt-get  install -y \
   vifm \
   zsh \
   python-is-python3 \
-  tzdata
+  tzdata \
+  gnome-keyring \
+  libsodium-dev
 
 # TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN apt-get install -y \
@@ -126,11 +128,13 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
+# R-Studio last know release to work with jupyter-rsession-proxy
 ENV RSTUDIO_VERSION 1.3.959
-# R-Studio 1.3 preview release
-# ENV RSTUDIO_VERSION 1.3.1081
-# ENV RSTUDIO_VERSION 1.3.1087
-# ENV RSTUDIO_VERSION 1.4.781
+# R-Studio stable release
+# ENV RSTUDIO_VERSION 1.3.1093
+# R-Studio preview release
+# ENV RSTUDIO_VERSION 1.4.904
+
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
   && rm rstudio-server-*-amd64.deb
@@ -146,7 +150,7 @@ RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER \
   && adduser ${NB_USER} sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # download shiny-server
-ENV SHINY_VERSION 1.5.13.944
+ENV SHINY_VERSION 1.5.14.948
 
 RUN wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-${SHINY_VERSION}-amd64.deb \
   && gdebi -n shiny-server-${SHINY_VERSION}-amd64.deb \
@@ -172,10 +176,12 @@ RUN ln -sf /home/${NB_USER}/.Rprofile /home/shiny/.Rprofile \
 RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron \
   && sed -i -e 's/R_LIBS_SITE-/R_LIBS_SITE:-/' /etc/R/Renviron
 
+
 # installing some basic r-packages
 RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
   -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv", "languageserver"), repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")' \
-  -e 'install.packages(c("pbdZMQ", "caTools", "bitops"), repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))'
+  -e 'install.packages(c("pbdZMQ", "caTools", "bitops"), repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'remotes::install_github("vnijs/rcanvas")'
 
 # installing the radian terminal application
 RUN pip3 install radian jupyterhub==1.1.0

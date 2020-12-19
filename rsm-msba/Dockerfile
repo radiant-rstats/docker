@@ -30,17 +30,15 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
   && apt-get install -y nodejs \
   && npm install -g npm
 
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@2.0 \
+RUN jupyter labextension install \
+  @jupyter-widgets/jupyterlab-manager@2.0 \
   @jupyterlab/git \
   jupyterlab-jupytext \
   @ryantam626/jupyterlab_code_formatter \
   @jupyterlab/server-proxy
 
-# RUN jupyter serverextension enable \
-#   --py jupyterlab_code_formatter --system \
-#   --py jupyterlab_git --system \
-#   --py --sys-prefix jupyter_server_proxy --system \
-#   && chown ${NB_USER}:shiny -R /var/lib/shiny-server 
+# RUN pip3 install git+https://github.com/jseabold/jupyterlab-sql.git@support-v2
+RUN pip3 install git+https://github.com/joequant/jupyterlab-sql.git@support-v2
 
 RUN jupyter serverextension enable \
   --py jupyterlab_code_formatter --system \
@@ -48,7 +46,15 @@ RUN jupyter serverextension enable \
   --py jupyterlab_git --system \
   && jupyter serverextension enable \
   --py --sys-prefix jupyter_server_proxy --system \
+  && jupyter serverextension enable \
+  --py --sys-prefix jupyterlab_sql --system \
+  && jupyter lab build \
   && chown ${NB_USER}:shiny -R /var/lib/shiny-server 
+
+# just for nbgrader
+RUN jupyter nbextension install --sys-prefix --py nbgrader --overwrite \
+  && jupyter nbextension enable --sys-prefix --py nbgrader \ 
+  && jupyter serverextension enable --sys-prefix --py nbgrader
 
 # install the R kernel for Jupyter Lab
 RUN R -e 'install.packages("IRkernel")' \
@@ -98,8 +104,8 @@ COPY clean.sh /usr/local/bin/clean
 RUN chmod +x /usr/local/bin/clean
 
 # codeserver version
-ENV CODE_SERVER="3.4.1"
-# ENV CODE_SERVER="3.5.0"
+# ENV CODE_SERVER="3.4.1"
+ENV CODE_SERVER="3.8.0"
 
 RUN cd /opt \
   && mkdir /opt/code-server \

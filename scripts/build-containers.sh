@@ -2,7 +2,7 @@
 
 # git pull
 docker login
-DOCKERHUB_VERSION=1.8.2
+DOCKERHUB_VERSION=1.8.4
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -48,7 +48,8 @@ launcher () {
 }
 
 LABEL=r-focal
-build 
+build
+
 # if you use the line below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 

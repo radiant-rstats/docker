@@ -1,5 +1,24 @@
 #!/bin/bash
 
+function docker_setup() {
+  echo "Usage: $0 [-d]"
+  echo "  -d, --dev   Setup using VS Code development repo"
+  echo ""
+  exit 1
+}
+
+## parse command-line arguments
+while [[ "$#" > 0 ]]; do case $1 in
+  -d|--dev) ARG_TAG="$1"; shift;shift;;
+  *) echo "Unknown parameter passed: $1"; echo ""; docker_setup; shift; shift;;
+esac; done
+
+if [ "$ARG_TAG" == "" ]; then
+  EXTENSIONS="https://raw.githubusercontent.com/radiant-rstats/docker-vsix/master/vsix_list.txt"
+else
+  EXTENSIONS="https://raw.githubusercontent.com/radiant-rstats/docker-vsix-dev/main/vsix_list.txt"
+fi
+
 ostype=`uname`
 if [[ "$ostype" == "Linux" ]]; then
   HOMEDIR=~
@@ -72,7 +91,8 @@ echo 'options(radiant.shinyFiles = TRUE)' >> "${RPROF}"
 echo 'options(radiant.ace_autoComplete = "live")' >> "${RPROF}"
 echo 'options(radiant.ace_theme = "tomorrow")' >> "${RPROF}"
 if ! grep -q 'options(\s*repos\s*' ${RPROF}; then
-  echo 'if (Sys.info()["sysname"] == "Linux") {
+  echo '
+  if (Sys.info()["sysname"] == "Linux") {
     options(repos = c(
       RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest",
       RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest",
@@ -83,7 +103,8 @@ if ! grep -q 'options(\s*repos\s*' ${RPROF}; then
       RSM = "https://radiant-rstats.github.io/minicran",
       CRAN = "https://cloud.r-project.org"
     ))
-  }' >> "${RPROF}"
+  }
+  ' >> "${RPROF}"
 fi
 echo '# List specific directories you want to use with radiant' >> "${RPROF}"
 echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
@@ -95,8 +116,7 @@ echo "Setup extensions for VS Code"
 echo "-----------------------------------------------------------------------"
 
 mkdir -p ~/.rsm-msba/share/code-server/User
-# rm -rf ~/.rsm-msba/share/code-server/User
-cp /opt/code-server/settings.json ~/.rsm-msba/share/code-server/User/settings.json
+\cp /opt/code-server/settings.json ~/.rsm-msba/share/code-server/User/settings.json
 
 # extension available in code-server market place
 extensions="mechatroner.rainbow-csv"
@@ -107,7 +127,8 @@ for ext in $extensions; do
 done
 
 # avoid including (large) vscode extensions
-wget https://raw.githubusercontent.com/radiant-rstats/docker-vsix/master/vsix_list.txt
+# wget https://raw.githubusercontent.com/radiant-rstats/docker-vsix/master/vsix_list.txt
+wget ${EXTENSIONS}
 wget -i vsix_list.txt
 
 for file in *.vsix; do
