@@ -70,7 +70,7 @@ RUN apt-get -y install --no-install-recommends \
   cargo \
   libudunits2-dev \
   r-base \
-  r-base-dev=4.0.0* 
+  r-base-dev
 
 # setting up odbc for connections
 RUN apt-get -y install \
@@ -176,15 +176,15 @@ RUN ln -sf /home/${NB_USER}/.Rprofile /home/shiny/.Rprofile \
 RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron \
   && sed -i -e 's/R_LIBS_SITE-/R_LIBS_SITE:-/' /etc/R/Renviron
 
-
 # installing some basic r-packages
-RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv", "languageserver"), repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")' \
-  -e 'install.packages(c("pbdZMQ", "caTools", "bitops"), repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
-  -e 'remotes::install_github("vnijs/rcanvas")'
+# RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  # -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv", "languageserver"), repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")' \
+RUN R -e  'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv", "languageserver"))' \
+  -e 'install.packages(c("pbdZMQ", "caTools", "bitops"))'
 
 # installing the radian terminal application
-RUN pip3 install radian jupyterhub==1.1.0
+RUN pip3 install radian jupyterhub==1.3.0
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

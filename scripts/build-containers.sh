@@ -2,7 +2,7 @@
 
 # git pull
 docker login
-DOCKERHUB_VERSION=1.8.4
+DOCKERHUB_VERSION=1.8.5
 UPLOAD="NO"
 UPLOAD="YES"
 
@@ -88,7 +88,6 @@ docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
 
 exit
-
 # testing for Rstudio Preview
 # docker tag jupyterhub-test-user vnijs/jupyterhub-test-user
 # docker push vnijs/jupyterhub-test-user:latest

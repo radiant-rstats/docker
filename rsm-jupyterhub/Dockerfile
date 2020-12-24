@@ -40,8 +40,8 @@ RUN groupadd wheel -g 11 && \
   fix-permissions /var/lib/rstudio-server
 
 # update R-packages
-RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")'
+RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'radiant.update::radiant.update()'
 
 # Add Tini
 ENV TINI_VERSION v0.18.0

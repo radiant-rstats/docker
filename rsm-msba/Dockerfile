@@ -31,7 +31,7 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
   && npm install -g npm
 
 RUN jupyter labextension install \
-  @jupyter-widgets/jupyterlab-manager@2.0 \
+  @jupyter-widgets/jupyterlab-manager \
   @jupyterlab/git \
   jupyterlab-jupytext \
   @ryantam626/jupyterlab_code_formatter \
@@ -134,8 +134,8 @@ RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \
   -e 'remotes::install_github("bmschmidt/wordVectors", upgrade = "never")' \
   -e 'install.packages("igraph", repos = "https://cran.rstudio.com")'
 
-RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
-  -e 'radiant.update::radiant.update(repos = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")'
+RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'radiant.update::radiant.update()'
 
 # settings for local install of python packages 
 ENV PYTHONUSERBASE=${PYBASE} \

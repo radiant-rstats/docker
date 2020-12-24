@@ -1,9 +1,9 @@
+wheel==0.35
 nbgrader
 altair
 bash_kernel
 beautifulsoup4
 black
-bonobo
 cython
 datatable
 eli5
@@ -13,10 +13,9 @@ ipywidgets
 jupyter
 #nbclient==0.4.1
 # nbconvert==5.6.1
-#jupyterlab==2.2.4
 nbclient
 nbconvert
-jupyterlab
+jupyterlab==2.2.9
 jupyterlab_code_formatter
 #jupyterlab-git==0.21.1
 jupyterlab-git
@@ -34,8 +33,7 @@ networkx
 nltk
 numba
 numexpr
-numpy<1.19.0,>=1.16.0
-h5py<2.11.0,>=2.10.0
+numpy
 pandas
 patsy
 plotly
@@ -55,6 +53,10 @@ sqlalchemy
 statsmodels
 sympy
 tensorflow
+
+h5py==2.10.0
+six==1.15.0
+
 tweepy
 vincent
 xgboost
