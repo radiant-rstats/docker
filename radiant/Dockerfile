@@ -19,9 +19,14 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
   && echo "WORKON_HOME=${PYBASE}" >> /etc/R/Renviron.site \
   && echo "NB_USER=${NB_USER}" >> /etc/R/Renviron.site
 
+## needed for gert
+RUN apt-get install -y libgit2-dev
+
 ## update R-packages
 RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'install.packages(c("gert", "usethis"))' \
   -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 
+  -e 'remotes::install_github("vnijs/gitgadget", upgrade = "never")' \ 
   -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")' \ 
   -e 'radiant.update::radiant.update()'
 
