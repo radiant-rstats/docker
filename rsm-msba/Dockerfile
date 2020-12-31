@@ -35,7 +35,8 @@ RUN jupyter labextension install \
   @jupyterlab/git \
   jupyterlab-jupytext \
   @ryantam626/jupyterlab_code_formatter \
-  @jupyterlab/server-proxy
+  @jupyterlab/server-proxy \
+  qgrid2
 
 # RUN pip3 install git+https://github.com/jseabold/jupyterlab-sql.git@support-v2
 RUN pip3 install git+https://github.com/joequant/jupyterlab-sql.git@support-v2
@@ -182,6 +183,7 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/inst
 
 COPY zshrc /etc/skel/.zshrc
 COPY p10k.zsh /etc/skel/.p10k.zsh
+COPY usethis /usr/local/bin/usethis
 
 # RUN echo "# Server Configuration File" > /etc/rstudio/rserver.conf \
 #   && echo "rsession-which-r=/usr/local/bin/R" >> /etc/rstudio/rserver.conf \
