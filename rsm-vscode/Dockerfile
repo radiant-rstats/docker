@@ -246,7 +246,7 @@ RUN chmod 777 -R $HADOOP_HOME
 RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site
 
 # requires seperate install for some reason
-RUN pip3 install 'pyrsm>=0.2.8'
+RUN pip3 install 'pyrsm>=0.3.0'
 
 RUN addgroup ${NB_USER} postgres
 

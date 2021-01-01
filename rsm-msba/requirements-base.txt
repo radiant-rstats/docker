@@ -68,3 +68,5 @@ keras-tuner
 colorama==0.3.7
 
 qgrid
+jupyter-lsp
+python-language-server[all]
