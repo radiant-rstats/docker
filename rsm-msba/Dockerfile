@@ -182,6 +182,7 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/inst
 
 COPY zshrc /etc/skel/.zshrc
 COPY p10k.zsh /etc/skel/.p10k.zsh
+COPY usethis /usr/local/bin/usethis
 
 # RUN echo "# Server Configuration File" > /etc/rstudio/rserver.conf \
 #   && echo "rsession-which-r=/usr/local/bin/R" >> /etc/rstudio/rserver.conf \
