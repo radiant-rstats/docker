@@ -23,7 +23,7 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && python3 -m bash_kernel.install
 
 # requires seperate install for some reason
-RUN pip3 install 'pyrsm>=0.2.8'
+RUN pip3 install 'pyrsm>=0.3.0'
 # RUN pip3 install -vvv git+git://github.com/vnijs/pyrsm@master
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
@@ -35,7 +35,12 @@ RUN jupyter labextension install \
   @jupyterlab/git \
   jupyterlab-jupytext \
   @ryantam626/jupyterlab_code_formatter \
-  @jupyterlab/server-proxy
+  @jupyterlab/server-proxy \
+  qgrid2 \
+  @jupyterlab/shortcutui \
+  @lckr/jupyterlab_variableinspector \
+  @krassowski/jupyterlab-lsp \
+  jupyterlab-skip-traceback
 
 # RUN pip3 install git+https://github.com/jseabold/jupyterlab-sql.git@support-v2
 RUN pip3 install git+https://github.com/joequant/jupyterlab-sql.git@support-v2
