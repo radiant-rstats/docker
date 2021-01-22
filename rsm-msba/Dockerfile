@@ -20,11 +20,13 @@ COPY requirements-base.txt /home/${NB_USER}/requirements.txt
 # COPY requirements.txt /home/${NB_USER}/requirements.txt
 RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && rm /home/${NB_USER}/requirements.txt \
-  && python3 -m bash_kernel.install
+  && python3 -m bash_kernel.install \
+  && python3 -m spacy download en_core_web_sm
 
 # requires seperate install for some reason
 RUN pip3 install 'pyrsm>=0.3.0'
 # RUN pip3 install -vvv git+git://github.com/vnijs/pyrsm@master
+
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
   && apt-get install -y nodejs \
@@ -33,14 +35,24 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
 RUN jupyter labextension install \
   @jupyter-widgets/jupyterlab-manager \
   @jupyterlab/git \
-  jupyterlab-jupytext \
+  jupyterlab-jupytext@1.2.2 \
   @ryantam626/jupyterlab_code_formatter \
   @jupyterlab/server-proxy \
   qgrid2 \
   @jupyterlab/shortcutui \
   @lckr/jupyterlab_variableinspector \
-  @krassowski/jupyterlab-lsp \
-  jupyterlab-skip-traceback
+  jupyterlab-skip-traceback 
+
+RUN git clone https://github.com/vnijs/jupyterlab_spellchecker /opt/jupyter/jupyterlab_spellchecker \
+  && cd /opt/jupyter/jupyterlab_spellchecker \   
+  && npm install \
+  && npm run build \
+  && jupyter labextension link . 
+
+  # maybe not quite ready for prime-time?
+  # @krassowski/jupyterlab-lsp \
+  # adding wavy lines to the spell checker extension
+  # @ijmbarr/jupyterlab_spellchecker
 
 # RUN pip3 install git+https://github.com/jseabold/jupyterlab-sql.git@support-v2
 RUN pip3 install git+https://github.com/joequant/jupyterlab-sql.git@support-v2

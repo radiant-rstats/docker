@@ -27,7 +27,7 @@ ENV SPARK_HOME="/opt/spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION
   PYSPARK_DRIVER_PYTHON=jupyter \
   PYSPARK_DRIVER_PYTHON_OPTS=lab
 ENV PATH=$PATH:${SPARK_HOME}/bin \
-  PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/build:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH"
+  PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/build:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH"
 
 RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site
 
@@ -59,6 +59,37 @@ RUN chmod 777 /opt/launch.sh
 COPY ./hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
 COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 RUN chmod 777 -R $HADOOP_HOME
+
+# Add Jingbo's AutoPhrase
+ADD https://github.com/shangjingbo1226/AutoPhrase/archive/master.zip /opt/AutoPhrase-master.zip
+ENV PATH="${PATH}:/opt/autophrase"
+# RUN unzip /opt/eautophrase.zip
+RUN cd /opt \
+  && unzip /opt/AutoPhrase-master.zip \
+  && rm /opt/AutoPhrase-master.zip \
+  && mv /opt/AutoPhrase-master /opt/autophrase
+RUN echo "===> compile" \
+  && cd /opt/autophrase && bash compile.sh \
+  && chmod 755 tools/treetagger/bin/tree-tagger \
+  && mv data default_data \
+  && mv models default_models
+RUN echo "===> clean up..."  \
+  && apt-get purge -y make \
+  && apt-get autoremove -y --purge make \
+  && rm -rf /var/cache/oracle-jdk8-installer  \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# ENV DATA_DIR /opt/autophrase/default_data
+# ENV MODELS_DIR /opt/autophrase/default_models
+# RUN echo "===> testing ..."  \
+#   && ln -s /opt/autophrase/default_data data \
+#   && ln -s /opt/autophrase/default_model models \
+#   && auto_phrase.sh 
+
+# RUN echo "===> testing ..."  \
+#   && cd /opt/autophrase \
+#   && ./auto_phrase.sh
 
 EXPOSE 8989 8765 22
 

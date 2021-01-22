@@ -16,14 +16,14 @@ jupyter
 nbclient
 nbconvert
 jupyterlab==2.2.9
-jupyterlab_code_formatter
+jupyterlab_code_formatter==1.3.8
 #jupyterlab-git==0.21.1
 jupyterlab-git
 # jupyterlab_sql
 jupyter-server-proxy
 jupyter-shiny-proxy
 jupyter-rsession-proxy
-jupytext
+jupytext==1.8.0
 keras
 lightgbm
 lime
@@ -70,3 +70,5 @@ colorama==0.3.7
 qgrid
 jupyter-lsp
 python-language-server[all]
+
+gensim
