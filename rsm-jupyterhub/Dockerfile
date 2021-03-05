@@ -18,6 +18,13 @@ COPY start.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 
+## CUDA
+COPY cuda.sh /opt/cuda/cuda.sh
+RUN sh /opt/cuda/cuda.sh
+
+# we probably also need something like the below
+# https://github.com/rocker-org/rocker-versioned2/blob/95a84fa90a107026eea69090e8b03dd21f731e7f/scripts/config_R_cuda.sh
+
 # updating the version added in rsm-msba
 COPY jupyter_notebook_config.py /etc/jupyter/
 
@@ -76,8 +83,8 @@ CMD ["start-notebook.sh"]
 # COPY images/help.svg /opt/help/help.svg
 
 # remove sudo privileges for security 
-RUN passwd --delete ${NB_USER}
-RUN deluser ${NB_USER} sudo
+# RUN passwd --delete ${NB_USER}
+# RUN deluser ${NB_USER} sudo
 
 # set user
 USER ${NB_USER}

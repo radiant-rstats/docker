@@ -2,9 +2,10 @@
 
 # git pull
 docker login
-DOCKERHUB_VERSION=1.8.6
+DOCKERHUB_VERSION=1.8.7
 UPLOAD="NO"
 UPLOAD="YES"
+
 
 build () {
   {
@@ -47,6 +48,14 @@ launcher () {
   fi
 }
 
+LABEL=rsm-jupyterhub
+build
+
+## new containers should be launched using the newest version of the container
+docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
+
+exit
+
 LABEL=r-focal
 build
 
@@ -82,7 +91,7 @@ LABEL=rsm-jupyterhub
 build
 
 ## new containers should be launched using the newest version of the container
-docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+# docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user

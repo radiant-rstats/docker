@@ -22,7 +22,7 @@ jupyterlab-git
 # jupyterlab_sql
 jupyter-server-proxy
 jupyter-shiny-proxy
-jupyter-rsession-proxy
+# jupyter-rsession-proxy
 jupytext==1.8.0
 keras
 lightgbm
@@ -72,3 +72,7 @@ jupyter-lsp
 python-language-server[all]
 
 gensim
+pytest
+ipynbname
+torch
+pystan

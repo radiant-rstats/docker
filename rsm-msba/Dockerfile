@@ -13,7 +13,8 @@ RUN apt-get update \
   python3-virtualenv \
   libzmq3-dev \
   graphviz \
-  fonts-firacode
+  fonts-firacode \
+  libv8-dev
 
 # install python packages
 COPY requirements-base.txt /home/${NB_USER}/requirements.txt
@@ -24,9 +25,14 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && python3 -m spacy download en_core_web_sm
 
 # requires seperate install for some reason
-RUN pip3 install 'pyrsm>=0.3.0'
+RUN pip3 install "pyrsm>=0.4.5" twine keyring
 # RUN pip3 install -vvv git+git://github.com/vnijs/pyrsm@master
 
+# RUN pip install jupyter-rsession-proxy
+RUN pip3 install -vvv git+git://github.com/jupyterhub/jupyter-rsession-proxy@master
+# RUN jupyter labextension install @jupyterlab/server-proxy
+ENV RSESSION_PROXY_RSTUDIO_1_4=yes
+ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
   && apt-get install -y nodejs \
@@ -122,7 +128,7 @@ RUN chmod +x /usr/local/bin/clean
 
 # codeserver version
 # ENV CODE_SERVER="3.4.1"
-ENV CODE_SERVER="3.8.0"
+ENV CODE_SERVER="3.9.0"
 
 RUN cd /opt \
   && mkdir /opt/code-server \
@@ -152,7 +158,10 @@ RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \
   -e 'install.packages("igraph", repos = "https://cran.rstudio.com")'
 
 RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
-  -e 'radiant.update::radiant.update()'
+  -e 'radiant.update::radiant.update()' \
+  -e 'install.packages("V8", repos = "https://cloud.r-project.org/", dependencies = TRUE)' \
+  -e 'install.packages("rstan", repos = "https://cloud.r-project.org/", dependencies = TRUE)'
+
 
 # settings for local install of python packages 
 ENV PYTHONUSERBASE=${PYBASE} \
@@ -189,22 +198,23 @@ RUN git clone https://github.com/vnijs/gitgadget.git /srv/shiny-server/gitgadget
 COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
 
 # oh-my-zsh
-RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
-  && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
-  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
-  && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
-  && git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k \
-  && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k \
-  && cp -R /home/jovyan/.oh-my-zsh /etc/skel/.oh-my-zsh
+# RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+#   && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
+#   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
+#   && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
+#   && git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k \
+#   && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k \
+#   && cp -R /home/jovyan/.oh-my-zsh /etc/skel/.oh-my-zsh
 
 COPY zshrc /etc/skel/.zshrc
 COPY p10k.zsh /etc/skel/.p10k.zsh
 COPY usethis /usr/local/bin/usethis
 
-# RUN echo "# Server Configuration File" > /etc/rstudio/rserver.conf \
-#   && echo "rsession-which-r=/usr/local/bin/R" >> /etc/rstudio/rserver.conf \
-#   && echo "auth-none=1" >> /etc/rstudio/rserver.conf \
-#   && echo "USER=$NB_USER" >> /etc/environment
+# RUN pip install jupyter-rsession-proxy
+# RUN pip3 install -vvv git+git://github.com/jupyterhub/jupyter-rsession-proxy@master
+# RUN jupyter labextension install @jupyterlab/server-proxy
+# ENV RSESSION_PROXY_RSTUDIO_1_4=yes
+# ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 
 USER ${NB_USER}
 ENV HOME /home/${NB_USER}

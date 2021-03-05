@@ -61,35 +61,22 @@ COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 RUN chmod 777 -R $HADOOP_HOME
 
 # Add Jingbo's AutoPhrase
-ADD https://github.com/shangjingbo1226/AutoPhrase/archive/master.zip /opt/AutoPhrase-master.zip
-ENV PATH="${PATH}:/opt/autophrase"
-# RUN unzip /opt/eautophrase.zip
-RUN cd /opt \
-  && unzip /opt/AutoPhrase-master.zip \
-  && rm /opt/AutoPhrase-master.zip \
-  && mv /opt/AutoPhrase-master /opt/autophrase
-RUN echo "===> compile" \
-  && cd /opt/autophrase && bash compile.sh \
-  && chmod 755 tools/treetagger/bin/tree-tagger \
-  && mv data default_data \
-  && mv models default_models
-RUN echo "===> clean up..."  \
-  && apt-get purge -y make \
-  && apt-get autoremove -y --purge make \
-  && rm -rf /var/cache/oracle-jdk8-installer  \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-# ENV DATA_DIR /opt/autophrase/default_data
-# ENV MODELS_DIR /opt/autophrase/default_models
-# RUN echo "===> testing ..."  \
-#   && ln -s /opt/autophrase/default_data data \
-#   && ln -s /opt/autophrase/default_model models \
-#   && auto_phrase.sh 
-
-# RUN echo "===> testing ..."  \
-#   && cd /opt/autophrase \
-#   && ./auto_phrase.sh
+# ADD https://github.com/shangjingbo1226/AutoPhrase/archive/master.zip /opt/AutoPhrase-master.zip
+# ENV PATH="${PATH}:/opt/autophrase"
+# RUN cd /opt \
+#   && unzip /opt/AutoPhrase-master.zip \
+#   && rm /opt/AutoPhrase-master.zip \
+#   && mv /opt/AutoPhrase-master /opt/autophrase
+# RUN echo "===> compile" \
+#   && cd /opt/autophrase && bash compile.sh \
+#   && chmod -R 755 tools/treetagger/bin/tree-tagger \
+#   && setfacl -Rm u:${NB_USER}:rwX /opt/autophrase \
+#   && mv data default_data \
+#   && mv models default_models
+# RUN echo "===> clean up..."  \
+#   && rm -rf /var/cache/oracle-jdk8-installer  \
+#   && apt-get clean \
+#   && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8989 8765 22
 
