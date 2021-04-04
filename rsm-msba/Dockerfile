@@ -13,8 +13,7 @@ RUN apt-get update \
   python3-virtualenv \
   libzmq3-dev \
   graphviz \
-  fonts-firacode \
-  libv8-dev
+  fonts-firacode 
 
 # install python packages
 COPY requirements-base.txt /home/${NB_USER}/requirements.txt
@@ -25,7 +24,7 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && python3 -m spacy download en_core_web_sm
 
 # requires seperate install for some reason
-RUN pip3 install "pyrsm>=0.4.5" twine keyring
+RUN pip3 install "pyrsm>=0.5.0" twine keyring
 # RUN pip3 install -vvv git+git://github.com/vnijs/pyrsm@master
 
 # RUN pip install jupyter-rsession-proxy
@@ -158,11 +157,9 @@ RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \
   -e 'install.packages("igraph", repos = "https://cran.rstudio.com")'
 
 RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
-  -e 'radiant.update::radiant.update()' \
-  -e 'install.packages("V8", repos = "https://cloud.r-project.org/", dependencies = TRUE)' \
-  -e 'install.packages("rstan", repos = "https://cloud.r-project.org/", dependencies = TRUE)'
+  -e 'radiant.update::radiant.update()'
 
-
+# -e 'install.packages(c("V8", "rstan"))' \
 # settings for local install of python packages 
 ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \
@@ -198,23 +195,21 @@ RUN git clone https://github.com/vnijs/gitgadget.git /srv/shiny-server/gitgadget
 COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
 
 # oh-my-zsh
-# RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
-#   && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
-#   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
-#   && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
-#   && git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k \
-#   && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k \
-#   && cp -R /home/jovyan/.oh-my-zsh /etc/skel/.oh-my-zsh
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+  && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
+  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
+  && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
+  && git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k \
+  && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k \
+  && cp -R /home/jovyan/.oh-my-zsh /etc/skel/.oh-my-zsh
 
 COPY zshrc /etc/skel/.zshrc
 COPY p10k.zsh /etc/skel/.p10k.zsh
 COPY usethis /usr/local/bin/usethis
 
-# RUN pip install jupyter-rsession-proxy
-# RUN pip3 install -vvv git+git://github.com/jupyterhub/jupyter-rsession-proxy@master
-# RUN jupyter labextension install @jupyterlab/server-proxy
-# ENV RSESSION_PROXY_RSTUDIO_1_4=yes
-# ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
+# weirdness with lib not being available for V8 and rstan
+# although it works fine in the vnijs/radiant container
+RUN apt-get install -y libnode-dev
 
 USER ${NB_USER}
 ENV HOME /home/${NB_USER}

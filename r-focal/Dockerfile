@@ -70,8 +70,8 @@ RUN apt-get -y install --no-install-recommends \
   cargo \
   libudunits2-dev \
   r-base \
-  r-base-dev \
-  libv8-dev
+  r-base-dev
+
 
 # setting up odbc for connections
 RUN apt-get -y install \
@@ -81,7 +81,7 @@ RUN apt-get -y install \
   libsqliteodbc
 
 # Utilities
-RUN apt-get  install -y \
+RUN apt-get install -y \
   vim \
   net-tools \
   inetutils-ping \
@@ -110,7 +110,8 @@ RUN apt-get  install -y \
   gnome-keyring \
   libsodium-dev \
   build-essential \
-  acl
+  acl \ 
+  libnode-dev
 
 # TeX for the rmarkdown package in RStudio, and pandoc is also useful
 RUN apt-get install -y \
@@ -179,7 +180,7 @@ RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron \
 
 # installing some basic r-packages
 RUN R -e  'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
-  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv", "languageserver"))' \
+  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv", "languageserver"), repos="https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")' \
   -e 'install.packages(c("pbdZMQ", "caTools", "bitops"))'
 
 # installing the radian terminal application

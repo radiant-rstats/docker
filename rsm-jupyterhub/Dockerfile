@@ -80,6 +80,11 @@ RUN chmod 777 /opt/launch.sh
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
+# weirdness with curl lib not being available in rsm-jupyterhub 
+# although it works fine in the vnijs/rsm-msba-spark
+RUN apt-get update \
+  && apt-get install -y curl
+
 # COPY images/help.svg /opt/help/help.svg
 
 # remove sudo privileges for security 
