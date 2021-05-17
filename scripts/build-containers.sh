@@ -2,9 +2,9 @@
 
 # git pull
 docker login
-DOCKERHUB_VERSION=1.9.0
+DOCKERHUB_VERSION=1.9.1
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 build () {
   {
@@ -47,11 +47,11 @@ launcher () {
   fi
 }
 
-
 LABEL=r-focal
-build 
+build
 
-# if you use the line below, manually remove the 'allow' section afterwards
+# if you use the line
+# below, manually remove the 'allow' section afterwards
 # launcher "radiant" "Radiant" "shiny-apps"
 
 LABEL=radiant
@@ -87,6 +87,9 @@ docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 
 ## new containers should be launched using the newest version of the container
 docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
+
+# LABEL=rsm-jupyterhub-no-gpu
+# build
 
 exit
 

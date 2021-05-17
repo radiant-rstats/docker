@@ -39,8 +39,7 @@ RUN mkdir $HADOOP_HOME \
   && rm -rf *.tar.gz
 
 # install the R kernel for Jupyter Lab
-RUN R -e 'options(spark.install.dir = "/opt")' \
-  -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("BUILT_FOR_HADOOP_VERSION"))'
+RUN R -e 'options(spark.install.dir = "/opt"); sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("BUILT_FOR_HADOOP_VERSION"))'
 
 # install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
@@ -48,7 +47,8 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && rm /home/${NB_USER}/requirements.txt
 
 # update R-packages
-RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
   -e 'radiant.update::radiant.update()'
 
 # Copy the launch script into the image

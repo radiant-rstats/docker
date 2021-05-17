@@ -179,9 +179,9 @@ RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron \
   && sed -i -e 's/R_LIBS_SITE-/R_LIBS_SITE:-/' /etc/R/Renviron
 
 # installing some basic r-packages
-RUN R -e  'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
-  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv", "languageserver"), repos="https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest")' \
-  -e 'install.packages(c("pbdZMQ", "caTools", "bitops"))'
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'install.packages(c("Rcpp", "R6", "digest", "shiny", "rmarkdown", "DBI", "RPostgreSQL", "odbc", "remotes", "rprojroot", "renv", "languageserver", "pbdZMQ", "caTools", "bitops"))' 
 
 # installing the radian terminal application
 RUN pip3 install radian jupyterhub==1.3.0

@@ -13,7 +13,10 @@ RUN apt-get update \
   python3-virtualenv \
   libzmq3-dev \
   graphviz \
-  fonts-firacode 
+  fonts-firacode \
+  libleptonica-dev \ 
+  libtesseract-dev \ 
+  tesseract-ocr
 
 # install python packages
 COPY requirements-base.txt /home/${NB_USER}/requirements.txt
@@ -79,8 +82,7 @@ RUN jupyter nbextension install --sys-prefix --py nbgrader --overwrite \
   && jupyter serverextension enable --sys-prefix --py nbgrader
 
 # install the R kernel for Jupyter Lab
-RUN R -e 'install.packages("IRkernel")' \
-  && R -e 'IRkernel::installspec(user = FALSE)'
+RUN R -e 'install.packages("IRkernel"); IRkernel::installspec(user = FALSE)'
 
 # install google chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -127,6 +129,7 @@ RUN chmod +x /usr/local/bin/clean
 
 # codeserver version
 # ENV CODE_SERVER="3.4.1"
+# ENV CODE_SERVER="3.9.3" # keeps throwing reconnect
 ENV CODE_SERVER="3.9.0"
 
 RUN cd /opt \
@@ -152,20 +155,25 @@ COPY setup.sh /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
 
 # update R-packages
-RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 
+RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \
   -e 'remotes::install_github("bmschmidt/wordVectors", upgrade = "never")' \
-  -e 'install.packages("igraph", repos = "https://cran.rstudio.com")'
-
-RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
+  -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'install.packages("rWishart")' \ 
   -e 'radiant.update::radiant.update()'
 
-# -e 'install.packages(c("V8", "rstan"))' \
+ENV CMDSTAN_VERSION="2.26.1"
+
+RUN install_cmdstan -d /opt/cmdstan -v $CMDSTAN_VERSION
+
 # settings for local install of python packages 
 ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \
   JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime \
   JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
-  SHELL=/bin/zsh
+  SHELL=/bin/zsh \
+  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

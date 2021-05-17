@@ -12,6 +12,9 @@ ARG NB_GID="100"
 ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server"
 
+# remove once this packages has been added to rsm-msba
+RUN pip3 install pyLDAvis 
+
 # add scripts from https://github.com/jupyter/docker-stacks/tree/master/base-notebook
 COPY fix-permissions /usr/local/bin/
 COPY start.sh /usr/local/bin/
@@ -47,8 +50,10 @@ RUN groupadd wheel -g 11 && \
   fix-permissions /var/lib/rstudio-server
 
 # update R-packages
-RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
   -e 'radiant.update::radiant.update()'
+
 
 # Add Tini
 ENV TINI_VERSION v0.18.0
