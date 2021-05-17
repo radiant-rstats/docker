@@ -14,7 +14,7 @@ backcall==0.2.0
 bash-kernel==0.7.2
 beautifulsoup4==4.9.3
 black==20.8b1
-bleach==3.2.1
+bleach==3.3.0
 blis==0.7.4
 cachetools==4.2.0
 catalogue==1.0.0
