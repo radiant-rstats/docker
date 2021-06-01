@@ -233,7 +233,7 @@ Twisted==20.3.0
 typed-ast==1.4.1
 typing-extensions==3.7.4.3
 tzlocal==2.1
-urllib3==1.25.8
+urllib3==1.26.5
 vincent==0.4.4
 virtualenv==20.0.17
 w3lib==1.22.0
