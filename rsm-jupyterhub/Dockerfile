@@ -13,7 +13,7 @@ ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 ENV LD_LIBRARY_PATH="/usr/lib/R/lib:/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server"
 
 # remove once this packages has been added to rsm-msba
-RUN pip3 install pyLDAvis 
+# RUN pip3 install pyLDAvis 
 
 # add scripts from https://github.com/jupyter/docker-stacks/tree/master/base-notebook
 COPY fix-permissions /usr/local/bin/
