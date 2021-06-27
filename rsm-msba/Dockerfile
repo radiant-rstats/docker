@@ -13,18 +13,28 @@ RUN apt-get update \
   python3-virtualenv \
   libzmq3-dev \
   graphviz \
-  fonts-firacode
+  fonts-firacode \
+  libleptonica-dev \ 
+  libtesseract-dev \ 
+  tesseract-ocr
 
 # install python packages
 COPY requirements-base.txt /home/${NB_USER}/requirements.txt
 # COPY requirements.txt /home/${NB_USER}/requirements.txt
 RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && rm /home/${NB_USER}/requirements.txt \
-  && python3 -m bash_kernel.install
+  && python3 -m bash_kernel.install \
+  && python3 -m spacy download en_core_web_sm
 
 # requires seperate install for some reason
-RUN pip3 install 'pyrsm>=0.3.0'
+RUN pip3 install "pyrsm>=0.5.0" twine keyring
 # RUN pip3 install -vvv git+git://github.com/vnijs/pyrsm@master
+
+# RUN pip install jupyter-rsession-proxy
+RUN pip3 install -vvv git+git://github.com/jupyterhub/jupyter-rsession-proxy@master
+# RUN jupyter labextension install @jupyterlab/server-proxy
+ENV RSESSION_PROXY_RSTUDIO_1_4=yes
+ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
   && apt-get install -y nodejs \
@@ -33,14 +43,24 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
 RUN jupyter labextension install \
   @jupyter-widgets/jupyterlab-manager \
   @jupyterlab/git \
-  jupyterlab-jupytext \
+  jupyterlab-jupytext@1.2.2 \
   @ryantam626/jupyterlab_code_formatter \
   @jupyterlab/server-proxy \
   qgrid2 \
   @jupyterlab/shortcutui \
   @lckr/jupyterlab_variableinspector \
-  @krassowski/jupyterlab-lsp \
-  jupyterlab-skip-traceback
+  jupyterlab-skip-traceback 
+
+RUN git clone https://github.com/vnijs/jupyterlab_spellchecker /opt/jupyter/jupyterlab_spellchecker \
+  && cd /opt/jupyter/jupyterlab_spellchecker \   
+  && npm install \
+  && npm run build \
+  && jupyter labextension link . 
+
+  # maybe not quite ready for prime-time?
+  # @krassowski/jupyterlab-lsp \
+  # adding wavy lines to the spell checker extension
+  # @ijmbarr/jupyterlab_spellchecker
 
 # RUN pip3 install git+https://github.com/jseabold/jupyterlab-sql.git@support-v2
 RUN pip3 install git+https://github.com/joequant/jupyterlab-sql.git@support-v2
@@ -62,8 +82,7 @@ RUN jupyter nbextension install --sys-prefix --py nbgrader --overwrite \
   && jupyter serverextension enable --sys-prefix --py nbgrader
 
 # install the R kernel for Jupyter Lab
-RUN R -e 'install.packages("IRkernel")' \
-  && R -e 'IRkernel::installspec(user = FALSE)'
+RUN R -e 'install.packages("IRkernel"); IRkernel::installspec(user = FALSE)'
 
 # install google chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -110,7 +129,8 @@ RUN chmod +x /usr/local/bin/clean
 
 # codeserver version
 # ENV CODE_SERVER="3.4.1"
-ENV CODE_SERVER="3.8.0"
+# ENV CODE_SERVER="3.9.3" # keeps throwing reconnect
+ENV CODE_SERVER="3.9.0"
 
 RUN cd /opt \
   && mkdir /opt/code-server \
@@ -135,19 +155,25 @@ COPY setup.sh /usr/local/bin/setup
 RUN chmod +x /usr/local/bin/setup
 
 # update R-packages
-RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 
+RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \
   -e 'remotes::install_github("bmschmidt/wordVectors", upgrade = "never")' \
-  -e 'install.packages("igraph", repos = "https://cran.rstudio.com")'
-
-RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
+  -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+  -e 'install.packages("rWishart")' \ 
   -e 'radiant.update::radiant.update()'
+
+ENV CMDSTAN_VERSION="2.26.1"
+
+RUN install_cmdstan -d /opt/cmdstan -v $CMDSTAN_VERSION
 
 # settings for local install of python packages 
 ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \
   JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime \
   JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
-  SHELL=/bin/zsh
+  SHELL=/bin/zsh \
+  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
 
 # updating the supervisord.conf file for Jupyter
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -189,10 +215,9 @@ COPY zshrc /etc/skel/.zshrc
 COPY p10k.zsh /etc/skel/.p10k.zsh
 COPY usethis /usr/local/bin/usethis
 
-# RUN echo "# Server Configuration File" > /etc/rstudio/rserver.conf \
-#   && echo "rsession-which-r=/usr/local/bin/R" >> /etc/rstudio/rserver.conf \
-#   && echo "auth-none=1" >> /etc/rstudio/rserver.conf \
-#   && echo "USER=$NB_USER" >> /etc/environment
+# weirdness with lib not being available for V8 and rstan
+# although it works fine in the vnijs/radiant container
+RUN apt-get install -y libnode-dev
 
 USER ${NB_USER}
 ENV HOME /home/${NB_USER}

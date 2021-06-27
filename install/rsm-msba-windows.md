@@ -108,8 +108,7 @@ USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r')
 Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future. Copy-and-paste the code below into an Ubuntu terminal.
 
 ```bash
-echo "REM Powershell.exe -command \"wsl launch\"" > /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
-echo "Powershell.exe -command \"wsl launch -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
+echo "Powershell.exe -command \"wsl ~/git/docker/launch-rsm-msba-spark.sh -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 chmod 755 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
 cd ~;
 ln -s /mnt/c/Users/"$USERNAME"/Desktop ./Desktop;

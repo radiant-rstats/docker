@@ -9,6 +9,7 @@ ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 RUN git clone https://github.com/radiant-rstats/radiant.git /srv/shiny-server/radiant/ \
   && chown shiny:shiny -R /srv/shiny-server \
   && R -e 'install.packages("igraph", repos = "https://cran.rstudio.com")' \
+  -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
   -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
   -e 'source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/rsm-msba.R")'
 
@@ -23,11 +24,12 @@ RUN echo "PYTHONUSERBASE=${PYBASE}" >> /etc/R/Renviron.site \
 RUN apt-get install -y libgit2-dev
 
 ## update R-packages
-RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
   -e 'install.packages(c("gert", "usethis"))' \
-  -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \ 
-  -e 'remotes::install_github("vnijs/gitgadget", upgrade = "never")' \ 
-  -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")' \ 
+  -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \
+  -e 'remotes::install_github("vnijs/gitgadget", upgrade = "never")' \
+  -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")' \
   -e 'radiant.update::radiant.update()'
 
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf

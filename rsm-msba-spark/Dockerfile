@@ -13,7 +13,7 @@ RUN apt-get -y update \
   && rm -rf /var/lib/apt/lists/* \
   && R CMD javareconf
 
-ENV SPARK_VERSION=2.4 \
+ENV SPARK_VERSION=3.0.1 \
   BUILT_FOR_HADOOP_VERSION=2.7 \
   HADOOP_VERSION=2.7.7 \ 
   JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 
@@ -27,7 +27,7 @@ ENV SPARK_HOME="/opt/spark-${SPARK_VERSION}-bin-hadoop${BUILT_FOR_HADOOP_VERSION
   PYSPARK_DRIVER_PYTHON=jupyter \
   PYSPARK_DRIVER_PYTHON_OPTS=lab
 ENV PATH=$PATH:${SPARK_HOME}/bin \
-  PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/build:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH"
+  PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/build:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH"
 
 RUN echo "SPARK_HOME=${SPARK_HOME}" >> /etc/R/Renviron.site
 
@@ -39,8 +39,7 @@ RUN mkdir $HADOOP_HOME \
   && rm -rf *.tar.gz
 
 # install the R kernel for Jupyter Lab
-RUN R -e 'options(spark.install.dir = "/opt")' \
-  -e 'sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("BUILT_FOR_HADOOP_VERSION"))'
+RUN R -e 'options(spark.install.dir = "/opt"); sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("BUILT_FOR_HADOOP_VERSION"))'
 
 # install python packages
 COPY requirements.txt /home/${NB_USER}/requirements.txt
@@ -48,7 +47,8 @@ RUN pip3 install -r /home/${NB_USER}/requirements.txt \
   && rm /home/${NB_USER}/requirements.txt
 
 # update R-packages
-RUN R -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
+RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version$platform, R.version$arch, R.version$os)))' \
+  -e 'options(repos = c(RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest", RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest", CRAN = "https://cloud.r-project.org"))' \
   -e 'radiant.update::radiant.update()'
 
 # Copy the launch script into the image
@@ -59,6 +59,24 @@ RUN chmod 777 /opt/launch.sh
 COPY ./hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
 COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 RUN chmod 777 -R $HADOOP_HOME
+
+# Add Jingbo's AutoPhrase
+# ADD https://github.com/shangjingbo1226/AutoPhrase/archive/master.zip /opt/AutoPhrase-master.zip
+# ENV PATH="${PATH}:/opt/autophrase"
+# RUN cd /opt \
+#   && unzip /opt/AutoPhrase-master.zip \
+#   && rm /opt/AutoPhrase-master.zip \
+#   && mv /opt/AutoPhrase-master /opt/autophrase
+# RUN echo "===> compile" \
+#   && cd /opt/autophrase && bash compile.sh \
+#   && chmod -R 755 tools/treetagger/bin/tree-tagger \
+#   && setfacl -Rm u:${NB_USER}:rwX /opt/autophrase \
+#   && mv data default_data \
+#   && mv models default_models
+# RUN echo "===> clean up..."  \
+#   && rm -rf /var/cache/oracle-jdk8-installer  \
+#   && apt-get clean \
+#   && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8989 8765 22
 

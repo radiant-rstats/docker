@@ -1,3 +1,10 @@
+# matplotlib==3.1.1 # needed for pdpbox
+setuptools>=46.4.0
+
+matplotlib
+numpy
+tensorflow
+
 wheel==0.35
 nbgrader
 altair
@@ -16,24 +23,22 @@ jupyter
 nbclient
 nbconvert
 jupyterlab==2.2.9
-jupyterlab_code_formatter
+jupyterlab_code_formatter==1.3.8
 #jupyterlab-git==0.21.1
-jupyterlab-git
+jupyterlab-git==0.24.0
 # jupyterlab_sql
-jupyter-server-proxy
+jupyter-server-proxy==1.6.0
 jupyter-shiny-proxy
-jupyter-rsession-proxy
-jupytext
+# jupyter-rsession-proxy
+jupytext==1.8.0
 keras
 lightgbm
 lime
-matplotlib
 mypy
 networkx
 nltk
 numba
 numexpr
-numpy
 pandas
 patsy
 plotly
@@ -42,7 +47,6 @@ psycopg2
 pylint
 rpy2
 scikit-learn
-#scipy==1.4.1
 scipy
 scrapy
 seaborn
@@ -52,7 +56,6 @@ spacy
 sqlalchemy
 statsmodels
 sympy
-tensorflow
 
 h5py==2.10.0
 six==1.15.0
@@ -70,3 +73,27 @@ colorama==0.3.7
 qgrid
 jupyter-lsp
 python-language-server[all]
+
+gensim
+pytest
+ipynbname
+torch
+pyro-ppl
+python-dotenv
+linearmodels
+cmdstanpy>=0.9.75
+ujson
+tqdm
+smart-open<4.0.0,>=2.2.0
+pytesseract
+
+numpyro==0.6.0
+jax==0.2.10
+jaxlib==0.1.62
+
+# not yet run on 5/9/2021
+pyLDAvis 
+
+# ERROR: pathy 0.4.0 has requirement smart-open<4.0.0,>=2.2.0, but you'll have smart-open 5.0.0 which is incompatible.
+# ERROR: tensorflow 2.4.1 has requirement numpy~=1.19.2, but you'll have numpy 1.20.2 which is incompatible.
+# ERROR: pdpbox 0.2.1 has requirement matplotlib==3.1.1, but you'll have matplotlib 3.4.1 which is incompatible.
