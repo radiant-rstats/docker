@@ -57,7 +57,7 @@ Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx7
 
 **Step 3**: Install Windows Tools
 
-Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.42101-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
+Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v1.0.11692/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
 
 ```bash
 winget install -e Microsoft.WindowsTerminal;
