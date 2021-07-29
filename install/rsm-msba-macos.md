@@ -21,7 +21,7 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 
 ![docker](figures/docker-icon.png)
 
-https://download.docker.com/mac/stable/Docker.dmg
+[download docker for macOS with an Intel chip](https://desktop.docker.com/mac/stable/amd64/Docker.dmg?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-mac-amd64)
 
 You can also change the (maximum) resources docker is allowed to use on your system. You can set this to approximately 50% of the maximum available on your system.
 
