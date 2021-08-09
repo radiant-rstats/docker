@@ -17,17 +17,21 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 
 **Step 1**: Upgrade Windows
 
-Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students should be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="_blank">https://youtu.be/p0gcRbatO0w</a>.
+Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students should be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="_blank">https://youtu.be/p0gcRbatO0w</a>. The link to get Windows Education for students is shown below.
+
+<https://onthehub.com/download/free-software/windows-10-education-for-students/>
 
 Check if there are any updates available for your system by clicking on the Start icon and typing "Check for Updates". After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, continue with **Step 2**. 
 
 <img src="figures/windows-version.png" width="300px">
 
+<!-- 
 If you are having issues upgrading your Windows version, please reach out your IT support staff. If upgrading is not feasible for some reason you will see a message like the screenshot below, and should use the install instructions shown in the document linked below:
 
 <img src="figures/win-update-message.png" width="600px">
 
 <https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md>
+-->
 
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
@@ -57,6 +61,8 @@ Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx7
 To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
 
 ```bash
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart;
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart;
 wsl --install -d Ubuntu-20.04
 ```
 
