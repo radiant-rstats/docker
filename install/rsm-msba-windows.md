@@ -166,6 +166,14 @@ The created and launched script will finalize the installation of the computing 
 
 <img src="figures/rsm-msba-menu-wsl2.png" width="500px">
 
+**Trouble shooting**
+
+If you do **not** have a file called `launch-rsm-msba-spark.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open notepad, copy-and-paste the code, and save the file as `launch-rsm-msba-spark.bat`. Save the files as type `.bat`. After saving, double-click on the icon on your desktop to get started.
+
+```bash
+Powershell.exe -command "wsl ~/git/docker/launch-rsm-msba-spark.sh -v ~"
+pause
+```
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
 You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. If you are asked for login credentials, the **username is "jovyan"** and the **password is "jupyter"**. Have your browser remember the username and password so you won't be asked for it again. 
