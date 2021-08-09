@@ -29,14 +29,12 @@ If you are having issues upgrading your Windows version, please reach out your I
 
 <https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md>
 
-
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
 <!-- 
 For Hyper-V VMs to allow nested virtualization:
 
 Set-VMProcessor "Docker Testing" -ExposeVirtualizationExtensions $true 
--->
 
 To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
 
@@ -54,16 +52,45 @@ wsl --set-default-version 2;
 If you see a message that "WSL 2 requires an update to its kernel component", download and run the <a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" target="_blank">kernel installer</a> 
 
 Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx71" target="_blank">Ubuntu 20.04</a> from the Windows Store. You will be asked to provide a username and password. Make sure to enter the same username and password you use to login to your computer.
+-->
+
+To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
+
+```bash
+wsl --install -d Ubuntu-20.04
+```
+
+Next, restart your computer and re-open PowerShell to check if Ubuntu is set as the default linux distribution:
+
+```bash
+wsl --list
+```
+
+This should return the below:
+
+```bash
+PS C:\WINDOWS\system32> wsl --list
+Windows Subsystem for Linux Distributions:
+Ubuntu-20.04 (Default)
+docker-desktop-data
+docker-desktop
+```
+
+If Ubuntu is not set as the default linux distribution, update the default setting and double check that it is now correct
+
+```bash
+wsl --setdefault Ubuntu-20.04
+wsl --list
+```
 
 **Step 3**: Install Windows Tools
 
-Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v1.0.11692/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
+Download and install the Microsoft <a href="https://www.microsoft.com/en-us/p/app-installer/9nblggh4nns1?activetab=pivot:overviewtab" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
 
 ```bash
 winget install -e Microsoft.WindowsTerminal;
 winget install -e Docker.DockerDesktop;
 ```
-
 This will install the "Windows Terminal" and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
 
 Next, logout and back into Windows and then start Docker by clicking on the Whale icon that was added to your desktop (see image below).
