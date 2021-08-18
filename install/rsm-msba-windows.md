@@ -97,6 +97,7 @@ Download and install the Microsoft <a href="https://www.microsoft.com/en-us/p/ap
 winget install -e Microsoft.WindowsTerminal;
 winget install -e Docker.DockerDesktop;
 ```
+
 This will install the "Windows Terminal" and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
 
 Next, logout and back into Windows and then start Docker by clicking on the Whale icon that was added to your desktop (see image below).
@@ -140,32 +141,21 @@ USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r')
 
 Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future. 
 
-If you do **not** backup your Desktop to OneDrive, please copy-and-paste the code below into an Ubuntu terminal.
+If you do **not** backup your Desktop to OneDrive, please copy-and-paste the code below as-is into an Ubuntu terminal. If you **do** backup your Desktop to OneDrive, you will need to adjust the `DTOP` variable in the section below to something like `DTOP="/OneDrive/Desktop"`
+
+<!-- echo "Powershell.exe -command \"wsl ~/git/docker/launch-rsm-msba-spark.sh -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat; -->
 
 ```bash
-echo "Powershell.exe -command \"wsl ~/git/docker/launch-rsm-msba-spark.sh -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
-chmod 755 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
+DTOP="/Desktop"
+echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-spark.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-spark.bat;
+chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-spark.bat;
 cd ~;
-ln -s /mnt/c/Users/"$USERNAME"/Desktop ./Desktop;
+ln -s /mnt/c/Users/"$USERNAME$DTOP"/ ./Desktop;
 ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
 ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
 ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
 ln -s /mnt/c/Users/"$USERNAME" ./win_home;
-/mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
-```
-
-If you **do** backup your Desktop to OneDrive, please copy-and-paste the code below into an Ubuntu terminal.
-
-```bash
-echo "Powershell.exe -command \"wsl ~/git/docker/launch-rsm-msba-spark.sh -v ~\"" >> /mnt/c/Users/"$USERNAME"/OneDrive/Desktop/launch-rsm-msba-spark.bat;
-chmod 755 /mnt/c/Users/"$USERNAME"/OneDrive/Desktop/launch-rsm-msba-spark.bat;
-cd ~;
-ln -s /mnt/c/Users/"$USERNAME"/OneDrive/Desktop ./Desktop;
-ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
-ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
-ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
-ln -s /mnt/c/Users/"$USERNAME" ./win_home;
-/mnt/c/Users/"$USERNAME"/OneDrive/Desktop/launch-rsm-msba-spark.bat;
+/mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-spark.bat;
 ```
 
 The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the image to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
