@@ -63,10 +63,16 @@ To activate WSL2, start PowerShell as an administrator and copy-and-paste the co
 ```bash
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart;
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart;
+```
+
+Next, restart your computer and re-open PowerShell to install Ubuntu. You will be asked to provide a username and password. Make sure to enter the same username and password you use to login to your computer.
+
+```bash
+wsl --set-default-version 2
 wsl --install -d Ubuntu-20.04
 ```
 
-Next, restart your computer and re-open PowerShell to check if Ubuntu is set as the default linux distribution:
+Next, restart your computer and re-open PowerShell to check that Ubuntu is set as the default linux distribution:
 
 ```bash
 wsl --list
