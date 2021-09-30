@@ -17,18 +17,21 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 
 **Step 1**: Upgrade Windows
 
-Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students should be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="_blank">https://youtu.be/p0gcRbatO0w</a>.
+Windows users **must** use Microsoft Windows 10 Professional, Education, or Enterprise (64-bit). Students should be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="_blank">https://youtu.be/p0gcRbatO0w</a>. The link to get Windows Education for students is shown below.
+
+<https://onthehub.com/download/free-software/windows-10-education-for-students/>
 
 Check if there are any updates available for your system by clicking on the Start icon and typing "Check for Updates". After upgrading to the latest version of Windows, open PowerShell and type `winver`. If the windows version is 2004 or higher, as shown in the screenshot below, continue with **Step 2**. 
 
 <img src="figures/windows-version.png" width="300px">
 
+<!-- 
 If you are having issues upgrading your Windows version, please reach out your IT support staff. If upgrading is not feasible for some reason you will see a message like the screenshot below, and should use the install instructions shown in the document linked below:
 
 <img src="figures/win-update-message.png" width="600px">
 
 <https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md>
-
+-->
 
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
@@ -36,7 +39,6 @@ If you are having issues upgrading your Windows version, please reach out your I
 For Hyper-V VMs to allow nested virtualization:
 
 Set-VMProcessor "Docker Testing" -ExposeVirtualizationExtensions $true 
--->
 
 To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
 
@@ -53,7 +55,22 @@ wsl --set-default-version 2;
 
 If you see a message that "WSL 2 requires an update to its kernel component", download and run the <a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" target="_blank">kernel installer</a> 
 
-Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx71" target="_blank">Ubuntu 20.04</a> from the Windows Store. You will be asked to provide a username and password. 
+Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx71" target="_blank">Ubuntu 20.04</a> from the Windows Store. You will be asked to provide a username and password. Make sure to enter the same username and password you use to login to your computer.
+-->
+
+To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
+
+```bash
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart;
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart;
+```
+
+Next, restart your computer and re-open PowerShell to install Ubuntu. You will be asked to provide a username and password. 
+
+```bash
+wsl --set-default-version 2
+wsl --install -d Ubuntu-20.04
+```
 
 > Important: Make sure to enter the same username and password you use to login to your computer
 
@@ -63,9 +80,32 @@ Check your username for Windows and Ubunutu by executing the command below in bo
 whoami
 ```
 
+Next, restart your computer and re-open PowerShell to check that Ubuntu is set as the default linux distribution:
+
+```bash
+wsl --list
+```
+
+This should return the below:
+
+```bash
+PS C:\WINDOWS\system32> wsl --list
+Windows Subsystem for Linux Distributions:
+Ubuntu-20.04 (Default)
+docker-desktop-data
+docker-desktop
+```
+
+If Ubuntu is not set as the default linux distribution, update the default setting and double check that it is now correct
+
+```bash
+wsl --setdefault Ubuntu-20.04
+wsl --list
+```
+
 **Step 3**: Install Windows Tools
 
-Download and install the Microsoft <a href="https://github.com/microsoft/winget-cli/releases/download/v0.1.42101-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
+Download and install the Microsoft <a href="https://www.microsoft.com/en-us/p/app-installer/9nblggh4nns1?activetab=pivot:overviewtab" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
 
 ```bash
 winget install -e Microsoft.WindowsTerminal;
@@ -113,24 +153,37 @@ Next, determine your Windows username by running the code below from an Ubuntu t
 USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r')
 ```
 
-Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future. Copy-and-paste the code below into an Ubuntu terminal.
+Finally, we will create and launch a script `launch-rsm-msba-spark.bat` on your Desktop that you can double-click to start the container in the future. 
+
+If you do **not** backup your Desktop to OneDrive, please copy-and-paste the code below as-is into an Ubuntu terminal. If you **do** backup your Desktop to OneDrive, you will need to adjust the `DTOP` variable in the section below to something like `DTOP="/OneDrive/Desktop"`
+
+<!-- echo "Powershell.exe -command \"wsl ~/git/docker/launch-rsm-msba-spark.sh -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat; -->
 
 ```bash
-echo "Powershell.exe -command \"wsl ~/git/docker/launch-rsm-msba-spark.sh -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
-chmod 755 /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
+DTOP="/Desktop"
+echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-spark.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-spark.bat;
+chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-spark.bat;
 cd ~;
-ln -s /mnt/c/Users/"$USERNAME"/Desktop ./Desktop;
+ln -s /mnt/c/Users/"$USERNAME$DTOP"/ ./Desktop;
 ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
 ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
 ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
 ln -s /mnt/c/Users/"$USERNAME" ./win_home;
-/mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-msba-spark.bat;
+/mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-spark.bat;
 ```
 
 The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the image to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
 <img src="figures/rsm-msba-menu-wsl2.png" width="500px">
 
+**Trouble shooting**
+
+If you do **not** have a file called `launch-rsm-msba-spark.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open notepad, copy-and-paste the code, and save the file as `launch-rsm-msba-spark.bat`. Save the files as type `.bat`. After saving, double-click on the icon on your desktop to get started.
+
+```bash
+Powershell.exe -command "wsl ~/git/docker/launch-rsm-msba-spark.sh -v ~"
+pause
+```
 **Step 5**: Check that you can launch Rstudio and Jupyter
 
 You will know that the installation was successful if you can start Rstudio and Jupyter Lab. When you press 2 (and Enter) in the terminal, Rstudio should start up in your default web browser. If you press 3 (and Enter) Jupyter Lab should start up in another tab in your web browser. If you are asked for login credentials, the **username is "jovyan"** and the **password is "jupyter"**. Have your browser remember the username and password so you won't be asked for it again. 
@@ -239,6 +292,14 @@ engine.table_names()
 ```
 
 For a more extensive example using Python see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb" target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb</a>
+
+### Trouble shooting
+
+If you cannot connect to postgresql it is most likely due to an issue with the docker volume that contains the data. The volume can become corrupted if the container is not properly stopped using `q + Enter` in the launch menu. To create a clean volume for postgres (1) stop the running container using `q + Enter`, (2) run the code below in a terminal, and (3) restart the container. If you are still having issues connecting to the postgresql server, please reach out for support through Piazza.
+
+```
+docker volume rm pg_data
+```
 
 ## Installing R and Python packages locally
 

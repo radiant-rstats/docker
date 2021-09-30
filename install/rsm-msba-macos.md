@@ -21,7 +21,7 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 
 ![docker](figures/docker-icon.png)
 
-https://download.docker.com/mac/stable/Docker.dmg
+[download docker for macOS with an Intel chip](https://desktop.docker.com/mac/stable/amd64/Docker.dmg?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-mac-amd64)
 
 You can also change the (maximum) resources docker is allowed to use on your system. You can set this to approximately 50% of the maximum available on your system.
 
@@ -168,6 +168,14 @@ engine.table_names()
 ```
 
 For a more extensive example using Python see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb" target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb</a>
+
+### Trouble shooting
+
+If you cannot connect to postgresql it is most likely due to an issue with the docker volume that contains the data. The volume can become corrupted if the container is not properly stopped using `q + Enter` in the launch menu. To create a clean volume for postgres (1) stop the running container using `q + Enter`, (2) run the code below in a terminal, and (3) restart the container. If you are still having issues connecting to the postgresql server, please reach out for support through Piazza.
+
+```
+docker volume rm pg_data
+```
 
 ## Installing R and Python packages locally
 

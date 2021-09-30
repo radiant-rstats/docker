@@ -73,3 +73,13 @@ To use fonts and icons in the Windows Console Host (i.e., CMD) change the termin
 If you want to have access to the same icons in the terminal in VSCode change the settings as follows:
 
 > Visual Studio Code: Open File → Preferences → Settings, enter terminal.integrated.fontFamily in the search box and set the value to "MesloLGS NF".
+
+To use fonts and icons in the JupyterLab terminal, change the terminal settings as follows: 
+
+> Settings: Advanced Settings Editor → Terminal, then enter the below in the `User Preferences` window.
+
+```
+{
+    "fontFamily": "MesloLGS NF",
+}
+```
