@@ -508,7 +508,7 @@ else
       else
         curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
+        sh "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
       fi
       exit 1
     elif [ ${menu_exec} == 6 ]; then
