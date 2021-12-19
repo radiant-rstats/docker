@@ -65,11 +65,19 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart;
 ```
 
-Next, restart your computer and re-open PowerShell to install Ubuntu. You will be asked to provide a username and password. Make sure to enter the same username and password you use to login to your computer.
+Next, restart your computer and re-open PowerShell to install Ubuntu. You will be asked to provide a username and password. 
 
 ```bash
 wsl --set-default-version 2
 wsl --install -d Ubuntu-20.04
+```
+
+> Important: Make sure to enter the same username and password you use to login to your computer
+
+Check your username for Windows and Ubunutu by executing the command below in both (1) a Windows PowerShell and (2) an Ubuntu terminal. The output in both cases should be the same.
+
+```bash
+whoami
 ```
 
 Next, restart your computer and re-open PowerShell to check that Ubuntu is set as the default linux distribution:
