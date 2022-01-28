@@ -2,16 +2,17 @@
 
 # git pull
 docker login
-DOCKERHUB_VERSION=1.9.1
+DOCKERHUB_VERSION=2.0.0
 UPLOAD="NO"
 # UPLOAD="YES"
 
 build () {
   {
     if [[ "$1" == "NO" ]]; then
-      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest ./${LABEL}
+      # using buildx to create multi-platform images
+      docker buildx --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest ./${LABEL}
     else
-      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ./${LABEL}
+      docker buildx --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ./${LABEL}
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -48,7 +49,9 @@ launcher () {
 }
 
 LABEL=r-focal
-build
+build NO
+
+exit
 
 # if you use the line
 # below, manually remove the 'allow' section afterwards
