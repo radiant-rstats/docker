@@ -10,9 +10,9 @@ build () {
   {
     if [[ "$1" == "NO" ]]; then
       # using buildx to create multi-platform images
-      docker buildx --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest ./${LABEL}
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --load -t $USER/${LABEL}:latest ../${LABEL}
     else
-      docker buildx --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ./${LABEL}
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ../${LABEL}
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -48,7 +48,7 @@ launcher () {
   fi
 }
 
-LABEL=r-focal
+LABEL=rsm-msba-spark
 build NO
 
 exit

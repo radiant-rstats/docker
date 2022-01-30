@@ -8,6 +8,7 @@ ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 ENV DEBIAN_FRONTEND=noninteractive
 # installing java
 RUN apt-get -y update \
+  && mkdir -p /etc/ssl/certs/java \
   && apt-get install --no-install-recommends -y openjdk-8-jre-headless openjdk-8-jdk-headless ca-certificates-java \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
