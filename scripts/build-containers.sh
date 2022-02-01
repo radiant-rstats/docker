@@ -10,7 +10,7 @@ build () {
   {
     if [[ "$1" == "NO" ]]; then
       # using buildx to create multi-platform images
-      docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $USER/${LABEL}:latest ../${LABEL}
+      docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $TF_VAR_DOCKER_USERNAME/${LABEL}:latest --tag $TF_VAR_DOCKER_USERNAME/${LABEL}:1.9.2 ../${LABEL}
     else
       docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $TF_VAR_DOCKER_USERNAME/${LABEL}:latest --tag $TF_VAR_DOCKER_USERNAME/${LABEL}:1.9.2 ../${LABEL}
     fi

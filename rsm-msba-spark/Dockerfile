@@ -14,6 +14,9 @@ RUN apt-get -y update \
   && rm -rf /var/lib/apt/lists/* \
   && R CMD javareconf
 
+RUN sudo mkdir /srv/shiny-server/radiant/inst/app/app_cache \
+    && sudo chmod 777 /srv/shiny-server/radiant/inst/app/app_cache
+
 ENV SPARK_VERSION=3.0.1 \
   BUILT_FOR_HADOOP_VERSION=2.7 \
   HADOOP_VERSION=2.7.7 \ 
@@ -39,6 +42,12 @@ RUN mkdir $HADOOP_HOME \
   && chown -R root:root $HADOOP_HOME  \
   && rm -rf *.tar.gz
 
+
+ENV TZ="America/Los_Angeles"
+
+# link to Rstudio's pandoc
+RUN ln -sf /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin/pandoc
+
 # install the R kernel for Jupyter Lab
 RUN R -e 'options(spark.install.dir = "/opt"); sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("BUILT_FOR_HADOOP_VERSION"))'
 
@@ -54,12 +63,12 @@ RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(ge
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba-spark.sh /opt/launch.sh
-RUN chmod 777 /opt/launch.sh
+RUN sudo chmod 777 /opt/launch.sh
 
 # Configure Hadoop 
 COPY ./hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
 COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-RUN chmod 777 -R $HADOOP_HOME
+RUN sudo chmod 777 -R $HADOOP_HOME
 
 # Add Jingbo's AutoPhrase
 # ADD https://github.com/shangjingbo1226/AutoPhrase/archive/master.zip /opt/AutoPhrase-master.zip
