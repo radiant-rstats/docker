@@ -50,7 +50,7 @@ LABEL="rsm-msba-spark"
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
 
-# Choose your timezone https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# Choose your timezone https://urldefense.proofpoint.com/v2/url?u=https-3A__en.wikipedia.org_wiki_List-5Fof-5Ftz-5Fdatabase-5Ftime-5Fzones&d=DwIGAg&c=-35OiAkTchMrZOngvJPOeA&r=Fl9jXwBiBhOXNPxlgSZKqSEZiBiPWs1diKtm8L8hkjw&m=dKnl0Zu1E_xKFdSYdXmzt7bxtrBIg5RlcxG-BpgA_VrGxp0RzlpV-l_r-7ohiVX6&s=k56JQbeCh2XYwmquVFHpgEvOCtGfPD7QxLhqLzl1fdY&e= 
 # TIMEZONE="Europe/Amsterdam"
 TIMEZONE="America/Los_Angeles"
 if [ "$ARG_TAG" != "" ]; then
@@ -97,14 +97,14 @@ if [ "${has_docker}" == "" ]; then
   if [[ "$ostype" == "Linux" ]]; then
     is_wsl=$(which explorer.exe)
     if [[ "$is_wsl" != "" ]]; then
-      echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
+      echo "https://hub.docker.com/editions/community/docker-ce-desktop-windows"
     else
       echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
     fi
   elif [[ "$ostype" == "Darwin" ]]; then
-    echo "https://download.docker.com/mac/stable/Docker.dmg"
+    echo "https://hub.docker.com/editions/community/docker-ce-desktop-mac"
   else
-    echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
+    echo "https://hub.docker.com/editions/community/docker-ce-desktop-windows"
   fi
   echo "-----------------------------------------------------------------------"
   read
@@ -211,18 +211,18 @@ else
     if [ "${ARG_HOME}" != "" ] && [ ! -d "${ARG_HOME}" ]; then
       echo "The directory ${ARG_HOME} does not yet exist."
       echo "Please create the directory and restart the launch script"
-      sleep 5s
+      sleep 5
       exit 1
     fi
     if [ "$ARG_DIR" != "" ]; then
       if [ ! -d "${ARG_DIR}" ]; then
         echo "The directory ${ARG_DIR} does not yet exist."
         echo "Please create the directory and restart the launch script"
-        sleep 5s
+        sleep 5
         exit 1
       fi
       ARG_HOME="$(cd "$ARG_DIR"; pwd)"
-      ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
+      ## https://urldefense.proofpoint.com/v2/url?u=https-3A__unix.stackexchange.com_questions_295991_sed-2Derror-2D1-2Dnot-2Ddefined-2Din-2Dthe-2Dre-2Dunder-2Dos-2Dx&d=DwIGAg&c=-35OiAkTchMrZOngvJPOeA&r=Fl9jXwBiBhOXNPxlgSZKqSEZiBiPWs1diKtm8L8hkjw&m=dKnl0Zu1E_xKFdSYdXmzt7bxtrBIg5RlcxG-BpgA_VrGxp0RzlpV-l_r-7ohiVX6&s=KKDjxkSRJ0qvoGlr8sml5JXw7t7ezY9qt6lDgkkfRW8&e= 
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
       echo "---------------------------------------------------------------------------"
@@ -355,6 +355,11 @@ else
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
+<<<<<<< HEAD
+=======
+      -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
+      --privileged \
+>>>>>>> raghav-dev
       ${IMAGE}:${IMAGE_VERSION}
   } || {
     echo "-----------------------------------------------------------------------"
@@ -366,7 +371,11 @@ else
   }
 
   ## make sure abend is set correctly
+<<<<<<< HEAD
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
+=======
+  ## https://urldefense.proofpoint.com/v2/url?u=https-3A__community.rstudio.com_t_restarting-2Drstudio-2Dserver-2Din-2Ddocker-2Davoid-2Derror-2Dmessage_10349_2&d=DwIGAg&c=-35OiAkTchMrZOngvJPOeA&r=Fl9jXwBiBhOXNPxlgSZKqSEZiBiPWs1diKtm8L8hkjw&m=dKnl0Zu1E_xKFdSYdXmzt7bxtrBIg5RlcxG-BpgA_VrGxp0RzlpV-l_r-7ohiVX6&s=1oqbvYQWSFi7o_18weHa78VVICgdKhs4vzp5z_90Yjg&e= 
+>>>>>>> raghav-dev
   rstudio_abend () {
     if [ -d "${HOMEDIR}/.rstudio/sessions/active" ]; then
       RSTUDIO_STATE_FILES=$(find "${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state" -type f 2>/dev/null)
@@ -478,15 +487,15 @@ else
             -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
             ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
           rstudio_abend
-          sleep 4s
+          sleep 4
         }
         open_browser http://localhost:${menu_arg}/rstudio
       fi
     elif [ ${menu_exec} == 3 ]; then
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
-        sleep 2s
-        open_browser http://localhost:8989/lab
+        sleep 2
+        open_browser http://localhost:8989/lab 
       else
         echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
         docker run --net ${NETWORK} -d \
@@ -496,7 +505,7 @@ else
           -v ${HOMEDIR}:/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
-        sleep 3s
+        sleep 3
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 4 ]; then
@@ -531,7 +540,7 @@ else
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
-        sleep 4s
+        sleep 4
         open_browser http://localhost:${menu_arg}/vscode
       fi
     elif [ ${menu_exec} == 5 ]; then
@@ -792,12 +801,12 @@ else
   }
 
   ## sleep to give the server time to start up fully
-  sleep 2s
+  sleep 2
   show_service
   ret=$?
   ## keep asking until quit
   while [ $ret -ne 2 ]; do
-    sleep 2s
+    sleep 2
     if [ "$ARG_SHOW" != "show" ]; then
       clear
     fi
