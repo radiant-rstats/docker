@@ -355,11 +355,6 @@ else
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-<<<<<<< HEAD
-=======
-      -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
-      --privileged \
->>>>>>> raghav-dev
       ${IMAGE}:${IMAGE_VERSION}
   } || {
     echo "-----------------------------------------------------------------------"
@@ -371,11 +366,7 @@ else
   }
 
   ## make sure abend is set correctly
-<<<<<<< HEAD
   ## https://community.rstudio.com/t/restarting-rstudio-server-in-docker-avoid-error-message/10349/2
-=======
-  ## https://urldefense.proofpoint.com/v2/url?u=https-3A__community.rstudio.com_t_restarting-2Drstudio-2Dserver-2Din-2Ddocker-2Davoid-2Derror-2Dmessage_10349_2&d=DwIGAg&c=-35OiAkTchMrZOngvJPOeA&r=Fl9jXwBiBhOXNPxlgSZKqSEZiBiPWs1diKtm8L8hkjw&m=dKnl0Zu1E_xKFdSYdXmzt7bxtrBIg5RlcxG-BpgA_VrGxp0RzlpV-l_r-7ohiVX6&s=1oqbvYQWSFi7o_18weHa78VVICgdKhs4vzp5z_90Yjg&e= 
->>>>>>> raghav-dev
   rstudio_abend () {
     if [ -d "${HOMEDIR}/.rstudio/sessions/active" ]; then
       RSTUDIO_STATE_FILES=$(find "${HOMEDIR}/.rstudio/sessions/active/*/session-persistent-state" -type f 2>/dev/null)
