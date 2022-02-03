@@ -82,6 +82,8 @@ source ~/.zshrc;
 
 To start Radiant, open RStudio and follow the steps in the picture below
 
+<img src="figures/rsm-radiant.jpeg">
+
 <!-- ssh-copy-id -i ~/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
 
 ## Updating the RSM-MSBA computing environment on macOS M1
