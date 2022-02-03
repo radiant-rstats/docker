@@ -23,12 +23,6 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 
 [download docker for macOS with an M1 (ARM) chip](https://desktop.docker.com/mac/stable/arm64/Docker.dmg?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-mac-arm64)
 
-You must also install Rosetta 2 as some binaries are still Darwin/AMD64. To install Rosetta 2 manually from the command line, run the following command:
-
-```bash
-softwareupdate --install-rosetta;
-```
-
 You can also change the (maximum) resources docker is allowed to use on your system. You can set this to approximately 50% of the maximum available on your system.
 
 <img src="figures/docker-resources-mac.png" width="500px">
