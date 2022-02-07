@@ -23,12 +23,6 @@ Please follow the instructions below to install the rsm-msba-spark computing env
 
 [download docker for macOS with an M1 (ARM) chip](https://desktop.docker.com/mac/stable/arm64/Docker.dmg?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-mac-arm64)
 
-You must also install Rosetta 2 as some binaries are still Darwin/AMD64. To install Rosetta 2 manually from the command line, run the following command:
-
-```bash
-softwareupdate --install-rosetta;
-```
-
 You can also change the (maximum) resources docker is allowed to use on your system. You can set this to approximately 50% of the maximum available on your system.
 
 <img src="figures/docker-resources-mac.png" width="500px">
@@ -47,20 +41,20 @@ xcode-select --install;
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop/launch-rsm-msba-spark.command;
-~/Desktop/launch-rsm-msba-spark.command;
+cp -p ~/git/docker/launch-rsm-msba-spark-m1.sh ~/Desktop/launch-rsm-msba-spark-m1.command;
+~/Desktop/launch-rsm-msba-spark-m1.command;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
 <img src="figures/rsm-msba-menu-macos.png" width="500px">
 
-The code above also creates a copy of the file `launch-rsm-msba-spark.command` on your Desktop that you can double-click to start the container again in the future.
+The code above also creates a copy of the file `launch-rsm-msba-spark-m1.command` on your Desktop that you can double-click to start the container again in the future.
 
 Copy-and-paste the command below to create a shortcut to the launch script to use from the command line.
 
 ```bash
-ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch;
+ln -s ~/git/docker/launch-rsm-msba-spark-m1.sh /usr/local/bin/launch;
 ```
 
 **Step 4**: Check that you can launch Rstudio and Jupyter
@@ -79,12 +73,16 @@ You will know that the installation was successful if you can start Rstudio and 
 
 To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in either Rstudio or Jupyter lab and run the code below:
 
-To finalize the setup for Radiant, Rstudio, and VS Code open a terminal in either Rstudio or Jupyter lab and run the code below:
-
 ```bash
 setup;
 source ~/.zshrc;
 ```
+
+**Radiant**:
+
+To start Radiant, open RStudio and follow the steps in the picture below
+
+<img src="figures/rsm-radiant.jpeg">
 
 <!-- ssh-copy-id -i ~/.ssh/id_rsa.pub username@rsm-compute-01.ucsd.edu -->
 
@@ -97,10 +95,10 @@ To update the container use the launch script and press 6 (+ enter). To update t
 If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
 ```bash
-docker pull vnijs/rsm-msba-spark;
+docker pull raghavprasad13/rsm-msba-spark;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-msba-spark.sh ~/Desktop/launch-rsm-msba-spark.command;
+cp -p ~/git/docker/launch-rsm-msba-spark-m1.sh ~/Desktop/launch-rsm-msba-spark-m1.command;
 ```
 
 ## Using VS Code for Python
@@ -272,8 +270,8 @@ rm -rf ~/.rstudio;
 rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
-docker pull vnijs/rsm-msba-spark;
-sudo -- bash -c 'rm -f /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch; chmod 755 /usr/local/bin/launch';
+docker pull raghavprasad13/rsm-msba-spark;
+sudo -- bash -c 'rm -f /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-msba-spark-m1.sh /usr/local/bin/launch; chmod 755 /usr/local/bin/launch';
 ```
 
 ## Getting help
