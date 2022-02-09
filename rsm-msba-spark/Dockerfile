@@ -14,6 +14,10 @@ RUN apt-get -y update \
   && rm -rf /var/lib/apt/lists/* \
   && R CMD javareconf
 
+# install nodejs so as to include npm as well
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - \
+  && sudo apt install -y nodejs
+
 RUN sudo mkdir /srv/shiny-server/radiant/inst/app/app_cache \
     && sudo chmod 777 /srv/shiny-server/radiant/inst/app/app_cache
 
@@ -87,6 +91,10 @@ RUN sudo chmod 777 -R $HADOOP_HOME
 #   && rm -rf /var/cache/oracle-jdk8-installer  \
 #   && apt-get clean \
 #   && rm -rf /var/lib/apt/lists/*
+
+# Uninstall tensorflow to avoid qemu error
+RUN pip3 uninstall -y tensorflow tensorflow-estimator \
+  && pip3 install -U https://tf.novaal.de/barcelona/tensorflow-2.6.0-cp38-cp38-linux_x86_64.whl
 
 EXPOSE 8989 8765 22
 
