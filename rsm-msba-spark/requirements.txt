@@ -1,3 +1,4 @@
 pyspark==3.0.1
 py4j==0.10.9
 findspark
+numpy==1.20.2

@@ -96,6 +96,12 @@ RUN sudo chmod 777 -R $HADOOP_HOME
 RUN pip3 uninstall -y tensorflow tensorflow-estimator \
   && pip3 install -U https://tf.novaal.de/barcelona/tensorflow-2.6.0-cp38-cp38-linux_x86_64.whl
 
+# usethis script
+COPY usethis /usr/local/bin/usethis
+
+# to get rid of jupyterlab_spellchecker error
+RUN jupyter lab build
+
 EXPOSE 8989 8765 22
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
