@@ -3,16 +3,18 @@
 # git pull
 docker login
 DOCKERHUB_VERSION=2.0.0
+DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
 # UPLOAD="YES"
 
 build () {
   {
+    docker buildx create --use
     if [[ "$1" == "NO" ]]; then
       # using buildx to create multi-platform images
-      docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $TF_VAR_DOCKER_USERNAME/${LABEL}:latest --tag $TF_VAR_DOCKER_USERNAME/${LABEL}:1.9.2 ../${LABEL}
+      docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
     else
-      docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $TF_VAR_DOCKER_USERNAME/${LABEL}:latest --tag $TF_VAR_DOCKER_USERNAME/${LABEL}:1.9.2 ../${LABEL}
+      docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -48,10 +50,13 @@ launcher () {
   fi
 }
 
-LABEL=rsm-msba-spark
+LABEL=rsm-jupyter
 build
 
 exit
+
+LABEL=r-focal
+build
 
 # if you use the line
 # below, manually remove the 'allow' section afterwards
