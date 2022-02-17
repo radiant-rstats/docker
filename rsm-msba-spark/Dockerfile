@@ -100,7 +100,8 @@ RUN pip3 uninstall -y tensorflow tensorflow-estimator \
 COPY usethis /usr/local/bin/usethis
 
 # to get rid of jupyterlab_spellchecker error
-RUN jupyter lab build
+# disabled minimize option to make sure build doesn't fail due to resource contraints
+RUN sudo jupyter lab build --minimize=False
 
 EXPOSE 8989 8765 22
 

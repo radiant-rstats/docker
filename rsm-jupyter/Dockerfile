@@ -14,32 +14,39 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
 
+# This installs toolchain to build icu4c and libiconv later
+RUN sudo apt-get update \
+    && sudo apt-get install -y build-essential
+
 RUN pip3 install bash_kernel \
   "pyrsm>=0.5.1" \
+  jupyterlab_widgets \
   jupytext \ 
   jupyterlab_code_formatter \
   jupyterlab-git \
   jupyterlab-skip-traceback \
+  lckr-jupyterlab-variableinspector \
   && python -m bash_kernel.install 
 
 RUN jupyter labextension install \
-  @jupyter-widgets/jupyterlab-manager \
+  @jupyter-widgets/jupyterlab-manager \ 
   @jupyterlab/git \
   jupyterlab-jupytext \
-  @ryantam626/jupyterlab_code_formatter \
-  @lckr/jupyterlab_variableinspector
+  @ryantam626/jupyterlab_code_formatter
+  # @lckr/jupyterlab_variableinspector  # this has been shifted up to be installed using pip
 
 RUN jupyter serverextension enable \
   --py jupyterlab_code_formatter --system \
-  && jupyter serverextension enable \
+  && jupyter server extension enable \
   --py jupyterlab_git --system \
   && jupyter lab build
 
-RUN git clone https://github.com/vnijs/jupyterlab_spellchecker /opt/jupyter/jupyterlab_spellchecker \
-  && cd /opt/jupyter/jupyterlab_spellchecker \   
-  && npm install \
-  && npm run build \
-  && jupyter labextension link . 
+# Removing this because it is incompatible with jupyterlab 3.x
+# RUN git clone https://github.com/vnijs/jupyterlab_spellchecker /opt/jupyter/jupyterlab_spellchecker \
+#   && cd /opt/jupyter/jupyterlab_spellchecker \   
+#   && npm install \
+#   && npm run build \
+#   && jupyter labextension link . 
 
 ENV R_VERSION=4.1.2
 ENV TERM=xterm
@@ -47,17 +54,39 @@ ENV R_HOME=/usr/local/lib/R
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
-RUN wget https://github.com/rocker-org/rocker-versioned2/blob/master/scripts/install_R.sh \
+# Build icu4c and libiconv first to prevent issues in install_R.sh later
+RUN wget https://github.com/unicode-org/icu/releases/download/release-69-1/icu4c-69_1-src.tgz \
+    && tar -xf icu4c-69_1-src.tgz \
+    && cd icu/source \
+    && chmod +x runConfigureICU configure install-sh \
+    && ./runConfigureICU Linux/gcc --prefix=/usr/local \
+    && make \
+    && make install \
+    && cd \
+    && rm icu4c-69_1-src.tgz
+
+RUN wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz \
+    && tar -xf libiconv-1.16.tar.gz \
+    && cd libiconv-1.16 \
+    && chmod +x configure \
+    && ./configure --prefix /usr/local \
+    && make \
+    && make install \
+    && cd \
+    && rm libiconv-1.16.tar.gz
+
+RUN wget https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/install_R.sh \
   && chmod 755 install_R.sh \ 
-  && install_R.sh
+  && ./install_R.sh
 
 # set path to user directory to install packages
 # fix bug in Rstudio 1.3 that omits /usr/local/lib/R from .libPaths()
-RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/Renviron \
-  && sed -i -e 's/R_LIBS_SITE-/R_LIBS_SITE:-/' /etc/R/Renviron
+# commenting this out until we know more about the location of .Renviron file, otherwise it will throw a file not found error
+# RUN sed -i -e 's/~\/R\/x86_64/~\/.rsm-msba\/R\/x86_64/' /etc/R/.Renviron \
+#     && sed -i -e 's/R_LIBS_SITE-/R_LIBS_SITE:-/' /etc/R/.Renviron
 
 # install the R kernel for Jupyter Lab
-RUN R -e 'install.packages("IRkernel"); IRkernel::installspec(user = FALSE)'
+RUN R -e 'install.packages(c("IRkernel", "remotes")); IRkernel::installspec(user = FALSE)'
 
 # install google chrome
 # RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -102,11 +131,11 @@ RUN chmod +x /usr/local/bin/clean
 # update R-packages
 RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \
   -e 'remotes::install_github("bmschmidt/wordVectors", upgrade = "never")' \
-  -e 'install.packages(c("igraph","rWishart"))' \
+  -e 'install.packages(c("igraph","rWishart"))'
 
 ENV CMDSTAN_VERSION="2.26.1"
 
-RUN install_cmdstan -d /opt/cmdstan -v $CMDSTAN_VERSION
+RUN conda install -c conda-forge cmdstan=${CMDSTAN_VERSION}
 
 # settings for local install of python packages 
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
@@ -131,8 +160,11 @@ RUN addgroup ${NB_USER} postgres
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
+# Weirdly it doesn't find wget and git commands at this point
+RUN sudo apt-get install -y wget git
+
 # oh-my-zsh
-RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+RUN wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
   && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
   && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
