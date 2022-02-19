@@ -16,17 +16,19 @@ USER root
 
 # This installs toolchain to build icu4c and libiconv later
 RUN sudo apt-get update \
-    && sudo apt-get install -y build-essential
+    && sudo apt-get install -y build-essential supervisor openssh-server
 
-RUN pip3 install bash_kernel \
-  "pyrsm>=0.5.1" \
-  jupyterlab_widgets \
-  jupytext \ 
-  jupyterlab_code_formatter \
-  jupyterlab-git \
-  jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector \
-  && python -m bash_kernel.install 
+RUN mamba install -y -c conda-forge bash_kernel \
+    jupyterlab_widgets \
+    jupytext \
+    jupyterlab_code_formatter \
+    jupyterlab-git \
+    && python -m bash_kernel.install
+
+RUN mamba install -y -c suhas_goutham pyrsm
+
+RUN pip3 install jupyterlab-skip-traceback \
+    lckr-jupyterlab-variableinspector
 
 RUN jupyter labextension install \
   @jupyter-widgets/jupyterlab-manager \ 
@@ -86,7 +88,10 @@ RUN wget https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/s
 #     && sed -i -e 's/R_LIBS_SITE-/R_LIBS_SITE:-/' /etc/R/.Renviron
 
 # install the R kernel for Jupyter Lab
-RUN R -e 'install.packages(c("IRkernel", "remotes")); IRkernel::installspec(user = FALSE)'
+# RUN R -e 'install.packages(c("IRkernel", "remotes")); IRkernel::installspec(user = FALSE)'
+
+# Use mamba/conda to install r-base. This is used in lieu of install.packages (which has been commented above)
+RUN mamba install -c conda-forge r-base r-remotes
 
 # install google chrome
 # RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -135,7 +140,7 @@ RUN R -e 'remotes::install_github("vnijs/Diagrammer", upgrade = "never")' \
 
 ENV CMDSTAN_VERSION="2.26.1"
 
-RUN conda install -c conda-forge cmdstan=${CMDSTAN_VERSION}
+RUN mamba install -c conda-forge cmdstan=${CMDSTAN_VERSION}
 
 # settings for local install of python packages 
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
@@ -154,11 +159,9 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba.sh /opt/launch.sh
 # RUN chmod 777 /opt/launch.sh
 
-EXPOSE 8989 8765 22
-
-RUN addgroup ${NB_USER} postgres
-
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+RUN addgroup ${NB_USER} postgres \
+    && mkdir -p /var/log/supervisor \
+    && chown ${NB_USER} /var/log/supervisor
 
 # Weirdly it doesn't find wget and git commands at this point
 RUN sudo apt-get install -y wget git
@@ -176,9 +179,15 @@ COPY zshrc /etc/skel/.zshrc
 COPY p10k.zsh /etc/skel/.p10k.zsh
 COPY usethis /usr/local/bin/usethis
 
+EXPOSE 8989 8765 22
+
+ENTRYPOINT ["/usr/bin/supervisord"]
+
+CMD ["-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
 # weirdness with lib not being available for V8 and rstan
 # although it works fine in the vnijs/radiant container
 # RUN apt-get install -y libnode-dev
 
-# USER ${NB_USER}
-# ENV HOME /home/${NB_USER}
+USER ${NB_USER}
+ENV HOME /home/${NB_USER}
