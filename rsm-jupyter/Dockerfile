@@ -14,6 +14,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
 
+# fixes the issue where sudo requires terminal for password when starting postgres
+RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
 # This installs toolchain to build icu4c and libiconv later
 RUN sudo apt-get update \
     && sudo apt-get install -y build-essential supervisor openssh-server
