@@ -44,7 +44,6 @@ esac; done
 ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
-CODE_WORKINGDIR="/home/${NB_USER}/git"
 # ID="raghavprasad13"
 ID="vnijs"
 LABEL="rsm-jupyter"
@@ -242,11 +241,6 @@ else
       copy_config="y"
     fi
 
-    # setup working directory for vscode
-    if [ "${HOMEDIR}" != "${ARG_HOME}" ]; then
-      CODE_WORKINGDIR="/home/${NB_USER}"
-    fi
-
     if [ "${copy_config}" == "y" ]; then
       if [ -f "${HOMEDIR}/.inputrc" ] && [ ! -s "${ARG_HOME}/.inputrc" ]; then
         MNT="$MNT -v ${HOMEDIR}/.inputrc:/home/$NB_USER/.inputrc"
@@ -358,8 +352,7 @@ else
   fi
   {
     docker run --net ${NETWORK} -d \
-      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:2121:22 \
-      -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
+      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -426,7 +419,6 @@ else
         echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
         docker run --net ${NETWORK} -d \
           -p 127.0.0.1:${menu_arg}:8989 \
-          -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
           -e TZ=${TIMEZONE} \
           -v ${HOMEDIR}:/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
