@@ -392,16 +392,12 @@ else
     echo "-----------------------------------------------------------------------"
     echo "${LABEL}:${DOCKERHUB_VERSION} computing environment on ${ostype} (${BUILD_DATE//T*/})"
     echo "-----------------------------------------------------------------------"
-    echo "Press (1) to show Radiant, followed by [ENTER]:"
-    echo "Press (2) to show Rstudio, followed by [ENTER]:"
-    echo "Press (3) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (4) to show VS Code, followed by [ENTER]:"
-    echo "Press (5) to show a (ZSH) terminal, followed by [ENTER]:"
-    echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (7) to update the launch script, followed by [ENTER]:"
-    echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
-    echo "Press (9) to clear Python packages, followed by [ENTER]:"
-    echo "Press (10) to start a Selenium container, followed by [ENTER]:"
+    echo "Press (1) to show Jupyter Lab, followed by [ENTER]:"
+    echo "Press (2) to show a (ZSH) terminal, followed by [ENTER]:"
+    echo "Press (3) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (4) to update the launch script, followed by [ENTER]:"
+    echo "Press (5) to clear local R packages, followed by [ENTER]:"
+    echo "Press (6) to clear local Python packages, followed by [ENTER]:"
     echo "Press (h) to show help in the terminal and browser, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
@@ -415,75 +411,6 @@ else
     if [ -z "${menu_exec}" ]; then
       echo "Invalid entry. Resetting launch menu ..."
     elif [ ${menu_exec} == 1 ]; then
-      RPROF="${HOMEDIR}/.Rprofile"
-      if [ ! -f "${RPROF}" ]; then
-        touch "${RPROF}"
-      fi
-      if ! grep -q 'radiant.report = TRUE' ${RPROF}; then
-        echo "Your setup does not allow report generation in Radiant."
-        echo "Would you like to add relevant code to .Rprofile?"
-        echo "Press y or n, followed by [ENTER]:"
-        echo ""
-        read allow_report
-
-        if [ "${allow_report}" == "y" ]; then
-          ## Windows does not reliably use newlines with printf
-          sed_fun '/^options(radiant.maxRequestSize/d' "${RPROF}"
-          sed_fun '/^options(radiant.report/d' "${RPROF}" 
-          sed_fun '/^options(radiant.shinyFiles/d' "${RPROF}"
-          sed_fun '/^options(radiant.ace_autoComplete/d' "${RPROF}"
-          sed_fun '/^options(radiant.ace_theme/d' "${RPROF}"
-          sed_fun '/^#.*List.*specific.*directories.*you.*want.*to.*use.*with.*radiant/d' "${RPROF}"
-          sed_fun '/^#.*options(radiant\.sf_volumes.*=.*c(Git.*=.*"\/home\/jovyan\/git"))/d' "${RPROF}"
-          echo 'options(radiant.maxRequestSize = -1)' >> "${RPROF}"
-          echo 'options(radiant.report = TRUE)' >> "${RPROF}"
-          echo 'options(radiant.shinyFiles = TRUE)' >> "${RPROF}"
-          echo 'options(radiant.ace_autoComplete = "live")' >> "${RPROF}"
-          echo 'options(radiant.ace_theme = "tomorrow")' >> "${RPROF}"
-          echo '# List specific directories you want to use with radiant' >> "${RPROF}"
-          echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
-          # echo '# source(file.path(Sys.getenv(if (.Platform$OS.type == "windows") "HOMEPATH" else "HOME"), ".vscode-R", "init.R"))'
-          echo '' >> "${RPROF}"
-          sed_fun '/^[\s]*$/d' "${RPROF}"
-        fi
-      fi
-      if [ "${menu_arg}" == "" ]; then
-        echo "Starting Radiant in the default browser on localhost:8989/radiant"
-        open_browser http://localhost:8989/radiant
-      else
-        echo "Starting Radiant in the default browser on localhost:${menu_arg}/radiant"
-        { 
-          docker run --net ${NETWORK} -d \
-            -p 127.0.0.1:${menu_arg}:8989 \
-            -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
-            -e TZ=${TIMEZONE} \
-            -v "${HOMEDIR}":/home/${NB_USER} $MNT \
-            -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-            ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
-          sleep 4s
-        }
-        open_browser http://localhost:${menu_arg}/radiant
-      fi
-    elif [ ${menu_exec} == 2 ]; then
-      if [ "${menu_arg}" == "" ]; then
-        echo "Starting Rstudio in the default browser on localhost:8989/rstudio"
-        open_browser http://localhost:8989/rstudio
-      else
-        echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
-        { 
-          docker run --net ${NETWORK} -d \
-            -p 127.0.0.1:${menu_arg}:8989 \
-            -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
-            -e TZ=${TIMEZONE} \
-            -v "${HOMEDIR}":/home/${NB_USER} $MNT \
-            -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-            ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
-          rstudio_abend
-          sleep 4
-        }
-        open_browser http://localhost:${menu_arg}/rstudio
-      fi
-    elif [ ${menu_exec} == 3 ]; then
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
         sleep 2
@@ -500,42 +427,7 @@ else
         sleep 3
         open_browser http://localhost:${menu_arg}/lab
       fi
-    elif [ ${menu_exec} == 4 ]; then
-      RPROF="${HOMEDIR}/.Rprofile"
-      if [ ! -f "${RPROF}" ]; then
-        touch "${RPROF}"
-      fi
-      if ! grep -q '".vscode-R"' ${RPROF}; then
-        echo "Your setup does not provide full support for coding in R."
-        echo "Would you like to add relevant settings to .Rprofile?"
-        echo "Press y or n, followed by [ENTER]:"
-        echo ""
-        read update_rprofile
-
-        if [ "${update_rprofile}" == "y" ]; then
-          echo 'rvscode_file <- file.path(Sys.getenv(if (.Platform$OS.type == "windows") "HOMEPATH" else "HOME"), ".vscode-R", "init.R")' >> "${RPROF}"
-          echo 'if (file.exists(rvscode_file)) source(rvscode_file)' >> "${RPROF}"
-          echo 'rm(rvscode_file)' >> "${RPROF}"
-          # echo 'options(help.ports = 21000:21010)' >> "${RPROF}"
-          echo '' >> "${RPROF}"
-        fi
-      fi
-      if [ "${menu_arg}" == "" ]; then
-        echo "Starting VS Code in the default browser on localhost:8989/vscode"
-        open_browser http://localhost:8989/vscode
-      else
-        echo "Starting VS Code in the default browser on localhost:${menu_arg}/vscode"
-        docker run --net ${NETWORK} -d \
-          -p 127.0.0.1:${menu_arg}:8989 \
-          -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
-          -e TZ=${TIMEZONE} \
-          -v "${HOMEDIR}":/home/${NB_USER} $MNT \
-          -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-          ${IMAGE}:${IMAGE_VERSION}
-        sleep 4
-        open_browser http://localhost:${menu_arg}/vscode
-      fi
-    elif [ ${menu_exec} == 5 ]; then
+    elif [ ${menu_exec} == 2 ]; then
       running=$(docker ps -q | awk '{print $1}')
       if [ "${running}" != "" ]; then
         if [ "$ARG_SHOW" != "show" ]; then
@@ -553,7 +445,7 @@ else
           docker exec -it --user ${NB_USER} ${running} /bin/zsh
         fi
       fi
-    elif [ ${menu_exec} == 6 ]; then
+    elif [ ${menu_exec} == 3 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing environment"
@@ -579,7 +471,7 @@ else
       fi
       $CMD
       exit 1
-    elif [ ${menu_exec} == 7 ]; then
+    elif [ ${menu_exec} == 4 ]; then
       echo "Updating ${IMAGE} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -602,19 +494,7 @@ else
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}" "${@:1}"
       fi
       exit 1
-    elif [ ${menu_exec} == 8 ]; then
-      echo "-----------------------------------------------------"
-      echo "Clean up Rstudio sessions (y/n)?"
-      echo "-----------------------------------------------------"
-      read cleanup
-
-      if [ "${cleanup}" == "y" ]; then
-        echo "Cleaning up Rstudio sessions and settings"
-        rm -rf "${HOMEDIR}/.rstudio/sessions"
-        rm -rf "${HOMEDIR}/.rstudio/projects"
-        rm -rf "${HOMEDIR}/.rstudio/projects_settings"
-      fi
-
+    elif [ ${menu_exec} == 5 ]; then
       echo "-----------------------------------------------------"
       echo "Remove locally installed R packages (y/n)?"
       echo "-----------------------------------------------------"
@@ -628,7 +508,7 @@ else
           mkdir "${i}"
         done
       fi
-    elif [ ${menu_exec} == 9 ]; then
+    elif [ ${menu_exec} == 6 ]; then
       echo "Removing locally installed Python packages"
       rm -rf "${HOMEDIR}/.rsm-msba/bin"
       rm -rf "${HOMEDIR}/.rsm-msba/lib"
@@ -636,31 +516,6 @@ else
       for i in ${rm_list}; do
          rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
       done
-    elif [ "${menu_exec}" == 10 ]; then
-      if [ "${menu_arg}" != "" ]; then
-        selenium_port=${menu_arg}
-      else 
-        selenium_port=4444
-      fi
-      CPORT=$(curl -s localhost:${selenium_port} 2>/dev/null)
-      echo "-----------------------------------------------------------------------"
-      selenium_nr=($(docker ps -a | awk "/selenium_/" | awk '{print $1}'))
-      selenium_nr=${#selenium_nr[@]}
-      if [ "$CPORT" != "" ]; then
-        echo "A Selenium container may already be running on port ${selenium_port}"
-        selenium_nr=$((${selenium_nr}-1))
-      else
-        if [ $(arch) == "arm64" ]; then 
-          docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p ${selenium_port}:4444  --platform=linux/arm64 selenium/standalone-firefox
-        else
-          docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
-        fi
-      fi
-      echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
-      echo "${LABEL} container and ip: 127.0.0.1, port: ${selenium_port} from the host OS"
-      echo "Press any key to continue"
-      echo "-----------------------------------------------------------------------"
-      read continue
     elif [ "${menu_exec}" == "h" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Showing help for your OS in the default browser"
