@@ -1,7 +1,7 @@
 library(DBI)
-library(RPostgreSQL)
+library(RPostgres)
 con <- dbConnect(
-  dbDriver("PostgreSQL"),
+  dbDriver("Postgres"),
   user = "jovyan",
   host = "127.0.0.1",
   port = 8765,
@@ -26,8 +26,8 @@ dat
 ## show updated list of tables
 dbListTables(con)
 
-## drop a table
-db_drop_table(con, table = "mtcars")
+## drop a table (not working anymore)
+# dbRemoveTable(con, table = "mtcars")
 
 ## show updated list of tables
 dbListTables(con)

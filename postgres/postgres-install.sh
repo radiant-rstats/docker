@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# script to use for SQL+ETL course
 cd ~
 mkdir sql_data
 

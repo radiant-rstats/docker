@@ -12,10 +12,10 @@ Starting the `rsm-msba-spark` computing container also starts a postgresql serve
 
 ```r
 library(DBI)
-library(RPostgreSQL)
+library(RPostgres)
 con <- dbConnect(
-  dbDriver("PostgreSQL"),
-  user = "jovyan", 
+  dbDriver("Postgres"),
+  user = "jovyan",
   host = "127.0.0.1",
   port = 8765,
   dbname = "rsm-docker",
@@ -48,12 +48,27 @@ The following objects are masked from 'package:base':
 ```
 
 ```r
+library(dbplyr)
+```
+
+```
+
+Attaching package: 'dbplyr'
+```
+
+```
+The following objects are masked from 'package:dplyr':
+
+    ident, sql
+```
+
+```r
 db_tabs <- dbListTables(con)
 db_tabs
 ```
 
 ```
-[1] "flights"
+[1] "mtcars"  "flights"
 ```
 
 If the database is empty, lets start with the example at <a href="https://db.rstudio.com/dplyr/" target="_blank">https://db.rstudio.com/dplyr/</a> and work through the following 6 steps:
@@ -122,19 +137,19 @@ flights_db %>% select(year:day, dep_delay, arr_delay)
 
 ```
 # Source:   lazy query [?? x 5]
-# Database: postgres 10.0.10 [jovyan@127.0.0.1:8765/rsm-docker]
+# Database: postgres [jovyan@127.0.0.1:8765/rsm-docker]
     year month   day dep_delay arr_delay
    <int> <int> <int>     <dbl>     <dbl>
- 1  2013     7     1       109        90
- 2  2013     7     1        63        56
- 3  2013     7     1       138       134
- 4  2013     7     1         9        -2
- 5  2013     7     1       154       174
- 6  2013     7     1        29        NA
- 7  2013     7     1       150       185
- 8  2013     7     1        45        29
- 9  2013     7     1        30        19
-10  2013     7     1        40        70
+ 1  2013    10     6        -5       -31
+ 2  2013    10     6        -2       -21
+ 3  2013    10     6        -3       -25
+ 4  2013    10     6       -10       -23
+ 5  2013    10     6        16        14
+ 6  2013    10     6       -10       -22
+ 7  2013    10     6        -9       -25
+ 8  2013    10     6        -4        -9
+ 9  2013    10     6         2       -19
+10  2013    10     6        -2        16
 # … with more rows
 ```
 
@@ -145,23 +160,22 @@ flights_db %>% filter(dep_delay > 240)
 
 ```
 # Source:   lazy query [?? x 19]
-# Database: postgres 10.0.10 [jovyan@127.0.0.1:8765/rsm-docker]
-    year month   day dep_time sched_dep_time dep_delay arr_time
-   <int> <int> <int>    <int>          <int>     <dbl>    <int>
- 1  2013     7     1     1351            933       258     1648
- 2  2013     7     1     1353            930       263     1701
- 3  2013     7     1     1404            935       269     1742
- 4  2013     7     1     1410            820       350     1558
- 5  2013     7     1     1424           1005       259     1538
- 6  2013     7     1     1504           1100       244     1801
- 7  2013     7     1     1544           1142       242     1717
- 8  2013     7     1     1602            959       363     1739
- 9  2013     7     1     1621           1100       321     1743
-10  2013     7     1     1632           1200       272     1859
-# … with more rows, and 12 more variables: sched_arr_time <int>,
-#   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
-#   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
-#   minute <dbl>, time_hour <dttm>
+# Database: postgres [jovyan@127.0.0.1:8765/rsm-docker]
+    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+   <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+ 1  2013    10     6     1357            929       268     1640           1234
+ 2  2013    10     6     2208           1645       323       20           1912
+ 3  2013    10     7     1738           1300       278     1858           1434
+ 4  2013    10     7     1741           1159       342     1909           1309
+ 5  2013    10     7     1858           1240       378     2025           1425
+ 6  2013    10     7     1905           1453       252     2002           1556
+ 7  2013    10     7     1912           1425       287     2048           1547
+ 8  2013    10     7     2002           1600       242     2100           1715
+ 9  2013    10     7     2004           1400       364     2112           1506
+10  2013    10     7     2310           1905       245        8           2038
+# … with more rows, and 11 more variables: arr_delay <dbl>, carrier <chr>,
+#   flight <int>, tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>,
+#   distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
 ```
 
 
@@ -179,7 +193,7 @@ This warning is displayed only once per session.
 
 ```
 # Source:   lazy query [?? x 2]
-# Database: postgres 10.0.10 [jovyan@127.0.0.1:8765/rsm-docker]
+# Database: postgres [jovyan@127.0.0.1:8765/rsm-docker]
    dest  delay
    <chr> <dbl>
  1 ABQ   2006.
@@ -202,8 +216,8 @@ tailnum_delay_db <- flights_db %>%
   summarise(
     delay = mean(arr_delay),
     n = n()
-  ) %>% 
-  arrange(desc(delay)) %>%
+  ) %>%
+  window_order(desc(delay)) %>%
   filter(n > 100)
 
 tailnum_delay_db
@@ -211,20 +225,20 @@ tailnum_delay_db
 
 ```
 # Source:     lazy query [?? x 3]
-# Database:   postgres 10.0.10 [jovyan@127.0.0.1:8765/rsm-docker]
+# Database:   postgres [jovyan@127.0.0.1:8765/rsm-docker]
 # Ordered by: desc(delay)
-   tailnum delay     n
-   <chr>   <dbl> <dbl>
- 1 <NA>     NA    2512
- 2 N11119   30.3   148
- 3 N16919   29.9   251
- 4 N14998   27.9   230
- 5 N15910   27.6   280
- 6 N13123   26.0   121
- 7 N11192   25.9   154
- 8 N14950   25.3   219
- 9 N21130   25.0   126
-10 N24128   24.9   129
+   tailnum delay       n
+   <chr>   <dbl> <int64>
+ 1 N0EGMQ   9.98     371
+ 2 N10156  12.7      153
+ 3 N10575  20.7      289
+ 4 N11106  14.9      129
+ 5 N11107  15.0      148
+ 6 N11109  14.9      148
+ 7 N11113  15.8      138
+ 8 N11119  30.3      148
+ 9 N11121  10.3      154
+10 N11127  13.6      124
 # … with more rows
 ```
 
@@ -235,11 +249,9 @@ tailnum_delay_db %>% show_query()
 ```
 <SQL>
 SELECT *
-FROM (SELECT *
 FROM (SELECT "tailnum", AVG("arr_delay") AS "delay", COUNT(*) AS "n"
 FROM "flights"
-GROUP BY "tailnum") "dbplyr_003"
-ORDER BY "delay" DESC) "dbplyr_004"
+GROUP BY "tailnum") "q01"
 WHERE ("n" > 100.0)
 ```
 
@@ -266,15 +278,15 @@ tail(tailnum_delay)
 ```
 
 ```
-# A tibble: 6 x 3
-  tailnum  delay     n
-  <chr>    <dbl> <dbl>
-1 N494UA   -8.47   107
-2 N839VA   -8.81   127
-3 N706TW   -9.28   220
-4 N727TW   -9.64   275
-5 N3772H   -9.73   157
-6 N3753   -10.2    130
+# A tibble: 6 × 3
+  tailnum delay       n
+  <chr>   <dbl> <int64>
+1 N5FNAA   8.92     101
+2 N305DQ  -4.26     139
+3 N373NW  -1.39     110
+4 N543MQ  13.8      202
+5 N602LR  12.1      274
+6 N637VA  -1.20     142
 ```
 
 ### 5. Query the flights table using SQL
@@ -283,6 +295,10 @@ You can specify a SQL code chunk to query the database directly
 
 
 ```sql
+/* 
+set the header of the sql chunck to
+{sql, connection = con, output.var = "flights"}
+*/
 SELECT * FROM flights WHERE dep_time > 2350
 ```
 
@@ -295,24 +311,24 @@ head(flights)
 
 ```
   year month day dep_time sched_dep_time dep_delay arr_time sched_arr_time
-1 2013     7   1     2359           2049       190      239           2348
-2 2013     7   3     2356           1900       296      237           2240
-3 2013     7   3     2359           2359         0      401            350
-4 2013     7   4     2357           2359        -2      343            344
-5 2013     7   5     2353           2359        -6      331            340
-6 2013     7   5     2358           2359        -1      330            344
-  arr_delay carrier flight tailnum origin dest air_time distance hour
-1       171      B6    523  N789JB    JFK  LAX      314     2475   20
-2       237      DL   1465  N624AG    JFK  SFO      311     2586   19
-3        11      B6    745  N519JB    JFK  PSE      212     1617   23
-4        -1      B6   1503  N524JB    JFK  SJU      197     1598   23
-5        -9      B6    839  N661JB    JFK  BQN      196     1576   23
-6       -14      B6   1503  N712JB    JFK  SJU      193     1598   23
-  minute           time_hour
-1     49 2013-07-02 00:00:00
-2      0 2013-07-03 23:00:00
-3     59 2013-07-04 03:00:00
-4     59 2013-07-05 03:00:00
-5     59 2013-07-06 03:00:00
-6     59 2013-07-06 03:00:00
+1 2013    10   7     2351           2359        -8      353            350
+2 2013    10   7     2356           2159       117       56           2312
+3 2013    10  10     2353           2159       114       46           2308
+4 2013    10  10     2358           2359        -1      352            350
+5 2013    10  11     2351           1905       286      103           2038
+6 2013    10  11     2353           2100       173      111           2235
+  arr_delay carrier flight tailnum origin dest air_time distance hour minute
+1         3      B6    745  N703JB    JFK  PSE      214     1617   23     59
+2       104      EV   5904  N12924    EWR  BTV       46      266   21     59
+3        98      9E   3525  N913XJ    LGA  SYR       32      198   21     59
+4         2      B6    745  N580JB    JFK  PSE      212     1617   23     59
+5       265      EV   5383  N761ND    LGA  ROC       46      254   19      5
+6       156      MQ   3317  N507MQ    LGA  RDU       64      431   21      0
+            time_hour
+1 2013-10-08 03:00:00
+2 2013-10-08 01:00:00
+3 2013-10-11 01:00:00
+4 2013-10-11 03:00:00
+5 2013-10-11 23:00:00
+6 2013-10-12 01:00:00
 ```

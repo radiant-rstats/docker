@@ -16,10 +16,10 @@ Starting the `rsm-msba-spark` computing container also starts a postgresql serve
 
 ```{r}
 library(DBI)
-library(RPostgreSQL)
+library(RPostgres)
 con <- dbConnect(
-  dbDriver("PostgreSQL"),
-  user = "jovyan", 
+  dbDriver("Postgres"),
+  user = "jovyan",
   host = "127.0.0.1",
   port = 8765,
   dbname = "rsm-docker",
@@ -31,6 +31,7 @@ Is there anything in the database? If this is not the first time you are running
 
 ```{r}
 library(dplyr)
+library(dbplyr)
 db_tabs <- dbListTables(con)
 db_tabs
 ```
@@ -107,8 +108,8 @@ tailnum_delay_db <- flights_db %>%
   summarise(
     delay = mean(arr_delay),
     n = n()
-  ) %>% 
-  arrange(desc(delay)) %>%
+  ) %>%
+  window_order(desc(delay)) %>%
   filter(n > 100)
 
 tailnum_delay_db
@@ -127,6 +128,10 @@ tail(tailnum_delay)
 You can specify a SQL code chunk to query the database directly
 
 ```{sql, connection = con, output.var = "flights"}
+/* 
+set the header of the sql chunck to
+{sql, connection = con, output.var = "flights"}
+*/
 SELECT * FROM flights WHERE dep_time > 2350
 ```
 

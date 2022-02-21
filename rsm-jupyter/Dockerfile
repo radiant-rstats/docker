@@ -117,8 +117,10 @@ RUN wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz \
     && cd \
     && rm libiconv-1.16.tar.gz
 
-RUN wget https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/install_R.sh \
-  && chmod 755 install_R.sh \ 
+# RUN wget https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/install_R.sh \
+
+COPY files/install_R.sh install_R.sh
+RUN chmod 755 install_R.sh \ 
   && ./install_R.sh \
   && rm install_R.sh
 
