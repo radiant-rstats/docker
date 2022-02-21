@@ -28,6 +28,7 @@ install2.r --error --skipinstalled -n $NCPUS \
 R --quiet -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")'
 R --quiet -e 'remotes::install_github("vnijs/DiagrammeR", upgrade = "never")'
 R --quiet -e "devtools::install_github('IRkernel/IRkernel')"
+R --quiet -e "devtools::install_github('IRkernel/IRdisplay')"
 R --quiet -e "IRkernel::installspec(user=FALSE)"
 
 rm -rf /tmp/downloaded_packages
