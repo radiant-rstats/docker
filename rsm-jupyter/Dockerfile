@@ -185,7 +185,7 @@ ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-ju
 RUN chmod 755 /opt/launch.sh
 
 RUN addgroup ${NB_USER} postgres \
-  mkdir -p /var/log/supervisor \
+  && mkdir -p /var/log/supervisor \
   && chown ${NB_USER} /var/log/supervisor
 
 EXPOSE 8989 8765 8181
