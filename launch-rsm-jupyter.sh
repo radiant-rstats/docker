@@ -152,6 +152,7 @@ else
     docker pull ${IMAGE}:${IMAGE_VERSION}
   fi
 
+  chip=""
   if [[ "$ostype" == "Linux" ]]; then
     ostype="Linux"
     HOMEDIR=~
@@ -180,7 +181,13 @@ else
       fi
     fi
   elif [[ "$ostype" == "Darwin" ]]; then
+    archtype=`arch`
     ostype="macOS"
+    if [[ "$archtype" == "arm64" ]]; then
+      chip="(ARM64)"
+    else
+      chip="(Intel)"
+    fi
     HOMEDIR=~
     ID=$USER
     open_browser () {
@@ -339,7 +346,7 @@ else
   fi
 
   echo "-----------------------------------------------------------------------"
-  echo "Starting the ${LABEL} computing environment on ${ostype}"
+  echo "Starting the ${LABEL} computing environment on ${ostype} ${chip}"
   echo "Version   : ${DOCKERHUB_VERSION}"
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "Base dir. : ${HOMEDIR}"
@@ -509,20 +516,32 @@ else
         done
       fi
     elif [ ${menu_exec} == 6 ]; then
-      echo "Removing locally installed Python packages"
-      rm -rf "${HOMEDIR}/.rsm-msba/bin"
-      rm -rf "${HOMEDIR}/.rsm-msba/lib"
-      rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter | grep -v code-server)
-      for i in ${rm_list}; do
-         rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
-      done
+      echo "-----------------------------------------------------"
+      echo "Remove locally installed Pyton packages (y/n)?"
+      echo "-----------------------------------------------------"
+      read cleanup
+      if [ "${cleanup}" == "y" ]; then
+        echo "Removing locally installed Python packages"
+        rm -rf "${HOMEDIR}/.rsm-msba/bin"
+        rm -rf "${HOMEDIR}/.rsm-msba/lib"
+        if [ -d "${HOMEDIR}/.rsm-msba/share" ]; then
+          rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter | grep -v code-server)
+          for i in ${rm_list}; do
+            rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
+          done
+        fi
+      fi
     elif [ "${menu_exec}" == "h" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Showing help for your OS in the default browser"
       echo "Showing help to start the docker container from the command line"
       echo ""
       if [[ "$ostype" == "macOS" ]]; then
-        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
+        if [[ "$archtype" == "arm64" ]]; then
+          open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos-m1.md
+        else
+          open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
+        fi
       elif [[ "$ostype" == "Windows" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md
       elif [[ "$ostype" == "WSL2" ]]; then
