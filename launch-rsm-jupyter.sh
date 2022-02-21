@@ -650,7 +650,11 @@ else
         echo "A Selenium container may already be running on port ${selenium_port}"
         selenium_nr=$((${selenium_nr}-1))
       else
-        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
+        if [ $(arch) == "arm64" ]; then 
+          docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p ${selenium_port}:4444  --platform=linux/arm64 selenium/standalone-firefox
+        else
+          docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
+        fi
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
       echo "${LABEL} container and ip: 127.0.0.1, port: ${selenium_port} from the host OS"
