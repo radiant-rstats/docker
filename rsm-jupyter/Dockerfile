@@ -169,11 +169,8 @@ USER root
 # settings for local install of python packages 
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV PYBASE=${PYBASE}
-ENV PYTHONUSERBASE=${PYBASE} \
-  JUPYTER_PATH=${PYBASE}/share/jupyter \
-  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime \
-  JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
-  SHELL=/bin/zsh \
+ENV PYTHONUSERBASE=${PYBASE}
+ENV  SHELL=/bin/zsh \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
   R_LIBS_USER="~/.rsm-msba/R/"
 
