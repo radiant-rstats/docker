@@ -96,23 +96,29 @@ def _radiant_alt_command(port):
 
 
 c.ServerProxy.servers = {
+    # "radiant": {
+    #     "command": _radiant_command,
+    #     "timeout": 20,
+    #     "launcher_entry": {
+    #         "title": "Radiant (org)",
+    #         "icon_path": "/opt/radiant/logo.svg",
+    #     },
+    # },
+    # "gitgadget": {
+    #     "command": _gitgadget_command,
+    #     "timeout": 20,
+    #     "launcher_entry": {
+    #         "title": "Git Gadget",
+    #         "icon_path": "/opt/gitgadget/gitgadget.svg",
+    #     },
+    # },
     "radiant": {
-        "command": _radiant_command,
-        "timeout": 20,
-        "launcher_entry": {"title": "Radiant (org)", "icon_path": "/opt/radiant/logo.svg"},
-    },
-    "gitgadget": {
-        "command": _gitgadget_command,
-        "timeout": 20,
-        "launcher_entry": {
-            "title": "Git Gadget",
-            "icon_path": "/opt/gitgadget/gitgadget.svg",
-        },
-    },
-    "radiant_alt": {
         "command": _radiant_alt_command,
         "timeout": 20,
-        "launcher_entry": {"title": "Radiant (alt)", "icon_path": "/opt/radiant/logo.svg"},
+        "launcher_entry": {
+            "title": "Radiant",
+            "icon_path": "/opt/radiant/logo.svg",
+        },
     },
 }
 

@@ -19,62 +19,61 @@ RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # This installs toolchain 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-    build-essential \
-    supervisor \
-    openssh-server \
-    zsh \
-    vim \
-    vifm
+  build-essential \
+  supervisor \
+  openssh-server \
+  zsh \
+  vim \
+  vifm
 
 ENV CMDSTAN_VERSION="2.29.0"
 
 RUN mamba install -y -c conda-forge \
-    cmdstan=${CMDSTAN_VERSION} \
-    sqlalchemy \
-    psycopg2 \
-    ipython-sql \
-    altair \
-    beautifulsoup4 \
-    xgboost \
-    lime \
-    networkx \
-    seaborn \
-    selenium \
-    shap \
-    spacy \
-    sqlalchemy \
-    pyLDAvis \
-    python-dotenv \
-    linearmodels \
-    jupyterlab_widgets \
-    jupytext \
-    jupyterlab_code_formatter \
-    black \
-    jupyterlab-git \
-    jupyterlab-spellchecker \
-    jupyter-rsession-proxy \
-    jupyter-server-proxy \
-    bash_kernel \
-    && python -m bash_kernel.install
+  cmdstan=${CMDSTAN_VERSION} \
+  sqlalchemy \
+  psycopg2 \
+  ipython-sql \
+  altair \
+  beautifulsoup4 \
+  xgboost \
+  lime \
+  networkx \
+  seaborn \
+  selenium \
+  shap \
+  spacy \
+  sqlalchemy \
+  pyLDAvis \
+  python-dotenv \
+  linearmodels \
+  jupyterlab_widgets \
+  jupytext \
+  jupyterlab_code_formatter \
+  black \
+  jupyterlab-git \
+  jupyterlab-spellchecker \
+  jupyter-server-proxy \
+  bash_kernel \
+  && python -m bash_kernel.install
 
 RUN mamba install -y -c suhas_goutham pyrsm
 
 # ML framework that are not (yet) available
-    # 'pytorch' \
-    # 'pyro-ppl' \
-    # 'numpyro' \
-    # 'jax' \
-    # 'jaxlib' \
+# 'pytorch' \
+# 'pyro-ppl' \
+# 'numpyro' \
+# 'jax' \
+# 'jaxlib' \
 
 RUN mamba install -y -c \
-    tensorflow \
-    keras \
-    && mamba clean --all -f -y && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+  tensorflow \
+  keras \
+  && mamba clean --all -f -y && \
+  fix-permissions "${CONDA_DIR}" && \
+  fix-permissions "/home/${NB_USER}"
 
 RUN pip3 install jupyterlab-skip-traceback \
-    lckr-jupyterlab-variableinspector
+  lckr-jupyterlab-variableinspector
 
 # oh-my-zsh
 RUN wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
@@ -98,24 +97,24 @@ ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
 RUN wget https://github.com/unicode-org/icu/releases/download/release-69-1/icu4c-69_1-src.tgz \
-    && tar -xf icu4c-69_1-src.tgz \
-    && cd icu/source \
-    && chmod +x runConfigureICU configure install-sh \
-    && ./runConfigureICU Linux/gcc --prefix=/usr/local \
-    && make \
-    && make install \
-    && cd \
-    && rm icu4c-69_1-src.tgz
+  && tar -xf icu4c-69_1-src.tgz \
+  && cd icu/source \
+  && chmod +x runConfigureICU configure install-sh \
+  && ./runConfigureICU Linux/gcc --prefix=/usr/local \
+  && make \
+  && make install \
+  && cd \
+  && rm icu4c-69_1-src.tgz
 
 RUN wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz \
-    && tar -xf libiconv-1.16.tar.gz \
-    && cd libiconv-1.16 \
-    && chmod +x configure \
-    && ./configure --prefix /usr/local \
-    && make \
-    && make install \
-    && cd \
-    && rm libiconv-1.16.tar.gz
+  && tar -xf libiconv-1.16.tar.gz \
+  && cd libiconv-1.16 \
+  && chmod +x configure \
+  && ./configure --prefix /usr/local \
+  && make \
+  && make install \
+  && cd \
+  && rm libiconv-1.16.tar.gz
 
 # RUN wget https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/install_R.sh \
 
@@ -194,6 +193,8 @@ RUN chmod 755 /opt/launch.sh
 RUN addgroup ${NB_USER} postgres \
   && mkdir -p /var/log/supervisor \
   && chown ${NB_USER} /var/log/supervisor
+
+RUN apt-get -y autoremove --purge texlive* tex-common*
 
 RUN R -e "tinytex::install_tinytex(dir='/opt/tinytex')" \
   && chown ${NB_USER} /opt/tinytex
