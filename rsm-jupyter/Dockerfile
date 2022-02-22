@@ -171,10 +171,18 @@ USER root
 # settings for local install of python packages 
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV PYBASE=${PYBASE}
-ENV PYTHONUSERBASE=${PYBASE}
-ENV  SHELL=/bin/zsh \
+ENV PYTHONUSERBASE=${PYBASE} \
+  JUPYTER_PATH=${PYBASE}/share/jupyter \
+  JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
+  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime 
+
+ENV SHELL=/bin/zsh \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
   R_LIBS_USER="~/.rsm-msba/R/"
+
+# jupytext extension
+RUN jupyter nbextension install --py jupytext \
+  && jupyter nbextension enable --py jupytext
 
 # updating the supervisord.conf file for Jupyter
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -186,6 +194,15 @@ RUN chmod 755 /opt/launch.sh
 RUN addgroup ${NB_USER} postgres \
   && mkdir -p /var/log/supervisor \
   && chown ${NB_USER} /var/log/supervisor
+
+RUN R -e "tinytex::install_tinytex(dir='/opt/tinytex')" \
+  && chown ${NB_USER} /opt/tinytex
+
+COPY files/jupyter_notebook_config.py /etc/jupyter/
+RUN git clone https://github.com/vnijs/gitgadget.git /opt/gitgadget/ \
+  && chown ${NB_USER} -R /opt/gitgadget
+COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
+COPY images/logo200.svg /opt/radiant/logo.svg
 
 EXPOSE 8989 8765 8181
 ENTRYPOINT ["/usr/bin/supervisord"]
