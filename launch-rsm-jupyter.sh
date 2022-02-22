@@ -411,6 +411,22 @@ else
 
     if [ -z "${menu_exec}" ]; then
       echo "Invalid entry. Resetting launch menu ..."
+    elif [ ${menu_exec} == 1 ]; then
+      if [ "${menu_arg}" == "" ]; then
+        echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
+        sleep 2
+        open_browser http://localhost:8989/lab 
+      else
+        echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
+        docker run --net ${NETWORK} -d \
+          -p 127.0.0.1:${menu_arg}:8989 \
+          -e TZ=${TIMEZONE} \
+          -v ${HOMEDIR}:/home/${NB_USER} $MNT \
+          -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
+          ${IMAGE}:${IMAGE_VERSION}
+        sleep 3
+        open_browser http://localhost:${menu_arg}/lab
+      fi
     elif [ ${menu_exec} == 2 ]; then
       RPROF="${HOMEDIR}/.Rprofile"
       touch "${RPROF}"
@@ -443,9 +459,9 @@ else
       fi
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Radiant in the default browser on port 8181"
+        docker exec -d rsm_jupyter R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
+        sleep 3
         open_browser http://localhost:8181
-        echo "-- Refresh your browser to see the app ---"
-        docker exec -it rsm_jupyter R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
       else
         echo "Starting Radiant in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
@@ -454,26 +470,11 @@ else
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
-        open_browser http://localhost:${menu_arg} 
-        echo "-- Refresh your browser to see the app running on port ${menu_arg} ---"
-        docker exec -it rsm_jupyter_${menuarg} R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
-      fi
-    elif [ ${menu_exec} == 1 ]; then
-      if [ "${menu_arg}" == "" ]; then
-        echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
-        sleep 2
-        open_browser http://localhost:8989/lab 
-      else
-        echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
-        docker run --net ${NETWORK} -d \
-          -p 127.0.0.1:${menu_arg}:8989 \
-          -e TZ=${TIMEZONE} \
-          -v ${HOMEDIR}:/home/${NB_USER} $MNT \
-          -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-          ${IMAGE}:${IMAGE_VERSION}
+        docker exec -d rsm_jupyter_${menuarg} R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
         sleep 3
-        open_browser http://localhost:${menu_arg}/lab
+        open_browser http://localhost:${menu_arg} 
       fi
+
     elif [ ${menu_exec} == 3 ]; then
       running=$(docker ps -q | awk '{print $1}')
       if [ "${running}" != "" ]; then
