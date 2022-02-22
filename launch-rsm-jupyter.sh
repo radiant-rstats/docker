@@ -351,7 +351,7 @@ else
     docker volume create --name=pg_data
   fi
   {
-    docker run --net ${NETWORK} -d \
+    docker run --name rsm_jupyter --net ${NETWORK} -d \
       -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
@@ -393,11 +393,12 @@ else
     echo "${LABEL}:${DOCKERHUB_VERSION} computing environment on ${ostype} (${BUILD_DATE//T*/})"
     echo "-----------------------------------------------------------------------"
     echo "Press (1) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (2) to show a (ZSH) terminal, followed by [ENTER]:"
-    echo "Press (3) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (4) to update the launch script, followed by [ENTER]:"
-    echo "Press (5) to clear local R packages, followed by [ENTER]:"
-    echo "Press (6) to clear local Python packages, followed by [ENTER]:"
+    echo "Press (2) to show Radiant, followed by [ENTER]:"
+    echo "Press (3) to show a (ZSH) terminal, followed by [ENTER]:"
+    echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (5) to update the launch script, followed by [ENTER]:"
+    echo "Press (6) to clear local R packages, followed by [ENTER]:"
+    echo "Press (7) to clear local Python packages, followed by [ENTER]:"
     echo "Press (h) to show help in the terminal and browser, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
@@ -410,6 +411,53 @@ else
 
     if [ -z "${menu_exec}" ]; then
       echo "Invalid entry. Resetting launch menu ..."
+    elif [ ${menu_exec} == 2 ]; then
+      RPROF="${HOMEDIR}/.Rprofile"
+      touch "${RPROF}"
+      if ! grep -q 'radiant.report = TRUE' ${RPROF} || ! grep -q 'radiant.shinyFiles = TRUE' ${RPROF}; then
+        echo "Your setup does not allow report generation in Radiant."
+        echo "Would you like to add relevant code to .Rprofile?"
+        echo "Press y or n, followed by [ENTER]:"
+        echo ""
+        read allow_report
+
+        if [ "${allow_report}" == "y" ]; then
+          ## Windows does not reliably use newlines with printf
+          sed_fun '/^options(radiant.maxRequestSize/d' "${RPROF}"
+          sed_fun '/^options(radiant.report/d' "${RPROF}" 
+          sed_fun '/^options(radiant.shinyFiles/d' "${RPROF}"
+          sed_fun '/^options(radiant.ace_autoComplete/d' "${RPROF}"
+          sed_fun '/^options(radiant.ace_theme/d' "${RPROF}"
+          sed_fun '/^#.*List.*specific.*directories.*you.*want.*to.*use.*with.*radiant/d' "${RPROF}"
+          sed_fun '/^#.*options(radiant\.sf_volumes.*=.*c(Git.*=.*"\/home\/jovyan\/git"))/d' "${RPROF}"
+          echo 'options(radiant.maxRequestSize = -1)' >> "${RPROF}"
+          echo 'options(radiant.report = TRUE)' >> "${RPROF}"
+          echo 'options(radiant.shinyFiles = TRUE)' >> "${RPROF}"
+          echo 'options(radiant.ace_autoComplete = "live")' >> "${RPROF}"
+          echo 'options(radiant.ace_theme = "tomorrow")' >> "${RPROF}"
+          echo '# List specific directories you want to use with radiant' >> "${RPROF}"
+          echo '# options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))' >> "${RPROF}"
+          echo '' >> "${RPROF}"
+          sed_fun '/^[\s]*$/d' "${RPROF}"
+        fi
+      fi
+      if [ "${menu_arg}" == "" ]; then
+        echo "Starting Radiant in the default browser on port 8181"
+        open_browser http://localhost:8181
+        echo "-- Refresh your browser to see the app ---"
+        docker exec -it rsm_jupyter R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
+      else
+        echo "Starting Radiant in the default browser on port ${menu_arg}"
+        docker run --net ${NETWORK} -d \
+          --name rsm_jupyter_${menuarg} \
+          -p 127.0.0.1:${menu_arg}:8181 \
+          -e TZ=${TIMEZONE} \
+          -v "${HOMEDIR}":/home/${NB_USER} $MNT \
+          ${IMAGE}:${IMAGE_VERSION}
+        open_browser http://localhost:${menu_arg} 
+        echo "-- Refresh your browser to see the app running on port ${menu_arg} ---"
+        docker exec -it rsm_jupyter_${menuarg} R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
+      fi
     elif [ ${menu_exec} == 1 ]; then
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
@@ -426,7 +474,7 @@ else
         sleep 3
         open_browser http://localhost:${menu_arg}/lab
       fi
-    elif [ ${menu_exec} == 2 ]; then
+    elif [ ${menu_exec} == 3 ]; then
       running=$(docker ps -q | awk '{print $1}')
       if [ "${running}" != "" ]; then
         if [ "$ARG_SHOW" != "show" ]; then
@@ -444,7 +492,7 @@ else
           docker exec -it --user ${NB_USER} ${running} /bin/zsh
         fi
       fi
-    elif [ ${menu_exec} == 3 ]; then
+    elif [ ${menu_exec} == 4 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing environment"
@@ -470,7 +518,7 @@ else
       fi
       $CMD
       exit 1
-    elif [ ${menu_exec} == 4 ]; then
+    elif [ ${menu_exec} == 5 ]; then
       echo "Updating ${IMAGE} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -493,7 +541,7 @@ else
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}" "${@:1}"
       fi
       exit 1
-    elif [ ${menu_exec} == 5 ]; then
+    elif [ ${menu_exec} == 6 ]; then
       echo "-----------------------------------------------------"
       echo "Remove locally installed R packages (y/n)?"
       echo "-----------------------------------------------------"
@@ -507,7 +555,7 @@ else
           mkdir "${i}"
         done
       fi
-    elif [ ${menu_exec} == 6 ]; then
+    elif [ ${menu_exec} == 7 ]; then
       echo "-----------------------------------------------------"
       echo "Remove locally installed Pyton packages (y/n)?"
       echo "-----------------------------------------------------"

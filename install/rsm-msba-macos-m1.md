@@ -15,7 +15,7 @@
 
 ## Installing the RSM-MSBA computing environment on macOS M1
 
-Please follow the instructions below to install the rsm-jupyter computing environment. It has R, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
+Please follow the instructions below to install the rsm-jupyter computing environment. It has R, Radiant, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
 **Step 1**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below at the top-right of your screen. If the containers in the image are moving up and down docker hasn't finished starting up yet.
 
@@ -88,7 +88,7 @@ git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 cp -p ~/git/docker/launch-rsm-jupyter.sh ~/Desktop/launch-rsm-jupyter.command;
 ```
 
-## Using VS Code for Python
+## Using VS Code
 
 Microsoft's open-source integrated development environment (IDE), VS Code or Visual Studio Code, was the most popular development environment in according to a [Stack Overflow developer survey](https://insights.stackoverflow.com/survey/2018#development-environments-and-tools). VS Code is widely used by Google developers and is the [default development environment at Facebook](https://www.zdnet.com/article/facebook-microsofts-visual-studio-code-is-now-our-default-development-platform/).
 
@@ -251,11 +251,11 @@ For additional resources on developing docker images see the links below:
 
 ## Cleanup
 
-To remove locally installed R-packages, press 5 (and Enter) in the launch menu. To remove locally installed Python modules press 6 (and Enter) in the launch menu.
+To remove locally installed R-packages, press 6 (and Enter) in the launch menu. To remove locally installed Python modules press 7 (and Enter) in the launch menu.
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
-You should always stop the `rsm-jupyter` docker container using `q` (and Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R and Python settings, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-spark):
+You should always stop the `rsm-jupyter` docker container using `q` (and Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-jupyter):
 
 ```bash
 rm -rf ~/.rsm-msba;
