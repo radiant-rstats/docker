@@ -2,16 +2,27 @@
 
 # git pull
 docker login
-DOCKERHUB_VERSION=1.9.1
+DOCKERHUB_VERSION=2.0.0
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
+
+# mkdir -vp ~/.docker/cli-plugins/
+# curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-amd64" > ~/.docker/cli-plugins/docker-buildx
+# chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 build () {
   {
+    # docker buildx create --use
+    # docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    # docker buildx rm builder
+    # docker buildx create --name builder --driver docker-container --use
+    # docker buildx inspect --bootstrap
     if [[ "$1" == "NO" ]]; then
-      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest ./${LABEL}
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest -t $USER/${LABEL}:${DOCKERHUB_VERSION} ./${LABEL}
+      # docker buildx build --platform linux/amd64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache -t $USER/${LABEL}:latest ./${LABEL}
     else
-      docker build --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ./${LABEL}
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest -t $USER/${LABEL}:${DOCKERHUB_VERSION} ./${LABEL}
+      # docker buildx build --platform linux/amd64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest ./${LABEL}
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -21,8 +32,10 @@ build () {
     exit 1
   }
   if [ "${UPLOAD}" == "YES" ]; then
-    docker tag $USER/${LABEL}:latest $USER/${LABEL}:${DOCKERHUB_VERSION}
-    docker push $USER/${LABEL}:${DOCKERHUB_VERSION}; docker push $USER/${LABEL}:latest
+    docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} -t $USER/${LABEL}:latest -t $USER/${LABEL}:${DOCKERHUB_VERSION} ./${LABEL}
+    # docker tag $USER/${LABEL}:latest $USER/${LABEL}:${DOCKERHUB_VERSION}
+    # docker push $USER/${LABEL}:${DOCKERHUB_VERSION}
+    # docker push $USER/${LABEL}:latest
   fi
 }
 
@@ -47,8 +60,13 @@ launcher () {
   fi
 }
 
-LABEL=r-focal
+LABEL=r-focal-mult
+# LABEL=r-focal
 build
+
+exit
+
+xxx
 
 # if you use the line
 # below, manually remove the 'allow' section afterwards
