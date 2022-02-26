@@ -16,6 +16,29 @@ docker --version
 Docker version 18.06.0-ce, build 0ffa825
 ```
 
+## Development
+
+1.  **Enable experimental features**: Edit `~/.docker/config.json`
+    ```
+    {
+        ...
+        "experimental": "enabled"
+    }
+    ```
+2.  Restart Docker desktop
+3.  `docker buildx create --use`
+4.  `docker buildx build --platform linux/amd64,linux/arm64 -t image_name .`
+5.  Added `mkdir -p /etc/ssl/certs/java` to Dockerfile to ensure `ca-certificates-java` is installed without a hitch
+6.  `docker buildx create --use` to switch to a different driver that supports _multiple platforms_
+    -   Note: You can't use the `--load` option while using `buildx` for **multi**-platform builds
+7.  Bug in Jupyterlab
+
+    ```shell
+    F tensorflow/core/lib/monitoring/sampler.cc:42] Check failed: bucket_limits_[i] > bucket_limits_[i - 1] (0 vs. 10)
+    qemu: uncaught target signal 6 (Aborted) - core dumped
+    ```
+    See [this](https://github.com/tensorflow/tensorflow/issues/52845), [this](https://github.com/tensorflow/tensorflow/issues/42387), and [this](https://stackoverflow.com/questions/68105073/tensorflow-error-when-used-as-docker-baseimage). [Possible temporary fix](https://github.com/tensorflow/tensorflow/issues/52845#issuecomment-969457773). The issue is because of a `qemu` bug. `qemu` is a hypervisor that is used as an emulation layer by Docker to emulate x86 environments on ARM devices. We have created a multiplatform image for `rsm-msba-spark`, but the  base image for it is still `amd64`. That's why I think the problem originates upstream.
+
 ## Run from the Docker Hub image
 
 To start all applications in a temporary container use the command below. To map local drives to Rstudio use the `-v` option. For example, the command below would map your home directory the home directory used for Rstudio

@@ -124,6 +124,12 @@ docker ps -s
 docker system df
 ```
 
+## Future development
+
+1.  Each docker image should have its own Github repository
+2.  Each of those repositories should be linked to a corresponding Dockerhub repository (these Dockerhub repositories can be part of an _organization_) which will run automated builds every time a change is pushed to the Dockerfile in the Github repository
+3.  Each repository will have different branches, and the branch names will correspond to the docker image tags. Automated build rules in Dockerhub can be specified to use the Github repository branch names for the corresponding image tags.
+
 ## Trademarks
 
 Shiny and Shiny Server are registered trademarks of RStudio, Inc. The use of the trademarked terms Shiny and Shiny Server and the distribution of the Shiny Server through the images hosted on hub.docker.com has been granted by explicit permission of RStudio. Please review RStudio's trademark use policy and address inquiries about further distribution or other questions to permissions@rstudio.com.

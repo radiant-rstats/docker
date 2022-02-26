@@ -8,10 +8,18 @@ ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 ENV DEBIAN_FRONTEND=noninteractive
 # installing java
 RUN apt-get -y update \
+  && mkdir -p /etc/ssl/certs/java \
   && apt-get install --no-install-recommends -y openjdk-8-jre-headless openjdk-8-jdk-headless ca-certificates-java \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && R CMD javareconf
+
+# install nodejs so as to include npm as well
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - \
+  && sudo apt install -y nodejs
+
+RUN sudo mkdir /srv/shiny-server/radiant/inst/app/app_cache \
+    && sudo chmod 777 /srv/shiny-server/radiant/inst/app/app_cache
 
 ENV SPARK_VERSION=3.0.1 \
   BUILT_FOR_HADOOP_VERSION=2.7 \
@@ -38,6 +46,12 @@ RUN mkdir $HADOOP_HOME \
   && chown -R root:root $HADOOP_HOME  \
   && rm -rf *.tar.gz
 
+
+ENV TZ="America/Los_Angeles"
+
+# link to Rstudio's pandoc
+RUN ln -sf /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin/pandoc
+
 # install the R kernel for Jupyter Lab
 RUN R -e 'options(spark.install.dir = "/opt"); sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"), hadoop_version = Sys.getenv("BUILT_FOR_HADOOP_VERSION"))'
 
@@ -53,12 +67,12 @@ RUN R -e 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(ge
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-msba-spark.sh /opt/launch.sh
-RUN chmod 777 /opt/launch.sh
+RUN sudo chmod 777 /opt/launch.sh
 
 # Configure Hadoop 
 COPY ./hadoop-config/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
 COPY ./hadoop-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-RUN chmod 777 -R $HADOOP_HOME
+RUN sudo chmod 777 -R $HADOOP_HOME
 
 # Add Jingbo's AutoPhrase
 # ADD https://github.com/shangjingbo1226/AutoPhrase/archive/master.zip /opt/AutoPhrase-master.zip
@@ -77,6 +91,17 @@ RUN chmod 777 -R $HADOOP_HOME
 #   && rm -rf /var/cache/oracle-jdk8-installer  \
 #   && apt-get clean \
 #   && rm -rf /var/lib/apt/lists/*
+
+# Uninstall tensorflow to avoid qemu error
+RUN pip3 uninstall -y tensorflow tensorflow-estimator \
+  && pip3 install -U https://tf.novaal.de/barcelona/tensorflow-2.6.0-cp38-cp38-linux_x86_64.whl
+
+# usethis script
+COPY usethis /usr/local/bin/usethis
+
+# to get rid of jupyterlab_spellchecker error
+# disabled minimize option to make sure build doesn't fail due to resource contraints
+RUN sudo jupyter lab build --minimize=False
 
 EXPOSE 8989 8765 22
 
