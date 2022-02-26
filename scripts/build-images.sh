@@ -10,7 +10,7 @@ docker login
 DOCKERHUB_VERSION=2.1.0
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
 
 build () {
   {

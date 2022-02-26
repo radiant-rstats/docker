@@ -13,7 +13,7 @@ CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
 
 ## source install if using RSPM and arm64 image
 if [ "$(uname -m)" = "aarch64" ]; then
-    CRAN=$CRAN_SOURCE
+  CRAN=$CRAN_SOURCE
 fi
 
 export DEBIAN_FRONTEND=noninteractive
@@ -93,7 +93,6 @@ BUILDDEPS="curl \
 
 apt-get install -y --no-install-recommends $BUILDDEPS
 
-
 if [[ "$R_VERSION" == "devel" ]]; then                               \
     wget https://stat.ethz.ch/R/daily/R-devel.tar.gz;                \
 elif [[ "$R_VERSION" == "patched" ]]; then                           \
@@ -103,6 +102,26 @@ else                                                                 \
     wget https://cran.r-project.org/src/base/R-4/R-${R_VERSION}.tar.gz; \
 fi &&                                                                \
     tar xzf R-${R_VERSION}.tar.gz &&
+
+wget https://github.com/unicode-org/icu/releases/download/release-69-1/icu4c-69_1-src.tgz \
+  && tar -xf icu4c-69_1-src.tgz \
+  && cd icu/source \
+  && chmod +x runConfigureICU configure install-sh \
+  && ./runConfigureICU Linux/gcc --prefix=/usr/local \
+  && make \
+  && make install \
+  && cd \
+  && rm icu4c-69_1-src.tgz
+
+wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz \
+  && tar -xf libiconv-1.16.tar.gz \
+  && cd libiconv-1.16 \
+  && chmod +x configure \
+  && ./configure --prefix /usr/local \
+  && make \
+  && make install \
+  && cd \
+  && rm libiconv-1.16.tar.gz
 
 cd R-${R_VERSION}
 R_PAPERSIZE=letter \

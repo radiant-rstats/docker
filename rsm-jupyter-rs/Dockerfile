@@ -98,28 +98,6 @@ ENV R_HOME=/usr/local/lib/R
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
-RUN wget https://github.com/unicode-org/icu/releases/download/release-69-1/icu4c-69_1-src.tgz \
-  && tar -xf icu4c-69_1-src.tgz \
-  && cd icu/source \
-  && chmod +x runConfigureICU configure install-sh \
-  && ./runConfigureICU Linux/gcc --prefix=/usr/local \
-  && make \
-  && make install \
-  && cd \
-  && rm icu4c-69_1-src.tgz
-
-RUN wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz \
-  && tar -xf libiconv-1.16.tar.gz \
-  && cd libiconv-1.16 \
-  && chmod +x configure \
-  && ./configure --prefix /usr/local \
-  && make \
-  && make install \
-  && cd \
-  && rm libiconv-1.16.tar.gz
-
-# RUN wget https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/install_R.sh \
-
 COPY files/install_R.sh install_R.sh
 RUN chmod 755 install_R.sh \ 
   && ./install_R.sh \
