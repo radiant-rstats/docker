@@ -352,7 +352,7 @@ else
   fi
   {
     docker run --name rsm_jupyter --net ${NETWORK} -d \
-      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 \
+      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 -p 127.0.0.1:8282:8282 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -394,11 +394,12 @@ else
     echo "-----------------------------------------------------------------------"
     echo "Press (1) to show Jupyter Lab, followed by [ENTER]:"
     echo "Press (2) to show Radiant, followed by [ENTER]:"
-    echo "Press (3) to show a (ZSH) terminal, followed by [ENTER]:"
-    echo "Press (4) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (5) to update the launch script, followed by [ENTER]:"
-    echo "Press (6) to clear local R packages, followed by [ENTER]:"
-    echo "Press (7) to clear local Python packages, followed by [ENTER]:"
+    echo "Press (3) to show GitGadget, followed by [ENTER]:"
+    echo "Press (4) to show a (ZSH) terminal, followed by [ENTER]:"
+    echo "Press (5) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (6) to update the launch script, followed by [ENTER]:"
+    echo "Press (7) to clear local R packages, followed by [ENTER]:"
+    echo "Press (8) to clear local Python packages, followed by [ENTER]:"
     echo "Press (h) to show help in the terminal and browser, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
@@ -474,8 +475,25 @@ else
         sleep 3
         open_browser http://localhost:${menu_arg} 
       fi
-
     elif [ ${menu_exec} == 3 ]; then
+      if [ "${menu_arg}" == "" ]; then
+        echo "Starting GitGadget in the default browser on port 8282"
+        docker exec -d rsm_jupyter R -e "gitgadget:::gitgadget(host='0.0.0.0', port=8282, launch.browser=FALSE)"
+        sleep 2
+        open_browser http://localhost:8282
+      else
+        echo "Starting GitGadget in the default browser on port ${menu_arg}"
+        docker run --net ${NETWORK} -d \
+          --name rsm_jupyter_${menuarg} \
+          -p 127.0.0.1:${menu_arg}:8282 \
+          -e TZ=${TIMEZONE} \
+          -v "${HOMEDIR}":/home/${NB_USER} $MNT \
+          ${IMAGE}:${IMAGE_VERSION}
+        docker exec -d rsm_jupyter_${menuarg} R -e "gitgadget:::gitgadget(host='0.0.0.0', port=${menuarg}, launch.browser=FALSE)"
+        sleep 2
+        open_browser http://localhost:${menu_arg} 
+      fi
+    elif [ ${menu_exec} == 4 ]; then
       running=$(docker ps -q | awk '{print $1}')
       if [ "${running}" != "" ]; then
         if [ "$ARG_SHOW" != "show" ]; then
@@ -493,7 +511,7 @@ else
           docker exec -it --user ${NB_USER} ${running} /bin/zsh
         fi
       fi
-    elif [ ${menu_exec} == 4 ]; then
+    elif [ ${menu_exec} == 5 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing environment"
@@ -519,7 +537,7 @@ else
       fi
       $CMD
       exit 1
-    elif [ ${menu_exec} == 5 ]; then
+    elif [ ${menu_exec} == 6 ]; then
       echo "Updating ${IMAGE} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -542,7 +560,7 @@ else
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}" "${@:1}"
       fi
       exit 1
-    elif [ ${menu_exec} == 6 ]; then
+    elif [ ${menu_exec} == 7 ]; then
       echo "-----------------------------------------------------"
       echo "Remove locally installed R packages (y/n)?"
       echo "-----------------------------------------------------"
@@ -556,7 +574,7 @@ else
           mkdir "${i}"
         done
       fi
-    elif [ ${menu_exec} == 7 ]; then
+    elif [ ${menu_exec} == 8 ]; then
       echo "-----------------------------------------------------"
       echo "Remove locally installed Pyton packages (y/n)?"
       echo "-----------------------------------------------------"

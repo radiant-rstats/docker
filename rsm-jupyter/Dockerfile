@@ -50,6 +50,7 @@ RUN mamba install -y -c conda-forge \
   jupytext \
   jupyterlab_code_formatter \
   black \
+  isort \
   jupyterlab-git \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
@@ -194,18 +195,15 @@ RUN addgroup ${NB_USER} postgres \
   && mkdir -p /var/log/supervisor \
   && chown ${NB_USER} /var/log/supervisor
 
-RUN apt-get -y autoremove --purge texlive* tex-common*
-
-RUN R -e "tinytex::install_tinytex(dir='/opt/tinytex')" \
-  && chown ${NB_USER} /opt/tinytex
-
 COPY files/jupyter_notebook_config.py /etc/jupyter/
-RUN git clone https://github.com/vnijs/gitgadget.git /opt/gitgadget/ \
-  && chown ${NB_USER} -R /opt/gitgadget
+RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \ 
+  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/ \
+  && chown ${NB_USER} -R /opt/shiny/
+
 COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
 COPY images/logo200.svg /opt/radiant/logo.svg
 
-EXPOSE 8989 8765 8181
+EXPOSE 8989 8765 8181 8282
 ENTRYPOINT ["/usr/bin/supervisord"]
 CMD ["-c", "/etc/supervisor/conf.d/supervisord.conf"]
 

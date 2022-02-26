@@ -15,6 +15,7 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     git
 
 rm -rf /var/lib/apt/lists/*
+apt-get -y autoremove --purge texlive* tex-common*
 
 install2.r --error --skipinstalled -n $NCPUS \
     radiant \
@@ -23,12 +24,14 @@ install2.r --error --skipinstalled -n $NCPUS \
     webshot \
     tinytex \
     svglite \
-    remotes
+    remotes \
+    formatR
 
-R --quiet -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")'
-R --quiet -e 'remotes::install_github("vnijs/DiagrammeR", upgrade = "never")'
-R --quiet -e "devtools::install_github('IRkernel/IRkernel')"
-R --quiet -e "devtools::install_github('IRkernel/IRdisplay')"
-R --quiet -e "IRkernel::installspec(user=FALSE)"
+R --quiet -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")' \
+  -e 'remotes::install_github("vnijs/DiagrammeR", upgrade = "never")' \
+  -e "remotes::install_github('vnijs/gitgadget')" \
+  -e "devtools::install_github('IRkernel/IRkernel')"  \
+  -e "devtools::install_github('IRkernel/IRdisplay')" \
+  -e "IRkernel::installspec(user=FALSE)"
 
 rm -rf /tmp/downloaded_packages
