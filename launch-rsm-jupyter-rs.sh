@@ -348,8 +348,8 @@ else
     docker volume create --name=pg_data
   fi
   {
-    docker run --net ${NETWORK} -d \
-      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8282:8282 -p 127.0.0.1:8282:8282 \
+    docker run --name rsm_jupyter --net ${NETWORK} -d \
+      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 -p 127.0.0.1:8282:8282 \
       -e CODE_WORKINGDIR=" ${CODE_WORKINGDIR}" \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
