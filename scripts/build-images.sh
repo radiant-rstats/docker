@@ -12,27 +12,26 @@ DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
 UPLOAD="YES"
 
+if [ "$(uname -m)" = "arm64" ]; then
+  ARCH="linux/arm64"
+else
+  ARCH="linux/amd64"
+  # ARCH="linux/amd64,linux/arm64"
+fi
+
 build () {
   {
+    ## using buildx to create multi-platform images
+    ## run commands below the first time you build for platforms
     # docker buildx create --use
     # docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     # docker buildx rm builder
     # docker buildx create --name builder --driver docker-container --use
     # docker buildx inspect --bootstrap
     if [[ "$1" == "NO" ]]; then
-      # using buildx to create multi-platform images
-      # docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-      # docker buildx build --load --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-
-      docker buildx build --progress=plain --load --platform linux/amd64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
+      docker buildx build --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
     else
-      # docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-      # for local only
-      # docker buildx build --progress=plain --load --platform linux/amd64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-      # docker buildx build --load --platform linux/amd64,linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-      # docker buildx build --push --platform linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-      # docker buildx build --progress=plain --load --platform linux/arm64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-      docker buildx build --progress=plain --load --platform linux/amd64 --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
+      docker buildx build --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -69,17 +68,18 @@ launcher () {
   fi
 }
 
-LABEL=rsm-jupyter-rs
-build
-
-# LABEL=rsm-jupyter
+if [ "$(uname -m)" = "aarch64" ]; then
+  LABEL=rsm-jupyter
+  build
+else
+  LABEL=rsm-jupyter-rs
+  build
+fi
 
 exit
 
 LABEL=r-focal
 build
-
-exit
 
 # if you use the line
 # below, manually remove the 'allow' section afterwards
