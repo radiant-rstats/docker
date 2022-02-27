@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+## adapted from
+# https://github.com/rocker-org/rocker-versioned2/blob/master/scripts/install_R.sh
+
 apt-get update && apt-get -y install lsb-release
 
 UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}

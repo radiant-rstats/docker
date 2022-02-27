@@ -44,7 +44,7 @@ def _radiant_command(port):
     ).format(
         user=getpass.getuser(),
         port=str(port),
-        site_dir="/srv/shiny-server/radiant/inst/app",  # or your path
+        site_dir="/opt/shiny/radiant/inst/app",
     )
 
     # shiny-server configuration
@@ -78,7 +78,7 @@ def _gitgadget_command(port):
     ).format(
         user=getpass.getuser(),
         port=str(port),
-        site_dir="/srv/shiny-server/gitgadget/inst/app",  # or your path
+        site_dir="/opt/shiny/gitgadget/inst/app",
     )
 
     # shiny-server configuration
@@ -89,35 +89,21 @@ def _gitgadget_command(port):
     return ["shiny-server", f.name]
 
 
-def _radiant_alt_command(port):
-    full_path = shutil.which("R")
-    cmd = "radiant.data:::launch(package='radiant', host='0.0.0.0', port={port}, run=FALSE)"
-    return [full_path, "-e", f"'{cmd}'"]
-
-
 c.ServerProxy.servers = {
-    # "radiant": {
-    #     "command": _radiant_command,
-    #     "timeout": 20,
-    #     "launcher_entry": {
-    #         "title": "Radiant (org)",
-    #         "icon_path": "/opt/radiant/logo.svg",
-    #     },
-    # },
-    # "gitgadget": {
-    #     "command": _gitgadget_command,
-    #     "timeout": 20,
-    #     "launcher_entry": {
-    #         "title": "Git Gadget",
-    #         "icon_path": "/opt/gitgadget/gitgadget.svg",
-    #     },
-    # },
     "radiant": {
-        "command": _radiant_alt_command,
+        "command": _radiant_command,
         "timeout": 20,
         "launcher_entry": {
             "title": "Radiant",
-            "icon_path": "/opt/radiant/logo.svg",
+            "icon_path": "/opt/shiny/logo.svg",
+        },
+    },
+    "gitgadget": {
+        "command": _gitgadget_command,
+        "timeout": 20,
+        "launcher_entry": {
+            "title": "Git Gadget",
+            "icon_path": "/opt/shiny/gitgadget.svg",
         },
     },
 }

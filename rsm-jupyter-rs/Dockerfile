@@ -8,6 +8,7 @@ LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
+ENV DOCKERHUB_NAME=rsm-jupyter-rs
 
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -54,6 +55,7 @@ RUN mamba install -y -c conda-forge \
   jupyterlab-git \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
+  mamba_gator \
   bash_kernel \
   && python -m bash_kernel.install
 
@@ -69,10 +71,8 @@ RUN mamba install -y -c suhas_goutham pyrsm
 RUN mamba install -y -c \
   tensorflow \
   keras \
-  numpyro \
-  && mamba clean --all -f -y && \
-  fix-permissions "${CONDA_DIR}" && \
-  fix-permissions "/home/${NB_USER}"
+  && mamba clean --all -f -y \
+  && fix-permissions "${CONDA_DIR}"
 
 RUN pip3 install jupyterlab-skip-traceback \
   lckr-jupyterlab-variableinspector
@@ -90,7 +90,6 @@ COPY files/zshrc /etc/skel/.zshrc
 COPY files/p10k.zsh /etc/skel/.p10k.zsh
 COPY files/usethis /usr/local/bin/usethis
 COPY files/clean.sh /usr/local/bin/clean     
-RUN chmod +x /usr/local/bin/clean
 
 ENV R_VERSION=4.1.2
 ENV TERM=xterm
@@ -164,11 +163,17 @@ RUN jupyter nbextension install --py jupytext \
   && jupyter nbextension enable --py jupytext
 
 RUN addgroup ${NB_USER} postgres \
-  && mkdir -p /var/log/supervisor \
-  && chown ${NB_USER} /var/log/supervisor
+  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
+  && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
+
+COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
+COPY images/logo200.svg /opt/shiny/logo.svg
+RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \ 
+  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/ 
 
 RUN mamba install -y -c conda-forge \
-  jupyter-rsession-proxy
+  jupyter-rsession-proxy \
+  numpyro 
 
 COPY files/install-rstudio.sh setup.sh
 RUN chmod 755 setup.sh \ 
@@ -178,26 +183,32 @@ RUN chmod 755 setup.sh \
 COPY files/install-shiny.sh setup.sh
 RUN chmod 755 setup.sh \ 
   && ./setup.sh \
-  && rm setup.sh
+  && rm setup.sh \ 
+  && adduser ${NB_USER} shiny \
+  && fix-permissions /etc/shiny-server/ \
+  && fix-permissions /var/log/shiny-server/ \
+  && mkdir -p /var/lib/shiny-server/bookmarks \
+  && fix-permissions /var/lib/shiny-server/bookmarks \
+  && fix-permissions /opt/shiny/ 
 
-COPY files/jupyter_notebook_config.py /etc/jupyter/
-RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \ 
-  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/ \
-  && chown ${NB_USER} -R /opt/shiny/
-
-COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
-COPY images/logo200.svg /opt/radiant/logo.svg
-
-# updating the supervisord.conf file for Jupyter
+# updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY files/jupyter_notebook_config.py /etc/jupyter/
+RUN mkdir -p /var/log/supervisor \
+  && fix-permissions /var/log/supervisor \
+  && fix-permissions /etc/supervisor/conf.d/ \
+  && fix-permissions /etc/jupyter/ \
+  && fix-permissions "${CONDA_DIR}" 
 
 # Copy the launch script into the image
-ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-jupyter.sh /opt/launch.sh
-RUN chmod 755 /opt/launch.sh
+ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${DOCKERHUB_NAME}.sh /opt/launch.sh
+COPY files/setup.sh /usr/local/bin/setup
+RUN fix-permissions /etc/skel \
+  && fix-permissions /usr/local/bin \
+  && chmod 755 /usr/local/bin/* 
 
 EXPOSE 8989 8765 8181 8282
-ENTRYPOINT ["/usr/bin/supervisord"]
-CMD ["-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER ${NB_UID}

@@ -8,6 +8,7 @@ LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
+ENV DOCKERHUB_NAME=rsm-jupyter
 
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -54,6 +55,7 @@ RUN mamba install -y -c conda-forge \
   jupyterlab-git \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
+  mamba_gator \
   bash_kernel \
   && python -m bash_kernel.install
 
@@ -69,9 +71,8 @@ RUN mamba install -y -c suhas_goutham pyrsm
 RUN mamba install -y -c \
   tensorflow \
   keras \
-  && mamba clean --all -f -y && \
-  fix-permissions "${CONDA_DIR}" && \
-  fix-permissions "/home/${NB_USER}"
+  && mamba clean --all -f -y \
+  && fix-permissions "${CONDA_DIR}"
 
 RUN pip3 install jupyterlab-skip-traceback \
   lckr-jupyterlab-variableinspector
@@ -89,35 +90,12 @@ COPY files/zshrc /etc/skel/.zshrc
 COPY files/p10k.zsh /etc/skel/.p10k.zsh
 COPY files/usethis /usr/local/bin/usethis
 COPY files/clean.sh /usr/local/bin/clean     
-RUN chmod +x /usr/local/bin/clean
 
 ENV R_VERSION=4.1.2
 ENV TERM=xterm
 ENV R_HOME=/usr/local/lib/R
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
-
-RUN wget https://github.com/unicode-org/icu/releases/download/release-69-1/icu4c-69_1-src.tgz \
-  && tar -xf icu4c-69_1-src.tgz \
-  && cd icu/source \
-  && chmod +x runConfigureICU configure install-sh \
-  && ./runConfigureICU Linux/gcc --prefix=/usr/local \
-  && make \
-  && make install \
-  && cd \
-  && rm icu4c-69_1-src.tgz
-
-RUN wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz \
-  && tar -xf libiconv-1.16.tar.gz \
-  && cd libiconv-1.16 \
-  && chmod +x configure \
-  && ./configure --prefix /usr/local \
-  && make \
-  && make install \
-  && cd \
-  && rm libiconv-1.16.tar.gz
-
-# RUN wget https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/install_R.sh \
 
 COPY files/install_R.sh install_R.sh
 RUN chmod 755 install_R.sh \ 
@@ -184,28 +162,34 @@ ENV SHELL=/bin/zsh \
 RUN jupyter nbextension install --py jupytext \
   && jupyter nbextension enable --py jupytext
 
-# updating the supervisord.conf file for Jupyter
+RUN addgroup ${NB_USER} postgres \
+  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
+  && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
+
+COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
+COPY images/logo200.svg /opt/shiny/logo.svg
+RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \ 
+  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/ 
+
+
+# updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY files/jupyter_notebook_config.py /etc/jupyter/
+RUN mkdir -p /var/log/supervisor \
+  && fix-permissions /var/log/supervisor \
+  && fix-permissions /etc/supervisor/conf.d/ \
+  && fix-permissions /etc/jupyter/ \
+  && fix-permissions "${CONDA_DIR}" 
 
 # Copy the launch script into the image
-ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-rsm-jupyter.sh /opt/launch.sh
-RUN chmod 755 /opt/launch.sh
-
-RUN addgroup ${NB_USER} postgres \
-  && mkdir -p /var/log/supervisor \
-  && chown ${NB_USER} /var/log/supervisor
-
-COPY files/jupyter_notebook_config.py /etc/jupyter/
-RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \ 
-  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/ \
-  && chown ${NB_USER} -R /opt/shiny/
-
-COPY images/gitgadget.svg /opt/gitgadget/gitgadget.svg
-COPY images/logo200.svg /opt/radiant/logo.svg
+ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${DOCKERHUB_NAME}.sh /opt/launch.sh
+COPY files/setup.sh /usr/local/bin/setup
+RUN fix-permissions /etc/skel \
+  && fix-permissions /usr/local/bin \
+  && chmod 755 /usr/local/bin/* 
 
 EXPOSE 8989 8765 8181 8282
-ENTRYPOINT ["/usr/bin/supervisord"]
-CMD ["-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER ${NB_UID}
