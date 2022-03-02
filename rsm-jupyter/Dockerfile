@@ -20,12 +20,18 @@ RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # This installs toolchain 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-  build-essential \
   supervisor \
   openssh-server \
   zsh \
   vim \
   vifm
+
+# ML frameworks that are not (yet) available
+# 'pytorch' \
+# 'pyro-ppl' \
+# 'numpyro' \
+# 'jax' \
+# 'jaxlib' \
 
 ENV CMDSTAN_VERSION="2.29.0"
 
@@ -36,13 +42,17 @@ RUN mamba install -y -c conda-forge \
   ipython-sql \
   altair \
   beautifulsoup4 \
+  scikit-learn \
+  mlxtend \
   xgboost \
+  graphviz \
   lime \
+  shap \
+  spacy \
+  pydotplus \
   networkx \
   seaborn \
   selenium \
-  shap \
-  spacy \
   sqlalchemy \
   pyLDAvis \
   python-dotenv \
@@ -56,17 +66,11 @@ RUN mamba install -y -c conda-forge \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
   mamba_gator \
+  rpy2 \
   bash_kernel \
   && python -m bash_kernel.install
 
 RUN mamba install -y -c suhas_goutham pyrsm
-
-# ML framework that are not (yet) available
-# 'pytorch' \
-# 'pyro-ppl' \
-# 'numpyro' \
-# 'jax' \
-# 'jaxlib' \
 
 RUN mamba install -y -c \
   tensorflow \
@@ -146,6 +150,10 @@ COPY files/pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
 USER root
 
+RUN addgroup ${NB_USER} postgres \
+  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
+  && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
+
 # settings for local install of python packages 
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV PYBASE=${PYBASE}
@@ -158,23 +166,15 @@ ENV SHELL=/bin/zsh \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
   R_LIBS_USER="~/.rsm-msba/R/"
 
-# jupytext extension
-RUN jupyter nbextension install --py jupytext \
-  && jupyter nbextension enable --py jupytext
-
-RUN addgroup ${NB_USER} postgres \
-  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
-  && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
-
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
 RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \ 
   && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/ 
 
-
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY files/jupyter_notebook_config.py /etc/jupyter/
+COPY files/condarc /opt/conda/.condarc
 RUN mkdir -p /var/log/supervisor \
   && fix-permissions /var/log/supervisor \
   && fix-permissions /etc/supervisor/conf.d/ \

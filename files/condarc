@@ -1,0 +1,9 @@
+channels:
+  - conda-forge
+  - defaults
+channel_priority: disabled
+auto_update_conda: false
+show_channel_urls: true
+envs_dirs:
+  - /home/jovyan/.rsm-msba/conda/envs
+  - /opt/conda/envs

@@ -24,7 +24,8 @@ install2.r --error --skipinstalled -n $NCPUS \
     tinytex \
     svglite \
     remotes \
-    formatR
+    formatR \
+    reticulate
 
 R --quiet -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")' \
   -e 'remotes::install_github("vnijs/DiagrammeR", upgrade = "never")' \

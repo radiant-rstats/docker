@@ -194,6 +194,7 @@ RUN chmod 755 setup.sh \
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY files/jupyter_notebook_config.py /etc/jupyter/
+COPY files/condarc /opt/conda/.condarc
 RUN mkdir -p /var/log/supervisor \
   && fix-permissions /var/log/supervisor \
   && fix-permissions /etc/supervisor/conf.d/ \
@@ -206,6 +207,8 @@ COPY files/setup.sh /usr/local/bin/setup
 RUN fix-permissions /etc/skel \
   && fix-permissions /usr/local/bin \
   && chmod 755 /usr/local/bin/* 
+
+RUN mamba config --add envs_dirs ~/.rsm-msba/conda
 
 EXPOSE 8989 8765 8181 8282
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
