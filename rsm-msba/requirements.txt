@@ -80,7 +80,7 @@ jupyter-server-proxy==1.5.2
 jupyter-shiny-proxy==1.1
 jupyter-telemetry==0.1.0
 jupyterhub==1.3.0
-jupyterlab==2.2.9
+jupyterlab==2.2.10
 jupyterlab-code-formatter==1.3.8
 jupyterlab-git==0.23.2
 jupyterlab-pygments==0.1.2
