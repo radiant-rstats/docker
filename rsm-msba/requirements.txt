@@ -122,7 +122,7 @@ nltk==3.5
 notebook==6.1.6
 numba==0.52.0
 numexpr==2.7.1
-numpy==1.19.4
+numpy==1.21.0
 oauthlib==3.1.0
 opt-einsum==3.3.0
 packaging==20.8
