@@ -31,7 +31,8 @@ build () {
     if [[ "$1" == "NO" ]]; then
       docker buildx build --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
     else
-      docker buildx build --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
+      # docker buildx build --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
+      docker buildx build --progress=plain --push --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -68,13 +69,17 @@ launcher () {
   fi
 }
 
-if [ "$(uname -m)" = "aarch64" ]; then
-  LABEL=rsm-jupyter
-  build
-else
-  LABEL=rsm-jupyter-rs
-  build
-fi
+
+LABEL=rsm-jupyter
+build
+
+# if [ "$(uname -m)" = "arm64" ]; then
+#   LABEL=rsm-jupyter
+#   build
+# else
+#   LABEL=rsm-jupyter-rs
+#   build
+# fi
 
 exit
 
