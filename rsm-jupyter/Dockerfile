@@ -106,21 +106,14 @@ RUN chmod 755 install_R.sh \
   && ./install_R.sh \
   && rm install_R.sh
 
-RUN apt-get update -qq && apt-get -y --no-install-recommends install wget
-RUN wget -O /usr/local/bin/install2.r https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/bin/install2.r \
-  && chmod 755 /usr/local/bin/install2.r 
-
-# COPY files/install2.r /usr/local/bin/install2.r
-# RUN chmod 755 /usr/local/bin/install2.r 
+ENV R_HOME=${R_HOME:-/usr/local/lib/R}
+RUN echo "R_LIBS_USER='~/.rsm-msba/R/'" >> ${R_HOME}/etc/Renviron.site
+RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 
 COPY files/setup-tidyverse.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
-
-ENV R_HOME=${R_HOME:-/usr/local/lib/R}
-RUN echo "R_LIBS_USER='~/.rsm-msba/R/'" >> ${R_HOME}/etc/Renviron.site
-RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 
 COPY files/setup-radiant.sh setup.sh
 RUN chmod +x setup.sh \
