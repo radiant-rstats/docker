@@ -110,6 +110,9 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install wget
 RUN wget -O /usr/local/bin/install2.r https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/bin/install2.r \
   && chmod 755 /usr/local/bin/install2.r 
 
+# COPY files/install2.r /usr/local/bin/install2.r
+# RUN chmod 755 /usr/local/bin/install2.r 
+
 COPY files/setup-tidyverse.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \

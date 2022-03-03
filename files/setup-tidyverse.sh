@@ -21,8 +21,8 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     libxtst6 \
     libcurl4-openssl-dev \
     libssl-dev \
-    unixodbc-dev && \
-  rm -rf /var/lib/apt/lists/*
+    unixodbc-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 install2.r --error --skipinstalled -n $NCPUS \
     tidyverse \
