@@ -18,7 +18,7 @@ USER root
 # fixes the issue where sudo requires terminal for password when starting postgres
 RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# This installs toolchain 
+# This installs toolchain
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   supervisor \
   openssh-server \
@@ -93,7 +93,7 @@ RUN wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
 COPY files/zshrc /etc/skel/.zshrc
 COPY files/p10k.zsh /etc/skel/.p10k.zsh
 COPY files/usethis /usr/local/bin/usethis
-COPY files/clean.sh /usr/local/bin/clean     
+COPY files/clean.sh /usr/local/bin/clean
 
 ENV R_VERSION=4.1.2
 ENV TERM=xterm
@@ -102,7 +102,7 @@ ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
 COPY files/install_R.sh install_R.sh
-RUN chmod 755 install_R.sh \ 
+RUN chmod 755 install_R.sh \
   && ./install_R.sh \
   && rm install_R.sh
 
@@ -164,8 +164,8 @@ ENV SHELL=/bin/zsh \
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
-RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \ 
-  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/ 
+RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \
+  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/
 
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -175,14 +175,14 @@ RUN mkdir -p /var/log/supervisor \
   && fix-permissions /var/log/supervisor \
   && fix-permissions /etc/supervisor/conf.d/ \
   && fix-permissions /etc/jupyter/ \
-  && fix-permissions "${CONDA_DIR}" 
+  && fix-permissions "${CONDA_DIR}"
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${DOCKERHUB_NAME}.sh /opt/launch.sh
 COPY files/setup.sh /usr/local/bin/setup
 RUN fix-permissions /etc/skel \
   && fix-permissions /usr/local/bin \
-  && chmod 755 /usr/local/bin/* 
+  && chmod 755 /usr/local/bin/*
 
 EXPOSE 8989 8765 8181 8282
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

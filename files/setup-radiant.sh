@@ -1,11 +1,21 @@
 #!/bin/bash
 set -e
 
-export DEBIAN_FRONTEND=noninteractive
-
 ## build ARGs
 NCPUS=${NCPUS:--1}
 
+UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}
+CRAN=${CRAN:-https://cran.r-project.org}
+
+##  mechanism to force source installs if we're using RSPM
+CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
+
+## source install if using RSPM and arm64 image
+if [ "$(uname -m)" = "aarch64" ]; then
+  CRAN=$CRAN_SOURCE
+fi
+
+export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq && apt-get -y --no-install-recommends install \
     libicu-dev \
     pandoc \
@@ -14,10 +24,10 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     libgmp3-dev \
     libxml2-dev \
     cmake \
-    git \ 
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-R -e "install.packages('radiant', 'gitgadget', 'miniUI', 'webshot', 'tinytex', 'svglite', 'remotes', 'formatR', 'reticulate', Ncpus=${NCPUS}))"
+/usr/local/bin/R -e "install.packages(c('radiant', 'gitgadget', 'miniUI', 'webshot', 'tinytex', 'svglite', 'remotes', 'formatR', 'reticulate'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")' \
   -e 'remotes::install_github("vnijs/DiagrammeR", upgrade = "never")' \
   -e "remotes::install_github('vnijs/gitgadget')" \
