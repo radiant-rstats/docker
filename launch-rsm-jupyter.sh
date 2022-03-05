@@ -331,6 +331,11 @@ else
     HOMEDIR="${ARG_HOME}"
   fi
 
+  ## adding an environment dir for conda to use
+  if [ ! -d "${HOMEDIR}/.rsm-msba/conda/envs" ]; then
+    mkdir -p "${HOMEDIR}/.rsm-msba/conda/envs"
+  fi
+
   BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
 
   ## based on https://stackoverflow.com/a/52852871/1974918
