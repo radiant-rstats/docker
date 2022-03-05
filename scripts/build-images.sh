@@ -20,6 +20,8 @@ else
   # ARCH="linux/amd64,linux/arm64"
 fi
 
+ARCH="linux/arm64"
+
 build () {
   {
     ## using buildx to create multi-platform images

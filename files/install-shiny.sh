@@ -35,7 +35,7 @@ gdebi -n ss-latest.deb
 rm ss-latest.deb
 
 # Get R packages
-install2.r --error --skipinstalled -n $NCPUS shiny rmarkdown
+/usr/local/bin/R -e "install.packages(c('shiny'), repo='${CRAN}', Ncpus=${NCPUS})" \
 
 # Set up directories and permissions
 if [ -x "$(command -v rstudio-server)" ]; then
