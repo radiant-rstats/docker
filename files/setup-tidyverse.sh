@@ -4,13 +4,22 @@ set -e
 ## adapted from
 # https://github.com/rocker-org/rocker-versioned2/blob/master/scripts/install_tidyverse.sh
 
-## Fix library path
-echo "R_LIBS_USER='~/.rsm-msba/R/'" >> ${R_HOME}/etc/Renviron.site
+UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}
+CRAN=${CRAN:-https://cran.r-project.org}
 
-## build ARGs
+##  mechanism to force source installs if we're using RSPM
+CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
+
+## source install if using RSPM and arm64 image
+if [ "$(uname -m)" = "aarch64" ]; then
+  CRAN=$CRAN_SOURCE
+fi
+
 NCPUS=${NCPUS:--1}
 
-apt-get update -qq && apt-get -y --no-install-recommends install \
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq \
+    && apt-get -y --no-install-recommends install \
     libxml2-dev \
     libcairo2-dev \
     libgit2-dev \
@@ -24,21 +33,8 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     unixodbc-dev \
     && rm -rf /var/lib/apt/lists/*
 
-install2.r --error --skipinstalled -n $NCPUS \
-    tidyverse \
-    devtools \
-    rmarkdown \
-    vroom \
-    gert
-
-## dplyr database backends
-install2.r --error --skipmissing --skipinstalled -n $NCPUS \
-    dbplyr \
-    DBI \
-    dtplyr \
-    RPostgres \
-    RSQLite \
-    fst
+/usr/local/bin/R -e "install.packages(c('tidyverse', 'devtools', 'rmarkdown', 'vroom', 'gert'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "install.packages(c('dbplyr', 'DBI', 'dtplyr', 'RPostgres', 'RSQLite', 'fst'), repo='${CRAN}', Ncpus=${NCPUS})"
 
 ## a bridge to far? -- brings in another 60 packages
 # install2.r --error --skipinstalled -n $NCPUS tidymodels

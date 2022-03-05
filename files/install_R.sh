@@ -7,8 +7,6 @@ set -e
 apt-get update && apt-get -y install lsb-release
 
 UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}
-LANG=${LANG:-en_US.UTF-8}
-LC_ALL=${LC_ALL:-en_US.UTF-8}
 CRAN=${CRAN:-https://cran.r-project.org}
 
 ##  mechanism to force source installs if we're using RSPM
@@ -165,13 +163,6 @@ chmod g+ws ${R_HOME}/site-library
 
 ## Fix library path
 echo "R_LIBS=\${R_LIBS-'${R_HOME}/site-library:${R_HOME}/library'}" >> ${R_HOME}/etc/Renviron.site
-
-## Use littler installation scripts
-Rscript -e "install.packages(c('littler', 'docopt'), repos='${CRAN_SOURCE}')"
-ln -s ${R_HOME}/site-library/littler/examples/install2.r /usr/local/bin/install2.r
-ln -s ${R_HOME}/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r
-ln -s ${R_HOME}/site-library/littler/bin/r /usr/local/bin/r
-
 
 ## Clean up from R source install
 cd /
