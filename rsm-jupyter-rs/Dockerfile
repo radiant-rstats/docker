@@ -201,6 +201,9 @@ RUN fix-permissions /etc/skel \
   && fix-permissions /usr/local/bin \
   && chmod 755 /usr/local/bin/*
 
+# make system R the first choice
+ENV PATH="/usr/local/bin:$PATH"
+
 EXPOSE 8989 8765 8181 8282
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
