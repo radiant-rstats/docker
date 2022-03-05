@@ -18,20 +18,12 @@ USER root
 # fixes the issue where sudo requires terminal for password when starting postgres
 RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# This installs toolchain
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   supervisor \
   openssh-server \
   zsh \
   vim \
   vifm
-
-# ML frameworks that are not (yet) available
-# 'pytorch' \
-# 'pyro-ppl' \
-# 'numpyro' \
-# 'jax' \
-# 'jaxlib' \
 
 ENV CMDSTAN_VERSION="2.29.0"
 
@@ -65,12 +57,19 @@ RUN mamba install -y -c conda-forge \
   jupyterlab-git \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
-  mamba_gator \
   rpy2 \
+  mamba_gator \
   bash_kernel \
   && python -m bash_kernel.install
 
 RUN mamba install -y -c suhas_goutham pyrsm
+
+# ML frameworks that are not (yet) available
+# 'pytorch' \
+# 'pyro-ppl' \
+# 'numpyro' \
+# 'jax' \
+# 'jaxlib' \
 
 RUN mamba install -y -c \
   tensorflow \
@@ -106,8 +105,7 @@ RUN chmod 755 install_R.sh \
   && ./install_R.sh \
   && rm install_R.sh
 
-ENV R_HOME=${R_HOME:-/usr/local/lib/R}
-RUN echo "R_LIBS_USER='~/.rsm-msba/R/'" >> ${R_HOME}/etc/Renviron.site
+RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 
 COPY files/setup-tidyverse.sh setup.sh
@@ -159,8 +157,7 @@ ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime 
 
 ENV SHELL=/bin/zsh \
-  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
-  R_LIBS_USER="~/.rsm-msba/R/"
+  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg

@@ -15,14 +15,9 @@ if [ "$(uname -m)" = "aarch64" ]; then
   CRAN=$CRAN_SOURCE
 fi
 
-export DEBIAN_FRONTEND=noninteractive
-
-## Fix library path
-echo "R_LIBS_USER='~/.rsm-msba/R/'" >> ${R_HOME}/etc/Renviron.site
-
-## build ARGs
 NCPUS=${NCPUS:--1}
 
+export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq \
     && apt-get -y --no-install-recommends install \
     libxml2-dev \

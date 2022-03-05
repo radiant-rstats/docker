@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-## build ARGs
-NCPUS=${NCPUS:--1}
-
 UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}
 CRAN=${CRAN:-https://cran.r-project.org}
 
@@ -14,6 +11,8 @@ CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
 if [ "$(uname -m)" = "aarch64" ]; then
   CRAN=$CRAN_SOURCE
 fi
+
+NCPUS=${NCPUS:--1}
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq && apt-get -y --no-install-recommends install \

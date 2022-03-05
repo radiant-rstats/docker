@@ -486,7 +486,7 @@ else
       fi
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Radiant in the default browser on port 8181"
-        docker exec -d rsm_jupyter R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
+        docker exec -d rsm_jupyter /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
         sleep 3
         open_browser http://localhost:8181
       else
@@ -497,14 +497,14 @@ else
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
-        docker exec -d rsm_jupyter_${menuarg} R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
+        docker exec -d rsm_jupyter_${menuarg} /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
         sleep 3
         open_browser http://localhost:${menu_arg} 
       fi
     elif [ ${menu_exec} == 4 ]; then
       if [ "${menu_arg}" == "" ]; then
         echo "Starting GitGadget in the default browser on port 8282"
-        docker exec -d rsm_jupyter R -e "gitgadget:::gitgadget(host='0.0.0.0', port=8282, launch.browser=FALSE)"
+        docker exec -d rsm_jupyter /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=8282, launch.browser=FALSE)"
         sleep 2
         open_browser http://localhost:8282
       else
@@ -515,7 +515,7 @@ else
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
-        docker exec -d rsm_jupyter_${menuarg} R -e "gitgadget:::gitgadget(host='0.0.0.0', port=${menuarg}, launch.browser=FALSE)"
+        docker exec -d rsm_jupyter_${menuarg} /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=${menuarg}, launch.browser=FALSE)"
         sleep 2
         open_browser http://localhost:${menu_arg} 
       fi
@@ -606,8 +606,9 @@ else
 
       if [ "${cleanup}" == "y" ]; then
         echo "Removing locally installed R packages"
-        rm_list=$(ls -d "${HOMEDIR}"/.rsm-msba/R/*/[0-9]\.[0-9] 2>/dev/null)
+        rm_list=$(ls -d "${HOMEDIR}"/.rsm-msba/R/* 2>/dev/null)
         for i in ${rm_list}; do
+          echo ${i}
           rm -rf "${i}"
           mkdir "${i}"
         done
@@ -616,7 +617,7 @@ else
       echo "Removing locally installed Python packages"
       rm -rf "${HOMEDIR}/.rsm-msba/bin"
       rm -rf "${HOMEDIR}/.rsm-msba/lib"
-      rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter | grep -v code-server)
+      rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter)
       for i in ${rm_list}; do
          rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
       done

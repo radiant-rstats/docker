@@ -18,9 +18,7 @@ USER root
 # fixes the issue where sudo requires terminal for password when starting postgres
 RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# This installs toolchain 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-  build-essential \
   supervisor \
   openssh-server \
   zsh \
@@ -36,13 +34,17 @@ RUN mamba install -y -c conda-forge \
   ipython-sql \
   altair \
   beautifulsoup4 \
+  scikit-learn \
+  mlxtend \
   xgboost \
+  graphviz \
   lime \
+  shap \
+  spacy \
+  pydotplus \
   networkx \
   seaborn \
   selenium \
-  shap \
-  spacy \
   sqlalchemy \
   pyLDAvis \
   python-dotenv \
@@ -56,12 +58,13 @@ RUN mamba install -y -c conda-forge \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
   mamba_gator \
+  rpy2 \
   bash_kernel \
   && python -m bash_kernel.install
 
 RUN mamba install -y -c suhas_goutham pyrsm
 
-# ML framework that are not (yet) available
+# ML frameworks that are not (yet) available
 # 'pytorch' \
 # 'pyro-ppl' \
 # 'numpyro' \
@@ -89,7 +92,7 @@ RUN wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
 COPY files/zshrc /etc/skel/.zshrc
 COPY files/p10k.zsh /etc/skel/.p10k.zsh
 COPY files/usethis /usr/local/bin/usethis
-COPY files/clean.sh /usr/local/bin/clean     
+COPY files/clean.sh /usr/local/bin/clean
 
 ENV R_VERSION=4.1.2
 ENV TERM=xterm
@@ -98,22 +101,17 @@ ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
 COPY files/install_R.sh install_R.sh
-RUN chmod 755 install_R.sh \ 
+RUN chmod 755 install_R.sh \
   && ./install_R.sh \
   && rm install_R.sh
 
-RUN apt-get update -qq && apt-get -y --no-install-recommends install wget
-RUN wget -O /usr/local/bin/install2.r https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/bin/install2.r \
-  && chmod 755 /usr/local/bin/install2.r 
+RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
+RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 
 COPY files/setup-tidyverse.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
-
-ENV R_HOME=${R_HOME:-/usr/local/lib/R}
-RUN echo "R_LIBS_USER='~/.rsm-msba/R/'" >> ${R_HOME}/etc/Renviron.site
-RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 
 COPY files/setup-radiant.sh setup.sh
 RUN chmod +x setup.sh \
@@ -146,6 +144,10 @@ COPY files/pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
 USER root
 
+RUN addgroup ${NB_USER} postgres \
+  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
+  && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
+
 # settings for local install of python packages 
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV PYBASE=${PYBASE}
@@ -155,41 +157,32 @@ ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime 
 
 ENV SHELL=/bin/zsh \
-  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
-  R_LIBS_USER="~/.rsm-msba/R/"
-
-# jupytext extension
-RUN jupyter nbextension install --py jupytext \
-  && jupyter nbextension enable --py jupytext
-
-RUN addgroup ${NB_USER} postgres \
-  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
-  && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
+  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
-RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \ 
-  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/ 
+RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \
+  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/
 
 RUN mamba install -y -c conda-forge \
   jupyter-rsession-proxy \
-  numpyro 
+  numpyro
 
 COPY files/install-rstudio.sh setup.sh
-RUN chmod 755 setup.sh \ 
+RUN chmod 755 setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
 COPY files/install-shiny.sh setup.sh
-RUN chmod 755 setup.sh \ 
+RUN chmod 755 setup.sh \
   && ./setup.sh \
-  && rm setup.sh \ 
+  && rm setup.sh \
   && adduser ${NB_USER} shiny \
   && fix-permissions /etc/shiny-server/ \
   && fix-permissions /var/log/shiny-server/ \
   && mkdir -p /var/lib/shiny-server/bookmarks \
   && fix-permissions /var/lib/shiny-server/bookmarks \
-  && fix-permissions /opt/shiny/ 
+  && fix-permissions /opt/shiny/
 
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -199,16 +192,14 @@ RUN mkdir -p /var/log/supervisor \
   && fix-permissions /var/log/supervisor \
   && fix-permissions /etc/supervisor/conf.d/ \
   && fix-permissions /etc/jupyter/ \
-  && fix-permissions "${CONDA_DIR}" 
+  && fix-permissions "${CONDA_DIR}"
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${DOCKERHUB_NAME}.sh /opt/launch.sh
 COPY files/setup.sh /usr/local/bin/setup
 RUN fix-permissions /etc/skel \
   && fix-permissions /usr/local/bin \
-  && chmod 755 /usr/local/bin/* 
-
-RUN mamba config --add envs_dirs ~/.rsm-msba/conda
+  && chmod 755 /usr/local/bin/*
 
 EXPOSE 8989 8765 8181 8282
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
