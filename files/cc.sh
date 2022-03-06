@@ -1,14 +1,14 @@
 #!/bin/zsh -i
 
 function conda_create_kernel() {
-    mamba create -y -n $1 ipykernel $2
+    mamba create -y -n $1 -c conda-forge ipykernel "${@:2}"
     mamba activate $1
     ipython kernel install --user --name=$1
     mamba deactivate
 }
 
 if [ "$1" != "" ]; then
-    conda_create_kernel $1
+    conda_create_kernel $1 ${@:2}
     echo "The code run in this function is:"
     declare -f conda_create_kernel
     echo "You may need to refresh your browser to see the new kernel icon for environment '$1'"

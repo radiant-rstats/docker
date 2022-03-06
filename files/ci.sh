@@ -7,7 +7,7 @@ function conda_import_kernel() {
     mamba deactivate
 }
 
-elif [ "$1" != "" ]; then
+if [ "$1" != "" ]; then
     conda_import_kernel $1
     echo "You may need to refresh your browser to see the new kernel icon for environment '$1'"
     echo ""
