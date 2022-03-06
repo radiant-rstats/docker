@@ -23,7 +23,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 1.8.0 --directory ~/project_1"
+  echo "Example: $0 --tag 2.2.0 --directory ~/project_1"
   echo ""
   exit 1
 }
@@ -44,14 +44,11 @@ esac; done
 ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
-# ID="raghavprasad13"
 ID="vnijs"
 LABEL="rsm-jupyter"
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
-
-# Choose your timezone https://urldefense.proofpoint.com/v2/url?u=https-3A__en.wikipedia.org_wiki_List-5Fof-5Ftz-5Fdatabase-5Ftime-5Fzones&d=DwIGAg&c=-35OiAkTchMrZOngvJPOeA&r=Fl9jXwBiBhOXNPxlgSZKqSEZiBiPWs1diKtm8L8hkjw&m=dKnl0Zu1E_xKFdSYdXmzt7bxtrBIg5RlcxG-BpgA_VrGxp0RzlpV-l_r-7ohiVX6&s=k56JQbeCh2XYwmquVFHpgEvOCtGfPD7QxLhqLzl1fdY&e= 
-# TIMEZONE="Europe/Amsterdam"
+# Choose your timezone https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 TIMEZONE="America/Los_Angeles"
 if [ "$ARG_TAG" != "" ]; then
   IMAGE_VERSION="$ARG_TAG"
@@ -140,6 +137,7 @@ else
     echo "Stopping running containers"
     echo "-----------------------------------------------------------------------"
     docker stop ${running}
+    docker container rm  ${LABEL}
   fi
 
   available=$(docker images -q ${IMAGE}:${IMAGE_VERSION})
@@ -154,6 +152,11 @@ else
   chip=""
   if [[ "$ostype" == "Linux" ]]; then
     ostype="Linux"
+    if [[ "$archtype" == "aarch64" ]]; then
+      chip="(ARM64)"
+    else
+      chip="(Intel)"
+    fi
     HOMEDIR=~
     ID=$USER
     open_browser () {
@@ -229,7 +232,7 @@ else
         exit 1
       fi
       ARG_HOME="$(cd "$ARG_DIR"; pwd)"
-      ## https://urldefense.proofpoint.com/v2/url?u=https-3A__unix.stackexchange.com_questions_295991_sed-2Derror-2D1-2Dnot-2Ddefined-2Din-2Dthe-2Dre-2Dunder-2Dos-2Dx&d=DwIGAg&c=-35OiAkTchMrZOngvJPOeA&r=Fl9jXwBiBhOXNPxlgSZKqSEZiBiPWs1diKtm8L8hkjw&m=dKnl0Zu1E_xKFdSYdXmzt7bxtrBIg5RlcxG-BpgA_VrGxp0RzlpV-l_r-7ohiVX6&s=KKDjxkSRJ0qvoGlr8sml5JXw7t7ezY9qt6lDgkkfRW8&e= 
+      ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
       echo "---------------------------------------------------------------------------"
@@ -314,7 +317,7 @@ else
         rm -rf "${ARG_HOME}/.rsm-msba/R"
         rm -rf "${ARG_HOME}/.rsm-msba/bin"
         rm -rf "${ARG_HOME}/.rsm-msba/lib"
-        rm_list=$(ls "${ARG_HOME}/.rsm-msba/share" | grep -v jupyter | grep -v code-server)
+        rm_list=$(ls "${ARG_HOME}/.rsm-msba/share" | grep -v jupyter)
         for i in ${rm_list}; do
            rm -rf "${ARG_HOME}/.rsm-msba/share/${i}"
         done
@@ -356,7 +359,7 @@ else
     docker volume create --name=pg_data
   fi
   {
-    docker run --name rsm_jupyter --net ${NETWORK} -d \
+    docker run --name ${LABEL} --net ${NETWORK} -d \
       -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 -p 127.0.0.1:8282:8282 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
@@ -394,9 +397,13 @@ else
   rstudio_abend
 
   show_service () {
-    echo "-----------------------------------------------------------------------"
-    echo "${LABEL}:${DOCKERHUB_VERSION} computing environment on ${ostype} (${BUILD_DATE//T*/})"
-    echo "-----------------------------------------------------------------------"
+    echo "------------------------------------------------------------------------"
+    echo "Starting the ${LABEL} computing environment on ${ostype} ${chip}"
+    echo "Version   : ${DOCKERHUB_VERSION}"
+    echo "Build date: ${BUILD_DATE//T*/}"
+    echo "Base dir. : ${HOMEDIR}"
+    echo "Cont. name: ${LABEL}"
+    echo "------------------------------------------------------------------------"
     echo "Press (1) to show Jupyter Lab, followed by [ENTER]:"
     echo "Press (2) to show Radiant, followed by [ENTER]:"
     echo "Press (3) to show GitGadget, followed by [ENTER]:"
@@ -408,11 +415,11 @@ else
     echo "Press (h) to show help in the terminal and browser, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
-    echo "-----------------------------------------------------------------------"
-    echo "Note: To start, e.g., Jupyter on a different port type 3 8990 [ENTER]"
+    echo "------------------------------------------------------------------------"
+    echo "Note: To start, e.g., Jupyter on a different port type 1 8990 [ENTER]"
     echo "Note: To start a specific container version type, e.g., 6 ${DOCKERHUB_VERSION} [ENTER]"
-    echo "Note: To commit changes type, e.g., c myversion [ENTER]"
-    echo "-----------------------------------------------------------------------"
+    echo "Note: To commit changes to the container type, e.g., c myversion [ENTER]"
+    echo "------------------------------------------------------------------------"
     read menu_exec menu_arg
 
     if [ -z "${menu_exec}" ]; then
@@ -421,7 +428,7 @@ else
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Jupyter Lab in the default browser on localhost:8989/lab"
         sleep 2
-        open_browser http://localhost:8989/lab 
+        open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
         docker run --net ${NETWORK} -d \
@@ -465,36 +472,36 @@ else
       fi
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Radiant in the default browser on port 8181"
-        docker exec -d rsm_jupyter /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
+        docker exec -d ${LABEL} /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
         sleep 3
         open_browser http://localhost:8181
       else
         echo "Starting Radiant in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          --name rsm_jupyter_${menuarg} \
+          --name ${LABEL}-${menuarg} \
           -p 127.0.0.1:${menu_arg}:8181 \
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
-        docker exec -d rsm_jupyter_${menuarg} /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
+        docker exec -d ${LABEL}-${menuarg} /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
         sleep 3
         open_browser http://localhost:${menu_arg} 
       fi
     elif [ ${menu_exec} == 3 ]; then
       if [ "${menu_arg}" == "" ]; then
         echo "Starting GitGadget in the default browser on port 8282"
-        docker exec -d rsm_jupyter /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=8282, launch.browser=FALSE)"
+        docker exec -d ${LABEL} /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=8282, launch.browser=FALSE)"
         sleep 2
         open_browser http://localhost:8282
       else
         echo "Starting GitGadget in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} -d \
-          --name rsm_jupyter_${menuarg} \
+          --name ${LABEL}-${menuarg} \
           -p 127.0.0.1:${menu_arg}:8282 \
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
-        docker exec -d rsm_jupyter_${menuarg} /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=${menuarg}, launch.browser=FALSE)"
+        docker exec -d ${LABEL}-${menuarg} /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=${menuarg}, launch.browser=FALSE)"
         sleep 2
         open_browser http://localhost:${menu_arg} 
       fi
@@ -511,9 +518,9 @@ else
         echo ""
         ## git bash has issues with tty
         if [[ "$ostype" == "Windows" ]]; then
-          winpty docker exec -it --user ${NB_USER} ${running} sh
+          winpty docker exec -it --user ${NB_USER} ${LABEL} sh
         else
-          docker exec -it --user ${NB_USER} ${running} /bin/zsh
+          docker exec -it --user ${NB_USER} ${LABEL} /bin/zsh
         fi
       fi
     elif [ ${menu_exec} == 5 ]; then
@@ -548,6 +555,7 @@ else
       docker stop ${running}
       docker rm ${running}
       docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
+      docker container rm ${LABEL}
       if [ -d "${HOMEDIR}/Desktop" ]; then
         SCRIPT_DOWNLOAD="${HOMEDIR}/Desktop"
       else
@@ -705,6 +713,7 @@ else
         done
         docker stop ${running}
         docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
+        docker container rm ${LABEL}
       fi
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')
