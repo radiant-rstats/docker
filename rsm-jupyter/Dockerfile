@@ -153,6 +153,7 @@ ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV PYBASE=${PYBASE}
 ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \
+  JUPYTER_DATA_DIR=${PYBASE}/share/jupyter \
   JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
   JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime 
 
@@ -173,6 +174,11 @@ RUN mkdir -p /var/log/supervisor \
   && fix-permissions /etc/supervisor/conf.d/ \
   && fix-permissions /etc/jupyter/ \
   && fix-permissions "${CONDA_DIR}"
+
+# copy base conda environment management script
+COPY files/cc.sh /usr/local/bin/cc
+COPY files/cl.sh /usr/local/bin/cl
+COPY files/cr.sh /usr/local/bin/cr
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${DOCKERHUB_NAME}.sh /opt/launch.sh
