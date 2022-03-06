@@ -199,6 +199,8 @@ RUN mkdir -p /var/log/supervisor \
 COPY files/cc.sh /usr/local/bin/cc
 COPY files/cl.sh /usr/local/bin/cl
 COPY files/cr.sh /usr/local/bin/cr
+COPY files/ci.sh /usr/local/bin/ci
+COPY files/ce.sh /usr/local/bin/ce
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${DOCKERHUB_NAME}.sh /opt/launch.sh
