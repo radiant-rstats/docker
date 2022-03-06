@@ -23,3 +23,6 @@ fi
 echo ""
 echo "The code run in this function is:"
 declare -f conda_remove
+
+echo "\nSee the link below for additional information about conda"
+echo "https://docs.conda.io/projects/conda/en/latest/user-guide/index.html"

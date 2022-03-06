@@ -1,31 +1,20 @@
 #!/bin/zsh -i
 
 function conda_create_kernel() {
-    mamba create -y -n $1 ipykernel
+    mamba create -y -n $1 ipykernel $2
     mamba activate $1
     ipython kernel install --user --name=$1
     mamba deactivate
 }
 
-function conda_create_kernel_from_yml() {
-    mamba env create -n $1 --file $2
-    mamba activate $1
-    ipython kernel install --user --name=$1
-    mamba deactivate
-}
-
-if [ "$1" != "" ] && [ "$2" != "" ]; then
-    conda_create_kernel_from_yml $1 $2
-    fun_print=$(declare -f conda_create_kernel_from_yml)
-elif [ "$1" != "" ]; then
+if [ "$1" != "" ]; then
     conda_create_kernel $1
-    fun_print=$(declare -f conda_create_kernel)
+    echo "The code run in this function is:"
+    declare -f conda_create_kernel
+    echo "You may need to refresh your browser to see the new kernel icon for environment '$1'"
 else
-    echo "The create conda kernel function requires the name of a conda envivronment to create"
+    echo "This function to create a conda kernel requires the name of a conda envivronment to create and the names of any packages you want to install"
 fi
 
-echo "You may need to refresh your browser to see the new kernel icon for environment '$1'"
-echo ""
-echo "The code run in this function is:"
-
-echo $fun_print
+echo "\nSee the link below for additional information about conda"
+echo "https://docs.conda.io/projects/conda/en/latest/user-guide/index.html"
