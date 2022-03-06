@@ -35,7 +35,7 @@ gdebi -n ss-latest.deb
 rm ss-latest.deb
 
 # Get R packages
-/usr/local/bin/R -e "install.packages(c('shiny'), repo='${CRAN}', Ncpus=${NCPUS})" \
+/usr/local/bin/R -e "install.packages(c('shiny', 'digest'), repo='${CRAN}', Ncpus=${NCPUS})" \
 
 # Set up directories and permissions
 if [ -x "$(command -v rstudio-server)" ]; then
