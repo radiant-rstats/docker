@@ -1,5 +1,6 @@
 channels:
   - conda-forge
+  - vnijs
   - defaults
 channel_priority: disabled
 auto_update_conda: false
