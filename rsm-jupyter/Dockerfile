@@ -60,7 +60,9 @@ RUN mamba install -y -c conda-forge \
   rpy2 \
   mamba_gator \
   bash_kernel \
+  nb_conda_kernels \
   && python -m bash_kernel.install
+# nb_conda_kernels is required to display envs in JupyterLab launcher
 
 RUN mamba install -y -c suhas_goutham pyrsm
 
