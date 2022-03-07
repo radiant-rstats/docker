@@ -4,12 +4,8 @@
 from jupyter_core.paths import jupyter_data_dir
 import subprocess
 import os
-import shutil
 import errno
 import stat
-import textwrap
-import getpass
-import tempfile
 
 c = get_config()
 c.NotebookApp.ip = "0.0.0.0"
@@ -22,85 +18,30 @@ c.FileContentsManager.delete_to_trash = False
 
 
 def _radiant_command(port):
-    # based on @yuvipanda's comments
-    # https://github.com/yuvipanda/jupyter-launcher-shortcuts/issues/1
-    conf = textwrap.dedent(
-        """
-        run_as {user};
-        # make debugging easier
-        sanitize_errors false;
-        preserve_logs true;
-        # access_log /var/log/shiny-server/access.log dev;
-        server {{
-            listen {port};
-            location / {{
-                site_dir {site_dir};
-                log_dir /var/log/shiny-server;
-                reconnect false;
-                directory_index off;
-            }}
-        }}
-    """
-    ).format(
-        user=getpass.getuser(),
-        port=str(port),
-        site_dir="/opt/shiny/radiant/inst/app",
-    )
-
-    # shiny-server configuration
-    f = tempfile.NamedTemporaryFile(mode="w", delete=False)
-    f.write(conf)
-    f.close()
-
-    return ["shiny-server", f.name]
+    return [
+        "/usr/local/bin/R",
+        "-e",
+        f"radiant.data::launch(package='radiant', host='0.0.0.0', port={port}, run=FALSE)",
+    ]
 
 
 def _gitgadget_command(port):
-    # based on @yuvipanda's comments
-    # https://github.com/yuvipanda/jupyter-launcher-shortcuts/issues/1
-    conf = textwrap.dedent(
-        """
-        run_as {user};
-        # make debugging easier
-        sanitize_errors false;
-        preserve_logs true;
-        # access_log /var/log/shiny-server/access.log dev;
-        server {{
-            listen {port};
-            location / {{
-                site_dir {site_dir};
-                log_dir /var/log/shiny-server;
-                reconnect false;
-                directory_index off;
-            }}
-        }}
-    """
-    ).format(
-        user=getpass.getuser(),
-        port=str(port),
-        site_dir="/opt/shiny/gitgadget/inst/app",
-    )
-
-    # shiny-server configuration
-    f = tempfile.NamedTemporaryFile(mode="w", delete=False)
-    f.write(conf)
-    f.close()
-
-    return ["shiny-server", f.name]
+    return [
+        "/usr/local/bin/R",
+        "-e",
+        f"gitgadget::gitgadget(host='0.0.0.0', port={port}, launch.browser=FALSE)",
+    ]
 
 
 c.ServerProxy.servers = {
     "radiant": {
         "command": _radiant_command,
-        "timeout": 20,
-        "launcher_entry": {
-            "title": "Radiant",
-            "icon_path": "/opt/shiny/logo.svg",
-        },
+        "timeout": 30,
+        "launcher_entry": {"title": "Radiant", "icon_path": "/opt/shiny/logo.svg",},
     },
     "gitgadget": {
         "command": _gitgadget_command,
-        "timeout": 20,
+        "timeout": 30,
         "launcher_entry": {
             "title": "Git Gadget",
             "icon_path": "/opt/shiny/gitgadget.svg",
