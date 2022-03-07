@@ -23,11 +23,12 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   openssh-server \
   zsh \
   vim \
-  vifm
+  vifm \
+  wget
 
 ENV CMDSTAN_VERSION="2.29.0"
 
-RUN mamba install -y -c conda-forge \
+RUN mamba install -y -c conda-forge -c suhas_goutham \
   cmdstan=${CMDSTAN_VERSION} \
   sqlalchemy \
   psycopg2 \
@@ -57,42 +58,19 @@ RUN mamba install -y -c conda-forge \
   jupyterlab-git \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
+  jupyter-rsession-proxy \
   rpy2 \
   mamba_gator \
-  bash_kernel \
-  && python -m bash_kernel.install
+  nb_conda_kernels \
+  flask \
+  streamlit \
+  fastapi \
+  pyrsm
 
-RUN mamba install -y -c suhas_goutham pyrsm
-
-# ML frameworks that are not (yet) available
-# 'pytorch' \
-# 'pyro-ppl' \
-# 'numpyro' \
-# 'jax' \
-# 'jaxlib' \
-
-RUN mamba install -y -c \
-  tensorflow \
-  keras \
-  && mamba clean --all -f -y \
-  && fix-permissions "${CONDA_DIR}"
-
-RUN pip3 install jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector
-
-# oh-my-zsh
-RUN wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
-  && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
-  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
-  && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
-  && git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k \
-  && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k \
-  && cp -R /home/jovyan/.oh-my-zsh /etc/skel/.oh-my-zsh
-
-COPY files/zshrc /etc/skel/.zshrc
-COPY files/p10k.zsh /etc/skel/.p10k.zsh
-COPY files/usethis /usr/local/bin/usethis
-COPY files/clean.sh /usr/local/bin/clean
+COPY files/setup-ml-frameworks.sh setup.sh
+RUN chmod 755 setup.sh \
+  && ./setup.sh \
+  && rm setup.sh
 
 ENV R_VERSION=4.1.2
 ENV TERM=xterm
@@ -148,6 +126,25 @@ RUN addgroup ${NB_USER} postgres \
   && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
   && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
 
+# oh-my-zsh
+RUN wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
+  && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
+  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
+  && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
+  && git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k \
+  && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k \
+  && cp -R /home/jovyan/.oh-my-zsh /etc/skel/.oh-my-zsh
+
+COPY files/zshrc /etc/skel/.zshrc
+COPY files/p10k.zsh /etc/skel/.p10k.zsh
+COPY files/usethis /usr/local/bin/usethis
+COPY files/clean.sh /usr/local/bin/clean
+
+RUN pip3 install jupyterlab-skip-traceback \
+  lckr-jupyterlab-variableinspector \
+  zsh_jupyter_kernel \
+  && python -m zsh_jupyter_kernel.install
+
 # settings for local install of python packages 
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV PYBASE=${PYBASE}
@@ -155,15 +152,17 @@ ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \
   JUPYTER_DATA_DIR=${PYBASE}/share/jupyter \
   JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
-  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime 
+  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime
 
 ENV SHELL=/bin/zsh \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
-RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \
-  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/
+COPY files/install-rstudio.sh setup.sh
+RUN chmod 755 setup.sh \
+  && ./setup.sh \
+  && rm setup.sh
 
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

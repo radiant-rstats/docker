@@ -137,7 +137,7 @@ else
     echo "Stopping running containers"
     echo "-----------------------------------------------------------------------"
     docker stop ${running}
-    docker container rm  ${LABEL}
+    docker container rm ${LABEL} 2>/dev/null
   fi
 
   available=$(docker images -q ${IMAGE}:${IMAGE_VERSION})
@@ -405,18 +405,20 @@ else
     echo "Cont. name: ${LABEL}"
     echo "------------------------------------------------------------------------"
     echo "Press (1) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (2) to show Radiant, followed by [ENTER]:"
-    echo "Press (3) to show GitGadget, followed by [ENTER]:"
-    echo "Press (4) to show a (ZSH) terminal, followed by [ENTER]:"
-    echo "Press (5) to update the ${LABEL} container, followed by [ENTER]:"
-    echo "Press (6) to update the launch script, followed by [ENTER]:"
-    echo "Press (7) to clear local R packages, followed by [ENTER]:"
-    echo "Press (8) to clear local Python packages, followed by [ENTER]:"
+    echo "Press (2) to show Rstudio, followed by [ENTER]:"
+    echo "Press (3) to show Radiant, followed by [ENTER]:"
+    echo "Press (4) to show GitGadget, followed by [ENTER]:"
+    echo "Press (5) to show a (ZSH) terminal, followed by [ENTER]:"
+    echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
+    echo "Press (7) to update the launch script, followed by [ENTER]:"
+    echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
+    echo "Press (9) to clear local Python packages, followed by [ENTER]:"
+    echo "Press (10) to start a Selenium container, followed by [ENTER]:"
     echo "Press (h) to show help in the terminal and browser, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "------------------------------------------------------------------------"
-    echo "Note: To start, e.g., Jupyter on a different port type 1 8990 [ENTER]"
+    echo "Note: To start, e.g., Jupyter on a different port type 1 8991 [ENTER]"
     echo "Note: To start a specific container version type, e.g., 6 ${DOCKERHUB_VERSION} [ENTER]"
     echo "Note: To commit changes to the container type, e.g., c myversion [ENTER]"
     echo "------------------------------------------------------------------------"
@@ -441,6 +443,24 @@ else
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 2 ]; then
+      if [ "${menu_arg}" == "" ]; then
+        echo "Starting Rstudio in the default browser on localhost:8989/rstudio"
+        open_browser http://localhost:8989/rstudio
+      else
+        echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
+        { 
+          docker run --name ${LABEL} --net ${NETWORK} -d \
+            -p 127.0.0.1:${menu_arg}:8989 \
+            -e TZ=${TIMEZONE} \
+            -v "${HOMEDIR}":/home/${NB_USER} $MNT \
+            -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
+            ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
+          rstudio_abend
+          sleep 4s
+        }
+        open_browser http://localhost:${menu_arg}/rstudio
+      fi
+    elif [ ${menu_exec} == 3 ]; then
       RPROF="${HOMEDIR}/.Rprofile"
       touch "${RPROF}"
       if ! grep -q 'radiant.report = TRUE' ${RPROF} || ! grep -q 'radiant.shinyFiles = TRUE' ${RPROF}; then
@@ -487,7 +507,7 @@ else
         sleep 3
         open_browser http://localhost:${menu_arg} 
       fi
-    elif [ ${menu_exec} == 3 ]; then
+    elif [ ${menu_exec} == 4 ]; then
       if [ "${menu_arg}" == "" ]; then
         echo "Starting GitGadget in the default browser on port 8282"
         docker exec -d ${LABEL} /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=8282, launch.browser=FALSE)"
@@ -505,7 +525,7 @@ else
         sleep 2
         open_browser http://localhost:${menu_arg} 
       fi
-    elif [ ${menu_exec} == 4 ]; then
+    elif [ ${menu_exec} == 5 ]; then
       running=$(docker ps -q | awk '{print $1}')
       if [ "${running}" != "" ]; then
         if [ "$ARG_SHOW" != "show" ]; then
@@ -523,7 +543,7 @@ else
           docker exec -it --user ${NB_USER} ${LABEL} /bin/zsh
         fi
       fi
-    elif [ ${menu_exec} == 5 ]; then
+    elif [ ${menu_exec} == 6 ]; then
       running=$(docker ps -q)
       echo "-----------------------------------------------------------------------"
       echo "Updating the ${LABEL} computing environment"
@@ -549,7 +569,7 @@ else
       fi
       $CMD
       exit 1
-    elif [ ${menu_exec} == 6 ]; then
+    elif [ ${menu_exec} == 7 ]; then
       echo "Updating ${IMAGE} launch script"
       running=$(docker ps -q)
       docker stop ${running}
@@ -573,7 +593,19 @@ else
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}" "${@:1}"
       fi
       exit 1
-    elif [ ${menu_exec} == 7 ]; then
+    elif [ ${menu_exec} == 8 ]; then
+      echo "-----------------------------------------------------"
+      echo "Clean up Rstudio sessions (y/n)?"
+      echo "-----------------------------------------------------"
+      read cleanup
+
+      if [ "${cleanup}" == "y" ]; then
+        echo "Cleaning up Rstudio sessions and settings"
+        rm -rf "${HOMEDIR}/.rstudio/sessions"
+        rm -rf "${HOMEDIR}/.rstudio/projects"
+        rm -rf "${HOMEDIR}/.rstudio/projects_settings"
+      fi
+
       echo "-----------------------------------------------------"
       echo "Remove locally installed R packages (y/n)?"
       echo "-----------------------------------------------------"
@@ -602,8 +634,27 @@ else
           for i in ${rm_list}; do
             rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
           done
-        fi
+    elif [ "${menu_exec}" == 10 ]; then
+      if [ "${menu_arg}" != "" ]; then
+        selenium_port=${menu_arg}
+      else 
+        selenium_port=4444
       fi
+      CPORT=$(curl -s localhost:${selenium_port} 2>/dev/null)
+      echo "-----------------------------------------------------------------------"
+      selenium_nr=($(docker ps -a | awk "/selenium_/" | awk '{print $1}'))
+      selenium_nr=${#selenium_nr[@]}
+      if [ "$CPORT" != "" ]; then
+        echo "A Selenium container may already be running on port ${selenium_port}"
+        selenium_nr=$((${selenium_nr}-1))
+      else
+        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
+      fi
+      echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
+      echo "${LABEL} container and ip: 127.0.0.1, port: ${selenium_port} from the host OS"
+      echo "Press any key to continue"
+      echo "-----------------------------------------------------------------------"
+      read continue
     elif [ "${menu_exec}" == "h" ]; then
       echo "-----------------------------------------------------------------------"
       echo "Showing help for your OS in the default browser"

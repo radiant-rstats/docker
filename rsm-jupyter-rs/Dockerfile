@@ -57,8 +57,9 @@ RUN mamba install -y -c conda-forge \
   jupyterlab-git \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
-  mamba_gator \
+  jupyter-rsession-proxy \
   rpy2 \
+  mamba_gator \
   bash_kernel \
   && python -m bash_kernel.install
 
@@ -78,7 +79,9 @@ RUN mamba install -y -c \
   && fix-permissions "${CONDA_DIR}"
 
 RUN pip3 install jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector
+  lckr-jupyterlab-variableinspector \ 
+  zsh_jupyter_kernel \
+  && python -m zsh_jupyter_kernel.install
 
 # oh-my-zsh
 RUN wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
@@ -162,28 +165,21 @@ ENV SHELL=/bin/zsh \
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
-RUN git clone https://github.com/vnijs/gitgadget.git /opt/shiny/gitgadget/ \
-  && git clone https://github.com/radiant-rstats/radiant.git /opt/shiny/radiant/
-
-RUN mamba install -y -c conda-forge \
-  jupyter-rsession-proxy \
-  numpyro
-
 COPY files/install-rstudio.sh setup.sh
 RUN chmod 755 setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-COPY files/install-shiny.sh setup.sh
-RUN chmod 755 setup.sh \
-  && ./setup.sh \
-  && rm setup.sh \
-  && adduser ${NB_USER} shiny \
-  && fix-permissions /etc/shiny-server/ \
-  && fix-permissions /var/log/shiny-server/ \
-  && mkdir -p /var/lib/shiny-server/bookmarks \
-  && fix-permissions /var/lib/shiny-server/bookmarks \
-  && fix-permissions /opt/shiny/
+# COPY files/install-shiny.sh setup.sh
+# RUN chmod 755 setup.sh \
+#   && ./setup.sh \
+#   && rm setup.sh \
+#   && adduser ${NB_USER} shiny \
+#   && fix-permissions /etc/shiny-server/ \
+#   && fix-permissions /var/log/shiny-server/ \
+#   && mkdir -p /var/lib/shiny-server/bookmarks \
+#   && fix-permissions /var/lib/shiny-server/bookmarks \
+#   && fix-permissions /opt/shiny/
 
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

@@ -137,7 +137,7 @@ else
     echo "Stopping running containers"
     echo "-----------------------------------------------------------------------"
     docker stop ${running}
-    docker container rm  ${LABEL}
+    docker container rm ${LABEL} 2>/dev/null
   fi
 
   available=$(docker images -q ${IMAGE}:${IMAGE_VERSION})
@@ -412,13 +412,13 @@ else
     echo "Press (6) to update the ${LABEL} container, followed by [ENTER]:"
     echo "Press (7) to update the launch script, followed by [ENTER]:"
     echo "Press (8) to clear Rstudio sessions and packages, followed by [ENTER]:"
-    echo "Press (9) to clear Python packages, followed by [ENTER]:"
+    echo "Press (9) to clear local Python packages, followed by [ENTER]:"
     echo "Press (10) to start a Selenium container, followed by [ENTER]:"
     echo "Press (h) to show help in the terminal and browser, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
     echo "------------------------------------------------------------------------"
-    echo "Note: To start, e.g., Jupyter on a different port type 1 8990 [ENTER]"
+    echo "Note: To start, e.g., Jupyter on a different port type 1 8991 [ENTER]"
     echo "Note: To start a specific container version type, e.g., 6 ${DOCKERHUB_VERSION} [ENTER]"
     echo "Note: To commit changes to the container type, e.g., c myversion [ENTER]"
     echo "------------------------------------------------------------------------"

@@ -1,7 +1,9 @@
 #!/bin/zsh
 
 function conda_import_kernel() {
-    mamba env create --file $1
+    fn=$(basename -- "$1")
+    fn="${filename%.*}"
+    mamba env create --file $1 --name "${fn}"
     mamba activate $1
     ipython kernel install --user --name=$1
     mamba deactivate
