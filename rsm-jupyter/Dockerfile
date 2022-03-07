@@ -27,8 +27,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   wget
 
 ENV CMDSTAN_VERSION="2.29.0"
-
-RUN mamba install -y -c conda-forge -c suhas_goutham \
+RUN mamba install --quiet --yes -c conda-forge -c suhas_goutham \
   cmdstan=${CMDSTAN_VERSION} \
   sqlalchemy \
   psycopg2 \
@@ -65,12 +64,21 @@ RUN mamba install -y -c conda-forge -c suhas_goutham \
   flask \
   streamlit \
   fastapi \
-  pyrsm
+  pyrsm \
+  bash_kernel \
+  && python -m bash_kernel.install
 
 COPY files/setup-ml-frameworks.sh setup.sh
 RUN chmod 755 setup.sh \
   && ./setup.sh \
-  && rm setup.sh
+  && rm setup.sh \
+  && mamba clean --all -f -y \
+  && fix-permissions "${CONDA_DIR}" \
+  && fix-permissions "/home/${NB_USER}"
+
+# not available through conda-forge
+RUN pip3 install jupyterlab-skip-traceback \
+  lckr-jupyterlab-variableinspector
 
 ENV R_VERSION=4.1.2
 ENV TERM=xterm
@@ -126,8 +134,9 @@ RUN addgroup ${NB_USER} postgres \
   && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
   && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
 
-# oh-my-zsh
-RUN wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
+# oh-my-zsh (need to install wget again ...)
+RUN apt-get update -qq && apt-get -y --no-install-recommends install wget \
+  && wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
   && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
   && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
@@ -139,11 +148,6 @@ COPY files/zshrc /etc/skel/.zshrc
 COPY files/p10k.zsh /etc/skel/.p10k.zsh
 COPY files/usethis /usr/local/bin/usethis
 COPY files/clean.sh /usr/local/bin/clean
-
-RUN pip3 install jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector \
-  zsh_jupyter_kernel \
-  && python -m zsh_jupyter_kernel.install
 
 # settings for local install of python packages 
 ARG PYBASE=/home/${NB_USER}/.rsm-msba

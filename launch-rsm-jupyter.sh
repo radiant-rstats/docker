@@ -634,6 +634,8 @@ else
           for i in ${rm_list}; do
             rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
           done
+        fi
+      fi
     elif [ "${menu_exec}" == 10 ]; then
       if [ "${menu_arg}" != "" ]; then
         selenium_port=${menu_arg}
