@@ -29,6 +29,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
 ENV CMDSTAN_VERSION="2.29.0"
 RUN mamba install --quiet --yes -c conda-forge -c vnijs \
   cmdstan=${CMDSTAN_VERSION} \
+  cmdstanpy \
   sqlalchemy \
   psycopg2 \
   ipython-sql \
@@ -99,7 +100,14 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
+# packages need for radiant a reproducible analysis
 COPY files/setup-radiant.sh setup.sh
+RUN chmod +x setup.sh \
+  && ./setup.sh \
+  && rm setup.sh
+
+# tooling for Bayesian Machine Learning class
+COPY files/setup-bml.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
