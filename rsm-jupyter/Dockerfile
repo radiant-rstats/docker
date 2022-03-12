@@ -26,6 +26,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   vifm \
   wget
 
+
 ENV CMDSTAN_VERSION="2.29.0"
 RUN mamba install --quiet --yes -c conda-forge -c vnijs \
   cmdstan=${CMDSTAN_VERSION} \
