@@ -33,4 +33,4 @@ jobs:
           context: ./rsm-jupyter
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: vnijs/rsm-jupyter:testtag
+          tags: raghavprasad13/rsm-jupyter:testtag
