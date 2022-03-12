@@ -106,6 +106,7 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
+
 # tooling for Bayesian Machine Learning class
 COPY files/setup-bml.sh setup.sh
 RUN chmod +x setup.sh \
