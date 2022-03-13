@@ -1,4 +1,4 @@
-name: rsm-jupyter docker ci
+name: rsm-jupyter docker amd64 ci
 
 on:
   push:
@@ -41,7 +41,6 @@ jobs:
         with:
           context: .
           file: ./rsm-jupyter/Dockerfile
-          memory-swap: -1
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-jupyter:testtag
