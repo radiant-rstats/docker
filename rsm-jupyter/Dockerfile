@@ -195,7 +195,7 @@ COPY files/ce.sh /usr/local/bin/ce
 
 # Copy the launch script into the image
 ADD https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${DOCKERHUB_NAME}.sh /opt/launch.sh
-# COPY files/setup.sh /usr/local/bin/setup
+COPY files/setup.sh /usr/local/bin/setup
 RUN fix-permissions /etc/skel \
   && fix-permissions /usr/local/bin \
   && chmod 755 /usr/local/bin/*
