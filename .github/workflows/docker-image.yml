@@ -41,6 +41,6 @@ jobs:
         with:
           context: .
           file: ./rsm-jupyter/Dockerfile
-          platforms: linux/arm64
+          platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-jupyter:testtag
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-jupyter:latest
