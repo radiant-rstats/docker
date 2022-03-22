@@ -6,14 +6,19 @@ on:
       - 'master'
     paths:
       - 'rsm-jupyter/**'
+  workflow_dispatch:
 
 jobs:
   docker:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       -
         name: Checkout
         uses: actions/checkout@v2
+      - 
+        name: Install docker # Taken from https://github.com/actions/virtual-environments/issues/1143#issuecomment-652264388
+        run: |
+          brew install docker
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -41,7 +46,6 @@ jobs:
         with:
           context: .
           file: ./rsm-jupyter/Dockerfile
-          memory-swap: -1
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64, linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-jupyter:testtag
