@@ -119,7 +119,7 @@ nbgrader==0.6.1
 nest-asyncio==1.4.3
 networkx==2.5
 nltk==3.5
-notebook==6.1.6
+notebook==6.4.10
 numba==0.52.0
 numexpr==2.7.1
 numpy==1.19.4
