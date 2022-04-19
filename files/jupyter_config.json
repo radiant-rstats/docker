@@ -1,0 +1,7 @@
+{
+    "CondaKernelSpecManager": {
+        "conda_only": true,
+        "kernelspec_path": "--user",
+        "name_format": "{language} [{environment}]"
+    }
+}

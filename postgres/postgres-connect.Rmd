@@ -1,0 +1,142 @@
+---
+title: "Connecting to a postgresql database"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = NA,
+  echo = TRUE
+)
+```
+
+Starting the `rsm-msba-spark` (or `rsm-jupyter`) computing container also starts a postgresql server running on your machine. You can connect to the database from R using the code chunk below.
+
+```{r}
+library(DBI)
+library(RPostgres)
+con <- dbConnect(
+  dbDriver("Postgres"),
+  user = "jovyan",
+  host = "127.0.0.1",
+  port = 8765,
+  dbname = "rsm-docker",
+  password = "postgres"
+)
+```
+
+Is there anything in the database? If this is not the first time you are running this Rmarkdown file, the database should already have one or more tables and the code chunk below should show "flights" as an existing table.
+
+```{r}
+library(dplyr)
+library(dbplyr)
+db_tabs <- dbListTables(con)
+db_tabs
+```
+
+If the database is empty, lets start with the example at <a href="https://db.rstudio.com/dplyr/" target="_blank">https://db.rstudio.com/dplyr/</a> and work through the following 6 steps:
+
+### 1. install the nycflights13 package if not already available
+
+```{r}
+## install nycflights13 package locally if not already available
+if (!require("nycflights13")) {
+  local_dir <- Sys.getenv("R_LIBS_USER")
+  if (!dir.exists(local_dir)) {
+    dir.create(local_dir, recursive = TRUE)
+  }
+  install.packages("nycflights13", lib = local_dir)
+  ## now use Session > Restart R and start from the top of
+  ## of this file again
+}
+```
+
+### 2. Push data into the database 
+
+Note that this is a fairly large dataset that we are copying into the database so make sure you have sufficient resources set for docker to use. See the install instructions for details:
+
+* Windows: <a href="https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md" target="_blank">
+https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md</a>
+* macOS: <a href="https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md" target="_blank"> https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md</a>
+
+```{r}
+## only push to db if table does not yet exist
+## Note: This step requires you have a reasonable amount of memory
+## accessible for docker. This can be changed in Docker > Preferences
+## > Advanced   
+## Memory (RAM) should be set to 4GB or more
+if (!"flights" %in% db_tabs) {
+  copy_to(con, nycflights13::flights, "flights",
+    temporary = FALSE,
+    indexes = list(
+      c("year", "month", "day"),
+      "carrier",
+      "tailnum",
+      "dest"
+    )
+  )
+}
+```
+
+### 3. Create a reference to the data base that (db)plyr can work with
+
+```{r}
+flights_db <- tbl(con, "flights")
+```
+
+### 4. Query the data base using (db)plyr
+
+```{r}
+flights_db %>% select(year:day, dep_delay, arr_delay)
+```
+
+```{r}
+flights_db %>% filter(dep_delay > 240)
+```
+
+```{r}
+flights_db %>%
+  group_by(dest) %>%
+  summarise(delay = mean(dep_time))
+```
+
+```{r}
+tailnum_delay_db <- flights_db %>% 
+  group_by(tailnum) %>%
+  summarise(
+    delay = mean(arr_delay),
+    n = n()
+  ) %>%
+  window_order(desc(delay)) %>%
+  filter(n > 100)
+
+tailnum_delay_db
+tailnum_delay_db %>% show_query()
+```
+
+```{r}
+nrow(tailnum_delay_db) ## why doesn't this work?
+tailnum_delay <- tailnum_delay_db %>% collect()
+nrow(tailnum_delay)
+tail(tailnum_delay)
+```
+
+### 5. Query the flights table using SQL
+
+You can specify a SQL code chunk to query the database directly
+
+```{sql, connection = con, output.var = "flights"}
+/* 
+set the header of the sql chunck to
+{sql, connection = con, output.var = "flights"}
+*/
+SELECT * FROM flights WHERE dep_time > 2350
+```
+
+The variable `flights` now contains the result from the SQL query and will be shown below.
+
+```{r}
+head(flights)
+```
