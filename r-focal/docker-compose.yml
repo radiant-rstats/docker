@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  rsm-msba:
+    image: "vnijs/r-focal"
+    environment:
+      SHELL: /bin/zsh
+      PYTHONUSERBASE: /home/jovyan/.rsm-msba
+    ports:
+      - 127.0.0.1:8181:8181
+      - 127.0.0.1:8787:8787
+      - 127.0.0.1:2121:22
+    volumes:
+      - ~:/home/jovyan
