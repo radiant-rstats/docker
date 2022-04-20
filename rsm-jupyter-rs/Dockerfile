@@ -59,6 +59,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
   jupyter-rsession-proxy \
+  jupyterlab-system-monitor \
   rpy2 \
   mamba_gator \
   flask \

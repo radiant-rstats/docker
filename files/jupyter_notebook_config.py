@@ -13,6 +13,11 @@ c.NotebookApp.port = 8989
 c.NotebookApp.open_browser = False
 c.NotebookApp.allow_origin = "*"
 
+# settings for system monitor (does not enforce)
+c.ResourceUseDisplay.mem_limit = 8 * 1024 * 1024 * 1024
+c.ResourceUseDisplay.track_cpu_percent = True
+c.ResourceUseDisplay.cpu_limit = 4
+
 # https://github.com/jupyter/notebook/issues/3130
 c.FileContentsManager.delete_to_trash = False
 
@@ -37,7 +42,10 @@ c.ServerProxy.servers = {
     "radiant": {
         "command": _radiant_command,
         "timeout": 30,
-        "launcher_entry": {"title": "Radiant", "icon_path": "/opt/shiny/logo.svg",},
+        "launcher_entry": {
+            "title": "Radiant",
+            "icon_path": "/opt/shiny/logo.svg",
+        },
     },
     "gitgadget": {
         "command": _gitgadget_command,

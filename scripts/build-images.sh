@@ -11,7 +11,7 @@ docker login
 DOCKERHUB_VERSION=2.3.0
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-# UPLOAD=""YES"
+UPLOAD=""YES"
 
 if [ "$(uname -m)" = "arm64" ]; then
   ARCH="linux/arm64"
@@ -94,8 +94,4 @@ else
 fi
 
 ## to connec on a server use
-# ssh -t vnijs@rsm-compute-01.ucsd.edu docker run -it -v ~:/home/jovyan vnijs/rsm-vscode /bin/bash;
-
-# git add .
-# git commit -m "Update to image version ${DOCKERHUB_VERSION}"
-# git push
+# ssh -t vnijs@rsm-compute-01.ucsd.edu docker run -it -v ~:/home/jovyan vnijs/rsm-jupyterhub /bin/bash;
