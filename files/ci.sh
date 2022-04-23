@@ -1,9 +1,9 @@
 #!/bin/zsh
 
 function conda_import_environment() {
-    fn=$(basename -- "$1")
-    fn="${filename%.*}"
-    conda env create --file $1 --name "${fn}"
+    env=$(basename -- "$1")
+    env="${filename%.*}"
+    conda env create --file $1 --name "${env}"
     conda activate $1
     ipython kernel install --user --name=$1
     conda deactivate
@@ -11,8 +11,7 @@ function conda_import_environment() {
 
 if [ "$1" != "" ]; then
     conda_import_environment $1
-    echo "You may need to refresh your browser to see the new kernel icon for environment '$1'"
-    echo ""
+    echo "You may need to refresh your browser to see the new kernel icon for environment '$1'\n"
     echo "The code run in this function is:"
     declare -f conda_import_environment
 else

@@ -15,9 +15,7 @@ if [ "$1" != "" ]; then
     else
         conda_remove $1
 
-        echo ""
-        echo "The code run in this function is:"
-        echo ""
+        echo "\nThe code run in this function is:\n"
         # declare -f conda_remove
         echo "conda remove -y -n $1 --all"
         echo "jupyter kernelspec remove -y $1"
