@@ -134,9 +134,9 @@ The rsm-jupyter-rs container comes with <a href="http://www.postgresqltutorial.c
 ```r
 ## connect to database
 library(DBI)
-library(RPostgreSQL)
+library(RPostgres)
 con <- dbConnect(
-  dbDriver("PostgreSQL"),
+  dbDriver("Postgres"),
   user = "jovyan",
   host = "127.0.0.1",
   port = 8765,

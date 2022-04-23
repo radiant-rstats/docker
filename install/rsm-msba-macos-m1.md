@@ -137,9 +137,9 @@ The rsm-jupyter-rs container comes with <a href="http://www.postgresqltutorial.c
 ```r
 ## connect to database
 library(DBI)
-library(RPostgreSQL)
+library(RPostgres)
 con <- dbConnect(
-  dbDriver("PostgreSQL"),
+  dbDriver("Postgres"),
   user = "jovyan",
   host = "127.0.0.1",
   port = 8765,
@@ -157,11 +157,12 @@ To access postgresql from Jupyter Lab use the code below:
 
 ```py
 ## connect to database
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 engine = create_engine('postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker')
 
 ## show list of tables
-engine.table_names()
+inspector = inspect(engine)
+inspector.get_table_names()
 ```
 
 For a more extensive example using Python see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb" target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb</a>
