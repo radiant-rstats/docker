@@ -7,7 +7,15 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN npm install -g configurable-http-proxy
 
 RUN conda install -y -c conda-forge \
-    dockerspawner
+    dockerspawner \
+    numpyro
+
+# install pytorch
+RUN conda install -y -c pytorch \
+    pytorch \
+    torchvision \
+    torchaudio \
+    cpuonly
 
 COPY files/start.sh /usr/local/bin/
 COPY files/start-notebook.sh /usr/local/bin/
