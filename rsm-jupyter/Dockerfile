@@ -42,7 +42,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   networkx \
   seaborn \
   selenium \
-  sqlalchemy \
   pyLDAvis \
   python-dotenv \
   linearmodels \
@@ -63,7 +62,15 @@ RUN mamba install --quiet --yes -c conda-forge \
   fastapi \
   pyrsm \
   bash_kernel \
+  numpyro \
   && python -m bash_kernel.install
+
+# install pytorch
+RUN conda install -y -c pytorch \
+    pytorch \
+    torchvision \
+    torchaudio \
+    cpuonly
 
 COPY files/setup-ml-frameworks.sh setup.sh
 RUN chmod 755 setup.sh \
