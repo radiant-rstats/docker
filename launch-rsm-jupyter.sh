@@ -23,7 +23,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.2.0 --directory ~/project_1"
+  echo "Example: $0 --tag 2.3.0 --directory ~/project_1"
   echo ""
   exit 1
 }
@@ -441,7 +441,7 @@ else
         docker run --net ${NETWORK} -d \
           -p 127.0.0.1:${menu_arg}:8989 \
           -e TZ=${TIMEZONE} \
-          -v ${HOMEDIR}:/home/${NB_USER} $MNT \
+          -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 3
@@ -625,7 +625,7 @@ else
           mkdir "${i}"
         done
       fi
-    elif [ ${menu_exec} == 8 ]; then
+    elif [ ${menu_exec} == 9 ]; then
       echo "-----------------------------------------------------"
       echo "Remove locally installed Pyton packages (y/n)?"
       echo "-----------------------------------------------------"

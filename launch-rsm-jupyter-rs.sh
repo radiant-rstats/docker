@@ -23,7 +23,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.2.0 --directory ~/project_1"
+  echo "Example: $0 --tag 2.3.0 --directory ~/project_1"
   echo ""
   exit 1
 }
@@ -441,7 +441,7 @@ else
         docker run --net ${NETWORK} -d \
           -p 127.0.0.1:${menu_arg}:8989 \
           -e TZ=${TIMEZONE} \
-          -v ${HOMEDIR}:/home/${NB_USER} $MNT \
+          -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 3
@@ -626,13 +626,21 @@ else
         done
       fi
     elif [ ${menu_exec} == 9 ]; then
-      echo "Removing locally installed Python packages"
-      rm -rf "${HOMEDIR}/.rsm-msba/bin"
-      rm -rf "${HOMEDIR}/.rsm-msba/lib"
-      rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter)
-      for i in ${rm_list}; do
-         rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
-      done
+      echo "-----------------------------------------------------"
+      echo "Remove locally installed Pyton packages (y/n)?"
+      echo "-----------------------------------------------------"
+      read cleanup
+      if [ "${cleanup}" == "y" ]; then
+        echo "Removing locally installed Python packages"
+        rm -rf "${HOMEDIR}/.rsm-msba/bin"
+        rm -rf "${HOMEDIR}/.rsm-msba/lib"
+        if [ -d "${HOMEDIR}/.rsm-msba/share" ]; then
+          rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter)
+          for i in ${rm_list}; do
+            rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
+          done
+        fi
+      fi
     elif [ "${menu_exec}" == 10 ]; then
       if [ "${menu_arg}" != "" ]; then
         selenium_port=${menu_arg}

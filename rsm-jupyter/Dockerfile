@@ -1,8 +1,4 @@
-# Copyright (c) Jupyter Development Team.
-# Distributed under the terms of the Modified BSD License.
-ARG OWNER=jupyter
-ARG BASE_CONTAINER=$OWNER/pyspark-notebook
-FROM $BASE_CONTAINER
+FROM jupyter/pyspark-notebook
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -128,11 +124,6 @@ RUN apt -y update && \
   postgresql-client-${POSTGRES_VERSION} \
   postgresql-contrib-${POSTGRES_VERSION}
 
-# RUN apt-get update && apt-get install -y \
-#   postgresql-${POSTGRES_VERSION} \
-#   postgresql-client-${POSTGRES_VERSION} \
-#   postgresql-contrib-${POSTGRES_VERSION}
-
 # Run the rest of the commands as the postgres user
 USER postgres
 
@@ -209,7 +200,6 @@ COPY files/cl.sh /usr/local/bin/cl
 COPY files/cr.sh /usr/local/bin/cr
 COPY files/ci.sh /usr/local/bin/ci
 COPY files/ce.sh /usr/local/bin/ce
-
 
 # Copy the launch script into the image
 COPY launch-${DOCKERHUB_NAME}.sh /opt/launch.sh

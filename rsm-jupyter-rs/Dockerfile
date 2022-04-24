@@ -1,8 +1,4 @@
-# Copyright (c) Jupyter Development Team.
-# Distributed under the terms of the Modified BSD License.
-ARG OWNER=jupyter
-ARG BASE_CONTAINER=$OWNER/pyspark-notebook
-FROM $BASE_CONTAINER
+FROM jupyter/pyspark-notebook
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -128,11 +124,6 @@ RUN apt -y update && \
   postgresql-client-${POSTGRES_VERSION} \
   postgresql-contrib-${POSTGRES_VERSION}
 
-# RUN apt-get update && apt-get install -y \
-#   postgresql-${POSTGRES_VERSION} \
-#   postgresql-client-${POSTGRES_VERSION} \
-#   postgresql-contrib-${POSTGRES_VERSION}
-
 # Run the rest of the commands as the postgres user
 USER postgres
 
@@ -187,7 +178,6 @@ ENV SHELL=/bin/zsh \
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
-
 COPY files/install-rstudio.sh setup.sh
 RUN chmod 755 setup.sh \
   && ./setup.sh \
