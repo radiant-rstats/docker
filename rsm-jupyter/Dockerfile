@@ -62,21 +62,20 @@ RUN mamba install --quiet --yes -c conda-forge \
   fastapi \
   pyrsm \
   bash_kernel \
-  numpyro \
   && python -m bash_kernel.install
 
 # install pytorch
-RUN conda install -y -c pytorch \
-    pytorch \
-    torchvision \
-    torchaudio \
-    cpuonly
+RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 
-COPY files/setup-ml-frameworks.sh setup.sh
-RUN chmod 755 setup.sh \
-  && ./setup.sh \
-  && rm setup.sh \
-  && mamba clean --all -f -y \
+# COPY files/setup-ml-frameworks.sh setup.sh
+# RUN chmod 755 setup.sh \
+#   && ./setup.sh \
+#   && rm setup.sh \
+#   && mamba clean --all -f -y \
+#   && fix-permissions "${CONDA_DIR}" \
+#   && fix-permissions "/home/${NB_USER}"
+
+RUN mamba clean --all -f -y \
   && fix-permissions "${CONDA_DIR}" \
   && fix-permissions "/home/${NB_USER}"
 
