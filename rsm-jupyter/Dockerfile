@@ -1,3 +1,4 @@
+# __version__ 2.3.1
 FROM jupyter/pyspark-notebook
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
@@ -66,6 +67,9 @@ RUN mamba install --quiet --yes -c conda-forge \
 
 # install pytorch
 RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
+
+# prevents UserWarning when using PyTorch
+RUN conda update numpy=1.22.3
 
 # COPY files/setup-ml-frameworks.sh setup.sh
 # RUN chmod 755 setup.sh \
