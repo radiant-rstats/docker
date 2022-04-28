@@ -10,15 +10,11 @@ on:
 
 jobs:
   docker:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
         uses: actions/checkout@v2
-      - 
-        name: Install docker # Taken from https://github.com/actions/virtual-environments/issues/1143#issuecomment-652264388
-        run: |
-          brew install docker
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -41,11 +37,24 @@ jobs:
           sudo rm -rf /usr/local/share/boost
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
       -
-        name: Build and push
+        name: Build and push with commit hash as tag name
+        if: $(head -n 1 rsm-jupyter/Dockerfile) == "# __version__"*
         uses: docker/build-push-action@v2
         with:
           context: .
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-jupyter
           file: ./rsm-jupyter/Dockerfile
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-jupyter:testtag
+          tags: latest, $(git rev-parse --short "$GITHUB_SHA")
+      -
+        name: Build and push with explicit version number
+        if: $(head -n 1 rsm-jupyter/Dockerfile) != "# __version__"*
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-jupyter
+          file: ./rsm-jupyter/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: latest, $(head -n 1 rsm-jupyter/Dockerfile | sed 's/^# __version__ //')
