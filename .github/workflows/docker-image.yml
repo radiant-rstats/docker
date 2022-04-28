@@ -37,6 +37,15 @@ jobs:
           sudo rm -rf /usr/local/share/boost
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
       -
+        name: Prepare tags
+        id: tag_prep
+        run: |
+          TAGS="latest,$(git rev-parse --short '$GITHUB_SHA')"
+          if [[ $(head -n 1 rsm-jupyter/Dockerfile) == "# __version__"* ]]; then
+            TAGS="latest,$(head -n 1 rsm-jupyter/Dockerfile | sed 's/^# __version__ //')"
+          fi
+          echo ::set-output name=tags::${TAGS}
+      -
         name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -45,4 +54,4 @@ jobs:
           file: ./rsm-jupyter/Dockerfile
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: latest, ${{ [[ $(head -n 1 rsm-jupyter/Dockerfile) == "# __version__"* ]] && echo "$(head -n 1 rsm-jupyter/Dockerfile | sed 's/^# __version__ //')" || echo $(git rev-parse --short "$GITHUB_SHA") }}
+          tags: ${{ steps.tag_prep.outputs.tags }}
