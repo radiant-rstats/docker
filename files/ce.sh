@@ -1,19 +1,16 @@
 #!/bin/zsh
 
-function conda_export_environment() {
-    conda env export --name $1 > $2
-}
-
 if [ "$1" != "" ] && [ "$2" != "" ]; then
     # conda_export_environment $1 $2
     fprn="conda env export --name $1 > '$2'"
-    eval fprn
+    eval $fprn
     echo "\nEnvironment file saved to $2"
     echo "\nThe code run in this function is:\n"
     echo $fprn
 elif [ "$1" != "" ]; then
     fn="$PWD/$1.yml"
     fprn="conda env export --name $1 > '${fn}'"
+    eval $fprn
     echo "\nEnvironment file saved to ${fn}"
     echo "\nThe code run in this function is:\n"
     echo $fprn

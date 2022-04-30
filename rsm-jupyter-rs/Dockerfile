@@ -65,18 +65,11 @@ RUN mamba install --quiet --yes -c conda-forge \
   bash_kernel \
   && python -m bash_kernel.install
 
-# install pytorch
-RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
-
-# COPY files/setup-ml-frameworks.sh setup.sh
-# RUN chmod 755 setup.sh \
-#   && ./setup.sh \
-#   && rm setup.sh \
-#   && mamba clean --all -f -y \
-#   && fix-permissions "${CONDA_DIR}" \
-#   && fix-permissions "/home/${NB_USER}"
-
-RUN mamba clean --all -f -y \
+COPY files/setup-ml-frameworks.sh setup.sh
+RUN chmod 755 setup.sh \
+  && ./setup.sh \
+  && rm setup.sh \
+  && mamba clean --all -f -y \
   && fix-permissions "${CONDA_DIR}" \
   && fix-permissions "/home/${NB_USER}"
 
@@ -187,6 +180,14 @@ COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
 COPY files/install-rstudio.sh setup.sh
 RUN chmod 755 setup.sh \
+  && ./setup.sh \
+  && rm setup.sh
+
+# setup quarto - can be used with Rstudio
+# and when connecting to running container
+# from VSCode
+COPY files/setup-quarto.sh setup.sh
+RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 

@@ -17,7 +17,7 @@ Please follow the instructions below to install the rsm-jupyter-rs computing env
 
 **Step 1**: Upgrade Windows
 
-Windows users **must** use Microsoft Windows 11 (10) Professional, Education, or Enterprise (64-bit). Students should be able to upgrade to Microsoft Windows Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="_blank">https://youtu.be/p0gcRbatO0w</a>. The link to get Windows Education for students is shown below.
+Windows users must use Microsoft Windows 11, or Windows 10 Professional, Education, or Enterprise (64-bit). Students should be able to upgrade to Microsoft Windows 10 Education (64-bit) for free through their university. For Rady (UCSD) students, the steps in the upgrade process are shown in the following video: <a href="https://youtu.be/p0gcRbatO0w" target="_blank">https://youtu.be/p0gcRbatO0w</a>. The link to get Windows Education for students is shown below.
 
 <https://onthehub.com/download/free-software/windows-10-education-for-students/>
 
@@ -27,11 +27,6 @@ Check if there are any updates available for your system by clicking on the Star
 
 **Step 2**: Install Windows Subsystem for Linux (WSL2)
 
-If you see a message that "WSL 2 requires an update to its kernel component", download and run the <a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" target="_blank">kernel installer</a> 
-
-Next, get <a href="https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx71" target="_blank">Ubuntu 20.04</a> from the Windows Store. You will be asked to provide a username and password. Make sure to enter the same username and password you use to login to your computer.
--->
-
 To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
 
 ```bash
@@ -39,7 +34,7 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart;
 ```
 
-Next, restart your computer and re-open PowerShell to install Ubuntu. You will be asked to provide a username and password. 
+Next, restart your computer and re-open PowerShell to install Ubuntu. You will be asked to provide a username and password after install Ubuntu. 
 
 ```bash
 wsl --set-default-version 2
@@ -48,7 +43,7 @@ wsl --install -d Ubuntu-20.04
 
 > Important: Make sure to enter the same username and password you use to login to your computer
 
-Check your username for Windows and Ubunutu by executing the command below in both (1) a Windows PowerShell and (2) an Ubuntu terminal. The output in both cases should be the same.
+Check your username for Windows and Ubuntu by executing the command below in both (1) a Windows PowerShell and (2) an Ubuntu terminal. The output in both cases should be the same.
 
 ```bash
 whoami
@@ -83,10 +78,11 @@ Download and install the Microsoft <a href="https://www.microsoft.com/en-us/p/ap
 
 ```bash
 winget install -e Microsoft.WindowsTerminal;
+winget install -e Microsoft.VisualStudioCode;
 winget install -e Docker.DockerDesktop;
 ```
 
-This will install the "Windows Terminal" and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
+This will install  "Windows Terminal", VS Code, and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
 
 Next, logout and back into Windows and then start Docker by clicking on the Whale icon that was added to your desktop (see image below).
 
@@ -121,10 +117,13 @@ git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 sudo ln -s ~/git/docker/launch-rsm-jupyter-rs.sh /usr/local/bin/launch;
 ```
 
+After running the commands above you will be able to start the docker container by typing `launch` from a terminal. 
+
 Next, determine your Windows username by running the code below from an Ubuntu terminal:
 
 ```bash
-USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r')
+USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r');
+echo $USERNAME;
 ```
 
 Finally, we will create and launch a script `launch-rsm-jupyter-rs.bat` on your Desktop that you can double-click to start the container in the future. 
@@ -134,7 +133,7 @@ If you do **not** backup your Desktop to OneDrive, please copy-and-paste the cod
 <!-- echo "Powershell.exe -command \"wsl ~/git/docker/launch-rsm-jupyter-rs.sh -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-jupyter-rs.bat; -->
 
 ```bash
-DTOP="/Desktop"
+DTOP="/Desktop";
 echo "wt.exe wsl.exe ~/git/docker/launch-rsm-jupyter-rs.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-jupyter-rs.bat;
 chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-jupyter-rs.bat;
 cd ~;
@@ -148,7 +147,7 @@ ln -s /mnt/c/Users/"$USERNAME" ./win_home;
 
 The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the image to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
-<img src="figures/rsm-msba-menu-wsl2.png" width="500px">
+<img src="figures/rsm-msba-menu-windows.png" width="500px">
 
 **Trouble shooting**
 
@@ -164,18 +163,18 @@ You will know that the installation was successful if you can start Rstudio and 
 
 > Important: Always use q (and Enter) to shutdown the computing environment
 
-**Rstudio**:
-
-<img src="figures/rsm-rstudio.png" width="500px">
-
 **Jupyter**:
 
 <img src="figures/rsm-jupyter.png" width="500px">
 
+**Rstudio**:
+
+<img src="figures/rsm-rstudio.png" width="500px">
+
 To finalize the setup, open a terminal in Jupyter lab and run the code below:
 
 ```bash
-setup
+setup;
 ```
 
 Press `q` and `Enter`, when prompted and then run the code below in the same terminal:
@@ -187,7 +186,7 @@ source ~/.rsm-msba/zsh/.zshrc;
 
 To update the container use the launch script and press 6 (and Enter). To update the launch script itself, press 7 (and Enter).
 
-<img src="figures/rsm-msba-menu-wsl2.png" width="500px">
+<img src="figures/rsm-msba-menu-windows.png" width="500px">
 
 If for some reason you are having trouble updating either the container or the launch script open an Ubuntu terminal and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
@@ -202,15 +201,15 @@ sudo -- sh -c 'rm -rf /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-jupyt
 
 Microsoft's open-source integrated development environment (IDE), VS Code or Visual Studio Code, was the most popular development environment in according to a [Stack Overflow developer survey](https://insights.stackoverflow.com/survey/2018#development-environments-and-tools). VS Code is widely used by Google developers and is the [default development environment at Facebook](https://www.zdnet.com/article/facebook-microsofts-visual-studio-code-is-now-our-default-development-platform/).
 
-Run the code below from a Windows terminal after installing VS Code in install relevant extensions:
+Run the code below from a PowerShell terminal after installing VS Code to install relevant extensions:
 
 ```
-cd ~/git/docker/vscode;
-./extension-install.sh;
-cd -;
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/radiant-rstats/docker/master/vscode/extensions.txt -OutFile extensions.txt; 
+cat extensions.list |% { code --install-extension $_ --force};
+del extensions.txt;
 ```
 
-After running the setup command mentioned above, everything you need for python development will be available. To learn more about using VS Code to write python code see the links and comments below.
+To learn more about using VS Code to write python code see the links and comments below. The recommended process to install Python on your system is described in a [section below](#optional)
 
 - <a href="https://code.visualstudio.com/docs/python/python-tutorial#_create-a-python-hello-world-source-code-file" target="_blank">VS Code Python Tutorial</a>
 
@@ -218,7 +217,7 @@ Note that you can use `Shift+Enter` to run the current line in a Python Interact
 
 - <a href="https://code.visualstudio.com/docs/python/jupyter-support-py" target="_blank">Executing Python Code in VS Code</a>
 
-When writing and editing python code you will have access to "Intellisense" for auto-completions. Your code will also be auto-formatted every time you save it using the "black" formatter.
+When writing and editing python code you will have access to tools for auto-completion, etc. Your code will also be auto-formatted every time you save it using the "black" formatter.
 
 - <a href="https://code.visualstudio.com/docs/python/editing" target="_blank">Editing Python in VS Code Python</a>
 
@@ -312,13 +311,13 @@ After installing a module you will have to restart any running Python kernels to
 To install Python modules that **will** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
 
 ```
-conda init zsh
+conda init zsh;
 ```
 
 Then run the below. Here `myenv` if a new conda environment and `pyasn1` is a package to install. 
 
 ```
-cc myenv pyasn1
+cc myenv pyasn1;
 ```
 
 After refreshing your browser window showing JupyterLab you should see a new icon `myenv`. Click on this icon and run `import pyasn1`. If you do not see an error message you will have successfully created a new conda environment. You can now create your own conda environments with whatever packages you need.
@@ -326,7 +325,7 @@ After refreshing your browser window showing JupyterLab you should see a new ico
 You can also use the `cc` function to add more python package to a specific environment:
 
 ```
-cc myenv package_a package_b package_c
+cc myenv package_a package_b package_c;
 ```
 
 To list all available conda environments, use the `cl` command from a terminal in JuyterLab. To remove a conda environment use `cr myenv` where `myenv` is the environment you want to remove. To export an environment to share with others, use `ce myenv`. This will create a `myenv.yaml` file with information on all packages used in the `myenv` environment. To import a new environment from an existing `some_env.yaml` file use `ci some_env.yaml`. This will create a new environment called `some_env`.
@@ -387,7 +386,7 @@ For additional resources on developing docker images see the links below:
 
 ## Cleanup
 
-To remove any prior Rstudio sessions, and locally installed R-packages, press 8 (and Enter) in the launch menu. To remove locally installed Python packages press 9 (and Enter) in the launch menu.
+To remove any prior Rstudio sessions, and locally installed R-packages, press 8 (+ Enter) in the launch menu. To remove locally installed Python packages press 9 (+ Enter) in the launch menu.
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
@@ -424,12 +423,38 @@ Alternative "fixes" that have worked, are to restart docker by right-clicking on
 
 ## Optional
 
-You can install python3 and VS Code using **winget**. Open a Windows Terminal (PowerShell) and copy-and-paste the code below. Note: You may have to right-click to copy-and-paste the code into the terminal
+To install python3 from conda on macOS run the command below from PowerShell follow the prompts. The defaults are generally good.
 
-```bash
-winget install -e Python.Python;
-winget install -e Microsoft.VisualStudioCode;
 ```
+winget install -e --id Anaconda.Miniconda3
+```
+
+For more on minicoda visit the page below:
+
+<https://docs.conda.io/en/latest/miniconda.html>
+
+Once you have completed the install, open a new Anaconda Terminal from Windows terminal if you wan to install python packages. For example:
+
+```
+conda install -c conda-forge pandas ipykernel black
+```
+
+If you want to add the Miniconda terminal to the dropdown menu in the Windows Terminal, open Windows Terminal and press `Ctrl + ,`. Then press the settings icon to open up the settings.json file in VS Code. Scroll down until you see "profiles" and then add the below to the "list" section. Save the file, open a new Windows Terminal, and you should see the option to open a Miniconda terminal. You can see a full version of the settings.json file at the link below.
+
+<https://github.com/radiant-rstats/docker/blob/master/vscode/settings.json>
+
+```
+        ,{
+            // Miniconda Powershell prompt for local user install (non-admin install)
+            "guid": "{1caa0dad-35be-5f56-a812-afceeeaa1234}",
+            "name": "Miniconda",
+            "commandline": "%windir%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -ExecutionPolicy ByPass -NoExit -Command \"& '%USERPROFILE%\\Miniconda3\\shell\\condabin\\conda-hook.ps1' ; conda activate '%USERPROFILE%\\Miniconda3' \"",
+            "icon": "%USERPROFILE%\\Miniconda3\\Menu\\Iconleak-Atrous-PSConsole.ico",
+            "hidden": false,
+            "startingDirectory": "%HOMEPATH%"
+        }
+```
+
 
 If you want to make your terminal look nicer and add syntax highlighting, auto-completion, etc. consider following the install instructions linked below:
 
