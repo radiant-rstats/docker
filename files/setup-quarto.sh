@@ -15,9 +15,9 @@ if [ "$(uname -m)" != "aarch64" ]; then
     ln -fs /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin
 else
     CRAN=$CRAN_SOURCE
-    # git clone https://github.com/quarto-dev/quarto-cli
-    git clone https://github.com/quarto-dev/quarto-cli/commit/b064bec1efe7af4e3332c74f699686480baead12
+    git clone https://github.com/quarto-dev/quarto-cli
     cd quarto-cli
+    git checkout b064bec1efe7af4e3332c74f699686480baead12
     ./configure-linux.sh
 fi
 
