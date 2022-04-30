@@ -3,8 +3,8 @@ set -e
 
 if [ "$(uname -m)" != "aarch64" ]; then
   mamba install -y -c pytorch \
-    pytorch \
     cpuonly
+  mamba install -y -c conda-forge numpyro
 else
   mamba install -y astunparse numpy ninja pyyaml setuptools cmake cffi \
     typing_extensions future six requests dataclasses
@@ -17,4 +17,3 @@ else
   python setup.py install
 fi
 
-mamba install -y -c conda-forge numpyro
