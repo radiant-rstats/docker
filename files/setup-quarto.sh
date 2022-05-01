@@ -18,9 +18,10 @@ else
     CRAN=$CRAN_SOURCE
     # git clone https://github.com/quarto-dev/quarto-cli
     # cd quarto-cli
-    # # git checkout b064bec1efe7af4e3332c74f699686480baead12
+    # git checkout b064bec1efe7af4e3332c74f699686480baead12
     # ./configure-linux.sh
     # quarto check install
+    # see https://github.com/quarto-dev/quarto-cli/issues/781
 fi
 
 
