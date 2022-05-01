@@ -151,7 +151,7 @@ else
 
   chip=""
   if [[ "$ostype" == "Linux" ]]; then
-    ostype="Linux"
+    ostype="ChromeOS"
     if [[ "$archtype" == "aarch64" ]]; then
       chip="(ARM64)"
     else
@@ -441,7 +441,7 @@ else
         docker run --net ${NETWORK} -d \
           -p 0.0.0.0:${menu_arg}:8989 \
           -e TZ=${TIMEZONE} \
-          -v ${HOMEDIR}:/home/${NB_USER} $MNT \
+          -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
           ${IMAGE}:${IMAGE_VERSION}
         sleep 3
@@ -626,13 +626,21 @@ else
         done
       fi
     elif [ ${menu_exec} == 9 ]; then
-      echo "Removing locally installed Python packages"
-      rm -rf "${HOMEDIR}/.rsm-msba/bin"
-      rm -rf "${HOMEDIR}/.rsm-msba/lib"
-      rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter)
-      for i in ${rm_list}; do
-         rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
-      done
+      echo "-----------------------------------------------------"
+      echo "Remove locally installed Pyton packages (y/n)?"
+      echo "-----------------------------------------------------"
+      read cleanup
+      if [ "${cleanup}" == "y" ]; then
+        echo "Removing locally installed Python packages"
+        rm -rf "${HOMEDIR}/.rsm-msba/bin"
+        rm -rf "${HOMEDIR}/.rsm-msba/lib"
+        if [ -d "${HOMEDIR}/.rsm-msba/share" ]; then
+          rm_list=$(ls "${HOMEDIR}/.rsm-msba/share" | grep -v jupyter)
+          for i in ${rm_list}; do
+            rm -rf "${HOMEDIR}/.rsm-msba/share/${i}"
+          done
+        fi
+      fi
     elif [ "${menu_exec}" == 10 ]; then
       if [ "${menu_arg}" != "" ]; then
         selenium_port=${menu_arg}
