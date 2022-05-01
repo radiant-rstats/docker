@@ -2,8 +2,7 @@
 set -e
 
 if [ "$(uname -m)" != "aarch64" ]; then
-  mamba install -y -c pytorch \
-    cpuonly
+  mamba install -y torchvision cpuonly -c pytorch
   mamba install -y -c conda-forge numpyro
 else
   mamba install -y astunparse numpy ninja pyyaml setuptools cmake cffi \
@@ -15,5 +14,6 @@ else
   git submodule sync
   git submodule update --init --recursive --jobs 0 
   python setup.py install
+  mamba install -y torchvision cpuonly -c pytorch
 fi
 

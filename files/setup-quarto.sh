@@ -14,14 +14,15 @@ CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
 if [ "$(uname -m)" != "aarch64" ]; then
     ln -fs /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin
 else
+    # not available for aarch64 yet
     CRAN=$CRAN_SOURCE
-    git clone https://github.com/quarto-dev/quarto-cli
-    cd quarto-cli
-    git checkout b064bec1efe7af4e3332c74f699686480baead12
-    ./configure-linux.sh
+    # git clone https://github.com/quarto-dev/quarto-cli
+    # cd quarto-cli
+    # # git checkout b064bec1efe7af4e3332c74f699686480baead12
+    # ./configure-linux.sh
+    # quarto check install
 fi
 
-quarto check install
 
 # Get R packages
 /usr/local/bin/R -e "install.packages('quarto', repo='${CRAN}', Ncpus=${NCPUS})"
