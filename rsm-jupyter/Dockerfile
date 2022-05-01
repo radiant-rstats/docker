@@ -78,7 +78,7 @@ RUN chmod 755 setup.sh \
 RUN pip3 install jupyterlab-skip-traceback \
   lckr-jupyterlab-variableinspector
 
-ENV R_VERSION=4.1.2
+ENV R_VERSION=4.2.0
 ENV TERM=xterm
 ENV R_HOME=/usr/local/lib/R
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
