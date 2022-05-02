@@ -8,8 +8,6 @@
     "git.enableSmartCommit": true,
     "python.formatting.provider": "black",
     "jupyter.pylanceHandlesNotebooks": true,
-    "r.bracketedPaste": true,
-    "r.alwaysUseActiveTerminal": true,
     "terminal.external.osxExec": "iTerm.app",
     "terminal.integrated.env.osx": {
         "RSTUDIO_PANDOC": "/Applications/RStudio.app/Contents/MacOS/pandoc"
@@ -33,8 +31,10 @@
     "quarto.mathjax.theme": "dark",
     "jupyter.jupyterServerType": "local",
     "r.plot.useHttpgd": true,
+    "r.bracketedPaste": true,
     "r.rpath.linux": "/usr/local/bin/R",
     "r.rpath.mac": "/usr/local/bin/R",
-    "r.rterm.mac": "~/miniconda3/bin/radian",
+    "r.rterm.mac": "/opt/conda/bin/radian",
+    "r.alwaysUseActiveTerminal": true,
     "r.rterm.linux": "/opt/conda/bin/radian"
 }
