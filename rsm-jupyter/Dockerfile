@@ -172,9 +172,9 @@ ENV PYTHONUSERBASE=${PYBASE} \
   JUPYTER_PATH=${PYBASE}/share/jupyter \
   JUPYTER_DATA_DIR=${PYBASE}/share/jupyter \
   JUPYTER_CONFIG_DIR=${PYBASE}/jupyter \
-  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime
-
-ENV SHELL=/bin/zsh \
+  JUPYTER_RUNTIME_DIR=/tmp/jupyter/runtime \
+  RSTUDIO_WHICH_R=/usr/local/bin/R \ 
+  SHELL=/bin/zsh \
   ZDOTDIR=/home/${NB_USER}/.rsm-msba/zsh \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
 
