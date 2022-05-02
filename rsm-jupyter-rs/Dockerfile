@@ -48,7 +48,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   linearmodels \
   jupyterlab_widgets \
   jupytext \
-  jupyterlab_code_formatter \
+  jupyterlab_code_formatter==1.4.10 \
   black \
   isort \
   jupyterlab-git \
