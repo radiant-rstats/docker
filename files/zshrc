@@ -115,6 +115,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias c="clear"
+alias r="radian"
 # alias k="k -h"
 alias zc="vim ~/.rsm-msba/zsh/.zshrc"
 alias om="vim ~/.rsm-msba/zsh/.oh-my-zsh"

@@ -10,15 +10,11 @@
     "jupyter.pylanceHandlesNotebooks": true,
     "r.bracketedPaste": true,
     "r.alwaysUseActiveTerminal": true,
-    "r.rterm.linux": "~/miniconda3/bin/radian",
-    "r.rterm.mac": "~/miniconda3/bin/radian",
     "terminal.external.osxExec": "iTerm.app",
     "terminal.integrated.env.osx": {
         "RSTUDIO_PANDOC": "/Applications/RStudio.app/Contents/MacOS/pandoc"
     },
     "editor.formatOnSave": true,
-    "r.rpath.mac": "/usr/local/bin/R",
-    "python.condaPath": "~/miniconda3/bin/python",
     "python.experiments.enabled": false,
     "python.globalModuleInstallation": true,
     "python.testing.pytestEnabled": true,
@@ -35,5 +31,10 @@
     "editor.bracketPairColorization.enabled": true,
     "jupyter.alwaysScrollOnNewCell": true,
     "quarto.mathjax.theme": "dark",
-    "jupyter.jupyterServerType": "local"
+    "jupyter.jupyterServerType": "local",
+    "r.plot.useHttpgd": true,
+    "r.rpath.linux": "/usr/local/bin/R",
+    "r.rpath.mac": "/usr/local/bin/R",
+    "r.rterm.mac": "~/miniconda3/bin/radian",
+    "r.rterm.linux": "/opt/conda/bin/radian"
 }

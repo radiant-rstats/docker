@@ -158,6 +158,18 @@ else
   fi
 fi
 
+if [ ! -d "${HOMEDIR}/.rsm-msba/TinyTex" ]; then
+  echo "---------------------------------------------------"
+  echo "To create PDFs you will need to install a recent"
+  echo "distribution of TeX. We recommend using TinyTeX"
+  echo "Do you want to install TinyTex now (y/n)?"
+  echo "---------------------------------------------------"
+  read tinytex
+  if [ "${tinytex}" == "y" ]; then
+    /usr/local/bin/R -e "tinytex::install_tinytex(dir = '${HOMEDIR}/.rsm-msba/TinyTex')"
+  fi
+fi
+
 echo "-----------------------------------------------------------------------"
 echo "Setup complete"
 echo "-----------------------------------------------------------------------"

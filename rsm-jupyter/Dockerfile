@@ -76,7 +76,8 @@ RUN chmod 755 setup.sh \
 
 # not available through conda-forge
 RUN pip3 install jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector
+  lckr-jupyterlab-variableinspector \
+  radian
 
 ENV R_VERSION=4.2.0
 ENV TERM=xterm
