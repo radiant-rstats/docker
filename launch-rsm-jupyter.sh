@@ -448,23 +448,29 @@ else
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 2 ]; then
-      if [ "${menu_arg}" == "" ]; then
-        echo "Starting Rstudio in the default browser on localhost:8989/rstudio"
-        open_browser http://localhost:8989/rstudio
-      else
-        echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
-        { 
-          docker run --name ${LABEL} --net ${NETWORK} -d \
-            -p 127.0.0.1:${menu_arg}:8989 \
-            -e TZ=${TIMEZONE} \
-            -v "${HOMEDIR}":/home/${NB_USER} $MNT \
-            -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-            ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
-          rstudio_abend
-          sleep 4s
-        }
-        open_browser http://localhost:${menu_arg}/rstudio
-      fi
+      echo "------------------------------------------------------------------------"
+      echo "Rstudio Server is not yet available for M1 Macs"
+      echo "Press [ENTER] to continue"
+      echo "------------------------------------------------------------------------"
+      read rstudio_not_yet_available
+ 
+      # if [ "${menu_arg}" == "" ]; then
+      #   echo "Starting Rstudio in the default browser on localhost:8989/rstudio"
+      #   open_browser http://localhost:8989/rstudio
+      # else
+      #   echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
+      #   { 
+      #     docker run --name ${LABEL} --net ${NETWORK} -d \
+      #       -p 127.0.0.1:${menu_arg}:8989 \
+      #       -e TZ=${TIMEZONE} \
+      #       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
+      #       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
+      #       ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
+      #     rstudio_abend
+      #     sleep 4s
+      #   }
+      #   open_browser http://localhost:${menu_arg}/rstudio
+      # fi
     elif [ ${menu_exec} == 3 ]; then
       RPROF="${HOMEDIR}/.Rprofile"
       touch "${RPROF}"
