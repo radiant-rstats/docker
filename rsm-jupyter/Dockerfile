@@ -49,7 +49,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   linearmodels \
   jupyterlab_widgets \
   jupytext \
-  jupyterlab_code_formatter==1.4.10 \
+  jupyterlab_code_formatter \
   black \
   isort \
   jupyterlab-git \
@@ -85,10 +85,15 @@ ENV R_HOME=/usr/local/lib/R
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
-COPY files/install_R.sh install_R.sh
-RUN chmod 755 install_R.sh \
-  && ./install_R.sh \
-  && rm install_R.sh
+RUN wget -O R-latest.deb https://github.com/r-hub/R/releases/download/vnext/R-rstudio-ubuntu-2004-next_1_arm64.deb \
+  && apt-get -y install gdebi-core \
+  && gdebi R-latest.deb \
+  && rm R-latest.deb
+
+# COPY files/install_R.sh install_R.sh
+# RUN chmod 755 install_R.sh \
+#   && ./install_R.sh \
+#   && rm install_R.sh
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
