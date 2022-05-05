@@ -30,7 +30,11 @@ Check if there are any updates available for your system by clicking on the Star
 To activate WSL2, start PowerShell as an administrator and copy-and-paste the code below:
 
 ```bash
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart;
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+```
+Followed by:
+
+```
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart;
 ```
 
@@ -52,7 +56,7 @@ whoami
 Next, restart your computer and re-open PowerShell to check that Ubuntu is set as the default linux distribution:
 
 ```bash
-wsl --list
+wsl --list --online
 ```
 
 This should return the below:
@@ -69,7 +73,7 @@ If Ubuntu is not set as the default linux distribution, update the default setti
 
 ```bash
 wsl --setdefault Ubuntu-20.04
-wsl --list
+wsl --list --online
 ```
 
 **Step 3**: Install Windows Tools
