@@ -27,13 +27,13 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     && rm -rf /var/lib/apt/lists/*
 
 /usr/local/bin/R -e "install.packages(c('radiant', 'gitgadget', 'miniUI', 'webshot', 'tinytex', 'svglite'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('remotes', 'formatR', 'reticulate', 'renv'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "install.packages(c('devtools', 'remotes', 'formatR', 'reticulate', 'renv'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('httpgd', 'languageserver'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")' \
   -e 'remotes::install_github("vnijs/DiagrammeR", upgrade = "never")' \
   -e "remotes::install_github('vnijs/gitgadget')" \
-  -e "devtools::install_github('IRkernel/IRkernel')"  \
-  -e "devtools::install_github('IRkernel/IRdisplay')" \
+  -e "remotes::install_github('IRkernel/IRkernel')"  \
+  -e "remotes::install_github('IRkernel/IRdisplay')" \
   -e "IRkernel::installspec(user=FALSE)"
 
 rm -rf /tmp/downloaded_packages
