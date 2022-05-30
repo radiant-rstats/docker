@@ -45,6 +45,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   sqlalchemy \
   pyLDAvis \
   python-dotenv \
+  statsmodels \
   linearmodels \
   jupyterlab_widgets \
   jupytext \
@@ -149,8 +150,8 @@ RUN addgroup ${NB_USER} postgres \
   && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
   && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
 
-# oh-my-zsh (need to install wget again ...)
-RUN apt-get update -qq && apt-get -y --no-install-recommends install wget \
+# oh-my-zsh (need to install wget and curl again ...)
+RUN apt-get update -qq && apt-get -y --no-install-recommends install wget curl \
   && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
   && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions \
   && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
