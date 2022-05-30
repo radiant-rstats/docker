@@ -4,7 +4,7 @@ christian-kohler.path-intellisense
 ckolkman.vscode-postgres
 eamodio.gitlens
 GrapeCity.gc-excelviewer
-Ikuyadeu.r
+REditorSupport.r
 mechatroner.rainbow-csv
 medo64.render-crlf
 ms-azuretools.vscode-docker

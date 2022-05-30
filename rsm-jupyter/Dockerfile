@@ -1,5 +1,4 @@
-# __version__ 2.3.1
-FROM jupyter/pyspark-notebook
+FROM jupyter/pyspark-notebook:2022-05-29
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -30,11 +29,11 @@ RUN mamba install --quiet --yes -c conda-forge \
   sqlalchemy \
   psycopg2 \
   ipython-sql \
-  altair \
   beautifulsoup4 \
   scikit-learn \
   mlxtend \
   xgboost \
+  lightgbm \
   graphviz \
   lime \
   shap \
@@ -57,11 +56,9 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyter-server-proxy \
   jupyter-rsession-proxy \
   jupyterlab-system-monitor \
-  rpy2 \
   mamba_gator \
   flask \
   streamlit \
-  fastapi \
   pyrsm \
   bash_kernel \
   && python -m bash_kernel.install
@@ -75,7 +72,7 @@ RUN chmod 755 setup.sh \
   && fix-permissions "/home/${NB_USER}"
 
 # not available through conda-forge
-RUN pip3 install jupyterlab-skip-traceback \
+RUN pip install jupyterlab-skip-traceback \
   lckr-jupyterlab-variableinspector \
   radian
 
@@ -85,13 +82,15 @@ ENV R_HOME=/usr/local/lib/R
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
-COPY files/install_R.sh install_R.sh
-RUN chmod 755 install_R.sh \
-  && ./install_R.sh \
-  && rm install_R.sh
+COPY files/install-R.sh install-R.sh
+RUN chmod 755 install-R.sh \
+  && ./install-R.sh \
+  && rm install-R.sh
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
+
+RUN pip install rpy2
 
 COPY files/setup-tidyverse.sh setup.sh
 RUN chmod +x setup.sh \
@@ -177,6 +176,9 @@ ENV PYTHONUSERBASE=${PYBASE} \
   SHELL=/bin/zsh \
   ZDOTDIR=/home/${NB_USER}/.rsm-msba/zsh \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
+
+# issue with JupyterLab Code Formatter
+RUN echo "export LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/aarch64-linux-gnu:/usr/lib/jvm/java-11-openjdk-arm64/lib/server" >> /etc/zsh/zshrc
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
