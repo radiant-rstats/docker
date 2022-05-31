@@ -177,7 +177,7 @@ ENV PYTHONUSERBASE=${PYBASE} \
   SHELL=/bin/zsh \
   ZDOTDIR=/home/${NB_USER}/.rsm-msba/zsh \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
-  LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/aarch64-linux-gnu:/usr/lib/jvm/java-11-openjdk-arm64/lib/server
+  LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-11-openjdk/lib/server
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
