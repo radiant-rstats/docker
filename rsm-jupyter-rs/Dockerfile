@@ -176,10 +176,8 @@ ENV PYTHONUSERBASE=${PYBASE} \
   RSTUDIO_WHICH_R=/usr/local/bin/R \
   SHELL=/bin/zsh \
   ZDOTDIR=/home/${NB_USER}/.rsm-msba/zsh \
-  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
-
-# issue with JupyterLab Code Formatter
-RUN echo "export LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/aarch64-linux-gnu:/usr/lib/jvm/java-11-openjdk-arm64/lib/server" >> /etc/zsh/zshrc
+  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
+  LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/aarch64-linux-gnu:/usr/lib/jvm/java-11-openjdk-arm64/lib/server
 
 COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
 COPY images/logo200.svg /opt/shiny/logo.svg
