@@ -34,17 +34,18 @@ RUN groupadd wheel -g 11 && \
 
 ENV JUPYTER_ENABLE_LAB=1
 
-ARG OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS:-8}
-ENV OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS
-ARG OMP_NUM_THREADS=${OMP_NUM_THREADS:-8}
-ENV OMP_NUM_THREADS=$OMP_NUM_THREADS
+# The below sets up Rstudio to use the host username and not NB_USER
+# ARG OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS:-8}
+# ENV OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS
+# ARG OMP_NUM_THREADS=${OMP_NUM_THREADS:-8}
+# ENV OMP_NUM_THREADS=$OMP_NUM_THREADS
 
-RUN sudo echo "HOME=/home/${NB_USER}" >> /usr/local/lib/R/etc/Renviron.site \
-    && echo "USER=${NB_USER}" >> /usr/local/lib/R/etc/Renviron.site \
-    && echo "OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
-    && echo "OMP_NUM_THREADS=$OMP_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
-    && echo 'RhpcBLASctl::blas_set_num_threads(Sys.getenv("OPENBLAS_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site \
-    && echo 'RhpcBLASctl::omp_set_num_threads(Sys.getenv("OMP_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site
+# RUN sudo echo "HOME=/home/${NB_USER}" >> /usr/local/lib/R/etc/Renviron.site \
+#     && echo "USER=${NB_USER}" >> /usr/local/lib/R/etc/Renviron.site \
+#     && echo "OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
+#     && echo "OMP_NUM_THREADS=$OMP_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
+#     && echo 'RhpcBLASctl::blas_set_num_threads(Sys.getenv("OPENBLAS_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site \
+#     && echo 'RhpcBLASctl::omp_set_num_threads(Sys.getenv("OMP_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site
 
 # Copy the launch script into the image
 COPY launch-rsm-jupyterhub.sh /opt/launch.sh

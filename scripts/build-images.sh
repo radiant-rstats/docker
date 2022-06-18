@@ -87,10 +87,10 @@ else
   build
 
   ## new containers should be launched using the newest version of the container
-  # docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+  docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
 
   ## new containers should be launched using the newest version of the container
-  docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
+  #docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
 fi
 
 ## to connec on a server use
