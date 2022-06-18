@@ -34,6 +34,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   mlxtend \
   xgboost \
   lightgbm \
+  catboost \
   graphviz \
   lime \
   shap \
