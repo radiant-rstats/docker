@@ -42,6 +42,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   pydotplus \
   networkx \
   seaborn \
+  plotnine \
   selenium \
   sqlalchemy \
   pyLDAvis \
