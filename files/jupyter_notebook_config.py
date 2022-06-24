@@ -9,6 +9,7 @@ import stat
 
 c = get_config()
 c.NotebookApp.ip = "0.0.0.0"
+# c.NotebookApp.ip = "127.0.0.1" # seems to work fine locally, not sure about on the server
 c.NotebookApp.port = 8989
 c.NotebookApp.open_browser = False
 c.NotebookApp.allow_origin = "*"

@@ -1,4 +1,7 @@
-FROM jupyter/pyspark-notebook:2022-05-29
+# FROM jupyter/pyspark-notebook:2022-05-29
+# version latest posted on 6-22-2022
+FROM jupyter/pyspark-notebook@sha256:dcef7423820a4c6bfa21ed57b62a460f55bdb91e1ab1ab1d15d2d25de86ba032
+
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -78,6 +81,9 @@ RUN chmod 755 setup.sh \
 RUN pip install jupyterlab-skip-traceback \
   lckr-jupyterlab-variableinspector \
   radian
+
+# setting up pgweb
+RUN pip install git+https://github.com/illumidesk/jupyter-pgweb-proxy.git
 
 ENV R_VERSION=4.2.0
 ENV TERM=xterm
@@ -220,6 +226,16 @@ COPY files/setup.sh /usr/local/bin/setup
 RUN fix-permissions /etc/skel \
   && fix-permissions /usr/local/bin \
   && chmod 755 /usr/local/bin/*
+
+# get pgweb
+RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.11/pgweb_linux_amd64.zip \
+  && unzip pgweb.zip -d pgweb_dir \
+  && rm pgweb.zip \
+  && mv pgweb_dir/* /usr/local/bin/pgweb \
+  && rm -rf pgweb_dir
+
+# setting up pgweb
+RUN pip install git+https://github.com/illumidesk/jupyter-pgweb-proxy.git
 
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"

@@ -1,4 +1,6 @@
-FROM jupyter/pyspark-notebook:2022-05-29
+# FROM jupyter/pyspark-notebook:2022-05-29
+# version latest posted on 6-22-2022
+FROM jupyter/pyspark-notebook@sha256:6e69d7d254cfdb3209ded27425315f45c9796b79fd5be99b3e98efc7dd5dfd36
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -220,6 +222,16 @@ COPY files/setup.sh /usr/local/bin/setup
 RUN fix-permissions /etc/skel \
   && fix-permissions /usr/local/bin \
   && chmod 755 /usr/local/bin/*
+
+# get pgweb
+RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.11/pgweb_linux_arm64_v7.zip \
+  && unzip pgweb.zip -d pgweb_dir \
+  && rm pgweb.zip \
+  && mv pgweb_dir/* /usr/local/bin/pgweb \
+  && rm -rf pgweb_dir
+
+# setting up pgweb
+RUN pip install git+https://github.com/illumidesk/jupyter-pgweb-proxy.git
 
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
