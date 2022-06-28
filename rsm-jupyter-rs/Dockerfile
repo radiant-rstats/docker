@@ -66,6 +66,9 @@ RUN mamba install --quiet --yes -c conda-forge \
   flask \
   streamlit \
   pyrsm \
+  xlrd \
+  openpyxl \
+  pyarrow \
   bash_kernel \
   && python -m bash_kernel.install
 
