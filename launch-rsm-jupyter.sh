@@ -68,15 +68,17 @@ else
   EXT="sh"
 fi
 
+BOUNDARY="------------------------------------------------------------------------"
+
 ## check the return code - if curl can connect something is already running
 curl -S localhost:8989 2>/dev/null
 ret_code=$?
 if [ "$ret_code" == 0 ]; then
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   echo "A launch script may already be running. To close the new session and"
   echo "continue with the previous session press q + enter. To continue with"
   echo "the new session and stop the previous session, press enter"
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   read contd
   if [ "${contd}" == "q" ]; then
     exit 1
@@ -89,7 +91,7 @@ if [ "$ARG_SHOW" != "show" ]; then
 fi
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   echo "Docker is not installed. Download and install Docker from"
   if [[ "$ostype" == "Linux" ]]; then
     is_wsl=$(which explorer.exe)
@@ -103,7 +105,7 @@ if [ "${has_docker}" == "" ]; then
   else
     echo "https://hub.docker.com/editions/community/docker-ce-desktop-windows"
   fi
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   read
 else
 
@@ -122,29 +124,30 @@ else
         sleep 2
       done
     else
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Docker is not running. Please start docker on your computer"
       echo "When docker has finished starting up press [ENTER] to continue"
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       read
     fi
   }
 
   ## kill running containers
-  running=$(docker ps -q)
+  running=$(docker ps -a --format {{.Names}} | grep ${LABEL} -w)
   if [ "${running}" != "" ]; then
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "Stopping running containers"
-    echo "-----------------------------------------------------------------------"
-    docker stop ${running}
+    echo $BOUNDARY
+    docker stop ${LABEL}
     docker container rm ${LABEL} 2>/dev/null
   fi
 
+  ## download image if not available
   available=$(docker images -q ${IMAGE}:${IMAGE_VERSION})
   if [ "${available}" == "" ]; then
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "Downloading the ${LABEL}:${IMAGE_VERSION} computing environment"
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     docker logout
     docker pull ${IMAGE}:${IMAGE_VERSION}
   fi
@@ -235,10 +238,10 @@ else
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
-      echo "---------------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Do you want to access git, ssh, and R configuration in this directory (y/n)"
       echo "${ARG_HOME}"
-      echo "---------------------------------------------------------------------------"
+      echo $BOUNDARY
       read copy_config
     else
       copy_config="y"
@@ -285,10 +288,10 @@ else
     fi
 
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Copying Rstudio and JupyterLab settings to:"
       echo "${ARG_HOME}"
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
 
       {
         which rsync 2>/dev/null
@@ -352,12 +355,12 @@ else
     docker network create ${NETWORK} 
   fi
 
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   echo "Starting the ${LABEL} computing environment on ${ostype} ${chip}"
   echo "Version   : ${DOCKERHUB_VERSION}"
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "Base dir. : ${HOMEDIR}"
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
 
   has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
   if [ "${has_volume}" == "" ]; then
@@ -371,11 +374,11 @@ else
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
       ${IMAGE}:${IMAGE_VERSION}
   } || {
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "It seems there was a problem starting the docker container. Please"
     echo "report the issue and add a screenshot of any messages shown on screen."
     echo "Press [ENTER] to continue"
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     read
   }
 
@@ -402,15 +405,15 @@ else
   rstudio_abend
 
   show_service () {
-    echo "------------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "Starting the ${LABEL} computing environment on ${ostype} ${chip}"
     echo "Version   : ${DOCKERHUB_VERSION}"
     echo "Build date: ${BUILD_DATE//T*/}"
     echo "Base dir. : ${HOMEDIR}"
     echo "Cont. name: ${LABEL}"
-    echo "------------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "Press (1) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (2) to show Rstudio, followed by [ENTER]:"
+    echo "Press (2) to show Rstudio (NOT AVAILABLE FOR M1 OR M2):"
     echo "Press (3) to show Radiant, followed by [ENTER]:"
     echo "Press (4) to show GitGadget, followed by [ENTER]:"
     echo "Press (5) to show a (ZSH) terminal, followed by [ENTER]:"
@@ -422,12 +425,20 @@ else
     echo "Press (h) to show help in the terminal and browser, followed by [ENTER]:"
     echo "Press (c) to commit changes, followed by [ENTER]:"
     echo "Press (q) to stop the docker process, followed by [ENTER]:"
-    echo "------------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "Note: To start, e.g., Jupyter on a different port type 1 8991 [ENTER]"
     echo "Note: To start a specific container version type, e.g., 6 ${DOCKERHUB_VERSION} [ENTER]"
     echo "Note: To commit changes to the container type, e.g., c myversion [ENTER]"
-    echo "------------------------------------------------------------------------"
+    echo $BOUNDARY
     read menu_exec menu_arg
+
+    # function to shut down running rsm containers
+    clean_rsm_containers () {
+      rsm_containers=$(docker ps -a --format {{.Names}} | grep "${LABEL}" | tr '\n' ' ')
+      eval "docker stop $rsm_containers"
+      eval "docker container rm $rsm_containers"
+      docker network rm ${NETWORK}
+    }
 
     if [ -z "${menu_exec}" ]; then
       echo "Invalid entry. Resetting launch menu ..."
@@ -438,7 +449,7 @@ else
         open_browser http://localhost:8989/lab
       else
         echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
-        docker run --net ${NETWORK} -d \
+        docker run --net ${NETWORK} --name "${LABEL}-${menu_arg}" -d \
           -p 127.0.0.1:${menu_arg}:8989 \
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
@@ -448,10 +459,10 @@ else
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 2 ]; then
-      echo "------------------------------------------------------------------------"
-      echo "Rstudio Server is not yet available for M1 Macs"
+      echo $BOUNDARY
+      echo "Rstudio Server is not yet available for M1 or M2 Macs"
       echo "Press [ENTER] to continue"
-      echo "------------------------------------------------------------------------"
+      echo $BOUNDARY
       read rstudio_not_yet_available
  
       # if [ "${menu_arg}" == "" ]; then
@@ -460,7 +471,7 @@ else
       # else
       #   echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
       #   { 
-      #     docker run --name ${LABEL} --net ${NETWORK} -d \
+      #     docker run --name "${LABEL}_${menu_arg}" --net ${NETWORK} -d \
       #       -p 127.0.0.1:${menu_arg}:8989 \
       #       -e TZ=${TIMEZONE} \
       #       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
@@ -508,13 +519,12 @@ else
         open_browser http://localhost:8181
       else
         echo "Starting Radiant in the default browser on port ${menu_arg}"
-        docker run --net ${NETWORK} -d \
-          --name ${LABEL}-${menuarg} \
+        docker run --net ${NETWORK} --name "${LABEL}-${menu_arg}" -d \
           -p 127.0.0.1:${menu_arg}:8181 \
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
-        docker exec -d ${LABEL}-${menuarg} /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
+        docker exec -d "${LABEL}-${menu_arg}" /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
         sleep 3
         open_browser http://localhost:${menu_arg} 
       fi
@@ -526,41 +536,40 @@ else
         open_browser http://localhost:8282
       else
         echo "Starting GitGadget in the default browser on port ${menu_arg}"
-        docker run --net ${NETWORK} -d \
-          --name ${LABEL}-${menuarg} \
+        docker run --net ${NETWORK} --name "${LABEL}-${menu_arg}" -d \
           -p 127.0.0.1:${menu_arg}:8282 \
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
-        docker exec -d ${LABEL}-${menuarg} /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=${menuarg}, launch.browser=FALSE)"
+        docker exec -d "${LABEL}-${menu_arg}" /usr/local/bin/R -e "gitgadget:::gitgadget(host='0.0.0.0', port=${menu_arg}, launch.browser=FALSE)"
         sleep 2
         open_browser http://localhost:${menu_arg} 
       fi
     elif [ ${menu_exec} == 5 ]; then
-      running=$(docker ps -q | awk '{print $1}')
-      if [ "${running}" != "" ]; then
-        if [ "$ARG_SHOW" != "show" ]; then
-          clear
-        fi
-        echo "------------------------------------------------------------------------------"
-        echo "ZSH terminal for session ${running} of ${IMAGE}:${IMAGE_VERSION}"
-        echo "Type 'exit' to return to the launch menu"
-        echo "------------------------------------------------------------------------------"
-        echo ""
-        ## git bash has issues with tty
-        if [[ "$ostype" == "Windows" ]]; then
-          winpty docker exec -it --user ${NB_USER} ${LABEL} sh
-        else
-          docker exec -it --user ${NB_USER} ${LABEL} /bin/zsh
-        fi
+      if [ "$ARG_SHOW" != "show" ]; then
+        clear
+      fi
+      if [ "${menu_arg}" == "" ]; then
+        zsh_lab="${LABEL}"
+      else
+        zsh_lab="${LABEL}-${menu_arg}"
+      fi
+
+      echo $BOUNDARY
+      echo "ZSH terminal for container ${zsh_lab} of ${IMAGE}:${IMAGE_VERSION}"
+      echo "Type 'exit' to return to the launch menu"
+      echo $BOUNDARY
+      echo ""
+      ## git bash has issues with tty
+      if [[ "$ostype" == "Windows" ]]; then
+        winpty docker exec -it --user ${NB_USER} ${zsh_lab} sh
+      else
+        docker exec -it --user ${NB_USER} ${zsh_lab} /bin/zsh
       fi
     elif [ ${menu_exec} == 6 ]; then
-      running=$(docker ps -q)
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Updating the ${LABEL} computing environment"
-      docker stop ${running}
-      docker rm ${running}
-      docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
+      clean_rsm_containers
 
       if [ "${menu_arg}" == "" ]; then
         echo "Pulling down tag \"latest\""
@@ -570,7 +579,7 @@ else
         VERSION=${menu_arg}
       fi
       docker pull ${IMAGE}:${VERSION}
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       CMD="$0"
       if [ "${menu_arg}" != "" ]; then
         CMD="$CMD -t ${menu_arg}"
@@ -582,11 +591,7 @@ else
       exit 1
     elif [ ${menu_exec} == 7 ]; then
       echo "Updating ${IMAGE} launch script"
-      running=$(docker ps -q)
-      docker stop ${running}
-      docker rm ${running}
-      docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
-      docker container rm ${LABEL}
+      clean_rsm_containers
       if [ -d "${HOMEDIR}/Desktop" ]; then
         SCRIPT_DOWNLOAD="${HOMEDIR}/Desktop"
       else
@@ -605,9 +610,9 @@ else
       fi
       exit 1
     elif [ ${menu_exec} == 8 ]; then
-      echo "-----------------------------------------------------"
+      echo $BOUNDARY
       echo "Clean up Rstudio sessions (y/n)?"
-      echo "-----------------------------------------------------"
+      echo $BOUNDARY
       read cleanup
 
       if [ "${cleanup}" == "y" ]; then
@@ -617,9 +622,9 @@ else
         rm -rf "${HOMEDIR}/.rstudio/projects_settings"
       fi
 
-      echo "-----------------------------------------------------"
+      echo $BOUNDARY
       echo "Remove locally installed R packages (y/n)?"
-      echo "-----------------------------------------------------"
+      echo $BOUNDARY
       read cleanup
 
       if [ "${cleanup}" == "y" ]; then
@@ -632,9 +637,9 @@ else
         done
       fi
     elif [ ${menu_exec} == 9 ]; then
-      echo "-----------------------------------------------------"
+      echo $BOUNDARY
       echo "Remove locally installed Pyton packages (y/n)?"
-      echo "-----------------------------------------------------"
+      echo $BOUNDARY
       read cleanup
       if [ "${cleanup}" == "y" ]; then
         echo "Removing locally installed Python packages"
@@ -654,22 +659,22 @@ else
         selenium_port=4444
       fi
       CPORT=$(curl -s localhost:${selenium_port} 2>/dev/null)
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       selenium_nr=($(docker ps -a | awk "/selenium_/" | awk '{print $1}'))
       selenium_nr=${#selenium_nr[@]}
       if [ "$CPORT" != "" ]; then
         echo "A Selenium container may already be running on port ${selenium_port}"
         selenium_nr=$((${selenium_nr}-1))
       else
-        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p ${selenium_port}:4444 selenium/standalone-firefox
+        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 127.0.0.1:${selenium_port}:4444 --platform linux/arm64 seleniumarm/standalone-firefox
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
       echo "${LABEL} container and ip: 127.0.0.1, port: ${selenium_port} from the host OS"
       echo "Press any key to continue"
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       read continue
     elif [ "${menu_exec}" == "h" ]; then
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Showing help for your OS in the default browser"
       echo "Showing help to start the docker container from the command line"
       echo ""
@@ -690,19 +695,19 @@ else
       fi
       $0 --help
       echo "Press any key to continue"
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       read continue
     elif [ "${menu_exec}" == "c" ]; then
       container_id=($(docker ps -a | awk "/${ID}\/${LABEL}/" | awk '{print $1}'))
       if [ "${menu_arg}" == "" ]; then
-        echo "-----------------------------------------------------------------------"
+        echo $BOUNDARY
         echo "Are you sure you want to over-write the current image (y/n)?"
-        echo "-----------------------------------------------------------------------"
+        echo $BOUNDARY
         read menu_commit
         if [ "${menu_commit}" == "y" ]; then
-          echo "-----------------------------------------------------------------------"
+          echo $BOUNDARY
           echo "Committing changes to ${IMAGE}"
-          echo "-----------------------------------------------------------------------"
+          echo $BOUNDARY
           docker commit ${container_id[0]} ${IMAGE}:${IMAGE_VERSION}
         else 
           return 1
@@ -721,19 +726,19 @@ else
         sed_fun "s+^ID\=\".*\"+ID\=\"${ID}\"+" "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
         sed_fun "s+^LABEL\=\".*\"+LABEL\=\"${menu_arg}\"+" "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
 
-        echo "-----------------------------------------------------------------------"
+        echo $BOUNDARY
         echo "Committing changes to ${ID}/${menu_arg}"
         echo "Use the following script to launch:"
         echo "${SCRIPT_COPY}/launch-${menu_arg}.${EXT}"
-        echo "-----------------------------------------------------------------------"
+        echo $BOUNDARY
         IMAGE_DHUB=${ID}/${menu_arg}
       fi
 
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Do you want to push this image to Docker hub (y/n)?"
       echo "Note: This requires an account at https://hub.docker.com/"
       echo "Note: To specify a version tag type, e.g., y 1.0.0"
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       read menu_push menu_tag
       if [ "${menu_push}" == "y" ]; then
         {
@@ -751,33 +756,36 @@ else
             docker push ${IMAGE_DHUB}:${menu_tag}
           fi
         } || {
-          echo "-----------------------------------------------------------------------"
+          echo $BOUNDARY
           echo "It seems there was a problem with login or pushing to Dockerhub"
           echo "Please make sure you have an account at https://hub.docker.com/"
-          echo "-----------------------------------------------------------------------"
+          echo $BOUNDARY
           sleep 3s
         }
       fi
     elif [ "${menu_exec}" == "q" ]; then
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Stopping the ${LABEL} computing environment and cleaning up as needed"
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
+
+      suspend_sessions () {
+        active_session=$(docker exec -t $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}' 2>/dev/null)
+        if [ "${active_session}" != "" ] && [ "${active_session}" != "OCI" ]; then
+          docker exec -t $1 rstudio-server suspend-session ${active_session} 2>/dev/null
+        fi
+      }
 
       running=$(docker ps -q)
-      if [ "${running}" != "" ]; then
-        echo "Stopping running containers ..."
-        suspend_sessions () {
-          active_session=$(docker exec -t $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}' 2>/dev/null)
-          if [ "${active_session}" != "" ] && [ "${active_session}" != "OCI" ]; then
-            docker exec -t $1 rstudio-server suspend-session ${active_session} 2>/dev/null
-          fi
-        }
-        for index in ${running}; do
-          suspend_sessions $index
-        done
-        docker stop ${running}
-        docker network rm $(docker network ls | awk "/ ${NETWORK} /" | awk '{print $1}')
-        docker container rm ${LABEL}
+      for index in ${running}; do
+        suspend_sessions $index
+      done
+
+      clean_rsm_containers
+
+      selenium_containers=$(docker ps -a --format {{.Names}} | grep 'selenium' | tr '\n' ' ')
+      if [ "${selenium_containers}" != "" ]; then
+        eval "docker stop $selenium_containers"
+        eval "docker container rm $selenium_containers"
       fi
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')
@@ -786,11 +794,11 @@ else
         docker rmi -f ${imgs}
       fi
 
-      procs=$(docker ps -a -q --no-trunc)
-      if [ "${procs}" != "" ]; then
-        echo "Stopping docker processes ..."
-        docker rm ${procs}
-      fi
+      # procs=$(docker ps -a -q --no-trunc)
+      # if [ "${procs}" != "" ]; then
+      #   echo "Stopping docker processes ..."
+      #   docker rm ${procs}
+      # fi
     else
       echo "Invalid entry. Resetting launch menu ..."
     fi

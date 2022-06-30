@@ -18,7 +18,7 @@ script_home () {
 function launch_usage() {
   echo "Usage: $0 [-t tag (version)] [-d directory]"
   echo "  -t, --tag         Docker image tag (version) to use"
-  echo "  -d, --directory   Base directory to use"
+  echo "  -d, --directory   Project directory to use"
   echo "  -v, --volume      Volume to mount as home directory"
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
@@ -54,9 +54,9 @@ trap finish EXIT
 ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
-CODE_WORKINGDIR="/home/${NB_USER}/git"
 ID="vnijs"
 LABEL="rsm-jupyterhub"
+NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
 # Choose your timezone https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 TIMEZONE="America/Los_Angeles"
@@ -78,15 +78,17 @@ else
   EXT="sh"
 fi
 
-## check if script is already running and using port 8787
-curl -S localhost:8765 2>/dev/null
+BOUNDARY="------------------------------------------------------------------------"
+
+## check the return code - if curl can connect something is already running
+curl -S localhost:8989 2>/dev/null
 ret_code=$?
 if [ "$ret_code" == 0 ]; then
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   echo "A launch script may already be running. To close the new session and"
   echo "continue with the previous session press q + enter. To continue with"
   echo "the new session and stop the previous session, press enter"
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   read contd
   if [ "${contd}" == "q" ]; then
     exit 1
@@ -99,16 +101,21 @@ if [ "$ARG_SHOW" != "show" ]; then
 fi
 has_docker=$(which docker)
 if [ "${has_docker}" == "" ]; then
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   echo "Docker is not installed. Download and install Docker from"
   if [[ "$ostype" == "Linux" ]]; then
-    echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
+    is_wsl=$(which explorer.exe)
+    if [[ "$is_wsl" != "" ]]; then
+      echo "https://hub.docker.com/editions/community/docker-ce-desktop-windows"
+    else
+      echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
+    fi
   elif [[ "$ostype" == "Darwin" ]]; then
-    echo "https://download.docker.com/mac/stable/Docker.dmg"
+    echo "https://hub.docker.com/editions/community/docker-ce-desktop-mac"
   else
-    echo "https://store.docker.com/editions/community/docker-ce-desktop-windows"
+    echo "https://hub.docker.com/editions/community/docker-ce-desktop-windows"
   fi
-  echo "-----------------------------------------------------------------------"
+  echo $BOUNDARY
   read
 else
 
@@ -117,38 +124,40 @@ else
   {
     docker ps -q 2>/dev/null
   } || {
-   if [[ "$ostype" == "Darwin" ]]; then
+    if [[ "$ostype" == "Darwin" ]]; then
       ## from https://stackoverflow.com/a/48843074/1974918
       # On Mac OS this would be the terminal command to launch Docker
       open /Applications/Docker.app
       #Wait until Docker daemon is running and has completed initialisation
       while (! docker stats --no-stream 2>/dev/null); do
         echo "Please wait while Docker starts up ..."
-        sleep 1
+        sleep 2
       done
     else
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Docker is not running. Please start docker on your computer"
       echo "When docker has finished starting up press [ENTER] to continue"
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       read
     fi
   }
 
   ## kill running containers
-  running=$(docker ps -q)
+  running=$(docker ps -a --format {{.Names}} | grep ${LABEL} -w)
   if [ "${running}" != "" ]; then
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "Stopping running containers"
-    echo "-----------------------------------------------------------------------"
-    docker stop ${running}
+    echo $BOUNDARY
+    docker stop ${LABEL}
+    docker container rm ${LABEL} 2>/dev/null
   fi
 
+  ## download image if not available
   available=$(docker images -q ${IMAGE}:${IMAGE_VERSION})
   if [ "${available}" == "" ]; then
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "Downloading the ${LABEL}:${IMAGE_VERSION} computing environment"
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     docker logout
     docker pull ${IMAGE}:${IMAGE_VERSION}
   fi
@@ -225,32 +234,27 @@ else
     if [ "${ARG_HOME}" != "" ] && [ ! -d "${ARG_HOME}" ]; then
       echo "The directory ${ARG_HOME} does not yet exist."
       echo "Please create the directory and restart the launch script"
-      sleep 5s
+      sleep 5
       exit 1
     fi
     if [ "$ARG_DIR" != "" ]; then
       if [ ! -d "${ARG_DIR}" ]; then
         echo "The directory ${ARG_DIR} does not yet exist."
         echo "Please create the directory and restart the launch script"
-        sleep 5s
+        sleep 5
         exit 1
       fi
       ARG_HOME="$(cd "$ARG_DIR"; pwd)"
       ## https://unix.stackexchange.com/questions/295991/sed-error-1-not-defined-in-the-re-under-os-x
       ARG_HOME="$(echo "$ARG_HOME" | sed -E "s|^/([A-z]{1})/|\1:/|")"
 
-      echo "---------------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Do you want to access git, ssh, and R configuration in this directory (y/n)"
       echo "${ARG_HOME}"
-      echo "---------------------------------------------------------------------------"
+      echo $BOUNDARY
       read copy_config
     else
       copy_config="y"
-    fi
-
-    # setup working directory for vscode
-    if [ "${HOMEDIR}" != "${ARG_HOME}" ]; then
-      CODE_WORKINGDIR="/home/${NB_USER}"
     fi
 
     if [ "${copy_config}" == "y" ]; then
@@ -294,10 +298,10 @@ else
     fi
 
     if [ -d "${HOMEDIR}/.rstudio" ] && [ ! -d "${ARG_HOME}/.rstudio" ]; then
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
       echo "Copying Rstudio and JupyterLab settings to:"
       echo "${ARG_HOME}"
-      echo "-----------------------------------------------------------------------"
+      echo $BOUNDARY
 
       {
         which rsync 2>/dev/null
@@ -326,7 +330,7 @@ else
         rm -rf "${ARG_HOME}/.rsm-msba/R"
         rm -rf "${ARG_HOME}/.rsm-msba/bin"
         rm -rf "${ARG_HOME}/.rsm-msba/lib"
-        rm_list=$(ls "${ARG_HOME}/.rsm-msba/share" | grep -v jupyter | grep -v code-server)
+        rm_list=$(ls "${ARG_HOME}/.rsm-msba/share" | grep -v jupyter)
         for i in ${rm_list}; do
            rm -rf "${ARG_HOME}/.rsm-msba/share/${i}"
         done
@@ -379,38 +383,39 @@ else
   fi
 
   BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
-  has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
-  if [ "${has_volume}" == "" ]; then
-    docker volume create --name=pg_data
+
+  ## based on https://stackoverflow.com/a/52852871/1974918
+  has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
+  if [ "${has_network}" == "" ]; then
+    docker network create ${NETWORK} 
   fi
 
-  echo "------------------------------------------------------------------------"
+  echo $BOUNDARY
   echo "Starting the ${LABEL} computing environment on ${ostype} ${chip}"
   echo "Version   : ${DOCKERHUB_VERSION}"
   echo "Build date: ${BUILD_DATE//T*/}"
   echo "Base dir. : ${HOMEDIR}"
   echo "Cont. name: ${LABEL}"
-  {
+  echo $BOUNDARY
 
-      # -e TZ=${TIMEZONE} \
-    docker run --rm -p 127.0.0.1:8888:8888 -p 127.0.0.1:8765:8765 \
+  has_volume=$(docker volume ls | awk "/pg_data/" | awk '{print $2}')
+  if [ "${has_volume}" == "" ]; then
+    docker volume create --name=pg_data
+  fi
+  {
+    docker run --name ${LABEL} --net ${NETWORK} --rm \
+      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 \
       -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 \
+      -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
       ${IMAGE}:${IMAGE_VERSION}
-
-    docker run --rm -p 127.0.0.1:8888:8888 -p 127.0.0.1:8765:8765 \
-      -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 \
-      -v ~:/home/jovan \
-      -v pg_data:/var/lib/postgresql/14/main \
-      vnijs/rsm-jupyterhub
-
   } || {
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     echo "It seems there was a problem starting the docker container. Please"
     echo "report the issue and add a screenshot of any messages shown on screen."
     echo "Press [ENTER] to continue"
-    echo "-----------------------------------------------------------------------"
+    echo $BOUNDARY
     read
   }
 
