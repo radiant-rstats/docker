@@ -25,7 +25,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   vifm \
   wget
 
-ENV CMDSTAN_VERSION="2.29.0"
+ENV CMDSTAN_VERSION="2.30.0"
 RUN mamba install --quiet --yes -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
@@ -243,7 +243,7 @@ RUN pip install git+https://github.com/illumidesk/jupyter-pgweb-proxy.git
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
 
-EXPOSE 8181 8282 8765 8989
+EXPOSE 8181 8282 8765 8989 8501
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root

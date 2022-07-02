@@ -8,7 +8,7 @@ docker login
 # curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-arm64" > ~/.docker/cli-plugins/docker-buildx
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
-DOCKERHUB_VERSION=2.4.2
+DOCKERHUB_VERSION=2.4.3
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
 UPLOAD="YES"
@@ -71,12 +71,17 @@ launcher () {
   fi
 }
 
+# LABEL=rsm-shiny
+# build
+
+# exit
+
 if [ "$(uname -m)" = "arm64" ]; then
   LABEL=rsm-jupyter
-  build
+  build NO
 else
   LABEL=rsm-jupyter-rs
-  build
+  build NO
 
   ## replace 127.0.0.1 by 0.0.0.0 for ChromeOS
   cp -p ./launch-rsm-jupyter-rs.sh ./launch-rsm-jupyter-rs-chromeos.sh

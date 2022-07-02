@@ -404,7 +404,7 @@ else
   fi
   {
     docker run --name ${LABEL} --net ${NETWORK} --rm \
-      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 \
+      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8501:8501 \
       -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \

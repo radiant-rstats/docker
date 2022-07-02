@@ -368,7 +368,7 @@ else
   fi
   {
     docker run --name ${LABEL} --net ${NETWORK} -d \
-      -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 -p 0.0.0.0:8181:8181 -p 0.0.0.0:8282:8282 \
+      -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 -p 0.0.0.0:8181:8181 -p 0.0.0.0:8282:8282 -p 0.0.0.0:8501:8501 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
