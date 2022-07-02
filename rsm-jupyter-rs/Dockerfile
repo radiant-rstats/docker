@@ -69,6 +69,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   xlrd \
   openpyxl \
   pyarrow \
+  python-duckdb \
   bash_kernel \
   && python -m bash_kernel.install
 
