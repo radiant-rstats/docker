@@ -78,10 +78,10 @@ launcher () {
 
 if [ "$(uname -m)" = "arm64" ]; then
   LABEL=rsm-jupyter
-  build NO
+  build
 else
   LABEL=rsm-jupyter-rs
-  build NO
+  build
 
   ## replace 127.0.0.1 by 0.0.0.0 for ChromeOS
   cp -p ./launch-rsm-jupyter-rs.sh ./launch-rsm-jupyter-rs-chromeos.sh
