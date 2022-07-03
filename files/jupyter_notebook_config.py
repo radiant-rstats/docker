@@ -35,7 +35,7 @@ def _gitgadget_command(port):
     return [
         "/usr/local/bin/R",
         "-e",
-        f"gitgadget::gitgadget(host='0.0.0.0', port={port}, launch.browser=FALSE, jupyter=TRUE)",
+        f"options(gitgadget.jupyter=TRUE); gitgadget::gitgadget(host='0.0.0.0', port={port}, launch.browser=FALSE)",
     ]
 
 
