@@ -108,6 +108,7 @@ RUN chmod +x setup.sh \
 
 # packages need for radiant a reproducible analysis
 COPY files/setup-radiant.sh setup.sh
+COPY files/setup-radiant.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
