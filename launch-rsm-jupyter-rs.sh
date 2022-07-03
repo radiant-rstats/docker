@@ -472,7 +472,7 @@ else
             -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
             ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
           rstudio_abend
-          sleep 4s
+          sleep 4
         }
         open_browser http://localhost:${menu_arg}/rstudio
       fi
@@ -509,7 +509,7 @@ else
       if [ "${menu_arg}" == "" ]; then
         echo "Starting Radiant in the default browser on port 8181"
         docker exec -d ${LABEL} /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
-        sleep 3
+        sleep 4
         open_browser http://localhost:8181
       else
         echo "Starting Radiant in the default browser on port ${menu_arg}"
@@ -519,7 +519,7 @@ else
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
         docker exec -d "${LABEL}-${menu_arg}" /usr/local/bin/R -e "radiant.data:::launch(package='radiant', host='0.0.0.0', port=8181, run=FALSE)"
-        sleep 3
+        sleep 4
         open_browser http://localhost:${menu_arg} 
       fi
     elif [ ${menu_exec} == 4 ]; then

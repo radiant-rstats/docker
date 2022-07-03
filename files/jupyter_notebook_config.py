@@ -27,7 +27,7 @@ def _radiant_command(port):
     return [
         "/usr/local/bin/R",
         "-e",
-        f"radiant.data::launch(package='radiant', host='0.0.0.0', port={port}, run=FALSE)",
+        f"options(radiant.jupyter=TRUE); radiant.data::launch(package='radiant', host='0.0.0.0', port={port}, run=FALSE)",
     ]
 
 
@@ -35,7 +35,7 @@ def _gitgadget_command(port):
     return [
         "/usr/local/bin/R",
         "-e",
-        f"gitgadget::gitgadget(host='0.0.0.0', port={port}, launch.browser=FALSE)",
+        f"gitgadget::gitgadget(host='0.0.0.0', port={port}, launch.browser=FALSE, jupyter=TRUE)",
     ]
 
 
