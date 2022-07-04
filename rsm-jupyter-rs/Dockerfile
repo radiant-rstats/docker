@@ -23,7 +23,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   zsh \
   vim \
   vifm \
-  wget
+  wget \
+  rsync
 
 ENV CMDSTAN_VERSION="2.30.0"
 RUN mamba install --quiet --yes -c conda-forge \
