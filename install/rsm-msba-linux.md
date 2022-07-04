@@ -185,11 +185,18 @@ docker volume rm pg_data
 To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into the Rstudio console.
 
 ```
-options(repos = c(
-  RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest",
-  RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest",
-  CRAN = "https://cloud.r-project.org"
-))
+if (Sys.info()["sysname"] == "Linux") {
+  options(repos = c(
+    RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest",
+    RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest",
+    CRAN = "https://cloud.r-project.org"
+  ))
+} else {
+  options(repos = c(
+    RSM = "https://radiant-rstats.github.io/minicran",
+    CRAN = "https://cloud.r-project.org"
+  ))
+}
 ```
 
 This will be done for you automatically if you run the `setup` command from a terminal inside the docker container. To install R packages that will persist after restarting the docker container, enter code like the below in Rstudio and follow any prompts. After doing this once, you can use `install.packages("some-other-package")` in the future.
@@ -238,6 +245,31 @@ cat /usr/local/bin/cr;
 cat /usr/local/bin/ce;
 cat /usr/local/bin/ci;
 ```
+### Switching conda environments in the terminal
+
+If you want to change the conda environment used in a terminal you can use the command below:
+
+```bash
+conda activate myenv
+```
+
+To deactivate a conda environment use:
+
+```bash
+conda deactivate
+```
+
+When leaving a custom environment you will most likely want to switch to the `base` environment so instead of `conda deactivate` you can also use:
+
+```bash
+conda activate base
+```
+
+Tips to avoid the python problems depicted in the comic linked below:
+- Stick with one tool to create environments (e.g., conda)
+- Don't go overboard with the number conda environments you create
+
+<a href="https://xkcd.com/1987/" target="_blank">https://xkcd.com/1987/</a>
 
 ### Removing locally installed packages
 

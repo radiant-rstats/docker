@@ -343,6 +343,32 @@ cat /usr/local/bin/cr;
 cat /usr/local/bin/ce;
 cat /usr/local/bin/ci;
 ```
+### Switching conda environments in the terminal
+
+If you want to change the conda environment used in a terminal you can use the command below:
+
+```bash
+conda activate myenv
+```
+
+To deactivate a conda environment use:
+
+```bash
+conda deactivate
+```
+
+When leaving a custom environment you will most likely want to switch to the `base` environment so instead of `conda deactivate` you can also use:
+
+```bash
+conda activate base
+```
+
+Tips to avoid the python problems depicted in the comic linked below:
+- Stick with one tool to create environments (e.g., conda)
+- Don't go overboard with the number conda environments you create
+
+<a href="https://xkcd.com/1987/" target="_blank">https://xkcd.com/1987/</a>
+
 ### Removing locally installed packages
 
 To remove locally installed R packages press 8 (and Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 9 (and Enter) in the launch menu
