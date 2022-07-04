@@ -50,7 +50,7 @@ def formatBytes(bytes):
         return "0B"
     suffixes = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
     index = int(math.floor(math.log(bytes, 1024)))
-    formatted = round(float(bytes) / (1024 ** index), 2)
+    formatted = round(float(bytes) / (1024**index), 2)
     return f"{formatted} {suffixes[index]}"
 
 
@@ -74,7 +74,9 @@ argsParser = argparse.ArgumentParser(
     description="Python script to download dropbox public folders as zip files. Adapted from: https://github.com/numbBrain/dropbox-downloader"
 )
 groupArgsParser = argsParser.add_mutually_exclusive_group()
-groupArgsParser.add_argument("--links", type=str, nargs="+", const=None, help="Read links from standard input")
+groupArgsParser.add_argument(
+    "--links", type=str, nargs="+", const=None, help="Read links from standard input"
+)
 groupArgsParser.add_argument(
     "--read",
     metavar="file.txt",
@@ -82,12 +84,18 @@ groupArgsParser.add_argument(
     const=None,
     help="Read links from file",
 )
-argsParser.add_argument("--dest", type=str, default=default_dest(), help="Specify download directory")
 argsParser.add_argument(
-    "--retain_zip", action="store_true", help="Don't delete zipfiles after unzipping when --unzip is used",
+    "--dest", type=str, default=default_dest(), help="Specify download directory"
 )
 argsParser.add_argument(
-    "unnamed", nargs=argparse.REMAINDER, help="Unnamed arguments are assumed to be links",
+    "--retain_zip",
+    action="store_true",
+    help="Don't delete zipfiles after unzipping when --unzip is used",
+)
+argsParser.add_argument(
+    "unnamed",
+    nargs=argparse.REMAINDER,
+    help="Unnamed arguments are assumed to be links",
 )
 arguments = argsParser.parse_args()  # use this to access supplied arguments
 
@@ -132,7 +140,12 @@ for suppliedLink in suppliedLinks:
     with requests.Session() as session:
         session.mount("https://", HTTPAdapter(max_retries=RETRIES))
         try:
-            zipFileResp = session.get(zippedDownloadURL, headers={"User-Agent": WGET_AGENT}, timeout=60, stream=True,)
+            zipFileResp = session.get(
+                zippedDownloadURL,
+                headers={"User-Agent": WGET_AGENT},
+                timeout=60,
+                stream=True,
+            )
             startTime = time.time()
             zipFileResp.raise_for_status()
 
@@ -151,17 +164,21 @@ for suppliedLink in suppliedLinks:
         zipFilename = (
             zipFileResp.headers["content-disposition"].split(";")[1].split('"')[1]
         )  # get filename from response headers
-        zipFileSize = float(zipFileResp.headers["Original-Content-Length"])  # get file size from response headers
+        zipFileSize = float(
+            zipFileResp.headers["Original-Content-Length"]
+        )  # get file size from response headers
         formattedZipFileSize = formatBytes(zipFileSize)
         filePath = os.path.join(destination, zipFilename)  # path to store the file
-        tempFilePath = os.path.join(destination, f"{zipFilename}.part")  # path to store file with temporary filename
+        tempFilePath = os.path.join(
+            destination, f"{zipFilename}.part"
+        )  # path to store file with temporary filename
 
         print(f"[file] Downloading file : {zipFilename}")
 
         currentSize = 0
         try:
             with open(tempFilePath, "wb") as zipFile:  # write file to disk
-                for chunk in zipFileResp.iter_content(chunk_size=2 ** 20):
+                for chunk in zipFileResp.iter_content(chunk_size=2**20):
                     if chunk:
                         currentSize += len(chunk)
                         zipFile.write(chunk)
@@ -176,7 +193,9 @@ for suppliedLink in suppliedLinks:
                             flush=True,
                         )
         except KeyboardInterrupt:
-            print(f"[downloaded] {progress}% of {formattedZipFileSize} at {speed} ps ETA {eta}")
+            print(
+                f"[downloaded] {progress}% of {formattedZipFileSize} at {speed} ps ETA {eta}"
+            )
             print("[ERROR]: Interrupted by user")
             exit()
 
@@ -184,7 +203,9 @@ for suppliedLink in suppliedLinks:
         if os.stat(tempFilePath).st_size == zipFileSize:
             os.rename(tempFilePath, filePath)
             print(ERASE, end="\r", flush=True)
-            print(f"[downloaded] 100% of {formattedZipFileSize} in {calcElaspedTime(startTime, time.time())}")
+            print(
+                f"[downloaded] 100% of {formattedZipFileSize} in {calcElaspedTime(startTime, time.time())}"
+            )
 
     with zipfile.ZipFile(filePath, "r") as zipFile:
         directoryName = zipFilename.replace(".zip", "")
@@ -195,4 +216,3 @@ for suppliedLink in suppliedLinks:
         # check if zip files should be deleted
         if not arguments.retain_zip:
             os.remove(filePath)
-
