@@ -25,8 +25,6 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   wget \
   rsync
 
-
-
 ENV CMDSTAN_VERSION="2.30.0"
 RUN mamba install --quiet --yes -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
@@ -64,7 +62,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyter-server-proxy \
   jupyter-rsession-proxy \
   jupyterlab-system-monitor \
-  mamba_gator \
   flask \
   streamlit \
   pyrsm \

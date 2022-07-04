@@ -63,7 +63,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyter-server-proxy \
   jupyter-rsession-proxy \
   jupyterlab-system-monitor \
-  mamba_gator \
   flask \
   streamlit \
   pyrsm \
