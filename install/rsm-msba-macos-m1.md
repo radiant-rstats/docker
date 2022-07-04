@@ -75,11 +75,21 @@ setup
 
 Press `q` and `Enter`, when prompted and then run the code below in the same terminal:
 
-```
+```bash
 source ~/.rsm-msba/zsh/.zshrc;
 ```
 
-> Note: At this time Rstudio is not available for docker running on M1 macs.
+> Note: At this time Rstudio is not available for docker running on M1 or M2 macs.
+
+To get access to Rstudio on M1 (or M2) macs, download and install the latest version of R from <a href="https://cran.r-project.org/bin/macosx/big-sur-arm64/base/R-release.pkg" target="_blank">https://cran.r-project.org/bin/macosx/big-sur-arm64/base/R-release.pkg</a>. Double click on the .pkg file to install and follow the prompts. After R has been installed, open R, copy-and-paste the command below into R, and press return. Accept all default settings during the install process:
+
+```R
+source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/install-msba-m1.R")
+```
+
+The video linked below walks you through the install process.
+
+<https://youtu.be/f5h2oDBsnJI>
 
 ## Updating the RSM-JUPYTER computing environment on macOS M1
 
