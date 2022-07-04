@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh -i
 
 function conda_remove() {
     conda remove -y -n $1 --all

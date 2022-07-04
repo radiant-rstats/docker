@@ -1,4 +1,4 @@
-#!/bin/zsh -i
+#!/usr/bin/env zsh -i
 
 function conda_create_kernel() {
     if { conda env list | grep "$1"; } >/dev/null 2>&1; then

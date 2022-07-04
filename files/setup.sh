@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
 function docker_setup() {
   echo "Usage: $0 [-d]"

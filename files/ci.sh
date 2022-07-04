@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh -i
 
 function conda_import_environment() {
     env=$(basename -- "$1")

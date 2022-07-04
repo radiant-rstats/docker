@@ -1,7 +1,6 @@
-#!/bin/zsh
+#!/usr/bin/env zsh -i
 
 if [ "$1" != "" ] && [ "$2" != "" ]; then
-    # conda_export_environment $1 $2
     fprn="conda env export --name $1 > '$2'"
     eval $fprn
     echo "\nEnvironment file saved to $2"
