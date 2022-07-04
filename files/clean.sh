@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh -i
+#!/usr/bin/env zsh
 
 ## script to run from jupyter lab to clean up settings
 ## and remove locally install R and python packages

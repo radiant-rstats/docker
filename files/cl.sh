@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh -i
+#!/usr/bin/env zsh
 
 CMD="conda info --envs"
 echo "$CMD\n"

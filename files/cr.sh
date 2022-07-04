@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh -i
+#!/usr/bin/env zsh
 
 if [ "$1" != "" ]; then
     echo "Please confirm that you want to remove the conda environment '$1'"

@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh -i
+#!/usr/bin/env zsh
 
 function conda_import_environment() {
     if [ "$2" != "" ]; then
