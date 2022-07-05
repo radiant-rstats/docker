@@ -78,7 +78,7 @@ else
   EXT="sh"
 fi
 
-BOUNDARY="------------------------------------------------------------------------"
+BOUNDARY="---------------------------------------------------------------------------"
 
 ## check the return code - if curl can connect something is already running
 curl -S localhost:8989 2>/dev/null
