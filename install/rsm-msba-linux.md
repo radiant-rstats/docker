@@ -330,7 +330,6 @@ rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-jupyter-rs;
-sudo -- bash -c 'rm -f /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-jupyter-rs.sh /usr/local/bin/launch; chmod 755 /usr/local/bin/launch';
 ```
 
 ## Getting help
