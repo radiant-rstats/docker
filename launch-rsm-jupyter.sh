@@ -23,10 +23,12 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.3.0 --directory ~/project_1"
+  echo "Example: $0 --tag 2.4.3 --volume ~/project_1"
   echo ""
   exit 1
 }
+
+LAUNCH_ARGS="${@:1}"
 
 ## parse command-line arguments
 while [[ "$#" > 0 ]]; do case $1 in
@@ -597,7 +599,7 @@ else
       else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
-      if [ $ostype == "Darwin" ]; then
+      if [ $ostype == "macOS" ]; then
         cd ~/git/docker 2>/dev/null;
         git pull 2>/dev/null;
         cd -
@@ -606,10 +608,10 @@ else
         # sudo ln -s ~/git/docker/launch-${LABEL}-rs.sh /usr/local/bin/launch 2>/dev/null;
         curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-${LABEL}.sh -o "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
-        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}" "${@:1}"
+        "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         exit 1
       else
-        echo "launch-rsm-jupyter.sh used on $ostype. This script is only intended for macOS with M1 or higher\n"
+        echo "launch-rsm-jupyter.sh used on $ostype. This script is only intended for macOS with M1 or higher"
         sleep 5
       fi
     elif [ ${menu_exec} == 8 ]; then

@@ -23,10 +23,12 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.3.0 --directory ~/project_1"
+  echo "Example: $0 --tag 2.4.3 --volume ~/project_1"
   echo ""
   exit 1
 }
+
+LAUNCH_ARGS="${@:1}"
 
 ## parse command-line arguments
 while [[ "$#" > 0 ]]; do case $1 in
@@ -595,11 +597,10 @@ else
         cd ~/git/docker 2>/dev/null;
         git pull 2>/dev/null;
         cd -;
-        chmod 755 ~/git/docker/launch-${LABEL}-rs.sh 2>/dev/null;
-        # echo "Provide your password. Note that the cursor will not move when you enter the password.\n"
-        # sudo ln -s ~/git/docker/launch-${LABEL}-rs.sh /usr/local/bin/launch 2>/dev/null;
-        ~/git/docker/launch-${LABEL}.sh "${@:1}";
+        chmod 755 ~/git/docker/launch-${LABEL}.sh 2>/dev/null;
+        ~/git/docker/launch-${LABEL}.sh "${LAUNCH_ARGS}"
         exit 1
+        sleep 10
       } || {
         echo "Updating the launch script failed\n"
         echo "Copy the code below and run it after stopping the docker container with q + Enter\n"
