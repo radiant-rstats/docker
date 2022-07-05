@@ -598,7 +598,7 @@ else
         git pull 2>/dev/null;
         cd -;
         chmod 755 ~/git/docker/launch-${LABEL}.sh 2>/dev/null;
-        ~/git/docker/launch-${LABEL}.sh "${LAUNCH_ARGS}"
+        eval "~/git/docker/launch-${LABEL}.sh ${LAUNCH_ARGS}"
         exit 1
         sleep 10
       } || {

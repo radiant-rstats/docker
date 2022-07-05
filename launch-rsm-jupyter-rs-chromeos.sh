@@ -590,7 +590,7 @@ else
           cd ~/git/docker 2>/dev/null;
           git pull 2>/dev/null;
           chmod 755 ~/git/docker/launch-${LABEL}-chromeos.sh 2>/dev/null;
-          ~/git/docker/launch-${LABEL}-chromeos.sh "${LAUNCH_ARGS}"
+          eval "~/git/docker/launch-${LABEL}-chromeos.sh ${LAUNCH_ARGS}"
           exit 1
         } || {
           echo "Updating the launch script failed\n"
