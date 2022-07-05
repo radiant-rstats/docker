@@ -597,47 +597,10 @@ else
       else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
-      if [ $ostype == "ChromeOS" ]; then
-        # sudo -- bash -c "rm -f /usr/local/bin/launch; curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-$LABEL-chromeos.sh -o /usr/local/bin/launch; chmod 755 /usr/local/bin/launch";
-        # /usr/local/bin/launch "${@:1}"
-        {
-          cd ~/git/docker 2>/dev/null;
-          git pull 2>/dev/null;
-          chmod 755 ~/git/docker/launch-${LABEL}-rs-chromeos.sh 2>/dev/null;
-          # echo "Provide your password. Note that the cursor will not move when you enter the password.\n"
-          # sudo ln -s ~/git/docker/launch-${LABEL}-rs-chromeos.sh /usr/local/bin/launch 2>/dev/null;
-          ~/git/docker/launch-${LABEL}-rs-chromeos.sh "${@:1}";
-          exit 1
-        } || {
-          echo "Updating the launch script failed\n"
-          echo "Copy the code below and run it after stopping the docker container with q + Enter\n"
-          echo "rm -rf ~/git/docker;\n"
-          echo "git clone https://github.com/radiant-rstats/docker.git ~/git/docker;\n"
-          echo "\nPress any key to continue"
-          read any_to_continue
-        }
-      elif [ $ostype == "WSL2" ]; then
-        # sudo -- bash -c "rm -f /usr/local/bin/launch; curl https://raw.githubusercontent.com/radiant-rstats/docker/master/launch-$LABEL.sh -o /usr/local/bin/launch; chmod 755 /usr/local/bin/launch";
-        # /usr/local/bin/launch "${@:1}"
-        {
-          cd ~/git/docker 2>/dev/null;
-          git pull 2>/dev/null;
-          chmod 755 ~/git/docker/launch-${LABEL}-rs.sh 2>/dev/null;
-          # echo "Provide your password. Note that the cursor will not move when you enter the password.\n"
-          # sudo ln -s ~/git/docker/launch-${LABEL}-rs.sh /usr/local/bin/launch 2>/dev/null;
-          ~/git/docker/launch-${LABEL}-rs.sh "${@:1}";
-          exit 1
-        } || {
-          echo "Updating the launch script failed\n"
-          echo "Copy the code below and run it after stopping the docker container with q + Enter\n"
-          echo "rm -rf ~/git/docker;\n"
-          echo "git clone https://github.com/radiant-rstats/docker.git ~/git/docker;\n"
-          echo "\nPress any key to continue"
-          read any_to_continue
-        }
-      else
+      if [ $ostype == "Darwin" ]; then
         cd ~/git/docker 2>/dev/null;
         git pull 2>/dev/null;
+        cd -
         chmod 755 ~/git/docker/launch-${LABEL}.sh 2>/dev/null;
         # echo "Provide your password. Note that the cursor will not move when you enter the password.\n"
         # sudo ln -s ~/git/docker/launch-${LABEL}-rs.sh /usr/local/bin/launch 2>/dev/null;
@@ -645,6 +608,9 @@ else
         chmod 755 "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}" "${@:1}"
         exit 1
+      else
+        echo "launch-rsm-jupyter.sh used on $ostype. This script is only intended for macOS with M1 or higher\n"
+        sleep 5
       fi
     elif [ ${menu_exec} == 8 ]; then
       echo $BOUNDARY
