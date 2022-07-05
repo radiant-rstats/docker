@@ -118,10 +118,9 @@ Now Ubuntu should be up to date and ready to accept commands to clone the docker
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-sudo ln -s ~/git/docker/launch-rsm-jupyter-rs.sh /usr/local/bin/launch;
 ```
 
-After running the commands above you will be able to start the docker container by typing `launch` from a terminal. 
+After running the commands above you will be able to start the docker container by typing `~/git/docker/launch-rsm-jupyter-rs.sh -v ~` from an Ubuntu terminal.
 
 Next, determine your Windows username by running the code below from an Ubuntu terminal:
 
@@ -158,7 +157,7 @@ The created and launched script will finalize the installation of the computing 
 If you do **not** have a file called `launch-rsm-jupyter-rs.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open notepad, copy-and-paste the code, and save the file as `launch-rsm-jupyter-rs.bat`. Save the files as type `.bat`. After saving, double-click on the icon on your desktop to get started.
 
 ```bash
-Powershell.exe -command "wsl ~/git/docker/launch-rsm-jupyter-rs.sh -v ~"
+wt.exe wsl.exe ~/git/docker/launch-rsm-jupyter-rs.sh -v ~
 pause
 ```
 **Step 5**: Check that you can launch Rstudio and Jupyter
@@ -198,7 +197,7 @@ If for some reason you are having trouble updating either the container or the l
 docker pull vnijs/rsm-jupyter-rs;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-sudo -- sh -c 'rm -rf /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-jupyter-rs.sh /usr/local/bin/launch;'
+~/git/docker/launch-rsm-jupyter-rs.sh -v ~;
 ```
 
 ## Using VS Code
@@ -428,7 +427,6 @@ rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
 docker pull vnijs/rsm-jupyter-rs;
-sudo -- bash -c 'rm -f /usr/local/bin/launch; ln -s ~/git/docker/launch-rsm-jupyter-rs.sh /usr/local/bin/launch; chmod 755 /usr/local/bin/launch';
 ```
 
 ## Getting help
