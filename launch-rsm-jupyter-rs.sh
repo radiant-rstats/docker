@@ -600,7 +600,7 @@ else
           chmod 755 ~/git/docker/launch-${LABEL}-rs-chromeos.sh 2>/dev/null;
           # echo "Provide your password. Note that the cursor will not move when you enter the password.\n"
           # sudo ln -s ~/git/docker/launch-${LABEL}-rs-chromeos.sh /usr/local/bin/launch 2>/dev/null;
-          ~/git/docker/launch-${LABEL}-rs-chromeos.sh "${@:1}" 2>/dev/null;
+          ~/git/docker/launch-${LABEL}-rs-chromeos.sh "${@:1}";
           exit 1
         } || {
           echo "Updating the launch script failed\n"
@@ -619,7 +619,7 @@ else
           chmod 755 ~/git/docker/launch-${LABEL}-rs.sh 2>/dev/null;
           # echo "Provide your password. Note that the cursor will not move when you enter the password.\n"
           # sudo ln -s ~/git/docker/launch-${LABEL}-rs.sh /usr/local/bin/launch 2>/dev/null;
-          ~/git/docker/launch-${LABEL}-rs.sh "${@:1}" 2>/dev/null;
+          ~/git/docker/launch-${LABEL}-rs.sh "${@:1}";
           exit 1
         } || {
           echo "Updating the launch script failed\n"
