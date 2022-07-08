@@ -79,6 +79,7 @@ sed_fun '/^options(radiant.ace_autoComplete/d' "${RPROF}"
 sed_fun '/^options(radiant.ace_theme/d' "${RPROF}"
 sed_fun '/^#.*List.*specific.*directories.*you.*want.*to.*use.*with.*radiant/d' "${RPROF}"
 sed_fun '/^#.*options(radiant\.sf_volumes.*=.*c(Git.*=.*"\/home\/jovyan\/git"))/d' "${RPROF}"
+echo ''
 echo 'options(radiant.maxRequestSize = -1)' >> "${RPROF}"
 echo 'options(radiant.report = TRUE)' >> "${RPROF}"
 echo 'options(radiant.shinyFiles = TRUE)' >> "${RPROF}"
