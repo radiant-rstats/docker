@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 function docker_setup() {
   echo "Usage: $0 [-d]"
@@ -124,7 +124,7 @@ else
   echo "-----------------------------------------------------"
   read overwrite
   if [ "${overwrite}" == "y" ]; then
-    \cp /etc/skel/.p10k.zsh "${HOMEDIR}/.rsm-msba/zsh/.p10k.zsh"
+    cp /etc/skel/.p10k.zsh "${HOMEDIR}/.rsm-msba/zsh/.p10k.zsh"
   fi
 fi
 
@@ -138,7 +138,7 @@ else
   echo "-----------------------------------------------------"
   read overwrite
   if [ "${overwrite}" == "y" ]; then
-    \cp -r /etc/skel/.oh-my-zsh "${HOMEDIR}/.rsm-msba/zsh/"
+    cp -r /etc/skel/.oh-my-zsh "${HOMEDIR}/.rsm-msba/zsh/"
   fi
 fi
 
@@ -153,7 +153,7 @@ else
   echo "---------------------------------------------------"
   read overwrite
   if [ "${overwrite}" == "y" ]; then
-    \cp /etc/skel/.zshrc "${HOMEDIR}/.rsm-msba/zsh/.zshrc"
+    cp /etc/skel/.zshrc "${HOMEDIR}/.rsm-msba/zsh/.zshrc"
     source ~/.rsm-msba/zsh/.zshrc 2>/dev/null
   fi
 fi
