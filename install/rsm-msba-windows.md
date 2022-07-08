@@ -234,7 +234,13 @@ You can even open and run Jupyter Notebooks in VS Code
 
 ## Connecting to postgresql
 
-The rsm-jupyter-rs container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql from Rstudio using the code below:
+The rsm-jupyter-rs container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
+
+```bash
+postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker
+```
+
+You can access postgresql from R using the code below:
 
 ```r
 ## connect to database
