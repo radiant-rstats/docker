@@ -1,5 +1,4 @@
-# FROM vnijs/rsm-jupyter
-FROM vnijs/rsm-jupyter-rs
+FROM vnijs/rsm-jupyter-rs:latest
 
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -29,10 +28,13 @@ RUN groupadd wheel -g 11 && \
     chmod g+w /etc/passwd && \
     fix-permissions $HOME && \
     fix-permissions /opt && \
+    mkdir /var/log/rstudio-server && \
     fix-permissions /var/log/rstudio-server && \
     fix-permissions /var/lib/rstudio-server
 
 ENV JUPYTER_ENABLE_LAB=1
+
+#NOTE: check env setting in jupyterhub_config()
 
 # The below sets up Rstudio to use the host username and not NB_USER
 # ARG OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS:-8}
@@ -47,8 +49,12 @@ ENV JUPYTER_ENABLE_LAB=1
 #     && echo 'RhpcBLASctl::blas_set_num_threads(Sys.getenv("OPENBLAS_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site \
 #     && echo 'RhpcBLASctl::omp_set_num_threads(Sys.getenv("OMP_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site
 
+RUN conda remove -y --force jupyterlab_code_formatter 
+# \ && pip install jupyterlab_code_formatter
+
 # Copy the launch script into the image
 COPY launch-rsm-jupyterhub.sh /opt/launch.sh
+COPY files/setup-jupyterhub.sh /usr/local/bin/setup
 RUN fix-permissions /usr/local/bin \
     && chmod 755 /usr/local/bin/* \
     && chmod 755 /opt/launch.sh

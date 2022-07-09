@@ -434,6 +434,14 @@ else
     echo $BOUNDARY
     read menu_exec menu_arg
 
+    # function to shut down running rsm containers
+    clean_rsm_containers () {
+      rsm_containers=$(docker ps -a --format {{.Names}} | grep "${LABEL}" | tr '\n' ' ')
+      eval "docker stop $rsm_containers"
+      eval "docker container rm $rsm_containers"
+      docker network rm ${NETWORK}
+    }
+
     if [ -z "${menu_exec}" ]; then
       echo "Invalid entry. Resetting launch menu ..."
     elif [ ${menu_exec} == 1 ]; then
@@ -585,24 +593,22 @@ else
       else
         SCRIPT_DOWNLOAD="${HOMEDIR}"
       fi
-      if [ $ostype == "ChromeOS" ]; then
-        {
-          cd ~/git/docker 2>/dev/null;
-          git pull 2>/dev/null;
-          chmod 755 ~/git/docker/launch-${LABEL}-chromeos.sh 2>/dev/null;
-          eval "~/git/docker/launch-${LABEL}-chromeos.sh ${LAUNCH_ARGS}"
-          exit 1
-        } || {
-          echo "Updating the launch script failed\n"
-          echo "Copy the code below and run it after stopping the docker container with q + Enter\n"
-          echo "rm -rf ~/git/docker;\n"
-          echo "git clone https://github.com/radiant-rstats/docker.git ~/git/docker;\n"
-          echo "\nPress any key to continue"
-          read any_to_continue
-        }
-      else
-        echo "launch-rsm-jupyter-rs-chromeos.sh used on $ostype. This script is only intended for ChromeOS computers\n"
-      fi
+      {
+        cd ~/git/docker 2>/dev/null;
+        git pull 2>/dev/null;
+        cd -;
+        chmod 755 ~/git/docker/launch-${LABEL}.sh 2>/dev/null;
+        eval "~/git/docker/launch-${LABEL}.sh ${LAUNCH_ARGS}"
+        exit 1
+        sleep 10
+      } || {
+        echo "Updating the launch script failed\n"
+        echo "Copy the code below and run it after stopping the docker container with q + Enter\n"
+        echo "rm -rf ~/git/docker;\n"
+        echo "git clone https://github.com/radiant-rstats/docker.git ~/git/docker;\n"
+        echo "\nPress any key to continue"
+        read any_to_continue
+      }
     elif [ ${menu_exec} == 8 ]; then
       echo $BOUNDARY
       echo "Clean up Rstudio sessions (y/n)?"
@@ -660,7 +666,7 @@ else
         echo "A Selenium container may already be running on port ${selenium_port}"
         selenium_nr=$((${selenium_nr}-1))
       else
-        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 0.0.0.0${selenium_port}:4444 selenium/standalone-firefox
+        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 0.0.0.0:${selenium_port}:4444 selenium/standalone-firefox
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
       echo "${LABEL} container and ip: 0.0.0.0, port: ${selenium_port} from the host OS"

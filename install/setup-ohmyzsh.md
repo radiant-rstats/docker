@@ -1,9 +1,5 @@
 ## Setup oh-my-zsh
 
-Start by setting `ZSH` as the default shell instead of `BASH`. On macOS, Linux, and Windows (WSL2) use the command below from a terminal and answer "y" if prompted.
-
-`chsh -s $(which zsh)`
-
 ## Install Meslo Nerd Font
 
 Follow the linked instructions to install the <a href="https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k" target="_blank">Meslo Nerd Font</a>. 
@@ -40,9 +36,13 @@ To use fonts and icons in a iTerm2 terminal on macOS with ZSH, type `p10k config
 
 ## Setup OhMyZsh
 
-Run the commands below to install some useful plugins and the `powerlevel10k` theme:
+> Note: If you are using the RSM-JUPYTER or RSM-JUPYTER-RS computing platform and have run the `setup` command you can skip this step
 
-> Note: If you are using the RSM-JUPYTER or RSM-JUPTER-RS computing platform and have run the `setup` command you can skip this step
+Start by setting `ZSH` as the default shell instead of `BASH`. On macOS, Linux, and Windows (WSL2) use the command below from a terminal and answer "y" if prompted.
+
+`chsh -s $(which zsh)`
+
+Run the commands below to install some useful plugins and the `powerlevel10k` theme:
 
 ```
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
