@@ -26,7 +26,7 @@ fi
 
 
 # Get R packages
-/usr/local/bin/R -e "install.packages('quarto', repo='${CRAN}', Ncpus=${NCPUS})"
+R -e "install.packages('quarto', repo='${CRAN}', Ncpus=${NCPUS})"
 
 # Clean up
 rm -rf /var/lib/apt/lists/*

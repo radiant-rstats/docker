@@ -71,6 +71,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   pyarrow \
   python-duckdb \
   bash_kernel \
+  r_base \
   && python -m bash_kernel.install
 
 COPY files/setup-ml-frameworks.sh setup.sh
@@ -91,17 +92,18 @@ RUN pip install git+https://github.com/illumidesk/jupyter-pgweb-proxy.git
 
 ENV R_VERSION=4.2.0
 ENV TERM=xterm
-ENV R_HOME=/usr/local/lib/R
+# ENV R_HOME=/usr/local/lib/R
+ENV R_HOME=/opt/conda/
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
-COPY files/install-R.sh install-R.sh
-RUN chmod 755 install-R.sh \
-  && ./install-R.sh \
-  && rm install-R.sh
+# COPY files/install-R.sh install-R.sh
+# RUN chmod 755 install-R.sh \
+#   && ./install-R.sh \
+#   && rm install-R.sh
 
-RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
-RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
+# RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
+# RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 
 RUN pip install rpy2
 

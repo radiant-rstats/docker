@@ -26,7 +26,7 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-/usr/local/bin/R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
+R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('radiant', 'gitgadget', 'miniUI', 'webshot', 'tinytex', 'svglite'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('devtools', 'remotes', 'formatR', 'styler', 'reticulate', 'renv'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('arrow', 'duckdb', 'fs', 'janitor', 'palmerpenguins', 'stringr', 'tictoc'), repo='${CRAN}', Ncpus=${NCPUS})" \

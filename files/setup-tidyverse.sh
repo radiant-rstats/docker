@@ -33,7 +33,7 @@ apt-get update -qq \
     unixodbc-dev \
     && rm -rf /var/lib/apt/lists/*
 
-/usr/local/bin/R -e "install.packages(c('tidyverse', 'devtools', 'rmarkdown', 'vroom', 'gert', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})" \
+R -e "install.packages(c('tidyverse', 'devtools', 'rmarkdown', 'vroom', 'gert', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('dbplyr', 'DBI', 'dtplyr', 'RPostgres', 'RSQLite', 'fst'), repo='${CRAN}', Ncpus=${NCPUS})"
 
 ## a bridge to far? -- brings in another 60 packages
