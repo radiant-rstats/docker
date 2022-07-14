@@ -67,6 +67,7 @@ plugins=(
   zsh-completions
   zsh-autosuggestions
   zsh-syntax-highlighting
+  autojump
   k
 )
 ```

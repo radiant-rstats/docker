@@ -30,4 +30,4 @@ dbListTables(con)
 # dbRemoveTable(con, table = "mtcars")
 
 ## show updated list of tables
-dbListTables(con)
+# dbListTables(con)

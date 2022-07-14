@@ -68,21 +68,21 @@ You will know that the installation was successful if you can start Rstudio and 
 **Rstudio**:
 
 <img src="figures/rsm-rstudio.png" width="500px">
+
 **Jupyter**:
 
 <img src="figures/rsm-jupyter.png" width="500px">
 
-To finalize the setup, open a terminal in Jupyter lab and run the code below:
+To finalize the setup, open a terminal in Jupyter lab, press `q` and `Enter` if prompted, and then run the code below in the same terminal:
 
 ```bash
-setup
+setup;
+exit;
 ```
 
-Press `q` and `Enter`, when prompted and then run the code below in the same terminal:
+Now open a new terminal in JupyterLab and you should see some icons
 
-```
-source ~/.rsm-msba/zsh/.zshrc;
-```
+<img src="figures/ohmyzsh-icons.png" width="400px">
 
 ## Updating the RSM-JUPYTER-RS computing environment on Linux
 
@@ -367,7 +367,7 @@ To install python3 from conda on macOS run the command below and follow the prom
 sh <(curl -s https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh);
 ```
 
-For more on minicoda visit the page below:
+For more on miniconda visit the page below:
 
 <https://docs.conda.io/en/latest/miniconda.html>
 

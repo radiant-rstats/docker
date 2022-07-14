@@ -86,7 +86,7 @@ winget install -e Microsoft.VisualStudioCode;
 winget install -e Docker.DockerDesktop;
 ```
 
-This will install  "Windows Terminal", VS Code, and Docker Desktop. We recommend you pin Windows Terminal to the taskbar as you will be using it regularly.
+This will install  "Windows Terminal", VS Code, and Docker Desktop. We recommend you pin Windows Terminal and VS Code to the taskbar as you will use these tools regularly.
 
 Next, logout and back into Windows and then start Docker by clicking on the Whale icon that was added to your desktop (see image below).
 
@@ -154,15 +154,16 @@ The created and launched script will finalize the installation of the computing 
 
 **Trouble shooting**
 
-If you do **not** have a file called `launch-rsm-jupyter-rs.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open notepad, copy-and-paste the code, and save the file as `launch-rsm-jupyter-rs.bat`. Save the files as type `.bat`. After saving, double-click on the icon on your desktop to get started.
+If you do **not** have a file called `launch-rsm-jupyter-rs.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open VS Code or notepad, copy-and-paste the code below into the editor, and save the file as `launch-rsm-jupyter-rs.bat`. Save the file as type `.bat`. After saving, double-click the file on your desktop to get started.
 
 ```bash
 wt.exe wsl.exe ~/git/docker/launch-rsm-jupyter-rs.sh -v ~
 pause
 ```
-**Step 5**: Check that you can launch Rstudio and Jupyter
 
-You will know that the installation was successful if you can start Rstudio and Jupyter Lab. If you press 1 (and Enter) Jupyter Lab should start up in your default web browser. If you are asked for login credentials, the **username is "jovyan"** and the **password is "jupyter"**. Have your browser remember the username and password so you won't be asked for it again.When you press 2 (and Enter) in the terminal, Rstudio should start up in a new tab in your web browser.  
+**Step 5**: Check that you can launch JupyterLab and Rstudio
+
+You will know that the installation was successful if you can start JupyterLab and Rstudio. If you press 1 (and Enter) Jupyter Lab should start up in your default web browser. If you are asked for login credentials, the **username is "jovyan"** and the **password is "jupyter"**. Have your browser remember the username and password so you won't be asked for it again.When you press 2 (and Enter) in the terminal, Rstudio should start up in a new tab in your web browser.
 
 > Important: Always use q (and Enter) to shutdown the computing environment
 
@@ -174,17 +175,17 @@ You will know that the installation was successful if you can start Rstudio and 
 
 <img src="figures/rsm-rstudio.png" width="500px">
 
-To finalize the setup, open a terminal in Jupyter lab and run the code below:
+To finalize the setup, open a terminal in Jupyter lab, press `q` and `Enter` when prompted, and then run the code below in the same terminal:
 
 ```bash
 setup;
+exit;
 ```
 
-Press `q` and `Enter`, when prompted and then run the code below in the same terminal:
+Now open a new terminal in JupyterLab and you should see some icons
 
-```
-source ~/.rsm-msba/zsh/.zshrc;
-```
+<img src="figures/ohmyzsh-icons.png" width="400px">
+
 ## Updating the RSM-JUPYTER-RS computing environment on Windows
 
 To update the container use the launch script and press 6 (and Enter). To update the launch script itself, press 7 (and Enter).
@@ -208,7 +209,7 @@ Run the code below from a PowerShell terminal after installing VS Code to instal
 
 ```
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/radiant-rstats/docker/master/vscode/extensions.txt -OutFile extensions.txt; 
-cat extensions.list |% { code --install-extension $_ --force};
+cat extensions.txt |% { code --install-extension $_ --force};
 del extensions.txt;
 ```
 

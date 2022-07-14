@@ -72,17 +72,16 @@ You will know that the installation was successful if you can start Jupyter Lab.
 
 <img src="figures/rsm-rstudio.png" width="500px">
 
-To finalize the setup, open a terminal in Jupyter lab and run the code below:
+To finalize the setup, open a terminal in Jupyter lab, press `q` and `Enter` if prompted, and then run the code below in the same terminal:
 
 ```bash
-setup
+setup;
+exit;
 ```
 
-Press `q` and `Enter`, when prompted and then run the code below in the same terminal:
+Now open a new terminal in JupyterLab and you should see some icons
 
-```
-source ~/.rsm-msba/zsh/.zshrc;
-```
+<img src="figures/ohmyzsh-icons.png" width="400px">
 
 ## Updating the RSM-JUPYTER-RS computing environment on macOS
 

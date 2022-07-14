@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Starting the `rsm-msba-spark` (or `rsm-jupyter`) computing container also starts a postgresql server running on your machine. You can connect to the database from R using the code chunk below.
+Starting the `rsm-jupyter` (or `rsm-jupyter-rs`) computing container also starts a postgresql server running on your machine. You can connect to the database from R using the code chunk below.
 
 ```{r}
 library(DBI)
@@ -65,7 +65,7 @@ https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
 ## only push to db if table does not yet exist
 ## Note: This step requires you have a reasonable amount of memory
 ## accessible for docker. This can be changed in Docker > Preferences
-## > Advanced   
+## > Advanced
 ## Memory (RAM) should be set to 4GB or more
 if (!"flights" %in% db_tabs) {
   copy_to(con, nycflights13::flights, "flights",
@@ -103,7 +103,7 @@ flights_db %>%
 ```
 
 ```{r}
-tailnum_delay_db <- flights_db %>% 
+tailnum_delay_db <- flights_db %>%
   group_by(tailnum) %>%
   summarise(
     delay = mean(arr_delay),

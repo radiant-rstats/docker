@@ -3,7 +3,6 @@ alexcvzz.vscode-sqlite
 christian-kohler.path-intellisense
 ckolkman.vscode-postgres
 eamodio.gitlens
-GrapeCity.gc-excelviewer
 REditorSupport.r
 mechatroner.rainbow-csv
 medo64.render-crlf
