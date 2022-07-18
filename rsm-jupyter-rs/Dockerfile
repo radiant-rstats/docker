@@ -1,7 +1,5 @@
-# FROM jupyter/pyspark-notebook:2022-05-29
-# version latest posted on 6-22-2022
-FROM jupyter/pyspark-notebook@sha256:dcef7423820a4c6bfa21ed57b62a460f55bdb91e1ab1ab1d15d2d25de86ba032
-
+# version latest posted on 7-17-2022
+FROM jupyter/pyspark-notebook@sha256:98f88c57b1ea0bcdd49fce30123eb484914321c14c8be5a1bc18f59a907c4cd5
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -113,8 +111,6 @@ RUN chmod +x setup.sh \
   && rm setup.sh
 
 # packages need for radiant a reproducible analysis
-COPY files/setup-radiant.sh setup.sh
-COPY files/setup-radiant.sh setup.sh
 COPY files/setup-radiant.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \

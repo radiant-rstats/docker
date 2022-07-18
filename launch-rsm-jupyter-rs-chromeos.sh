@@ -583,6 +583,9 @@ else
       if [ "$ARG_DIR" != "" ]; then
         CMD="$CMD -d ${ARG_DIR}"
       fi
+      if [ "$ARG_VOLUME" != "" ]; then
+        CMD="$CMD -v ${ARG_VOLUME}"
+      fi
       $CMD
       exit 1
     elif [ ${menu_exec} == 7 ]; then
