@@ -56,7 +56,7 @@ whoami
 Next, restart your computer and re-open PowerShell to check that Ubuntu is set as the default linux distribution:
 
 ```bash
-wsl --list --online
+wsl --list
 ```
 
 This should return the below:
