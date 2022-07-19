@@ -1,5 +1,7 @@
 # version latest posted on 7-17-2022
-FROM jupyter/pyspark-notebook@sha256:98f88c57b1ea0bcdd49fce30123eb484914321c14c8be5a1bc18f59a907c4cd5
+#FROM jupyter/pyspark-notebook@sha256:98f88c57b1ea0bcdd49fce30123eb484914321c14c8be5a1bc18f59a907c4cd5
+# version latest posted on 6-22-2022
+FROM jupyter/pyspark-notebook@sha256:dcef7423820a4c6bfa21ed57b62a460f55bdb91e1ab1ab1d15d2d25de86ba032
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -69,7 +71,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   pyarrow \
   python-duckdb \
   bash_kernel \
-  r_base \
   && python -m bash_kernel.install
 
 COPY files/setup-ml-frameworks.sh setup.sh
@@ -82,28 +83,23 @@ RUN chmod 755 setup.sh \
 
 # not available through conda-forge
 RUN pip install jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector \
-  radian
+  lckr-jupyterlab-variableinspector
 
-# setting up pgweb
-RUN pip install git+https://github.com/illumidesk/jupyter-pgweb-proxy.git
-
-ENV R_VERSION=4.2.0
+ENV R_VERSION=4.2.1
 ENV TERM=xterm
-# ENV R_HOME=/usr/local/lib/R
-ENV R_HOME=/opt/conda/
+ENV R_HOME=/usr/local/lib/R
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 ENV TZ=Etc/UTC
 
-# COPY files/install-R.sh install-R.sh
-# RUN chmod 755 install-R.sh \
-#   && ./install-R.sh \
-#   && rm install-R.sh
+COPY files/install-R.sh install-R.sh
+RUN chmod 755 install-R.sh \
+  && ./install-R.sh \
+  && rm install-R.sh
 
-# RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
-# RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
+RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
+RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 
-RUN pip install rpy2
+RUN pip install rpy2 radian
 
 COPY files/setup-tidyverse.sh setup.sh
 RUN chmod +x setup.sh \
