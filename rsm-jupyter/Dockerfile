@@ -1,5 +1,7 @@
+# version latest posted on 6-22-2022
+FROM jupyter/pyspark-notebook@sha256:6e69d7d254cfdb3209ded27425315f45c9796b79fd5be99b3e98efc7dd5dfd36
 # version latest posted on 7-17-2022
-FROM jupyter/pyspark-notebook@sha256:af5880877bd50a07b9011ed29900c839ac7a798d2c022945668fe8363a2110b0
+# FROM jupyter/pyspark-notebook@sha256:af5880877bd50a07b9011ed29900c839ac7a798d2c022945668fe8363a2110b0
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -84,7 +86,7 @@ RUN pip install jupyterlab-skip-traceback \
   lckr-jupyterlab-variableinspector \
   radian
 
-ENV R_VERSION=4.2.0
+ENV R_VERSION=4.2.1
 ENV TERM=xterm
 ENV R_HOME=/usr/local/lib/R
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
@@ -98,7 +100,7 @@ RUN chmod 755 install-R.sh \
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 
-RUN pip install rpy2
+RUN pip install rpy2 radian
 
 COPY files/setup-tidyverse.sh setup.sh
 RUN chmod +x setup.sh \
