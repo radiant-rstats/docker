@@ -31,17 +31,16 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('devtools', 'remotes', 'formatR', 'styler', 'reticulate', 'renv'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('arrow', 'duckdb', 'fs', 'janitor', 'palmerpenguins', 'stringr', 'tictoc'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('httpgd', 'languageserver'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e 'remotes::install_github("radiant-rstats/radiant.update", upgrade = "never")' \
-  -e "remotes::install_github('vnijs/gitgadget')" \
-  -e 'remotes::install_github("vnijs/DiagrammeR", upgrade = "never")' \
-  -e "remotes::install_github('IRkernel/IRkernel')"  \
-  -e "remotes::install_github('IRkernel/IRdisplay')" \
+  -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
+  -e "remotes::install_github('vnijs/gitgadget', upgrade = 'never')" \
+  -e "remotes::install_github('vnijs/DiagrammeR', upgrade = 'never')" \
+  -e "remotes::install_github('IRkernel/IRkernel', upgrade = 'never')"  \
+  -e "remotes::install_github('IRkernel/IRdisplay', upgrade = 'never')" \
   -e "IRkernel::installspec(user=FALSE)" \
-  -e 'remotes::install_github("radiant-rstats/radiant.data", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.design", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.basics", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.model", upgrade = "never")' \
-  -e 'remotes::install_github("radiant-rstats/radiant.multivariate", upgrade = "never")'
-
+  -e "remotes::install_github('radiant-rstats/radiant.data', upgrade = 'never')" \
+  -e "remotes::install_github('radiant-rstats/radiant.design', upgrade = 'never')" \
+  -e "remotes::install_github('radiant-rstats/radiant.basics', upgrade = 'never')" \
+  -e "remotes::install_github('radiant-rstats/radiant.model', upgrade = 'never')" \
+  -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')"
 
 rm -rf /tmp/downloaded_packages
