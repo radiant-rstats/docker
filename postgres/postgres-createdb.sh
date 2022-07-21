@@ -15,7 +15,7 @@ psql -p 8765 WestCoastImporters -U jovyan < ~/sql_data/WestCoastImporters_Full_D
 createdb -p 8765  -U jovyan Northwind
 psql -p 8765 Northwind -U jovyan < ~/sql_data/Northwind_DB_Dump.sql
 
-printf "\n\nDo you want to delete the directory with the raw data (y/n)?"
+printf "\n\nDo you want to delete the directory with the raw data (y/n)? "
 read del_sql_data
 if [ ${del_sql_data} = "y" ]; then
     {
