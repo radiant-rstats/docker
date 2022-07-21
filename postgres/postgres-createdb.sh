@@ -17,7 +17,7 @@ psql -p 8765 Northwind -U jovyan < ~/sql_data/Northwind_DB_Dump.sql
 
 printf "\n\nDo you want to delete the directory with the raw data (y/n)?"
 read del_sql_data
-if [ ${del_sql_data} == "y" ]; then
+if [ ${del_sql_data} = "y" ]; then
     {
         rm -rf ~/sql_data/
         echo "Raw data directory deleted"
