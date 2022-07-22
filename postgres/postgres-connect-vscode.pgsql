@@ -14,11 +14,11 @@ database?
 -- SELECT * FROM "films" LIMIT 5;
 -- SELECT * FROM "mtcars" LIMIT 5;
 
-/* choose WestCoastImporter as the active server and check if the below statement works */
--- SELECT * FROM "buyinggroup" LIMIT 5;
-
 /* choose Northwind as the active server and check if the below statement works */
 -- SELECT * FROM "products" LIMIT 5;
+
+/* choose WestCoastImporter as the active server and check if the below statement works */
+-- SELECT * FROM "buyinggroup" LIMIT 5;
 
 /* 
 make sure you have the PostgreSQL extension for VS Code
