@@ -26,6 +26,10 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     git \
     libharfbuzz-dev \
     libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
