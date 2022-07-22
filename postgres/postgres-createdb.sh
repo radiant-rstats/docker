@@ -5,15 +5,17 @@
 cd ~
 mkdir sql_data
 
-wget -O ~/sql_data/WestCoastImporters_Full_Dump.sql https://www.dropbox.com/s/gqnhvhhxyjrslmb/WestCoastImporters_Full_Dump.sql
-
+## get Northwind DB
 wget -O ~/sql_data/Northwind_DB_Dump.sql https://www.dropbox.com/s/s3bn7mkmpo391s3/Northwind_DB_Dump.sql
-
-createdb -p 8765  -U jovyan WestCoastImporters
-psql -p 8765 WestCoastImporters -U jovyan < ~/sql_data/WestCoastImporters_Full_Dump.sql
 
 createdb -p 8765  -U jovyan Northwind
 psql -p 8765 Northwind -U jovyan < ~/sql_data/Northwind_DB_Dump.sql
+
+## get WestCoastImporters DB
+wget -O ~/sql_data/WestCoastImporters_Full_Dump.sql https://www.dropbox.com/s/gqnhvhhxyjrslmb/WestCoastImporters_Full_Dump.sql
+
+createdb -p 8765  -U jovyan WestCoastImporters
+psql -p 8765 WestCoastImporters -U jovyan < ~/sql_data/WestCoastImporters_Full_Dump.sql
 
 printf "\n\nDo you want to delete the directory with the raw data (y/n)? "
 read del_sql_data
@@ -29,8 +31,8 @@ fi
 
 # to connect to the database from pgweb in the docker container
 # use the below as the "Scheme"
-# postgresql://jovyan:postgres@127.0.0.1:8765/WestCoastImporters
 # postgresql://jovyan:postgres@127.0.0.1:8765/Northwind
+# postgresql://jovyan:postgres@127.0.0.1:8765/WestCoastImporters
 
 # if you have an issue connecting to postgres
 # (1) stop the containers with q + Enter from the launch menu
