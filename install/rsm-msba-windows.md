@@ -248,7 +248,7 @@ You can access postgresql from R using the code below:
 library(DBI)
 library(RPostgres)
 con <- dbConnect(
-  dbDriver("Postgres"),
+  RPostgres::Postgres(),
   user = "jovyan",
   host = "127.0.0.1",
   port = 8765,
@@ -468,7 +468,7 @@ For more on minicoda visit the page below:
 
 <https://docs.conda.io/en/latest/miniconda.html>
 
-Once you have completed the install, open a new Anaconda Terminal from Windows terminal if you wan to install python packages. For example:
+Once you have completed the install, open a new Anaconda Terminal from Windows terminal if you want to install python packages. For example:
 
 ```
 conda install -c conda-forge pandas ipykernel black

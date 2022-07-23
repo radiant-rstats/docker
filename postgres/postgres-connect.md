@@ -14,7 +14,7 @@ Starting the `rsm-msba-spark` (or `rsm-jupyter`) computing container also starts
 library(DBI)
 library(RPostgres)
 con <- dbConnect(
-  dbDriver("Postgres"),
+  RPostgres::Postgres(),
   user = "jovyan",
   host = "127.0.0.1",
   port = 8765,

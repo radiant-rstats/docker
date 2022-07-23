@@ -145,7 +145,7 @@ You can access postgresql from R using the code below:
 library(DBI)
 library(RPostgres)
 con <- dbConnect(
-  dbDriver("Postgres"),
+  RPostgres::Postgres(),
   user = "jovyan",
   host = "127.0.0.1",
   port = 8765,
@@ -337,7 +337,7 @@ docker pull vnijs/rsm-jupyter-rs;
 
 Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (+ Enter) in the launch menu. Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
 
-* `launch -t 2.3.0` ensures a specific version of the docker container is used. Suppose you used version 2.3.0 for a project. Running the launch script with `-t 2.3.0` from the command line will ensure your code still runs, without modification, years after you last touched it!
+* `launch -t 2.4.4` ensures a specific version of the docker container is used. Suppose you used version 2.4.4 for a project. Running the launch script with `-t 2.4.4` from the command line will ensure your code still runs, without modification, years after you last touched it!
 * `launch -d ~/project_1` will treat the `project_1` directory on the host system (i.e., your ChromeOS computer) as the project home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
 * `launch -v ~/rsm-msba` will treat the `~/rsm-msba` directory on the host system (i.e., your ChromeOS computer) as the home directory in the docker container. This can be useful if you want to setup a particular directory that will house multiple projects
 * `launch -s` show additional output in the terminal that can be useful to debug any problems

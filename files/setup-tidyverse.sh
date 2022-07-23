@@ -31,6 +31,12 @@ apt-get update -qq \
     libcurl4-openssl-dev \
     libssl-dev \
     unixodbc-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
 R -e "install.packages(c('tidyverse', 'devtools', 'rmarkdown', 'vroom', 'gert', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})" \
