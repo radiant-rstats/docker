@@ -10,7 +10,6 @@ function conda_import_environment() {
         env_name="${env_name%.*}"
     fi
     conda env create --file "$1" --name "${env_name}"
-    conda create --file "$1" --name "${env_name}"
     conda activate "${env_name}"
     ipython kernel install --user --name="${env_name}"
     conda deactivate
