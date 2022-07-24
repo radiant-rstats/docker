@@ -309,7 +309,6 @@ fs::dir_create(Sys.getenv("R_LIBS_USER"), recurse = TRUE)
 install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))
 ```
 
-
 To install Python modules that will **not** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
 
 `conda install pyasn1`
@@ -322,9 +321,9 @@ To install Python modules that **will** persist after restarting the docker cont
 
 ```
 conda init zsh;
+exit;
 ```
-
-Then run the below. Here `myenv` if a new conda environment and `pyasn1` is a package to install. 
+Reopen a terminal and run the below. Here `myenv` if a new conda environment and `pyasn1` is a package to install.
 
 ```
 cc myenv pyasn1;
