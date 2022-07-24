@@ -4,14 +4,15 @@ set -e
 
 function conda_import_environment() {
     if [ "$2" != "" ]; then
-        env = $2
+        env_name="$2"
     else
-        env=$(basename -- "$1")
-        env="${filename%.*}"
+        env_name=$(basename -- "$1")
+        env_name="${env_name%.*}"
     fi
-    conda env create --file $1 --name "${env}"
-    conda activate "${env}"
-    ipython kernel install --user --name="${env}"
+    conda env create --file "$1" --name "${env_name}"
+    conda create --file "$1" --name "${env_name}"
+    conda activate "${env_name}"
+    ipython kernel install --user --name="${env_name}"
     conda deactivate
     echo "You may need to refresh your browser to see the new kernel icon for environment '${env}'\n"
 }
