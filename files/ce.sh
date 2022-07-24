@@ -1,4 +1,6 @@
-#!/usr/bin/env zsh
+#!/bin/zsh -i
+
+set -e
 
 if [ "$1" != "" ]; then
     if [ "$2" != "" ]; then

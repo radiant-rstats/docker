@@ -1,4 +1,6 @@
-#!/usr/bin/env zsh
+#!/bin/zsh -i
+
+set -e
 
 if [ "$1" != "" ]; then
     echo "Please confirm that you want to remove the conda environment '$1'"
@@ -10,7 +12,7 @@ if [ "$1" != "" ]; then
     else
         echo "\nThe code run in this function is:\n"
 
-        CMD="conda remove -y -n $1 --all"
+        CMD="mamba remove -y -n $1 --all"
         echo "$CMD\n"
         eval $CMD
 
