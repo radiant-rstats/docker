@@ -12,7 +12,7 @@ if [ "$1" != "" ]; then
     else
         echo "\nThe code run in this function is:\n"
 
-        CMD="mamba remove -y -n $1 --all"
+        CMD="conda remove -y -n $1 --all"
         echo "$CMD\n"
         eval $CMD
 
