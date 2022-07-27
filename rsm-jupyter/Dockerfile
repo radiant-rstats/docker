@@ -238,6 +238,13 @@ RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.
 # setting up pgweb
 RUN pip install git+https://github.com/illumidesk/jupyter-pgweb-proxy.git
 
+# updating version of git so that 'git init -b main' will work
+RUN apt-get update -qq && apt-get -y --no-install-recommends install \
+  software-properties-common \
+  && add-apt-repository ppa:git-core/ppa -y \
+  && apt-get update \
+  && apt -y install git
+
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
 
