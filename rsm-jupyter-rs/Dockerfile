@@ -249,7 +249,7 @@ RUN pip install shiny
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
 
-EXPOSE 8181 8282 8765 8989 8501
+EXPOSE 8181 8282 8765 8989 8501 8000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root
