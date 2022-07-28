@@ -244,6 +244,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   && apt-get update \
   && apt -y install git
 
+RUN pip install shiny
+
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
 
