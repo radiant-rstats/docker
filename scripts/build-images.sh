@@ -8,10 +8,10 @@ docker login
 # curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-arm64" > ~/.docker/cli-plugins/docker-buildx
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
-DOCKERHUB_VERSION=2.4.4
+DOCKERHUB_VERSION=2.4.5
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 if [ "$(uname -m)" = "arm64" ]; then
   ARCH="linux/arm64"
