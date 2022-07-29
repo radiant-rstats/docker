@@ -5,6 +5,7 @@
 cd ~
 mkdir sql_data
 
+
 ## get Northwind DB
 wget -O ~/sql_data/Northwind_DB_Dump.sql https://www.dropbox.com/s/s3bn7mkmpo391s3/Northwind_DB_Dump.sql
 
