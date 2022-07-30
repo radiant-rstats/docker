@@ -235,7 +235,7 @@ RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.
   && mv pgweb_dir/* /usr/local/bin/pgweb \
   && rm -rf pgweb_dir
 
-# setting up pgweb
+# setting up pgweb (using 30s timeout)
 RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git
 
 # updating version of git so that 'git init -b main' will work
