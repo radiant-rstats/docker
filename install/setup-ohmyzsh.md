@@ -2,7 +2,7 @@
 
 ## Install Meslo Nerd Font
 
-Follow the linked instructions to install the <a href="https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k" target="_blank">Meslo Nerd Font</a>. 
+Follow the linked instructions to install the <a href="https://github.com/romkatv/powerlevel10k#manual-font-installation" target="_blank">Meslo Nerd Font</a>.
 
 To use fonts and icons in the Standard macOS terminal with ZSH, change the terminal settings as follows:
 
@@ -67,7 +67,6 @@ plugins=(
   zsh-completions
   zsh-autosuggestions
   zsh-syntax-highlighting
-  autojump
   k
 )
 ```
