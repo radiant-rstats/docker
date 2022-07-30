@@ -133,8 +133,6 @@ Finally, we will create and launch a script `launch-rsm-jupyter-rs.bat` on your 
 
 If you do **not** backup your Desktop to OneDrive, please copy-and-paste the code below as-is into an Ubuntu terminal. If you **do** backup your Desktop to OneDrive, you will need to adjust the `DTOP` variable in the section below to something like `DTOP="/OneDrive/Desktop"`
 
-<!-- echo "Powershell.exe -command \"wsl ~/git/docker/launch-rsm-jupyter-rs.sh -v ~\"" >> /mnt/c/Users/"$USERNAME"/Desktop/launch-rsm-jupyter-rs.bat; -->
-
 ```bash
 DTOP="/Desktop";
 echo "wt.exe wsl.exe ~/git/docker/launch-rsm-jupyter-rs.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-jupyter-rs.bat;
@@ -154,7 +152,7 @@ The created and launched script will finalize the installation of the computing 
 
 **Trouble shooting**
 
-If you do **not** have a file called `launch-rsm-jupyter-rs.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open VS Code or notepad, copy-and-paste the code below into the editor, and save the file as `launch-rsm-jupyter-rs.bat`. Save the file as type `.bat`. After saving, double-click the file on your desktop to get started.
+If you do **not** have a file called `launch-rsm-jupyter-rs.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open VS Code or notepad, copy-and-paste the code below into the editor, and save the file as `launch-rsm-jupyter-rs.bat`. After saving, double-click the file to start the docker container.
 
 ```bash
 wt.exe wsl.exe ~/git/docker/launch-rsm-jupyter-rs.sh -v ~
