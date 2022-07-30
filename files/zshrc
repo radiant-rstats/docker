@@ -83,7 +83,6 @@ plugins=(
   zsh-completions
   zsh-autosuggestions
   zsh-syntax-highlighting
-  autojump
   k
 )
 
@@ -118,9 +117,9 @@ source $ZSH/oh-my-zsh.sh
 alias c="clear"
 alias r="radian"
 # alias k="k -h"
-alias zc="vim ~/.rsm-msba/zsh/.zshrc"
-alias om="vim ~/.rsm-msba/zsh/.oh-my-zsh"
-alias zp="vim ~/.rsm-msba/zsh/.p10k.zsh"
+# alias zc="vim ~/.rsm-msba/zsh/.zshrc"
+# alias om="vim ~/.rsm-msba/zsh/.oh-my-zsh"
+# alias zp="vim ~/.rsm-msba/zsh/.p10k.zsh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.rsm-msba/zsh/.p10k.zsh ]] || source ~/.rsm-msba/zsh/.p10k.zsh
