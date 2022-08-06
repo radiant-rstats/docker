@@ -51,10 +51,10 @@ This step will clone and start up a script that will finalize the installation o
 
 The code above also creates a copy of the file `launch-rsm-jupyter-rs.sh` on your Desktop that you can use to start the container again in the future.
 
-Copy-and-paste the command below to create a shortcut to the launch script to use from the command line.
+Copy-and-paste the command below to start the launch script from the command line.
 
 ```bash
-sudo ln -s ~/git/docker/launch-rsm-jupyter-rs.sh /usr/local/bin/launch;
+~/git/docker/launch-rsm-jupyter-chromeos.sh -v ~;
 ```
 
 After running this command you will be able to start the docker container by typing `launch` from a terminal.

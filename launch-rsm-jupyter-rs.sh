@@ -4,10 +4,8 @@
 ## want to to map the docker home directory to your local
 ## home directory
 
-## use the command below on macOS or Linux to setup a 'launch'
-## command. You can then use that command, e.g., launch ., to
-## launch the container from any directory
-## ln -s ~/git/docker/launch-rsm-msba-spark.sh /usr/local/bin/launch
+## use the command below on to launch the container:
+## ~/git/docker/launch-rsm-jupyter-rs.sh -v ~
 
 ## to map the directory where the launch script is located to
 ## the docker home directory call the script_home function

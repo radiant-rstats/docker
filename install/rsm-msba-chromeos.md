@@ -43,8 +43,7 @@ Optional: If you are interested, the linked video gives a brief intro to what Do
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-sudo ln -s ~/git/docker/launch-rsm-jupyter-rs-chromeos.sh /usr/local/bin/launch;
-launch;
+~/git/docker/launch-rsm-jupyter-rs-chromeos.sh -v ~;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
@@ -90,8 +89,7 @@ If for some reason you are having trouble updating either the container or the l
 docker pull vnijs/rsm-jupyter-rs;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-sudo rm /usr/local/bin/launch;
-sudo ln -s ~/git/docker/launch-rsm-jupyter-rs-chromeos.sh /usr/local/bin/launch;
+~/git/docker/launch-rsm-jupyter-rs-chromeos.sh -v ~;
 ```
 
 ## Using VS Code
