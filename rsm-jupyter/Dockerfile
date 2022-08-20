@@ -1,7 +1,8 @@
-# version latest posted on 6-22-2022
-FROM jupyter/pyspark-notebook@sha256:6e69d7d254cfdb3209ded27425315f45c9796b79fd5be99b3e98efc7dd5dfd36
 # version latest posted on 7-17-2022
 # FROM jupyter/pyspark-notebook@sha256:af5880877bd50a07b9011ed29900c839ac7a798d2c022945668fe8363a2110b0
+# version latest posted on 8-17-2022
+# FROM jupyter/pyspark-notebook:aarch64-ubuntu-22.04
+FROM jupyter/pyspark-notebook@sha256:436e045b96ab031f87acf68937619dc0751f5a36a40ba9cb8f8f86d3d8d43e08
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -38,7 +39,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   mlxtend \
   xgboost \
   lightgbm \
-  # catboost \
   graphviz \
   lime \
   shap \
@@ -238,13 +238,7 @@ RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.
 # setting up pgweb (using 30s timeout)
 RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git
 
-# updating version of git so that 'git init -b main' will work
-RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-  software-properties-common \
-  && add-apt-repository ppa:git-core/ppa -y \
-  && apt-get update \
-  && apt -y install git
-
+# adding shiny for python
 RUN pip install shiny
 
 # make system R the first choice
