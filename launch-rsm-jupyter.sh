@@ -413,7 +413,7 @@ else
     echo "Cont. name: ${LABEL}"
     echo $BOUNDARY
     echo "Press (1) to show Jupyter Lab, followed by [ENTER]:"
-    echo "Press (2) to show Rstudio (NOT AVAILABLE FOR M1 OR M2):"
+    echo "Press (2) to show Rstudio, followed by [ENTER]:"
     echo "Press (3) to show Radiant, followed by [ENTER]:"
     echo "Press (4) to show GitGadget, followed by [ENTER]:"
     echo "Press (5) to show a (ZSH) terminal, followed by [ENTER]:"
@@ -459,29 +459,23 @@ else
         open_browser http://localhost:${menu_arg}/lab
       fi
     elif [ ${menu_exec} == 2 ]; then
-      echo $BOUNDARY
-      echo "Rstudio Server is not yet available for M1 or M2 Macs"
-      echo "Press [ENTER] to continue"
-      echo $BOUNDARY
-      read rstudio_not_yet_available
- 
-      # if [ "${menu_arg}" == "" ]; then
-      #   echo "Starting Rstudio in the default browser on localhost:8989/rstudio"
-      #   open_browser http://localhost:8989/rstudio
-      # else
-      #   echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
-      #   { 
-      #     docker run --name "${LABEL}_${menu_arg}" --net ${NETWORK} -d \
-      #       -p 127.0.0.1:${menu_arg}:8989 \
-      #       -e TZ=${TIMEZONE} \
-      #       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
-      #       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
-      #       ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
-      #     rstudio_abend
-      #     sleep 4s
-      #   }
-      #   open_browser http://localhost:${menu_arg}/rstudio
-      # fi
+      if [ "${menu_arg}" == "" ]; then
+        echo "Starting Rstudio in the default browser on localhost:8989/rstudio"
+        open_browser http://localhost:8989/rstudio
+      else
+        echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
+        { 
+          docker run --name "${LABEL}_${menu_arg}" --net ${NETWORK} -d \
+            -p 127.0.0.1:${menu_arg}:8989 \
+            -e TZ=${TIMEZONE} \
+            -v "${HOMEDIR}":/home/${NB_USER} $MNT \
+            -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
+            ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
+          rstudio_abend
+          sleep 4s
+        }
+        open_browser http://localhost:${menu_arg}/rstudio
+      fi
     elif [ ${menu_exec} == 3 ]; then
       RPROF="${HOMEDIR}/.Rprofile"
       touch "${RPROF}"

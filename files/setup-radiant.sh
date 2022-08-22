@@ -35,11 +35,10 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('radiant', 'png', 'bslib', 'gitgadget', 'miniUI', 'webshot', 'tinytex', 'svglite'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('remotes', 'formatR', 'styler', 'reticulate', 'renv'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('arrow', 'duckdb', 'fs', 'janitor', 'palmerpenguins', 'stringr', 'tictoc'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "install.packages(c('arrow', 'duckdb', 'fs', 'janitor', 'dm', 'palmerpenguins', 'stringr', 'tictoc'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('httpgd', 'languageserver'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
   -e "remotes::install_github('vnijs/gitgadget', upgrade = 'never')" \
-  -e "remotes::install_github('vnijs/DiagrammeR', upgrade = 'never')" \
   -e "remotes::install_github('IRkernel/IRkernel', upgrade = 'never')"  \
   -e "remotes::install_github('IRkernel/IRdisplay', upgrade = 'never')" \
   -e "IRkernel::installspec(user=FALSE)" \
@@ -51,3 +50,5 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')"
 
 rm -rf /tmp/downloaded_packages
+
+# -e "remotes::install_github('vnijs/DiagrammeR', upgrade = 'never')" \

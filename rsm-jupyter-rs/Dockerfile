@@ -1,7 +1,9 @@
 # version latest posted on 7-17-2022
 #FROM jupyter/pyspark-notebook@sha256:98f88c57b1ea0bcdd49fce30123eb484914321c14c8be5a1bc18f59a907c4cd5
 # version latest posted on 6-22-2022
-FROM jupyter/pyspark-notebook@sha256:dcef7423820a4c6bfa21ed57b62a460f55bdb91e1ab1ab1d15d2d25de86ba032
+# FROM jupyter/pyspark-notebook@sha256:dcef7423820a4c6bfa21ed57b62a460f55bdb91e1ab1ab1d15d2d25de86ba032
+# FROM jupyter/pyspark-notebook:ubuntu-22.04
+FROM jupyter/pyspark-notebook@sha256:0c2635651aa3576e6870e8702c989b32dcc71bdcf0167812de55983e9d720316
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -245,6 +247,10 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   && apt -y install git
 
 RUN pip install shiny
+
+# downgrading due to issue with radiant and gitgadget
+# the following upgrade messes up the custom launcher icons nbclassic=0.4.3
+RUN mamba install --quiet --yes -c conda-forge nbclassic=0.3.7
 
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"

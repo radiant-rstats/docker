@@ -241,6 +241,10 @@ RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git
 # adding shiny for python
 RUN pip install shiny
 
+# downgrading due to issue with radiant and gitgadget
+# the following upgrade messes up the custom launcher icons nbclassic=0.4.3
+RUN mamba install --quiet --yes -c conda-forge nbclassic=0.3.7
+
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
 
