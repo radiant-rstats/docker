@@ -71,12 +71,6 @@ launcher () {
   fi
 }
 
-LABEL=rsm-test
-build
-
-exit
-
-
 if [ "$(uname -m)" = "arm64" ]; then
   LABEL=rsm-jupyter
   build
