@@ -206,7 +206,7 @@ RUN chmod +x setup.sh \
 
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY files/jupyter_notebook_config.py /etc/jupyter/
+COPY files/jupyter_radiant_config.py /etc/jupyter/
 COPY files/condarc /opt/conda/.condarc
 RUN mkdir -p /var/log/supervisor \
   && fix-permissions /var/log/supervisor \

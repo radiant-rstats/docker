@@ -49,7 +49,8 @@ ENV JUPYTER_ENABLE_LAB=1
 #     && echo 'RhpcBLASctl::blas_set_num_threads(Sys.getenv("OPENBLAS_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site \
 #     && echo 'RhpcBLASctl::omp_set_num_threads(Sys.getenv("OMP_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site
 
-RUN conda remove -y --force jupyterlab_code_formatter
+# RUN conda remove -y --force jupyterlab_code_formatter
+# RUN pip install jupyterlab_code_formatter
 
 # Copy the launch script into the image
 COPY launch-rsm-jupyterhub.sh /opt/launch.sh

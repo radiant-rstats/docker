@@ -11,7 +11,7 @@ docker login
 DOCKERHUB_VERSION=2.5.0
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
 
 if [ "$(uname -m)" = "arm64" ]; then
   ARCH="linux/arm64"
@@ -87,7 +87,8 @@ else
   build
 
   ## new containers should be launched using the newest version of the container
-  docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+  # docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
+  docker tag vnijs/rsm-jupyterhub:2.4.5 jupyterhub-user
 
   ## new containers should be launched using the newest version of the container
   #docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user

@@ -11,7 +11,8 @@
 
 set -e
 
-RSTUDIO_VERSION=${1:-${RSTUDIO_VERSION:-"stable"}}
+# RSTUDIO_VERSION=${1:-${RSTUDIO_VERSION:-"stable"}}
+RSTUDIO_VERSION=${1:-${RSTUDIO_VERSION:-"preview"}}
 
 DEFAULT_USER=${DEFAULT_USER:-jovyan}
 ARCH=$(dpkg --print-architecture)
@@ -36,6 +37,9 @@ apt-get install -y --no-install-recommends \
     sudo \
     wget
 
+# wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.4_amd64.deb -O libssl1.0.0.deb && \
+#     dpkg -i libssl1.0.0.deb
+
 rm -rf /var/lib/apt/lists/*
 
 export PATH=/usr/lib/rstudio-server/bin:$PATH
@@ -49,10 +53,10 @@ fi
 
 if [ "$(uname -m)" != "aarch64" ]; then
   if [ "$RSTUDIO_VERSION" = "stable" ] || [ "$RSTUDIO_VERSION" = "preview" ] || [ "$RSTUDIO_VERSION" = "daily" ]; then
-    wget "https://rstudio.org/download/latest/${RSTUDIO_VERSION}/server/bionic/rstudio-server-latest-${ARCH}.deb" -O "$DOWNLOAD_FILE"
+    wget "https://rstudio.org/download/latest/${RSTUDIO_VERSION}/server/jammy/rstudio-server-latest-${ARCH}.deb" -O "$DOWNLOAD_FILE"
   else
-    wget "https://download2.rstudio.org/server/bionic/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE" \
-    || wget "https://s3.amazonaws.com/rstudio-ide-build/server/bionic/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE"
+    wget "https://download2.rstudio.org/server/jammy/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE" \
+    || wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE"
   fi
 else
   # wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2022.11.0-daily-115-arm64.deb" -O "$DOWNLOAD_FILE" # working
