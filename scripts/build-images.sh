@@ -9,6 +9,7 @@ docker login
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 DOCKERHUB_VERSION=2.5.0
+JHUB_VERSION=2.4.5
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
 UPLOAD="YES"
@@ -88,7 +89,7 @@ else
 
   ## new containers should be launched using the newest version of the container
   # docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
-  docker tag vnijs/rsm-jupyterhub:2.4.5 jupyterhub-user
+  docker tag vnijs/rsm-jupyterhub:$JHUB_VERSION jupyterhub-user
 
   ## new containers should be launched using the newest version of the container
   #docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user

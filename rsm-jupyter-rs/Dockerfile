@@ -250,6 +250,7 @@ RUN pip install shiny
 
 # downgrading due to issue with radiant and gitgadget
 # the following upgrade messes up the custom launcher icons nbclassic=0.4.3
+RUN mamba install --quiet --yes -c conda-forge nbclassic=0.4.3
 RUN mamba install --quiet --yes -c conda-forge nbclassic=0.3.7
 
 # make system R the first choice
