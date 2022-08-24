@@ -78,12 +78,17 @@ wsl --list --online
 
 **Step 3**: Install Windows Tools
 
-Download and install the Microsoft <a href="https://www.microsoft.com/en-us/p/app-installer/9nblggh4nns1?activetab=pivot:overviewtab" target="_blank">App Installer</a>. After completing the install, open PowerShell and enter the commands below:
+Download and install the Microsoft <a href="https://www.microsoft.com/en-us/p/app-installer/9nblggh4nns1?activetab=pivot:overviewtab" target="_blank">App Installer</a>. After completing the install, open a new PowerShell terminal **as a regular user** and enter the commands below:
+
+```bash
+winget install -e Microsoft.VisualStudioCode;
+winget install -e Docker.DockerDesktop;
+```
+
+If you are using Windows 10, you should also install Windows Terminal using the command below:
 
 ```bash
 winget install -e Microsoft.WindowsTerminal;
-winget install -e Microsoft.VisualStudioCode;
-winget install -e Docker.DockerDesktop;
 ```
 
 This will install  "Windows Terminal", VS Code, and Docker Desktop. We recommend you pin Windows Terminal and VS Code to the taskbar as you will use these tools regularly.
