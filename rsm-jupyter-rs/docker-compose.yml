@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  rsm-jupyter:
+    image: "vnijs/rsm-jupyter-rs"
+    environment:
+      USER: jovyan
+      HOME: /home/jovyan
+      SHELL: /bin/zsh
+      PYTHONUSERBASE: /home/jovyan/.rsm-msba
+      JUPYTER_PATH: /home/jovyan/.rsm-msba/share/jupyter
+      JUPYTER_RUNTIME_DIR: /tmp/jupyter/runtime
+      JUPYTER_CONFIG_DIR: /home/jovyan/.rsm-msba/jupyter
+    ports:
+      - 127.0.0.1:8989:8989
+      - 127.0.0.1:8181:8181
+      - 127.0.0.1:8282:8282
+      - 127.0.0.1:8765:8765
+      - 127.0.0.1:8501:8501
+      - 127.0.0.1:8000:8000
+    volumes:
+      - ~:/home/jovyan
+      - pg_data:/var/lib/postgresql/14/main
+volumes:
+  pg_data:
+    external: true
