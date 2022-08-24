@@ -85,13 +85,11 @@ winget install -e Microsoft.VisualStudioCode;
 winget install -e Docker.DockerDesktop;
 ```
 
-If you are using Windows 10, you should also install Windows Terminal using the command below:
+This will install VS Code and Docker Desktop. If you are using Windows 10, you should also install Windows Terminal using the command below. Windows Terminal is available by default on Windows 11. We recommend you pin Windows Terminal and VS Code to the taskbar as you will use these tools regularly.
 
 ```bash
 winget install -e Microsoft.WindowsTerminal;
 ```
-
-This will install  "Windows Terminal", VS Code, and Docker Desktop. We recommend you pin Windows Terminal and VS Code to the taskbar as you will use these tools regularly.
 
 Next, logout and back into Windows and then start Docker by clicking on the Whale icon that was added to your desktop (see image below).
 
