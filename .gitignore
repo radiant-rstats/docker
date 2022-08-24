@@ -11,3 +11,4 @@ rsm-shiny
 files/ca.sh
 files/ccr.sh
 build-images.out
+rsm-test/
