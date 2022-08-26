@@ -1,7 +1,4 @@
-# version latest posted on 7-17-2022
-#FROM jupyter/pyspark-notebook@sha256:98f88c57b1ea0bcdd49fce30123eb484914321c14c8be5a1bc18f59a907c4cd5
-# version latest posted on 6-22-2022
-# FROM jupyter/pyspark-notebook@sha256:dcef7423820a4c6bfa21ed57b62a460f55bdb91e1ab1ab1d15d2d25de86ba032
+# version latest posted on 8-17-2022
 # FROM jupyter/pyspark-notebook:ubuntu-22.04
 FROM jupyter/pyspark-notebook@sha256:0c2635651aa3576e6870e8702c989b32dcc71bdcf0167812de55983e9d720316
 
@@ -189,8 +186,6 @@ ENV PYTHONUSERBASE=${PYBASE} \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
   LD_LIBRARY_PATH='/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-11-openjdk-amd64/lib/server'
 
-COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
-COPY images/logo200.svg /opt/shiny/logo.svg
 COPY files/install-rstudio.sh setup.sh
 RUN chmod 755 setup.sh \
   && ./setup.sh \
@@ -206,13 +201,10 @@ RUN chmod +x setup.sh \
 
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY files/jupyter_radiant_config.py /etc/jupyter/
 COPY files/condarc /opt/conda/.condarc
 RUN mkdir -p /var/log/supervisor \
   && fix-permissions /var/log/supervisor \
   && fix-permissions /etc/supervisor/conf.d/ \
-  && fix-permissions /etc/jupyter/ \
-  && fix-permissions /opt/shiny/ \
   && fix-permissions "${CONDA_DIR}"
 
 # copy base conda environment management script
@@ -236,22 +228,13 @@ RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.
   && mv pgweb_dir/* /usr/local/bin/pgweb \
   && rm -rf pgweb_dir
 
-# setting up pgweb (using 30s timeout)
-RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git
-
-# updating version of git so that 'git init -b main' will work
-RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-  software-properties-common \
-  && add-apt-repository ppa:git-core/ppa -y \
-  && apt-get update \
-  && apt -y install git
-
+# adding shiny for python
 RUN pip install shiny
 
-# downgrading due to issue with radiant and gitgadget
-# the following upgrade messes up the custom launcher icons nbclassic=0.4.3
-RUN mamba install --quiet --yes -c conda-forge nbclassic=0.4.3
-RUN mamba install --quiet --yes -c conda-forge nbclassic=0.3.7
+# setting up jupyter-server-proxy extensions pgweb, gitgadget, and radiant
+RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git \
+  && pip install git+https://github.com/vnijs/jupyter-gitgadget-proxy.git \
+  && pip install git+https://github.com/vnijs/jupyter-radiant-proxy.git
 
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"

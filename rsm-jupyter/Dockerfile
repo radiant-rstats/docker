@@ -1,5 +1,3 @@
-# version latest posted on 7-17-2022
-# FROM jupyter/pyspark-notebook@sha256:af5880877bd50a07b9011ed29900c839ac7a798d2c022945668fe8363a2110b0
 # version latest posted on 8-17-2022
 # FROM jupyter/pyspark-notebook:aarch64-ubuntu-22.04
 FROM jupyter/pyspark-notebook@sha256:436e045b96ab031f87acf68937619dc0751f5a36a40ba9cb8f8f86d3d8d43e08
@@ -83,8 +81,7 @@ RUN chmod 755 setup.sh \
 
 # not available through conda-forge
 RUN pip install jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector \
-  radian
+  lckr-jupyterlab-variableinspector
 
 ENV R_VERSION=4.2.1
 ENV TERM=xterm
@@ -188,8 +185,6 @@ ENV PYTHONUSERBASE=${PYBASE} \
   CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
   LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/aarch64-linux-gnu:/usr/lib/jvm/java-11-openjdk-arm64/lib/server
 
-COPY images/gitgadget.svg /opt/shiny/gitgadget.svg
-COPY images/logo200.svg /opt/shiny/logo.svg
 COPY files/install-rstudio.sh setup.sh
 RUN chmod 755 setup.sh \
   && ./setup.sh \
@@ -205,13 +200,10 @@ RUN chmod +x setup.sh \
 
 # updating the supervisord.conf file for Jupyter and the notebook_config file
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY files/jupyter_radiant_config.py /etc/jupyter/
 COPY files/condarc /opt/conda/.condarc
 RUN mkdir -p /var/log/supervisor \
   && fix-permissions /var/log/supervisor \
   && fix-permissions /etc/supervisor/conf.d/ \
-  && fix-permissions /etc/jupyter/ \
-  && fix-permissions /opt/shiny/ \
   && fix-permissions "${CONDA_DIR}"
 
 # copy base conda environment management script
@@ -235,15 +227,13 @@ RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.
   && mv pgweb_dir/* /usr/local/bin/pgweb \
   && rm -rf pgweb_dir
 
-# setting up pgweb (using 30s timeout)
-RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git
-
 # adding shiny for python
 RUN pip install shiny
 
-# downgrading due to issue with radiant and gitgadget
-# the following upgrade messes up the custom launcher icons nbclassic=0.4.3
-RUN mamba install --quiet --yes -c conda-forge nbclassic=0.3.7
+# setting up jupyter-server-proxy extensions pgweb, gitgadget, and radiant
+RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git \
+  && pip install git+https://github.com/vnijs/jupyter-gitgadget-proxy.git \
+  && pip install git+https://github.com/vnijs/jupyter-radiant-proxy.git
 
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
