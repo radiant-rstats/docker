@@ -236,6 +236,8 @@ RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git \
   && pip install git+https://github.com/vnijs/jupyter-gitgadget-proxy.git \
   && pip install git+https://github.com/vnijs/jupyter-radiant-proxy.git
 
+RUN R -e "options(HTTPUserAgent = sprintf('R/%s R (%s)', getRversion(), paste(getRversion(), R.version['platform'], R.version['arch'], R.version['os']))); install.packages(c('arrow', 'duckdb'), repos = 'https://packagemanager.rstudio.com/all/__linux__/jammy/latest', Ncpus=-1)"
+
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
 
