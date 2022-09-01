@@ -35,7 +35,7 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('radiant', 'png', 'bslib', 'gitgadget', 'miniUI', 'webshot', 'tinytex', 'svglite'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('remotes', 'formatR', 'styler', 'reticulate', 'renv'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('arrow', 'duckdb', 'fs', 'janitor', 'dm', 'palmerpenguins', 'stringr', 'tictoc'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "install.packages(c('fs', 'janitor', 'dm', 'palmerpenguins', 'stringr', 'tictoc'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('httpgd', 'languageserver'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
   -e "remotes::install_github('vnijs/gitgadget', upgrade = 'never')" \
@@ -47,8 +47,20 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.basics', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.model', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')" \
-  -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')"
+  -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')" \
+  -e "install.packages(c('arrow'), repo='${CRAN}', Ncpus=${NCPUS})"
+
+# arrow install from source is not currently working on aarch64
+# https://issues.apache.org/jira/projects/ARROW/issues/ARROW-17374?filter=allopenissues
+
+if [ "$(uname -m)" != "aarch64" ]; then
+  R -e "install.packages('duckdb', repo='${CRAN}', Ncpus=${NCPUS})"
+else
+  # based on https://github.com/duckdb/duckdb/issues/3049#issuecomment-1096671708
+  cp -a /usr/local/lib/R/etc/Makeconf /usr/local/lib/R/etc/Makeconf.bak;
+  sed -i 's/fpic/fPIC/g' /usr/local/lib/R/etc/Makeconf;
+  R -e "install.packages('duckdb', repo='${CRAN}', Ncpus=${NCPUS})"
+  mv /usr/local/lib/R/etc/Makeconf.bak /usr/local/lib/R/etc/Makeconf;
+fi
 
 rm -rf /tmp/downloaded_packages
-
-# -e "remotes::install_github('vnijs/DiagrammeR', upgrade = 'never')" \
