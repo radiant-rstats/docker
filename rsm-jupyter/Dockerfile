@@ -87,7 +87,7 @@ RUN pip install jupyterlab-skip-traceback \
 ENV R_VERSION=4.2.1
 ENV TERM=xterm
 ENV R_HOME=/usr/local/lib/R
-ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
+ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/jammy/latest
 ENV TZ=Etc/UTC
 
 COPY files/install-R.sh install-R.sh

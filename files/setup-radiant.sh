@@ -9,6 +9,8 @@ CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
 
 ## source install if using RSPM and arm64 image
 if [ "$(uname -m)" = "aarch64" ]; then
+  CRAN=https://cran.r-project.org
+  CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
   CRAN=$CRAN_SOURCE
 fi
 
@@ -30,6 +32,8 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
+    libsnappy-dev \
+    libre2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
@@ -47,19 +51,18 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.basics', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.model', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')" \
-  -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')" \
-  -e "install.packages(c('arrow'), repo='${CRAN}', Ncpus=${NCPUS})"
+  -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')"
 
 # arrow install from source is not currently working on aarch64
 # https://issues.apache.org/jira/projects/ARROW/issues/ARROW-17374?filter=allopenissues
 
 if [ "$(uname -m)" != "aarch64" ]; then
-  R -e "install.packages('duckdb', repo='${CRAN}', Ncpus=${NCPUS})"
+  R -e "install.packages(c('duckdb', 'arrow'), repo='${CRAN}', Ncpus=${NCPUS})"
 else
   # based on https://github.com/duckdb/duckdb/issues/3049#issuecomment-1096671708
   cp -a /usr/local/lib/R/etc/Makeconf /usr/local/lib/R/etc/Makeconf.bak;
   sed -i 's/fpic/fPIC/g' /usr/local/lib/R/etc/Makeconf;
-  R -e "install.packages('duckdb', repo='${CRAN}', Ncpus=${NCPUS})"
+  R -e "options(HTTPUserAgent = sprintf('R/%s R (%s)', getRversion(), paste(getRversion(), R.version['platform'], R.version['arch'], R.version['os']))); Sys.setenv('ARROW_R_DEV' = TRUE); install.packages(c('duckdb', 'arrow'), repo='${CRAN}', Ncpus=${NCPUS})"
   mv /usr/local/lib/R/etc/Makeconf.bak /usr/local/lib/R/etc/Makeconf;
 fi
 

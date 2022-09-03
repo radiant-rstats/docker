@@ -291,8 +291,8 @@ To install the latest version of R-packages you need, add the lines of code show
 ```
 if (Sys.info()["sysname"] == "Linux") {
   options(repos = c(
-    RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/focal/latest",
-    RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest",
+    RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/jammy/latest",
+    RSPM = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest",
     CRAN = "https://cloud.r-project.org"
   ))
 } else {
