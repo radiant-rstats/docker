@@ -236,10 +236,6 @@ RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git \
   && pip install git+https://github.com/vnijs/jupyter-gitgadget-proxy.git \
   && pip install git+https://github.com/vnijs/jupyter-radiant-proxy.git
 
-# binary install for aarch64 not currently working
-# see https://issues.apache.org/jira/projects/ARROW/issues/ARROW-17374?filter=allopenissues
-# RUN R -e "options(HTTPUserAgent = sprintf('R/%s R (%s)', getRversion(), paste(getRversion(), R.version['platform'], R.version['arch'], R.version['os']))); install.packages('arrow', repos = 'https://packagemanager.rstudio.com/all/__linux__/jammy/latest', Ncpus=-1)"
-
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
 
