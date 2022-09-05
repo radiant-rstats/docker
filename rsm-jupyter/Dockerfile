@@ -124,7 +124,7 @@ ENV POSTGRES_VERSION=14
 # upgrade to postgres 14
 RUN apt -y update && \
   apt -y upgrade && \
-  apt -y install gnupg2 wget vim && \
+  apt -y install gpgv dirmngr wget vim && \
   sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
   wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
   apt -y update && \
