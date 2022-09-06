@@ -89,7 +89,6 @@ if ! grep -q 'options(\s*repos\s*' ${RPROF}; then
   echo '
   if (Sys.info()["sysname"] == "Linux") {
     options(repos = c(
-      RSM = "https://rsm-compute-01.ucsd.edu:4242/rsm-msba/__linux__/jammy/latest",
       RSPM = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest",
       CRAN = "https://cloud.r-project.org"
     ))
