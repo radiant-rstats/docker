@@ -57,9 +57,7 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
 # https://issues.apache.org/jira/projects/ARROW/issues/ARROW-17374?filter=allopenissues
 
 if [ "$(uname -m)" != "aarch64" ]; then
-  # R -e "install.packages(c('duckdb', 'arrow'), repo='${CRAN}', Ncpus=${NCPUS})"
-  R -e "install.packages('duckdb', repo='${CRAN}', Ncpus=${NCPUS})" \
-    -e "install.packages('arrow', repo='${CRAN}', Ncpus=${NCPUS})"
+  R -e "install.packages(c('duckdb', 'arrow'), repo='${CRAN}', Ncpus=${NCPUS})"
 else
   # based on https://github.com/duckdb/duckdb/issues/3049#issuecomment-1096671708
   cp -a /usr/local/lib/R/etc/Makeconf /usr/local/lib/R/etc/Makeconf.bak;
