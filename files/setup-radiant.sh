@@ -51,7 +51,8 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.basics', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.model', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')" \
-  -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')"
+  -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')" \
+  -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
 
 # arrow install from source is not currently working on aarch64
 # https://issues.apache.org/jira/projects/ARROW/issues/ARROW-17374?filter=allopenissues

@@ -9,7 +9,7 @@ docker login
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 DOCKERHUB_VERSION=2.5.0
-JHUB_VERSION=2.4.5
+JHUB_VERSION=2.5.0
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
 UPLOAD="YES"
