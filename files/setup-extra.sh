@@ -24,6 +24,6 @@ apt-get update -qq && apt-get -y install \
   libmagick++-dev \
   gsfonts
 
-R -e "install.packages('magick', repo='${CRAN}', Ncpus=${NCPUS})" 
+R -e "install.packages(c('magick', 'leaflet'), repo='${CRAN}', Ncpus=${NCPUS})" 
 
 rm -rf /tmp/downloaded_packages
