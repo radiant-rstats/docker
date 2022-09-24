@@ -236,6 +236,12 @@ RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git \
   && pip install git+https://github.com/vnijs/jupyter-gitgadget-proxy.git \
   && pip install git+https://github.com/vnijs/jupyter-radiant-proxy.git
 
+# packages need for radiant a reproducible analysis
+COPY files/setup-extra.sh setup.sh
+RUN chmod +x setup.sh \
+  && ./setup.sh \
+  && rm setup.sh
+
 # make system R the first choice
 ENV PATH="/usr/local/bin:$PATH"
 
