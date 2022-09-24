@@ -22,7 +22,12 @@ apt-get update -qq && apt-get -y install \
   libssl-dev \
   imagemagick \
   libmagick++-dev \
-  gsfonts
+  gsfonts \
+  libpng-dev \
+  libgdal-dev \
+  gdal-bin \
+  libgeos-dev \
+  libproj-dev
 
 R -e "install.packages(c('magick', 'leaflet'), repo='${CRAN}', Ncpus=${NCPUS})" 
 
