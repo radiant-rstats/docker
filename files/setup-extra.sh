@@ -17,7 +17,7 @@ fi
 NCPUS=${NCPUS:--1}
 
 export DEBIAN_FRONTEND=noninteractive
-RUN apt-get update -qq && apt-get -y install \
+apt-get update -qq && apt-get -y install \
   libcurl4-openssl-dev \
   libssl-dev \
   imagemagick \
