@@ -36,7 +36,7 @@ ENV JUPYTER_ENABLE_LAB=1
 
 # NOTE: check env setting in jupyterhub_config()
 
-# limit the number of threads that a container can access from R
+## limit the number of threads that a container can access from R
 RUN R -e "install.packages('RhpcBLASctl', Ncpus=-1)"
 RUN echo "OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
     && echo "OMP_NUM_THREADS=$OMP_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
