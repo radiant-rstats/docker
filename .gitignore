@@ -6,9 +6,9 @@
 .ipynb_checkpoints
 .mypy_cache
 .vscode
-rsm-mgta453
-rsm-shiny
 files/ca.sh
 files/ccr.sh
 build-images.out
+rsm-shiny/
 rsm-test/
+rsm-mgta495/

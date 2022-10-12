@@ -52,15 +52,17 @@ if [ "$RSTUDIO_VERSION" = "latest" ]; then
 fi
 
 if [ "$(uname -m)" != "aarch64" ]; then
-  if [ "$RSTUDIO_VERSION" = "stable" ] || [ "$RSTUDIO_VERSION" = "preview" ] || [ "$RSTUDIO_VERSION" = "daily" ]; then
-    wget "https://rstudio.org/download/latest/${RSTUDIO_VERSION}/server/jammy/rstudio-server-latest-${ARCH}.deb" -O "$DOWNLOAD_FILE"
-  else
-    wget "https://download2.rstudio.org/server/jammy/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE" \
-    || wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE"
-  fi
+  # if [ "$RSTUDIO_VERSION" = "stable" ] || [ "$RSTUDIO_VERSION" = "preview" ] || [ "$RSTUDIO_VERSION" = "daily" ]; then
+  #   wget "https://rstudio.org/download/latest/${RSTUDIO_VERSION}/server/jammy/rstudio-server-latest-${ARCH}.deb" -O "$DOWNLOAD_FILE"
+  # else
+  #   wget "https://download2.rstudio.org/server/jammy/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE" \
+  #   || wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE"
+  # fi
+  wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/amd64/rstudio-server-2022.12.0-daily-259-amd64.deb" -O "$DOWNLOAD_FILE"
 else
   # wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2022.11.0-daily-115-arm64.deb" -O "$DOWNLOAD_FILE" # working
-  wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2022.11.0-daily-123-arm64.deb" -O "$DOWNLOAD_FILE"
+  #wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2022.11.0-daily-123-arm64.deb" -O "$DOWNLOAD_FILE"
+  wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2022.12.0-daily-259-arm64.deb" -O "$DOWNLOAD_FILE"
 fi
 
 dpkg -i "$DOWNLOAD_FILE"
