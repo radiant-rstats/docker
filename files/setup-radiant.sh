@@ -34,6 +34,7 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     libjpeg-dev \
     libsnappy-dev \
     libre2-dev \
+    libcurl4 \
     && rm -rf /var/lib/apt/lists/*
 
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
