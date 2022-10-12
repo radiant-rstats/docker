@@ -29,6 +29,8 @@ apt-get update -qq && apt-get -y install \
   libgeos-dev \
   libproj-dev
 
-R -e "install.packages(c('magick', 'leaflet'), repo='${CRAN}', Ncpus=${NCPUS})" 
+R -e "install.packages(c('magick', 'leaflet'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "remotes::install_github('vnijs/webshot', upgrade = 'never')" \
+  -e "webshot::install_phantomjs()"
 
 rm -rf /tmp/downloaded_packages
