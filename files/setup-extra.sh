@@ -27,7 +27,8 @@ apt-get update -qq && apt-get -y install \
   libgdal-dev \
   gdal-bin \
   libgeos-dev \
-  libproj-dev
+  libproj-dev \
+  pandoc
 
 R -e "install.packages(c('magick', 'leaflet'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('vnijs/webshot', upgrade = 'never')" \
