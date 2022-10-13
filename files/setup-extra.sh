@@ -27,11 +27,13 @@ apt-get update -qq && apt-get -y install \
   libgdal-dev \
   gdal-bin \
   libgeos-dev \
-  libproj-dev \
-  pandoc
+  libproj-dev
 
 R -e "install.packages(c('magick', 'leaflet'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('vnijs/webshot', upgrade = 'never')" \
   -e "webshot::install_phantomjs()"
+
+# updating conda pandoc
+mamba install --quiet --yes -c conda-forge pandoc>=2.19.2
 
 rm -rf /tmp/downloaded_packages

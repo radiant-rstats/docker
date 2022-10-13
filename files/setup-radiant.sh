@@ -34,7 +34,6 @@ apt-get update -qq && apt-get -y --no-install-recommends install \
     libjpeg-dev \
     libsnappy-dev \
     libre2-dev \
-    libcurl4 \
     && rm -rf /var/lib/apt/lists/*
 
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
@@ -53,8 +52,7 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.model', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')" \
-  -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
-  -e "webshot::install_phantomjs()"
+  -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')"
 
 # arrow install from source is not currently working on aarch64
 # https://issues.apache.org/jira/projects/ARROW/issues/ARROW-17374?filter=allopenissues
