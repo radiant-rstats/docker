@@ -17,6 +17,8 @@ fi
 NCPUS=${NCPUS:--1}
 
 if [ -f "/opt/conda/bin/R" ]; then
+  mamba install --quiet --yes -c conda-forge snappy
+else
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq && apt-get -y --no-install-recommends install \
       libicu-dev \
@@ -34,8 +36,6 @@ if [ -f "/opt/conda/bin/R" ]; then
       libjpeg-dev \
       libcurl4-openssl-dev \
       && rm -rf /var/lib/apt/lists/*
-else
-  mamba install --quiet --yes -c conda-forge snappy
 fi
 
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
