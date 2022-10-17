@@ -17,7 +17,7 @@ fi
 NCPUS=${NCPUS:--1}
 
 if [ -f "/opt/conda/bin/R" ]; then
-  mamba install --quiet --yes -c conda-forge snappy
+  mamba install --quiet --yes -c conda-forge snappy cmake
 else
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq && apt-get -y --no-install-recommends install \
