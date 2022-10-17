@@ -86,6 +86,24 @@ RUN chmod 755 setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
+# make system (conda) R the first choice
+ENV R_VERSION=4.2.1
+ENV TERM=xterm
+ENV R_HOME=/opt/conda/lib/R
+ENV PATH="/usr/local/bin:$PATH"
+
+RUN mamba install --quiet --yes -c conda-forge \
+  "r-base>=${R_VERSION}" \
+  r-curl \
+  binutils \
+  libgit2 \
+  freetype \
+  libpng \
+  libtiff \
+  libjpeg-turbo \
+  c-compiler \
+  && ln -s /opt/conda/bin/R /usr/local/bin/R
+
 # not available through conda-forge for both arm and amd
 # or the conda version is causing issues
 RUN pip install jupyterlab-skip-traceback \
@@ -94,22 +112,6 @@ RUN pip install jupyterlab-skip-traceback \
   shiny \
   rpy2 \
   catboost
-
-ENV R_VERSION=4.2.1
-ENV TERM=xterm
-ENV R_HOME=/opt/conda/lib/R
-# ENV TZ=Etc/UTC
-
-RUN mamba install --quiet --yes -c conda-forge \
-  "r-base>=$R_version" \
-  r-curl \
-  binutils \
-  libgit2 \
-  freetype \
-  libpng \
-  libtiff \
-  libjpeg-turbo \
-  c-compiler
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
@@ -262,10 +264,6 @@ RUN mamba update --yes pandoc \
   && mamba clean --all -f -y \
   && fix-permissions "${CONDA_DIR}" \
   && fix-permissions "/home/${NB_USER}"
-
-# make system (conda) R the first choice
-ENV PATH="/usr/local/bin:$PATH"
-RUN ln -s /opt/conda/bin/R /usr/local/bin/R
 
 EXPOSE 8181 8282 8765 8989 8501 8000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
