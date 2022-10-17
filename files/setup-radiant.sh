@@ -55,6 +55,6 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
-  -e "Sys.setenv('ARROW_PARQUET'='ON'); install.packages(c('duckdb', 'arrow'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "Sys.setenv('ARROW_PARQUET'='ON'); install.packages(c('duckdb', 'arrow'), repo='${CRAN}', Ncpus=${NCPUS})"
 
 rm -rf /tmp/downloaded_packages
