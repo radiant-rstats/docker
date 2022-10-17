@@ -79,15 +79,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   python-duckdb \
   snowflake-connector-python \
   bash_kernel \
-  "r-base>=4.2.1" \
-  r-curl \
-  binutils \
-  libgit2 \
-  freetype \
-  libpng \
-  libtiff \
-  libjpeg-turbo \
-  c-compiler \
   && python -m bash_kernel.install
 
 COPY files/setup-ml-frameworks.sh setup.sh
@@ -95,18 +86,30 @@ RUN chmod 755 setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-ENV R_VERSION=4.2.1
-ENV TERM=xterm
-ENV R_HOME=/opt/conda/lib/R
-ENV TZ=Etc/UTC
-
-# not available through conda-forge
+# not available through conda-forge for both arm and amd
+# or the conda version is causing issues
 RUN pip install jupyterlab-skip-traceback \
   lckr-jupyterlab-variableinspector \
   radian \
   shiny \
   rpy2 \
   catboost
+
+ENV R_VERSION=4.2.1
+ENV TERM=xterm
+ENV R_HOME=/opt/conda/lib/R
+# ENV TZ=Etc/UTC
+
+RUN mamba install --quiet --yes -c conda-forge \
+  "r-base>=$R_version" \
+  r-curl \
+  binutils \
+  libgit2 \
+  freetype \
+  libpng \
+  libtiff \
+  libjpeg-turbo \
+  c-compiler
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
