@@ -8,6 +8,7 @@ set -e
 NCPUS=${NCPUS:--1}
 
 ##  mechanism to force source installs if we're using RSPM
+UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}
 CRAN=${CRAN:-https://cran.r-project.org}
 CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
 

@@ -11,8 +11,7 @@
 
 set -e
 
-# RSTUDIO_VERSION=${1:-${RSTUDIO_VERSION:-"stable"}}
-RSTUDIO_VERSION=${1:-${RSTUDIO_VERSION:-"preview"}}
+UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}
 
 DEFAULT_USER=${DEFAULT_USER:-jovyan}
 ARCH=$(dpkg --print-architecture)
@@ -29,16 +28,12 @@ apt-get install -y --no-install-recommends \
     libobjc4 \
     libssl-dev \
     libpq5 \
-    lsb-release \
     psmisc \
     procps \
     python-setuptools \
     pwgen \
     sudo \
     wget
-
-# wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.4_amd64.deb -O libssl1.0.0.deb && \
-#     dpkg -i libssl1.0.0.deb
 
 rm -rf /var/lib/apt/lists/*
 
@@ -52,17 +47,9 @@ if [ "$RSTUDIO_VERSION" = "latest" ]; then
 fi
 
 if [ "$(uname -m)" != "aarch64" ]; then
-  # if [ "$RSTUDIO_VERSION" = "stable" ] || [ "$RSTUDIO_VERSION" = "preview" ] || [ "$RSTUDIO_VERSION" = "daily" ]; then
-  #   wget "https://rstudio.org/download/latest/${RSTUDIO_VERSION}/server/jammy/rstudio-server-latest-${ARCH}.deb" -O "$DOWNLOAD_FILE"
-  # else
-  #   wget "https://download2.rstudio.org/server/jammy/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE" \
-  #   || wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE"
-  # fi
-  wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/amd64/rstudio-server-2022.12.0-daily-259-amd64.deb" -O "$DOWNLOAD_FILE"
+  wget "https://s3.amazonaws.com/rstudio-ide-build/server/$UBUNTU_VERSION/amd64/rstudio-server-2022.12.0-daily-259-amd64.deb" -O "$DOWNLOAD_FILE"
 else
-  # wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2022.11.0-daily-115-arm64.deb" -O "$DOWNLOAD_FILE" # working
-  #wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2022.11.0-daily-123-arm64.deb" -O "$DOWNLOAD_FILE"
-  wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2022.12.0-daily-259-arm64.deb" -O "$DOWNLOAD_FILE"
+  wget "https://s3.amazonaws.com/rstudio-ide-build/server/$UBUNTU_VERSION/arm64/rstudio-server-2022.12.0-daily-259-arm64.deb" -O "$DOWNLOAD_FILE"
 fi
 
 dpkg -i "$DOWNLOAD_FILE"

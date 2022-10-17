@@ -166,7 +166,7 @@ if [ ! -d "${HOMEDIR}/.rsm-msba/TinyTex" ]; then
   echo "---------------------------------------------------"
   read tinytex
   if [ "${tinytex}" == "y" ]; then
-    /usr/local/bin/R -e "tinytex::install_tinytex(dir = '${HOMEDIR}/.rsm-msba/TinyTex')"
+    R -e "tinytex::install_tinytex(dir = '${HOMEDIR}/.rsm-msba/TinyTex')"
   fi
 fi
 

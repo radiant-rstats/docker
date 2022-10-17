@@ -14,6 +14,6 @@ fi
 
 NCPUS=${NCPUS:--1}
 
-/usr/local/bin/R -e "install.packages(c('cmdstanr', 'posterior', 'bayesplot'), repo='${CRAN}', Ncpus=${NCPUS})" \
+R -e "install.packages(c('cmdstanr', 'posterior', 'bayesplot'), repo='${CRAN}', Ncpus=${NCPUS})" \
 
 rm -rf /tmp/downloaded_packages

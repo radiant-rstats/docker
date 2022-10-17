@@ -1,6 +1,8 @@
 # version latest posted on 8-17-2022
 # FROM jupyter/pyspark-notebook:aarch64-ubuntu-22.04
-FROM jupyter/pyspark-notebook@sha256:436e045b96ab031f87acf68937619dc0751f5a36a40ba9cb8f8f86d3d8d43e08
+# FROM jupyter/pyspark-notebook@sha256:436e045b96ab031f87acf68937619dc0751f5a36a40ba9cb8f8f86d3d8d43e08
+# ubuntu-22.04 version latest posted on 10-12-2022 (arm64)
+FROM jupyter/pyspark-notebook@sha256:112f41dd959584d11f5544f103fec2b7678cd353fc213abd76ca6c7e216d2309
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -23,7 +25,14 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   vim \
   vifm \
   wget \
-  rsync
+  rsync \
+  lsb-release \
+  libcurl4-openssl-dev \
+  libgit2-dev \
+  libfreetype6-dev \
+  libpng-dev \
+  libtiff5-dev \
+  libjpeg-dev
 
 ENV CMDSTAN_VERSION="2.30.0"
 RUN mamba install --quiet --yes -c conda-forge \
@@ -70,35 +79,37 @@ RUN mamba install --quiet --yes -c conda-forge \
   python-duckdb \
   snowflake-connector-python \
   bash_kernel \
+  "r-base>=4.2.1" \
+  r-curl \
+  binutils \
+  libgit2 \
+  freetype \
+  libpng \
+  libtiff \
+  libjpeg-turbo \
+  c-compiler \
   && python -m bash_kernel.install
 
 COPY files/setup-ml-frameworks.sh setup.sh
 RUN chmod 755 setup.sh \
   && ./setup.sh \
-  && rm setup.sh \
-  && mamba clean --all -f -y \
-  && fix-permissions "${CONDA_DIR}" \
-  && fix-permissions "/home/${NB_USER}"
-
-# not available through conda-forge
-RUN pip install jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector
+  && rm setup.sh
 
 ENV R_VERSION=4.2.1
 ENV TERM=xterm
-ENV R_HOME=/usr/local/lib/R
-ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/jammy/latest
+ENV R_HOME=/opt/conda/lib/R
 ENV TZ=Etc/UTC
 
-COPY files/install-R.sh install-R.sh
-RUN chmod 755 install-R.sh \
-  && ./install-R.sh \
-  && rm install-R.sh
+# not available through conda-forge
+RUN pip install jupyterlab-skip-traceback \
+  lckr-jupyterlab-variableinspector \
+  radian \
+  shiny \
+  rpy2 \
+  catboost
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
-
-RUN pip install rpy2 radian
 
 COPY files/setup-tidyverse.sh setup.sh
 RUN chmod +x setup.sh \
@@ -134,6 +145,12 @@ RUN apt -y update && \
   postgresql-contrib-${POSTGRES_VERSION}
 
 # Run the rest of the commands as the postgres user
+RUN addgroup ${NB_USER} postgres \
+  && addgroup postgres users \
+  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/ \
+  && chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
+  && chmod -R u=rwX,go= /var/lib/postgresql/${POSTGRES_VERSION}/
+
 USER postgres
 
 ARG PGPASSWORD=${PGPASSWORD:-postgres}
@@ -183,8 +200,7 @@ ENV PYTHONUSERBASE=${PYBASE} \
   RSTUDIO_WHICH_R=/usr/local/bin/R \
   SHELL=/bin/zsh \
   ZDOTDIR=/home/${NB_USER}/.rsm-msba/zsh \
-  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}" \
-  LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/aarch64-linux-gnu:/usr/lib/jvm/java-11-openjdk-arm64/lib/server
+  CMDSTAN="/opt/cmdstan/cmdstan-${CMDSTAN_VERSION}"
 
 COPY files/install-rstudio.sh setup.sh
 RUN chmod 755 setup.sh \
@@ -228,9 +244,6 @@ RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.
   && mv pgweb_dir/* /usr/local/bin/pgweb \
   && rm -rf pgweb_dir
 
-# adding shiny for python
-RUN pip install shiny
-
 # setting up jupyter-server-proxy extensions pgweb, gitgadget, and radiant
 RUN pip install git+https://github.com/vnijs/jupyter-pgweb-proxy.git \
   && pip install git+https://github.com/vnijs/jupyter-gitgadget-proxy.git \
@@ -242,8 +255,14 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-# make system R the first choice
+RUN mamba update --yes pandoc \
+  && mamba clean --all -f -y \
+  && fix-permissions "${CONDA_DIR}" \
+  && fix-permissions "/home/${NB_USER}"
+
+# make system (conda) R the first choice
 ENV PATH="/usr/local/bin:$PATH"
+RUN ln -s /opt/conda/bin/R /usr/local/bin/R
 
 EXPOSE 8181 8282 8765 8989 8501 8000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
