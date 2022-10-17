@@ -34,6 +34,8 @@ if [ -f "/opt/conda/bin/R" ]; then
       libjpeg-dev \
       libcurl4-openssl-dev \
       && rm -rf /var/lib/apt/lists/*
+else
+  mamba install --quiet --yes -c conda-forge snappy
 fi
 
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
