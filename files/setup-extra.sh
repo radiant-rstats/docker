@@ -16,7 +16,12 @@ fi
 
 NCPUS=${NCPUS:--1}
 
-if [ "$(which R)" != "/opt/conda/bin/R" ]; then
+if [ -f "/opt/conda/bin/R" ]; then
+  mamba install --quiet --yes -c conda-forge \
+    r-raster \
+    imagemagick \
+    libgdal
+else
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq && apt-get -y install \
     libcurl4-openssl-dev \
@@ -30,13 +35,6 @@ if [ "$(which R)" != "/opt/conda/bin/R" ]; then
     libgeos-dev \
     libproj-dev \
     && rm -rf /var/lib/apt/lists/*
-else
-  mamba install --quiet --yes -c conda-forge \
-    r-raster \
-    r-terra \
-    imagemagick \
-    gdal \
-    libgdal
 fi
 
 R -e "install.packages(c('magick', 'leaflet', 'devtools'), repo='${CRAN}', Ncpus=${NCPUS})" \

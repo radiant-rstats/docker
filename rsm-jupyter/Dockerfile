@@ -110,8 +110,9 @@ RUN pip install jupyterlab-skip-traceback \
   lckr-jupyterlab-variableinspector \
   radian \
   shiny \
-  rpy2 \
-  catboost
+  rpy2
+
+# catboost # not available for arm64
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site

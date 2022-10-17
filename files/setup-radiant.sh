@@ -16,7 +16,7 @@ fi
 
 NCPUS=${NCPUS:--1}
 
-if [ "$(which R)" != "/opt/conda/bin/R" ]; then
+if [ -f "/opt/conda/bin/R" ]; then
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq && apt-get -y --no-install-recommends install \
       libicu-dev \
