@@ -33,12 +33,13 @@ RUN groupadd wheel -g 11 && \
     fix-permissions /var/lib/rstudio-server
 
 ENV JUPYTER_ENABLE_LAB=1
+ENV CRAN=${CRAN:-https://cran.r-project.org}
+ENV NCPUS=${NCPUS:--1}
 
 # NOTE: check env setting in jupyterhub_config()
-
 ## limit the number of threads that a container can access from R
-RUN R -e "install.packages('RhpcBLASctl', Ncpus=-1)"
-RUN echo "OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
+RUN R -e "install.packages('RhpcBLASctl', repo='${CRAN}', Ncpus=${NCPUS})" \
+    && echo "OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
     && echo "OMP_NUM_THREADS=$OMP_NUM_THREADS" >> /usr/local/lib/R/etc/Renviron.site \
     && echo 'RhpcBLASctl::blas_set_num_threads(Sys.getenv("OPENBLAS_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site \
     && echo 'RhpcBLASctl::omp_set_num_threads(Sys.getenv("OMP_NUM_THREADS"))' >> /usr/local/lib/R/etc/Renviron.site
