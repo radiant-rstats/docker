@@ -11,7 +11,6 @@ import docker
 
 c = get_config()
 
-# max_num_cpu = 6
 max_num_cpu = 6
 
 
@@ -101,7 +100,7 @@ c.DockerSpawner.environment = {"JUPYTER_ENABLE_LAB": "yes"}
 # notebook directory in the container
 c.DockerSpawner.volumes = {
     "/home/{username}": notebook_dir,
-    "pg_data_{username}": "/var/lib/postgresql/12/main",
+    "pg_data_{username}": "/var/lib/postgresql/14/main",
     "/srv/jupyterhub/resources": "/srv/jupyterhub/resources",
     "/srv/jupyterhub/capstone_data": "/srv/jupyterhub/capstone_data",
 }
