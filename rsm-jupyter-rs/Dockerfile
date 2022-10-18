@@ -265,6 +265,12 @@ RUN mamba update --yes pandoc \
   && fix-permissions "${CONDA_DIR}" \
   && fix-permissions "/home/${NB_USER}"
 
+# packages need for arrow
+COPY files/setup-arrow.sh setup.sh
+RUN chmod +x setup.sh \
+  && ./setup.sh \
+  && rm setup.sh
+
 EXPOSE 8181 8282 8765 8989 8501 8000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
