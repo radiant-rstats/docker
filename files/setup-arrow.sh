@@ -16,7 +16,7 @@ fi
 
 NCPUS=${NCPUS:--1}
 
-R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); install.packages(c('arrow', 'duckdb'), repo='${CRAN}', Ncpus=${NCPUS})"
+R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); install.packages('arrow', repo='${CRAN}', Ncpus=${NCPUS})"
 
   # does not work when you ARROW_WITH_SNAPPY 
   # when installed as follows, all pieces seem to work: Sys.setenv(ARROW_PARQUET='ON', ARROW_R_DEV=TRUE); install.packages('arrow')
