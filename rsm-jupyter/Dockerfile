@@ -62,7 +62,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   linearmodels \
   jupyterlab_widgets \
   jupytext \
-  jupyterlab_code_formatter \
   black \
   isort \
   jupyterlab-git \
@@ -102,15 +101,16 @@ RUN mamba install --quiet --yes -c conda-forge \
   libtiff \
   libjpeg-turbo \
   c-compiler \
+  rpy2 \
+  jupyterlab-variableinspector \
+  jupyterlab_code_formatter \
   && ln -s /opt/conda/bin/R /usr/local/bin/R
 
 # not available through conda-forge for both arm and amd
 # or the conda version is causing issues
 RUN pip install jupyterlab-skip-traceback \
-  lckr-jupyterlab-variableinspector \
   radian \
-  shiny \
-  rpy2
+  shiny
 
 # catboost # not available for arm64
 
