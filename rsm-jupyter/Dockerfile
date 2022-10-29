@@ -104,14 +104,13 @@ RUN mamba install --quiet --yes -c conda-forge \
   rpy2 \
   jupyterlab-variableinspector \
   jupyterlab_code_formatter \
+  shiny \
+  radian \
   && ln -s /opt/conda/bin/R /usr/local/bin/R
 
 # not available through conda-forge for both arm and amd
 # or the conda version is causing issues
-RUN pip install jupyterlab-skip-traceback \
-  radian \
-  shiny
-
+RUN pip install jupyterlab-skip-traceback
 # catboost # not available for arm64
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
