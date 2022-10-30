@@ -16,7 +16,8 @@ fi
 
 NCPUS=${NCPUS:--1}
 
-R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); install.packages('arrow', repo='${CRAN}', Ncpus=${NCPUS})"
+# R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); install.packages('arrow', repo='${CRAN}', Ncpus=${NCPUS})"
+R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); devtools::install_version('arrow', version='9.0.0.2', repos='${CRAN}', Ncpus=${NCPUS})"
 
 # for some reason this part needs to be at the end and does not work when combined with setup-radiant
 # Sys.setenv(ARROW_PARQUET='ON', ARROW_WITH_SNAPPY='ON', ARROW_R_DEV=TRUE); install.packages('arrow')
