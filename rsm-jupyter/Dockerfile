@@ -76,7 +76,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   openpyxl \
   pyarrow \
   python-duckdb \
-  polars \
   snowflake-connector-python \
   bash_kernel \
   && python -m bash_kernel.install
@@ -110,8 +109,10 @@ RUN mamba install --quiet --yes -c conda-forge \
 
 # not available through conda-forge for both arm and amd
 # or the conda version is causing issues
-RUN pip install jupyterlab-skip-traceback \
-  radian
+RUN pip install \
+  jupyterlab-skip-traceback \
+  radian \
+  polars
 
 # catboost # not available for arm64
 

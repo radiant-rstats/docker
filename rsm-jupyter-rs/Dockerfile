@@ -111,7 +111,10 @@ RUN mamba install --quiet --yes -c conda-forge \
 
 # not available through conda-forge for both arm and amd
 # or the conda version is causing issues
-RUN pip install jupyterlab-skip-traceback catboost
+RUN pip install \
+  jupyterlab-skip-traceback \
+  catboost \
+  polars
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
