@@ -18,6 +18,7 @@ NCPUS=${NCPUS:--1}
 
 if [ -f "/opt/conda/bin/R" ]; then
   mamba install --quiet --yes -c conda-forge \
+    r-rgdal \
     r-raster \
     imagemagick \
     libgdal
