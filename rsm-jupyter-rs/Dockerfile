@@ -76,7 +76,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   openpyxl \
   pyarrow \
   python-duckdb \
-  polars \
   snowflake-connector-python \
   bash_kernel \
   && python -m bash_kernel.install
