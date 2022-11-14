@@ -86,7 +86,7 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-ENV R_VERSION=4.2.1
+ENV R_VERSION=4.2.2
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
@@ -274,7 +274,7 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-EXPOSE 8181 8282 8765 8989 8501 8000
+EXPOSE 8181 8282 8765 8989 8501 8000 6006
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root

@@ -21,7 +21,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.4.4 --directory ~/project_1"
+  echo "Example: $0 --tag 2.6.0 --volume ~/project_1"
   echo ""
   exit 1
 }
@@ -402,7 +402,7 @@ else
   fi
   {
     docker run --name ${LABEL} --net ${NETWORK} --rm \
-      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8501:8501 \
+      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8501:8501 -p 127.0.0.1:8000:8000 -p 127.0.0.1:6006:6006 \
       -e NB_USER=0 -e NB_UID=1002 -e NB_GID=1002 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \

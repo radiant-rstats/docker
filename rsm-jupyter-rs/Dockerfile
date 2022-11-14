@@ -76,7 +76,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   openpyxl \
   pyarrow \
   python-duckdb \
-  polars \
   snowflake-connector-python \
   bash_kernel \
   && python -m bash_kernel.install
@@ -87,7 +86,7 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-ENV R_VERSION=4.2.1
+ENV R_VERSION=4.2.2
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
@@ -106,15 +105,15 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyterlab-variableinspector \
   jupyterlab_code_formatter \
   shiny \
-  radian \
   && ln -s /opt/conda/bin/R /usr/local/bin/R
 
 # not available through conda-forge for both arm and amd
 # or the conda version is causing issues
 RUN pip install \
   jupyterlab-skip-traceback \
-  catboost \
-  polars
+  radian \
+  polars \
+  catboost
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
@@ -274,7 +273,7 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-EXPOSE 8181 8282 8765 8989 8501 8000
+EXPOSE 8181 8282 8765 8989 8501 8000 6006
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root

@@ -55,4 +55,7 @@ R -e "install.packages(c('magick', 'leaflet', 'devtools'), repo='${CRAN}', Ncpus
   -e "remotes::install_github('vnijs/webshot', upgrade = 'never')" \
   -e "webshot::install_phantomjs()"
 
+# for Machine Learning with PyTorch and Scikit-Learn
+mamba install --quiet --yes -c conda-forge pytorch-lightning tensorboard
+
 rm -rf /tmp/downloaded_packages

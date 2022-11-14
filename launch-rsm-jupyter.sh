@@ -21,7 +21,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.4.5 --volume ~/project_1"
+  echo "Example: $0 --tag 2.6.0 --volume ~/project_1"
   echo ""
   exit 1
 }
@@ -368,7 +368,7 @@ else
   fi
   {
     docker run --name ${LABEL} --net ${NETWORK} -d \
-      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 -p 127.0.0.1:8282:8282 -p 127.0.0.1:8501:8501 -p 127.0.0.1:8000:8000 \
+      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 -p 127.0.0.1:8282:8282 -p 127.0.0.1:8501:8501 -p 127.0.0.1:8000:8000 -p 127.0.0.1:6006:6006 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -472,7 +472,7 @@ else
             -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
             ${IMAGE}:${IMAGE_VERSION} 2>/dev/null
           rstudio_abend
-          sleep 4s
+          sleep 4
         }
         open_browser http://localhost:${menu_arg}/rstudio
       fi
@@ -580,6 +580,9 @@ else
       fi
       if [ "$ARG_DIR" != "" ]; then
         CMD="$CMD -d ${ARG_DIR}"
+      fi
+      if [ "$ARG_VOLUME" != "" ]; then
+        CMD="$CMD -v ${ARG_VOLUME}"
       fi
       $CMD
       exit 1
