@@ -2,7 +2,9 @@
 # FROM jupyter/pyspark-notebook:ubuntu-22.04
 # FROM jupyter/pyspark-notebook@sha256:0c2635651aa3576e6870e8702c989b32dcc71bdcf0167812de55983e9d720316
 # ubuntu-22.04 version latest posted on 10-12-2022 (amd64)
-FROM jupyter/pyspark-notebook@sha256:c02dfe9defdd9bc8f8329a0bb7361a5f76a58bf1c8f66eefb2e7f55ef9b4d068
+# FROM jupyter/pyspark-notebook@sha256:c02dfe9defdd9bc8f8329a0bb7361a5f76a58bf1c8f66eefb2e7f55ef9b4d068
+# ubuntu-22.04 version latest posted on 11-21-2022 (amd64)
+FROM jupyter/pyspark-notebook@sha256:969d58e6dec81f2f2822987c7aee8437477a1e15057d5ca4787ec023fd561831
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -64,6 +66,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupytext \
   black \
   isort \
+  nltk \
   jupyterlab-git \
   jupyterlab-spellchecker \
   jupyter-server-proxy \
