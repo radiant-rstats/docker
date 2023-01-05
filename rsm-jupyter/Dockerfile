@@ -277,6 +277,9 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
+# using 'local' version of pyrsm for now
+RUN mamba install --yes -c vnijs pyrsm
+
 EXPOSE 8181 8282 8765 8989 8501 8000 6006
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
