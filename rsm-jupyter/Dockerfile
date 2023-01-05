@@ -37,7 +37,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libjpeg-dev
 
 ENV CMDSTAN_VERSION="2.30.0"
-RUN mamba install --quiet --yes -c conda-forge \
+ENV PYRSM_VERSION="0.6.2"
+RUN mamba install --quiet --yes -c vnijs -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
   sqlalchemy \
@@ -74,7 +75,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyterlab-system-monitor \
   flask \
   streamlit \
-  pyrsm \
+  "pyrsm>=${PYRSM_VERSION}" \
   xlrd \
   openpyxl \
   pyarrow \

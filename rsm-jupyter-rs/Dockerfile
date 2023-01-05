@@ -37,7 +37,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libjpeg-dev
 
 ENV CMDSTAN_VERSION="2.30.0"
-RUN mamba install --quiet --yes -c conda-forge \
+ENV PYRSM_VERSION="0.6.2"
+RUN mamba install --quiet --yes -c vnijs -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
   sqlalchemy \
@@ -74,7 +75,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyterlab-system-monitor \
   flask \
   streamlit \
-  pyrsm \
+  "pyrsm>=${PYRSM_VERSION}" \
   xlrd \
   openpyxl \
   pyarrow \
@@ -275,9 +276,6 @@ COPY files/setup-arrow.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
-
-# using 'local' version of pyrsm for now
-RUN mamba install --yes -c vnijs "pyrsm>=0.6.2"
 
 EXPOSE 8181 8282 8765 8989 8501 8000 6006
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
