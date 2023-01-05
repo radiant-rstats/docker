@@ -39,10 +39,10 @@ ENV NCPUS=${NCPUS:--1}
 # NOTE: check env setting in jupyterhub_config()
 ## limit the number of threads that a container can access from R
 RUN R -e "install.packages('RhpcBLASctl', repo='${CRAN}', Ncpus=${NCPUS})" \
-    && echo "OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS" >> ${R_HOME}/etc/Renviron.site \
-    && echo "OMP_NUM_THREADS=$OMP_NUM_THREADS" >> ${R_HOME}/etc/Renviron.site \
-    && echo 'RhpcBLASctl::blas_set_num_threads(Sys.getenv("OPENBLAS_NUM_THREADS"))' >> ${R_HOME}/etc/Renviron.site \
-    && echo 'RhpcBLASctl::omp_set_num_threads(Sys.getenv("OMP_NUM_THREADS"))' >> ${R_HOME}/etc/Renviron.site
+    && echo "OPENBLAS_NUM_THREADS=8" >> ${R_HOME}/etc/Renviron.site \
+    && echo "OMP_NUM_THREADS=8" >> ${R_HOME}/etc/Renviron.site \
+    && echo 'RhpcBLASctl::blas_set_num_threads(Sys.getenv("OPENBLAS_NUM_THREADS"))' >> ${R_HOME}/etc/Rprofile.site \
+    && echo 'RhpcBLASctl::omp_set_num_threads(Sys.getenv("OMP_NUM_THREADS"))' >> ${R_HOME}/etc/Rprofile.site
 
 # RUN conda remove -y --force jupyterlab_code_formatter
 # RUN pip install jupyterlab_code_formatter
