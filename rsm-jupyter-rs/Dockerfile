@@ -42,7 +42,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
 # libtiff5-dev \
 # libjpeg-dev
 
-ENV CMDSTAN_VERSION="2.30.0"
+ENV CMDSTAN_VERSION="2.31.0"
 ENV PYRSM_VERSION="0.6.2"
 RUN mamba install --quiet --yes -c vnijs -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \

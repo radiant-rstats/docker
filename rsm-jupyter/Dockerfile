@@ -89,7 +89,6 @@ RUN mamba install --quiet --yes -c vnijs -c conda-forge \
   bash_kernel \
   && python -m bash_kernel.install
 
-
 # causing issues with 1/12/2023 update
 # snowflake-connector-python
 
@@ -286,9 +285,6 @@ COPY files/setup-arrow.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
-
-# using 'local' version of pyrsm for now
-RUN mamba install --yes -c vnijs "pyrsm>=0.6.2"
 
 EXPOSE 8181 8282 8765 8989 8501 8000 6006
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
