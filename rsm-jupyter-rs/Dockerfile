@@ -34,11 +34,13 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   rsync \
   lsb-release \
   libcurl4-openssl-dev \
-  libgit2-dev \
-  libfreetype6-dev \
-  libpng-dev \
-  libtiff5-dev \
-  libjpeg-dev
+  git
+
+# libgit2-dev
+# libfreetype6-dev \
+# libpng-dev \
+# libtiff5-dev \
+# libjpeg-dev
 
 ENV CMDSTAN_VERSION="2.30.0"
 ENV PYRSM_VERSION="0.6.2"
@@ -84,9 +86,11 @@ RUN mamba install --quiet --yes -c vnijs -c conda-forge \
   openpyxl \
   pyarrow \
   python-duckdb \
-  snowflake-connector-python \
   bash_kernel \
   && python -m bash_kernel.install
+
+# causing issues with 1/12/2023 update
+# snowflake-connector-python
 
 COPY files/setup-ml-frameworks.sh setup.sh
 RUN chmod 755 setup.sh \
