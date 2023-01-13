@@ -6,6 +6,8 @@
 # ubuntu-22.04 version latest posted on 11-21-2022 (arm64)
 # FROM jupyter/pyspark-notebook@sha256:e63e4b2c924dd476b5f45099f29f3d96527dbdd504752f194102ff1fb3c084af
 # ubuntu-22.04 version latest posted on 1-8-2023 (arm64)
+# FROM jupyter/pyspark-notebook@sha256:30431a60056648ae0a0d0e9ab51a2772102e5d22e9de3b1fc418ee54ac00579c
+# python 3.10.8 version posted on 1-8-2023 (arm64)
 FROM jupyter/pyspark-notebook@sha256:30431a60056648ae0a0d0e9ab51a2772102e5d22e9de3b1fc418ee54ac00579c
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
@@ -32,11 +34,13 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   rsync \
   lsb-release \
   libcurl4-openssl-dev \
-  libgit2-dev \
-  libfreetype6-dev \
-  libpng-dev \
-  libtiff5-dev \
-  libjpeg-dev
+  git
+
+# libgit2-dev
+# libfreetype6-dev \
+# libpng-dev \
+# libtiff5-dev \
+# libjpeg-dev
 
 ENV CMDSTAN_VERSION="2.30.0"
 ENV PYRSM_VERSION="0.6.2"

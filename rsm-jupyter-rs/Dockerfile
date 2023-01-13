@@ -5,7 +5,9 @@
 # FROM jupyter/pyspark-notebook@sha256:c02dfe9defdd9bc8f8329a0bb7361a5f76a58bf1c8f66eefb2e7f55ef9b4d068
 # ubuntu-22.04 version latest posted on 11-21-2022 (amd64)
 # FROM jupyter/pyspark-notebook@sha256:969d58e6dec81f2f2822987c7aee8437477a1e15057d5ca4787ec023fd561831
-# ubuntu-22.04 version latest posted on 1-8-2023 (arm64)
+# ubuntu-22.04 version latest posted on 1-8-2023 (amd64)
+# FROM jupyter/pyspark-notebook@sha256:216ee24a0adcc70f05740ecd7b2c5c7f8fcb7d4a662df4399f4d87f92c15e3be
+# python 3.10.8 version posted on 1-8-2023 (amd64)
 FROM jupyter/pyspark-notebook@sha256:216ee24a0adcc70f05740ecd7b2c5c7f8fcb7d4a662df4399f4d87f92c15e3be
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
