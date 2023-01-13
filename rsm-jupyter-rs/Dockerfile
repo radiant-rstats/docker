@@ -4,7 +4,9 @@
 # ubuntu-22.04 version latest posted on 10-12-2022 (amd64)
 # FROM jupyter/pyspark-notebook@sha256:c02dfe9defdd9bc8f8329a0bb7361a5f76a58bf1c8f66eefb2e7f55ef9b4d068
 # ubuntu-22.04 version latest posted on 11-21-2022 (amd64)
-FROM jupyter/pyspark-notebook@sha256:969d58e6dec81f2f2822987c7aee8437477a1e15057d5ca4787ec023fd561831
+# FROM jupyter/pyspark-notebook@sha256:969d58e6dec81f2f2822987c7aee8437477a1e15057d5ca4787ec023fd561831
+# ubuntu-22.04 version latest posted on 1-8-2023 (arm64)
+FROM jupyter/pyspark-notebook@sha256:216ee24a0adcc70f05740ecd7b2c5c7f8fcb7d4a662df4399f4d87f92c15e3be
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -235,11 +237,11 @@ RUN mkdir -p /var/log/supervisor \
   && fix-permissions "${CONDA_DIR}"
 
 # copy base conda environment management script
-COPY files/cc.sh /usr/local/bin/cc
-COPY files/cl.sh /usr/local/bin/cl
-COPY files/cr.sh /usr/local/bin/cr
-COPY files/ci.sh /usr/local/bin/ci
-COPY files/ce.sh /usr/local/bin/ce
+COPY files/ccenv.sh /usr/local/bin/ccenv
+COPY files/clist.sh /usr/local/bin/clist
+COPY files/crem.sh /usr/local/bin/crem
+COPY files/cimp.sh /usr/local/bin/cimp
+COPY files/cexp.sh /usr/local/bin/cexp
 
 # Copy the launch script into the image
 COPY launch-${DOCKERHUB_NAME}.sh /opt/launch.sh
