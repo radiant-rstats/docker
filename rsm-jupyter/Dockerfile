@@ -36,14 +36,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libcurl4-openssl-dev \
   git
 
-# libgit2-dev
-# libfreetype6-dev \
-# libpng-dev \
-# libtiff5-dev \
-# libjpeg-dev
-
 ENV CMDSTAN_VERSION="2.31.0"
-ENV PYRSM_VERSION="0.6.2"
+ENV PYRSM_VERSION="0.6.6"
 RUN mamba install --quiet --yes -c vnijs -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
@@ -79,6 +73,7 @@ RUN mamba install --quiet --yes -c vnijs -c conda-forge \
   jupyter-server-proxy \
   jupyter-rsession-proxy \
   jupyterlab-system-monitor \
+  mamba_gator \
   flask \
   streamlit \
   "pyrsm>=${PYRSM_VERSION}" \
@@ -124,7 +119,9 @@ RUN mamba install --quiet --yes -c conda-forge \
 RUN pip install \
   jupyterlab-skip-traceback \
   radian \
-  polars
+  polars \
+  connectorx \
+  xlsx2csv
 
 # catboost # not available for arm64
 

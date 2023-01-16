@@ -74,7 +74,7 @@ launcher () {
 
 if [ "$(uname -m)" = "arm64" ]; then
   LABEL=rsm-jupyter
-  build NO
+  build
 else
   LABEL=rsm-jupyter-rs
   build
