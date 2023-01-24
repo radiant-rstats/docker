@@ -241,10 +241,10 @@ RUN mkdir -p /var/log/supervisor \
 
 # copy base conda environment management script
 COPY files/ccenv.sh /usr/local/bin/ccenv
-COPY files/clist.sh /usr/local/bin/clist
-COPY files/crem.sh /usr/local/bin/crem
-COPY files/cimp.sh /usr/local/bin/cimp
-COPY files/cexp.sh /usr/local/bin/cexp
+COPY files/cl.sh /usr/local/bin/cl
+COPY files/cr.sh /usr/local/bin/cr
+COPY files/ci.sh /usr/local/bin/ci
+COPY files/ce.sh /usr/local/bin/ce
 
 # Copy the launch script into the image
 COPY launch-${DOCKERHUB_NAME}.sh /opt/launch.sh

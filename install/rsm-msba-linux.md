@@ -217,6 +217,14 @@ To install Python modules that will **not** persist after restarting the docker 
 
 After installing a module you will have to restart any running Python kernels to `import` the module in your code.
 
+### Using pip to install python packages
+
+We recommand you use conda to install any additional packages you might need (see section below). However, it possible that no conda version of the package you want exists. In that case, you can use pip to install packages. For example, you can use the command below to install a new version of the `pyrsm` package. Note that adding `--user` is important to ensure the package is still available after you restart the docker container
+
+```
+pip install --user "pyrsm>=0.6.9"
+```
+
 ### Conda convenience functions
 
 To install Python modules that **will** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
@@ -228,15 +236,15 @@ exit;
 Reopen a terminal and run the below. Here `myenv` if a new conda environment and `pyasn1` is a package to install.
 
 ```
-cc myenv pyasn1
+ccenv myenv pyasn1
 ```
 
 After refreshing your browser window showing JupyterLab you should see a new icon `myenv`. Click on this icon and run `import pyasn1`. If you do not see an error message you will have successfully created a new conda environment. You can now create your own conda environments with whatever packages you need.
 
-You can also use the `cc` function to add more python package to a specific environment:
+You can also use the `ccenv` function to add more python package to a specific environment:
 
 ```
-cc myenv package_a package_b package_c
+ccenv myenv package_a package_b package_c
 ```
 
 To list all available conda environments, use the `cl` command from a terminal in JuyterLab. To remove a conda environment use `cr myenv` where `myenv` is the environment you want to remove. To export an environment to share with others, use `ce myenv`. This will create a `myenv.yaml` file with information on all packages used in the `myenv` environment. To import a new environment from an existing `some_env.yaml` file use `ci some_env.yaml`. This will create a new environment called `some_env`.
@@ -244,12 +252,13 @@ To list all available conda environments, use the `cl` command from a terminal i
 If you want to see the code included in these functions, run the code below:
 
 ```
-cat /usr/local/bin/cc;
+cat /usr/local/bin/ccenv;
 cat /usr/local/bin/cl;
 cat /usr/local/bin/cr;
 cat /usr/local/bin/ce;
 cat /usr/local/bin/ci;
 ```
+
 ### Switching conda environments in the terminal
 
 If you want to change the conda environment used in a terminal you can use the command below:
@@ -278,7 +287,7 @@ Tips to avoid the python problems depicted in the comic linked below:
 
 ### Removing locally installed packages
 
-To remove locally installed R packages press 8 (+ Enter) in the launch menu and follow the prompts. To remove locally installed Python modules press 9 (+ Enter) in the launch menu.
+To remove locally installed R packages press 8 (and Enter) in the launch menu and follow the prompts. To remove Python modules installed locally using `pip` press 9 (and Enter) in the launch menu
 
 ## Committing changes to the computing environment
 
