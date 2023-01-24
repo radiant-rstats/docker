@@ -53,6 +53,7 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.design', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.basics', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.model', upgrade = 'never')" \
+  -e "remotes::install_github('radiant-rstats/radiant.model', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
