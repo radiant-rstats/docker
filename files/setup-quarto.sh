@@ -16,15 +16,11 @@ if [ "$(uname -m)" != "aarch64" ]; then
     ln -fs /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin
 else
     # not available for aarch64 yet
+    sudo apt-get update -qq && apt-get -y install gdebi-core
+    wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.3.191/quarto-1.3.191-linux-arm64.deb -O quarto.deb
+    sudo gdebi -n quarto.deb # adding -n to run non-interactively
     CRAN=$CRAN_SOURCE
-    # git clone https://github.com/quarto-dev/quarto-cli
-    # cd quarto-cli
-    # git checkout b064bec1efe7af4e3332c74f699686480baead12
-    # ./configure-linux.sh
-    # quarto check install
-    # see https://github.com/quarto-dev/quarto-cli/issues/781
 fi
-
 
 # Get R packages
 R -e "install.packages('quarto', repo='${CRAN}', Ncpus=${NCPUS})"

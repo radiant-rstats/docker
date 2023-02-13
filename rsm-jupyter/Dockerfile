@@ -37,8 +37,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   git
 
 ENV CMDSTAN_VERSION="2.31.0"
-ENV PYRSM_VERSION="0.6.9"
-RUN mamba install --quiet --yes -c vnijs -c conda-forge \
+ENV PYRSM_VERSION="0.7.3"
+RUN mamba install --quiet --yes -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
   sqlalchemy \
