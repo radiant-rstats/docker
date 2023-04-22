@@ -384,7 +384,6 @@ else
 
   { 
     # check if network already exists
-    echo "--- Docker network ${NETWORK} already exists ---"
     docker network inspect ${NETWORK} >/dev/null 2>&1 
   } || { 
     # if network doesn't exist create it

@@ -38,6 +38,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
 
 ENV CMDSTAN_VERSION="2.31.0"
 ENV PYRSM_VERSION="0.7.9"
+ENV CONDA_PYTHON_VERSION="3.11.0"
+# "python>=${CONDA_PYTHON_VERSION}" \
 RUN mamba install --quiet --yes -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
@@ -93,7 +95,8 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-ENV R_VERSION=4.3.0
+# ENV R_VERSION=4.3.0
+ENV R_VERSION=4.2.3
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
