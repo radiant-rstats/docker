@@ -36,8 +36,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libcurl4-openssl-dev \
   git
 
-ENV CMDSTAN_VERSION="2.31.0"
-ENV PYRSM_VERSION="0.7.3"
+ENV CMDSTAN_VERSION="2.32.0"
+ENV PYRSM_VERSION="0.7.9"
 RUN mamba install --quiet --yes -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
@@ -80,6 +80,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   openpyxl \
   pyarrow \
   python-duckdb \
+  duckdb-engine \
   bash_kernel \
   && python -m bash_kernel.install
 
@@ -92,7 +93,7 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-ENV R_VERSION=4.2.2
+ENV R_VERSION=4.3.0
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
@@ -121,8 +122,8 @@ RUN pip install \
   polars \
   catboost \
   connectorx \
-  xlsx2csv
-
+  xlsx2csv \
+  jupysql
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site

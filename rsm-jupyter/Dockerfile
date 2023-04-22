@@ -37,7 +37,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   git
 
 ENV CMDSTAN_VERSION="2.31.0"
-ENV PYRSM_VERSION="0.7.3"
+ENV PYRSM_VERSION="0.7.9"
 RUN mamba install --quiet --yes -c conda-forge \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
@@ -80,6 +80,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   openpyxl \
   pyarrow \
   python-duckdb \
+  duckdb-engine \
   bash_kernel \
   && python -m bash_kernel.install
 
@@ -92,7 +93,7 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-ENV R_VERSION=4.2.2
+ENV R_VERSION=4.3.0
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
@@ -120,7 +121,8 @@ RUN pip install \
   radian \
   polars \
   connectorx \
-  xlsx2csv
+  xlsx2csv \
+  jupysql
 
 # catboost # not available for arm64
 

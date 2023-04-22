@@ -349,11 +349,15 @@ else
 
   BUILD_DATE=$(docker inspect -f '{{.Created}}' ${IMAGE}:${IMAGE_VERSION})
 
-  ## based on https://stackoverflow.com/a/52852871/1974918
-  has_network=$(docker network ls | awk "/ ${NETWORK} /" | awk '{print $2}')
-  if [ "${has_network}" == "" ]; then
+  { 
+    # check if network already exists
+    echo "--- Docker network ${NETWORK} already exists ---"
+    docker network inspect ${NETWORK} >/dev/null 2>&1 
+  } || { 
+    # if network doesn't exist create it
+    echo "--- Creating docker network: ${NETWORK} ---"
     docker network create ${NETWORK} 
-  fi
+  }
 
   echo $BOUNDARY
   echo "Starting the ${LABEL} computing environment on ${ostype} ${chip}"
