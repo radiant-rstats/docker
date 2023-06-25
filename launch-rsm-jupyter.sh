@@ -667,10 +667,11 @@ else
         echo "A Selenium container may already be running on port ${selenium_port}"
         selenium_nr=$((${selenium_nr}-1))
       else
-        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 127.0.0.1:${selenium_port}:4444 --platform linux/arm64 seleniumarm/standalone-firefox
+        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 127.0.0.1:${selenium_port}:4444 --platform linux/arm64 seleniarm/standalone-firefox
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
-      echo "${LABEL} container and ip: 127.0.0.1, port: ${selenium_port} from the host OS"
+      echo "${LABEL} container (selenium_${selenium_nr}:4444) and ip: 127.0.0.1," 
+      echo "port: ${selenium_port} (http://127.0.0.1:${selenium_port}) from the host OS"
       echo "Press any key to continue"
       echo $BOUNDARY
       read continue
@@ -772,6 +773,7 @@ else
       suspend_sessions () {
         active_session=$(docker exec -t $1 rstudio-server active-sessions | awk '/[0-9]+/ { print $1}' 2>/dev/null)
         if [ "${active_session}" != "" ] && [ "${active_session}" != "OCI" ]; then
+          echo "Stopping Rstudio sessions ..."
           docker exec -t $1 rstudio-server suspend-session ${active_session} 2>/dev/null
         fi
       }
@@ -781,13 +783,14 @@ else
         suspend_sessions $index
       done
 
-      clean_rsm_containers
-
       selenium_containers=$(docker ps -a --format {{.Names}} | grep 'selenium' | tr '\n' ' ')
       if [ "${selenium_containers}" != "" ]; then
+        echo "Stopping Selenium containers ..."
         eval "docker stop $selenium_containers"
         eval "docker container rm $selenium_containers"
       fi
+
+      clean_rsm_containers
 
       imgs=$(docker images | awk '/<none>/ { print $3 }')
       if [ "${imgs}" != "" ]; then

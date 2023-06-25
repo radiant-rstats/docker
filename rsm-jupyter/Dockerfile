@@ -84,6 +84,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   python-duckdb \
   duckdb-engine \
   bash_kernel \
+  sympy \
   && python -m bash_kernel.install
 
 # causing issues with 1/12/2023 update
@@ -101,7 +102,11 @@ ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
 
+# c-compiler \
+# gcc_linux-aarch64 \
+# RUN apt-get update && apt-get install -y g++-10
 RUN mamba install --quiet --yes -c conda-forge \
+  c-compiler \
   "r-base>=${R_VERSION}" \
   r-curl \
   binutils \
@@ -110,7 +115,8 @@ RUN mamba install --quiet --yes -c conda-forge \
   libpng \
   libtiff \
   libjpeg-turbo \
-  c-compiler \
+  libxml2 \
+  unixodbc \
   rpy2 \
   jupyterlab-variableinspector \
   jupyterlab_code_formatter \

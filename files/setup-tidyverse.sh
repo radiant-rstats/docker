@@ -17,31 +17,32 @@ fi
 
 NCPUS=${NCPUS:--1}
 
-if [ -f "/opt/conda/bin/R" ]; then
-  export DEBIAN_FRONTEND=noninteractive
-  apt-get update -qq \
-      && apt-get -y --no-install-recommends install \
-      libxml2-dev \
-      libcairo2-dev \
-      libgit2-dev \
-      libpq-dev \
-      libsasl2-dev \
-      libsqlite3-dev \
-      libssh2-1-dev \
-      libxtst6 \
-      libcurl4-openssl-dev \
-      libssl-dev \
-      unixodbc-dev \
-      libharfbuzz-dev \
-      libfribidi-dev \
-      libfreetype6-dev \
-      libpng-dev \
-      libtiff5-dev \
-      libjpeg-dev \
-      && rm -rf /var/lib/apt/lists/*
-fi
+# if [ -f "/opt/conda/bin/R" ]; then
+#   export DEBIAN_FRONTEND=noninteractive
+#   apt-get update -qq \
+#       && apt-get -y --no-install-recommends install \
+#       libxml2-dev \
+#       libcairo2-dev \
+#       libgit2-dev \
+#       libpq-dev \
+#       libsasl2-dev \
+#       libsqlite3-dev \
+#       libssh2-1-dev \
+#       libxtst6 \
+#       libcurl4-openssl-dev \
+#       libssl-dev \
+#       unixodbc-dev \
+#       libharfbuzz-dev \
+#       libfribidi-dev \
+#       libfreetype6-dev \
+#       libpng-dev \
+#       libtiff5-dev \
+#       libjpeg-dev \
+#       && rm -rf /var/lib/apt/lists/*
+# fi
 
-R -e "install.packages(c('tidyverse', 'rmarkdown', 'vroom', 'gert', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})" \
+R -e "install.packages(c('ragg', 'rlist'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "install.packages(c('tidyverse', 'rmarkdown', 'vroom', 'gert', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('dbplyr', 'DBI', 'dtplyr', 'RPostgres', 'RSQLite', 'fst'), repo='${CRAN}', Ncpus=${NCPUS})"
 
 rm -rf /tmp/downloaded_packages

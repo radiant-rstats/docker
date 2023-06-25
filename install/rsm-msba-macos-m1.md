@@ -121,6 +121,10 @@ cd ~/git/docker/vscode;
 cd -;
 ```
 
+If you get a "code: command not found" error when trying to launch VS Code from a terminal, follow the instructions below to add VS Code to your path:
+
+<https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line>
+
 To learn more about using VS Code to write python code see the links and comments below.
 
 - <a href="https://code.visualstudio.com/docs/python/python-tutorial#_create-a-python-hello-world-source-code-file" target="_blank">VS Code Python Tutorial</a>
