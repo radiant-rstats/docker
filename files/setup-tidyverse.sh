@@ -41,7 +41,10 @@ NCPUS=${NCPUS:--1}
 #       && rm -rf /var/lib/apt/lists/*
 # fi
 
-R -e "install.packages(c('ragg', 'rlist'), repo='${CRAN}', Ncpus=${NCPUS})" \
+# version 0.6.32 (2023-6-26) is causing install issues on 6/7/2023
+R -e "install.packages('remotes', repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "remotes::install_version('digest', version='0.6.31', repos='${CRAN}', Ncpus=${NCPUS})" \
+  -e "install.packages(c('ragg', 'rlist'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('tidyverse', 'rmarkdown', 'gert', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('dbplyr', 'DBI', 'dtplyr', 'RPostgres', 'RSQLite'), repo='${CRAN}', Ncpus=${NCPUS})"
 
