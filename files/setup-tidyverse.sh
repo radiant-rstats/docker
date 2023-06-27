@@ -42,7 +42,7 @@ NCPUS=${NCPUS:--1}
 # fi
 
 R -e "install.packages(c('ragg', 'rlist'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('tidyverse', 'rmarkdown', 'vroom', 'gert', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('dbplyr', 'DBI', 'dtplyr', 'RPostgres', 'RSQLite', 'fst'), repo='${CRAN}', Ncpus=${NCPUS})"
+  -e "install.packages(c('tidyverse', 'rmarkdown', 'gert', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "install.packages(c('dbplyr', 'DBI', 'dtplyr', 'RPostgres', 'RSQLite'), repo='${CRAN}', Ncpus=${NCPUS})"
 
 rm -rf /tmp/downloaded_packages

@@ -36,11 +36,11 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libcurl4-openssl-dev \
   git
 
-ENV CMDSTAN_VERSION="2.31.0"
-ENV PYRSM_VERSION="0.7.9"
-ENV CONDA_PYTHON_VERSION="3.11.0"
-# "python>=${CONDA_PYTHON_VERSION}" \
+ENV CMDSTAN_VERSION="2.32.2"
+ENV PANDAS_VERSION="2.0.2"
+ENV PYARROW_VERSION="12.0.0"
 RUN mamba install --quiet --yes -c conda-forge \
+  pandas=${PANDAS_VERSION} \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
   sqlalchemy \
@@ -75,12 +75,10 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyter-server-proxy \
   jupyter-rsession-proxy \
   jupyterlab-system-monitor \
-  flask \
   streamlit \
-  "pyrsm>=${PYRSM_VERSION}" \
   xlrd \
   openpyxl \
-  pyarrow \
+  pyarrow=${PYARROW_VERSION} \
   python-duckdb \
   duckdb-engine \
   bash_kernel \
@@ -120,7 +118,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   rpy2 \
   jupyterlab-variableinspector \
   jupyterlab_code_formatter \
-  shiny \
   && ln -s /opt/conda/bin/R /usr/local/bin/R
 
 # not available through conda-forge for both arm and amd
@@ -131,7 +128,9 @@ RUN pip install \
   polars \
   connectorx \
   xlsx2csv \
-  jupysql
+  jupysql \
+  shiny \
+  pyrsm
 
 # catboost # not available for arm64
 
@@ -288,6 +287,7 @@ RUN mamba update --yes pandoc \
   && fix-permissions "/home/${NB_USER}"
 
 # packages need for arrow
+COPY files/setup-arrow.sh setup.sh
 COPY files/setup-arrow.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \
