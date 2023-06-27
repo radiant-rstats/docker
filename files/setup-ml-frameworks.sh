@@ -38,7 +38,7 @@ else
 
 
   # mamba install -y pytorch torchvision "pillow<9" -c pytorch -c anaconda
-  mamba install -y "pillow<9" -c anaconda
+  # mamba install -y "pillow<9" -c anaconda
   mamba install -y pytorch torchvision cpuonly -c pytorch
 
   ## current version on conda-forge is 9.2.0
