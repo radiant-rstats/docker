@@ -1,14 +1,7 @@
-# version latest posted on 8-17-2022
-# FROM jupyter/pyspark-notebook:aarch64-ubuntu-22.04
-# FROM jupyter/pyspark-notebook@sha256:436e045b96ab031f87acf68937619dc0751f5a36a40ba9cb8f8f86d3d8d43e08
-# ubuntu-22.04 version latest posted on 10-12-2022 (arm64)
-# FROM jupyter/pyspark-notebook@sha256:112f41dd959584d11f5544f103fec2b7678cd353fc213abd76ca6c7e216d2309
-# ubuntu-22.04 version latest posted on 11-21-2022 (arm64)
-# FROM jupyter/pyspark-notebook@sha256:e63e4b2c924dd476b5f45099f29f3d96527dbdd504752f194102ff1fb3c084af
-# ubuntu-22.04 version latest posted on 1-8-2023 (arm64)
-# FROM jupyter/pyspark-notebook@sha256:30431a60056648ae0a0d0e9ab51a2772102e5d22e9de3b1fc418ee54ac00579c
 # python 3.10.8 version posted on 1-8-2023 (arm64)
 FROM jupyter/pyspark-notebook@sha256:30431a60056648ae0a0d0e9ab51a2772102e5d22e9de3b1fc418ee54ac00579c
+# python 3.11 version posted on 6-25-2023 (arm64)
+sha256:b18721c3abe68c5316aa71c1d783c459a18968b29154ab235ca33cef374c3b9a
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -83,6 +76,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   duckdb-engine \
   bash_kernel \
   sympy \
+  simpy \
   && python -m bash_kernel.install
 
 # causing issues with 1/12/2023 update
@@ -100,9 +94,6 @@ ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
 
-# c-compiler \
-# gcc_linux-aarch64 \
-# RUN apt-get update && apt-get install -y g++-10
 RUN mamba install --quiet --yes -c conda-forge \
   c-compiler \
   "r-base>=${R_VERSION}" \
@@ -287,7 +278,6 @@ RUN mamba update --yes pandoc \
   && fix-permissions "/home/${NB_USER}"
 
 # packages need for arrow
-COPY files/setup-arrow.sh setup.sh
 COPY files/setup-arrow.sh setup.sh
 RUN chmod +x setup.sh \
   && ./setup.sh \

@@ -1,14 +1,7 @@
-# version latest posted on 8-17-2022
-# FROM jupyter/pyspark-notebook:ubuntu-22.04
-# FROM jupyter/pyspark-notebook@sha256:0c2635651aa3576e6870e8702c989b32dcc71bdcf0167812de55983e9d720316
-# ubuntu-22.04 version latest posted on 10-12-2022 (amd64)
-# FROM jupyter/pyspark-notebook@sha256:c02dfe9defdd9bc8f8329a0bb7361a5f76a58bf1c8f66eefb2e7f55ef9b4d068
-# ubuntu-22.04 version latest posted on 11-21-2022 (amd64)
-# FROM jupyter/pyspark-notebook@sha256:969d58e6dec81f2f2822987c7aee8437477a1e15057d5ca4787ec023fd561831
-# ubuntu-22.04 version latest posted on 1-8-2023 (amd64)
-# FROM jupyter/pyspark-notebook@sha256:216ee24a0adcc70f05740ecd7b2c5c7f8fcb7d4a662df4399f4d87f92c15e3be
 # python 3.10.8 version posted on 1-8-2023 (amd64)
-FROM jupyter/pyspark-notebook@sha256:216ee24a0adcc70f05740ecd7b2c5c7f8fcb7d4a662df4399f4d87f92c15e3be
+# FROM jupyter/pyspark-notebook@sha256:216ee24a0adcc70f05740ecd7b2c5c7f8fcb7d4a662df4399f4d87f92c15e3be
+# python 3.11 version posted on 6-25-2023 (amd64)
+FROM jupyter/pyspark-notebook@sha256:cc4e4a6d19b0e05124e6340473346acfcd9bafb27bfcba153644810041a99c4d
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -36,9 +29,11 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libcurl4-openssl-dev \
   git
 
-ENV CMDSTAN_VERSION="2.32.0"
-ENV PYRSM_VERSION="0.7.9"
+ENV CMDSTAN_VERSION="2.32.2"
+ENV PANDAS_VERSION="2.0.2"
+ENV PYARROW_VERSION="12.0.0"
 RUN mamba install --quiet --yes -c conda-forge \
+  pandas=${PANDAS_VERSION} \
   cmdstan=${CMDSTAN_VERSION} \
   cmdstanpy \
   sqlalchemy \
@@ -73,15 +68,15 @@ RUN mamba install --quiet --yes -c conda-forge \
   jupyter-server-proxy \
   jupyter-rsession-proxy \
   jupyterlab-system-monitor \
-  flask \
   streamlit \
-  "pyrsm>=${PYRSM_VERSION}" \
   xlrd \
   openpyxl \
-  pyarrow \
+  pyarrow=${PYARROW_VERSION} \
   python-duckdb \
   duckdb-engine \
   bash_kernel \
+  sympy \
+  simpy \
   && python -m bash_kernel.install
 
 # causing issues with 1/12/2023 update
@@ -93,12 +88,14 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-ENV R_VERSION=4.3.0
+# ENV R_VERSION=4.3.0
+ENV R_VERSION=4.2.3
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
 
 RUN mamba install --quiet --yes -c conda-forge \
+  c-compiler \
   "r-base>=${R_VERSION}" \
   r-curl \
   binutils \
@@ -107,11 +104,11 @@ RUN mamba install --quiet --yes -c conda-forge \
   libpng \
   libtiff \
   libjpeg-turbo \
-  c-compiler \
+  libxml2 \
+  unixodbc \
   rpy2 \
   jupyterlab-variableinspector \
   jupyterlab_code_formatter \
-  shiny \
   && ln -s /opt/conda/bin/R /usr/local/bin/R
 
 # not available through conda-forge for both arm and amd
@@ -120,10 +117,13 @@ RUN pip install \
   jupyterlab-skip-traceback \
   radian \
   polars \
-  catboost \
   connectorx \
   xlsx2csv \
-  jupysql
+  jupysql \
+  shiny \
+  pyrsm
+
+# catboost # not available for arm64
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
