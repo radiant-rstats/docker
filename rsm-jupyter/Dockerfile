@@ -1,7 +1,9 @@
 # python 3.10.8 version posted on 1-8-2023 (arm64)
 # FROM jupyter/pyspark-notebook@sha256:30431a60056648ae0a0d0e9ab51a2772102e5d22e9de3b1fc418ee54ac00579c
 # python 3.11 version posted on 6-25-2023 (arm64)
-FROM jupyter/pyspark-notebook@sha256:b18721c3abe68c5316aa71c1d783c459a18968b29154ab235ca33cef374c3b9a
+# FROM jupyter/pyspark-notebook@sha256:b18721c3abe68c5316aa71c1d783c459a18968b29154ab235ca33cef374c3b9a
+# python 3.11 version posted on 6-13-2023 (arm64)
+FROM jupyter/pyspark-notebook@sha256:0b3cd3dadce9e1b088b4c987cf1b71ff9deaa1bbe90d89b095c757cb2badec13
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
