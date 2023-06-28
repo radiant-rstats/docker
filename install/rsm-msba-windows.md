@@ -42,7 +42,7 @@ Next, restart your computer and re-open PowerShell to install Ubuntu. You will b
 
 ```bash
 wsl --set-default-version 2
-wsl --install -d Ubuntu-20.04
+wsl --install -d Ubuntu-22.04
 ```
 
 > Important: Make sure to enter the same username and password you use to login to your computer
@@ -64,7 +64,7 @@ This should return the below:
 ```bash
 PS C:\WINDOWS\system32> wsl --list
 Windows Subsystem for Linux Distributions:
-Ubuntu-20.04 (Default)
+Ubuntu-22.04 (Default)
 docker-desktop-data
 docker-desktop
 ```
@@ -72,7 +72,7 @@ docker-desktop
 If Ubuntu is not set as the default linux distribution, update the default setting and double check that it is now correct
 
 ```bash
-wsl --setdefault Ubuntu-20.04
+wsl --setdefault Ubuntu-22.04
 wsl --list --online
 ```
 
