@@ -9,11 +9,11 @@ docker login
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 DOCKERHUB_VERSION=2.7.0
-# JHUB_VERSION=2.7.0
-JHUB_VERSION=2.6.5
+JHUB_VERSION=2.7.0
+# JHUB_VERSION=2.6.5
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
 
 if [ "$(uname -m)" = "arm64" ]; then
   ARCH="linux/arm64"
