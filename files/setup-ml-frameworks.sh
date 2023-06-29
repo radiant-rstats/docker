@@ -3,10 +3,11 @@ set -e
 
 if [ "$(uname -m)" != "aarch64" ]; then
   # has to be conda for some reason
-  conda install -y pytorch torchvision cpuonly -c pytorch
+  # conda install -y pytorch torchvision cpuonly -c pytorch
+  pip install -y pytorch torchvision
   # pip install jaxlib==0.3.7
   # pip install jaxlib==0.3.22
-  pip install jaxlib==0.3.24 numpyro
+  # pip install jaxlib==0.3.24 numpyro
 else
   # mamba install -y astunparse numpy ninja pyyaml setuptools cmake cffi \
   #   typing_extensions future six requests dataclasses
