@@ -1,11 +1,11 @@
-name: rsm-jupyter docker ci
+name: rsm-msba-arm docker ci
 
 on:
   push:
     branches:
       - 'master'
     paths:
-      - 'rsm-jupyter/**'
+      - 'rsm-msba-arm/**'
   workflow_dispatch:
 
 jobs:
@@ -34,8 +34,8 @@ jobs:
 #         id: tag_prep
 #         run: |
 #           TAGS="latest,$(git rev-parse --short '$GITHUB_SHA')"
-#           if [[ $(head -n 1 rsm-jupyter/Dockerfile) == "# __version__"* ]]; then
-#             TAGS="latest,$(head -n 1 rsm-jupyter/Dockerfile | sed 's/^# __version__ //')"
+#           if [[ $(head -n 1 rsm-msba-arm/Dockerfile) == "# __version__"* ]]; then
+#             TAGS="latest,$(head -n 1 rsm-msba-arm/Dockerfile | sed 's/^# __version__ //')"
 #           fi
 #           echo ::set-output name=tags::${TAGS}
       -
@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./rsm-jupyter/Dockerfile
+          file: ./rsm-msba-arm/Dockerfile
           platforms: linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-jupyter:testtag
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rsm-msba-arm:testtag

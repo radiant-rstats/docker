@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Starting the `rsm-jupyter` (or `rsm-jupyter-rs`) computing container also starts a postgresql server running on your machine. You can connect to the database from R using the code chunk below.
+Starting the `rsm-msba-arm` (or `rsm-msba-intel`) computing container also starts a postgresql server running on your machine. You can connect to the database from R using the code chunk below.
 
 ```{r}
 library(DBI)

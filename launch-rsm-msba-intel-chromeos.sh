@@ -5,7 +5,7 @@
 ## home directory
 
 ## use the command below on to launch the container:
-## ~/git/docker/launch-rsm-jupyter-rs.sh -v ~
+## ~/git/docker/launch-rsm-msba-intel.sh -v ~
 
 ## to map the directory where the launch script is located to
 ## the docker home directory call the script_home function
@@ -45,7 +45,7 @@ ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
 ID="vnijs"
-LABEL="rsm-jupyter-rs"
+LABEL="rsm-msba-intel"
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
 # Choose your timezone https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -154,7 +154,7 @@ else
 
   chip=""
   if [[ "$ostype" == "Linux" ]]; then
-    ostype="Linux"
+    ostype="ChromeOS"
     if [[ "$archtype" == "aarch64" ]]; then
       chip="(ARM64)"
     else
@@ -371,7 +371,7 @@ else
   fi
   {
     docker run --name ${LABEL} --net ${NETWORK} -d \
-      -p 127.0.0.1:8989:8989 -p 127.0.0.1:8765:8765 -p 127.0.0.1:8181:8181 -p 127.0.0.1:8282:8282 -p 127.0.0.1:8501:8501 -p 127.0.0.1:8000:8000 -p 127.0.0.1:6006:6006 \
+      -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 -p 0.0.0.0:8181:8181 -p 0.0.0.0:8282:8282 -p 0.0.0.0:8501:8501 -p 0.0.0.0:8000:8000 -p 0.0.0.0:6006:6006 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -453,7 +453,7 @@ else
       else
         echo "Starting Jupyter Lab in the default browser on localhost:${menu_arg}/lab"
         docker run --net ${NETWORK} --name "${LABEL}-${menu_arg}" -d \
-          -p 127.0.0.1:${menu_arg}:8989 \
+          -p 0.0.0.0:${menu_arg}:8989 \
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -469,7 +469,7 @@ else
         echo "Starting Rstudio in the default browser on localhost:${menu_arg}/rstudio"
         { 
           docker run --name "${LABEL}_${menu_arg}" --net ${NETWORK} -d \
-            -p 127.0.0.1:${menu_arg}:8989 \
+            -p 0.0.0.0:${menu_arg}:8989 \
             -e TZ=${TIMEZONE} \
             -v "${HOMEDIR}":/home/${NB_USER} $MNT \
             -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -517,7 +517,7 @@ else
       else
         echo "Starting Radiant in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} --name "${LABEL}-${menu_arg}" -d \
-          -p 127.0.0.1:${menu_arg}:8181 \
+          -p 0.0.0.0:${menu_arg}:8181 \
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
@@ -534,7 +534,7 @@ else
       else
         echo "Starting GitGadget in the default browser on port ${menu_arg}"
         docker run --net ${NETWORK} --name "${LABEL}-${menu_arg}" -d \
-          -p 127.0.0.1:${menu_arg}:8282 \
+          -p 0.0.0.0:${menu_arg}:8282 \
           -e TZ=${TIMEZONE} \
           -v "${HOMEDIR}":/home/${NB_USER} $MNT \
           ${IMAGE}:${IMAGE_VERSION}
@@ -670,7 +670,7 @@ else
         echo "A Selenium container may already be running on port ${selenium_port}"
         selenium_nr=$((${selenium_nr}-1))
       else
-        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 127.0.0.1:${selenium_port}:4444 selenium/standalone-firefox
+        docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 0.0.0.0:${selenium_port}:4444 selenium/standalone-firefox
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
       echo "${LABEL} container (selenium_${selenium_nr}:4444) and ip: 127.0.0.1," 

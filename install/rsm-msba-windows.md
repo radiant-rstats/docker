@@ -1,7 +1,7 @@
 # Contents
 
-- [Installing the RSM-JUPYTER-RS computing environment on Windows](#installing-the-rsm-jupyter-rs-computing-environment-on-windows)
-- [Updating the RSM-JUPYTER-RS computing environment on Windows](#updating-the-rsm-jupyter-rs-computing-environment-on-windows)
+- [Installing the RSM-MSBA-INTEL computing environment on Windows](#installing-the-rsm-msba-intel-computing-environment-on-windows)
+- [Updating the RSM-MSBA-INTEL computing environment on Windows](#updating-the-rsm-msba-intel-computing-environment-on-windows)
 - [Using VS Code](#using-vs-code)
 - [Connecting to postgresql](#connecting-to-postgresql)
 - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
@@ -11,9 +11,9 @@
 - [Trouble shooting](#trouble-shooting)
 - [Optional](#optional)
 
-## Installing the RSM-JUPYTER-RS computing environment on Windows
+## Installing the RSM-MSBA-INTEL computing environment on Windows
 
-Please follow the instructions below to install the rsm-jupyter-rs computing environment. It has R, Rstudio, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
+Please follow the instructions below to install the rsm-msba-intel computing environment. It has R, Rstudio, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
 **Step 1**: Upgrade Windows
 
@@ -107,7 +107,7 @@ Next click on _Resources > WSL INTEGRATION_ and ensure integration with Ubuntu i
 
 Optional: If you are interested, this linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
-**Step 4**: Open an Ubuntu terminal to complete RSM-JUPYTER-RS computing environment setup
+**Step 4**: Open an Ubuntu terminal to complete RSM-MSBA-INTEL computing environment setup
 
 If you are using Windows Terminal you can click on the down-caret at the top of the window to start an Ubuntu terminal as shown in the screenshot below. Alternatively, you can click on the Windows Start icon and type "ubuntu" to start an Ubuntu terminal. Copy-and-paste the code below into the Ubuntu terminal and provide your password when prompted.
 
@@ -123,7 +123,7 @@ Now Ubuntu should be up to date and ready to accept commands to clone the docker
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
 ```
 
-After running the commands above you will be able to start the docker container by typing `~/git/docker/launch-rsm-jupyter-rs.sh -v ~` from an Ubuntu terminal.
+After running the commands above you will be able to start the docker container by typing `~/git/docker/launch-rsm-msba-intel.sh -v ~` from an Ubuntu terminal.
 
 Next, determine your Windows username by running the code below from an Ubuntu terminal:
 
@@ -132,21 +132,21 @@ USERNAME=$(powershell.exe '$env:UserName'|tr -d '\r');
 echo $USERNAME;
 ```
 
-Finally, we will create and launch a script `launch-rsm-jupyter-rs.bat` on your Desktop that you can double-click to start the container in the future. 
+Finally, we will create and launch a script `launch-rsm-msba-intel.bat` on your Desktop that you can double-click to start the container in the future. 
 
 If you do **not** backup your Desktop to OneDrive, please copy-and-paste the code below as-is into an Ubuntu terminal. If you **do** backup your Desktop to OneDrive, you will need to adjust the `DTOP` variable in the section below to something like `DTOP="/OneDrive/Desktop"`
 
 ```bash
 DTOP="/Desktop";
-echo "wt.exe wsl.exe ~/git/docker/launch-rsm-jupyter-rs.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-jupyter-rs.bat;
-chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-jupyter-rs.bat;
+echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-intel.bat;
+chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-intel.bat;
 cd ~;
 ln -s /mnt/c/Users/"$USERNAME$DTOP"/ ./Desktop;
 ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
 ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
 ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
 ln -s /mnt/c/Users/"$USERNAME" ./win_home;
-/mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-jupyter-rs.bat;
+/mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-intel.bat;
 ```
 
 The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the image to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
@@ -155,10 +155,10 @@ The created and launched script will finalize the installation of the computing 
 
 **Trouble shooting**
 
-If you do **not** have a file called `launch-rsm-jupyter-rs.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open VS Code or notepad, copy-and-paste the code below into the editor, and save the file as `launch-rsm-jupyter-rs.bat`. After saving, double-click the file to start the docker container.
+If you do **not** have a file called `launch-rsm-msba-intel.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open VS Code or notepad, copy-and-paste the code below into the editor, and save the file as `launch-rsm-msba-intel.bat`. After saving, double-click the file to start the docker container.
 
 ```bash
-wt.exe wsl.exe ~/git/docker/launch-rsm-jupyter-rs.sh -v ~
+wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~
 pause
 ```
 
@@ -170,7 +170,7 @@ You will know that the installation was successful if you can start JupyterLab a
 
 **Jupyter**:
 
-<img src="figures/rsm-jupyter.png" width="500px">
+<img src="figures/rsm-msba-arm.png" width="500px">
 
 **Rstudio**:
 
@@ -187,7 +187,7 @@ Now open a new terminal in JupyterLab and you should see some icons
 
 <img src="figures/ohmyzsh-icons.png" width="400px">
 
-## Updating the RSM-JUPYTER-RS computing environment on Windows
+## Updating the RSM-MSBA-INTEL computing environment on Windows
 
 To update the container use the launch script and press 6 (and Enter). To update the launch script itself, press 7 (and Enter).
 
@@ -196,10 +196,10 @@ To update the container use the launch script and press 6 (and Enter). To update
 If for some reason you are having trouble updating either the container or the launch script open an Ubuntu terminal and copy-and-paste the code below. Note: You may have to right-click to get a copy-and-paste menu for the terminal. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
 ```bash
-docker pull vnijs/rsm-jupyter-rs;
+docker pull vnijs/rsm-msba-intel;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-~/git/docker/launch-rsm-jupyter-rs.sh -v ~;
+~/git/docker/launch-rsm-msba-intel.sh -v ~;
 ```
 
 ## Using VS Code
@@ -236,7 +236,7 @@ You can even open and run Jupyter Notebooks in VS Code
 
 ## Connecting to postgresql
 
-The rsm-jupyter-rs container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
+The rsm-msba-intel container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
 
 ```bash
 postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker
@@ -410,7 +410,7 @@ After completing the step above you can install the `rgdal` R-package locally us
 
 `install.packages("rgdal", lib = Sys.getenv("R_LIBS_USER"))`
 
-To save (or commit) these changes so they *will* be present after a (container) restart type, for example, `c myimage` (and Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-jupyter-rs-myimage.sh` that you can use to launch your customized environment in the future.
+To save (or commit) these changes so they *will* be present after a (container) restart type, for example, `c myimage` (and Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-msba-intel-myimage.sh` that you can use to launch your customized environment in the future.
 
 If you want to share your customized version of the container with others (e.g., team members) you can push it is to Docker Hub <a href="https://hub.docker.com" target="_blank">https://hub.docker.com</a> by following the menu dialog after typing, e.g., `c myimage` (and Enter). To create an account on Docker Hub go to <a href="https://hub.docker.com/signup" target="_blank">https://hub.docker.com/signup</a>.
 
@@ -433,14 +433,14 @@ To remove any prior Rstudio sessions, and locally installed R-packages, press 8 
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
-You should always stop the `rsm-jupyter-rs` docker container using `q` (and Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python settings, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-jupyter-rs):
+You should always stop the `rsm-msba-intel` docker container using `q` (and Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python settings, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-intel):
 
 ```bash
 rm -rf ~/.rstudio;
 rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
-docker pull vnijs/rsm-jupyter-rs;
+docker pull vnijs/rsm-msba-intel;
 ```
 
 ## Getting help

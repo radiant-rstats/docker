@@ -1,4 +1,4 @@
-FROM vnijs/rsm-jupyter-rs:latest
+FROM vnijs/rsm-msba-intel:latest
 
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -48,7 +48,7 @@ RUN R -e "install.packages('RhpcBLASctl', repo='${CRAN}', Ncpus=${NCPUS})" \
 # RUN pip install jupyterlab_code_formatter
 
 # Copy the launch script into the image
-COPY launch-rsm-jupyterhub.sh /opt/launch.sh
+COPY launch-rsm-msba-intel-jupyterhub.sh /opt/launch.sh
 COPY files/setup-jupyterhub.sh /usr/local/bin/setup
 RUN fix-permissions /usr/local/bin \
     && chmod 755 /usr/local/bin/* \

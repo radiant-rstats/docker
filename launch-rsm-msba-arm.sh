@@ -5,7 +5,7 @@
 ## home directory
 
 ## use the command below on to launch the container:
-## ~/git/docker/launch-rsm-jupyter-rs.sh -v ~
+## ~/git/docker/launch-rsm-msba-intel.sh -v ~
 
 ## to map the directory where the launch script is located to
 ## the docker home directory call the script_home function
@@ -45,7 +45,7 @@ ARG_HOME=""
 IMAGE_VERSION="latest"
 NB_USER="jovyan"
 ID="vnijs"
-LABEL="rsm-jupyter"
+LABEL="rsm-msba-arm"
 NETWORK="rsm-docker"
 IMAGE=${ID}/${LABEL}
 # Choose your timezone https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -607,7 +607,7 @@ else
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         exit 1
       else
-        echo "launch-rsm-jupyter.sh used on $ostype. This script is only intended for macOS with M1 or higher"
+        echo "launch-rsm-msba-arm.sh used on $ostype. This script is only intended for macOS with M1 or higher"
         sleep 5
       fi
     elif [ ${menu_exec} == 8 ]; then

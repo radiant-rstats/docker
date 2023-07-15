@@ -1,15 +1,15 @@
-# python 3.10.8 version posted on 1-8-2023 (amd64)
-# FROM jupyter/pyspark-notebook@sha256:216ee24a0adcc70f05740ecd7b2c5c7f8fcb7d4a662df4399f4d87f92c15e3be
+# python 3.10.8 version posted on 1-8-2023 (arm64)
+# FROM jupyter/pyspark-notebook@sha256:30431a60056648ae0a0d0e9ab51a2772102e5d22e9de3b1fc418ee54ac00579c
 # python 3.11 version posted on 6-13-2023 (arm64)
-# FROM jupyter/pyspark-notebook@sha256:c05345a6d72b5a12ba38a77e07681eb704a027fdbe7fc622a36fb2cc801db11c
-# python 3.11 version posted on 6-25-2023 (amd64)
-FROM jupyter/pyspark-notebook@sha256:cc4e4a6d19b0e05124e6340473346acfcd9bafb27bfcba153644810041a99c4d
+# FROM jupyter/pyspark-notebook@sha256:0b3cd3dadce9e1b088b4c987cf1b71ff9deaa1bbe90d89b095c757cb2badec13
+# python 3.11 version posted on 6-25-2023 (arm64)
+FROM jupyter/pyspark-notebook@sha256:b18721c3abe68c5316aa71c1d783c459a18968b29154ab235ca33cef374c3b9a
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
-ENV DOCKERHUB_NAME=rsm-jupyter-rs
+ENV DOCKERHUB_NAME=rsm-msba-arm
 
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -124,6 +124,8 @@ RUN pip install \
   jupysql \
   shiny \
   pyrsm
+
+# catboost # not available for arm64
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
@@ -255,7 +257,7 @@ RUN fix-permissions /etc/skel \
   && chmod 755 /usr/local/bin/*
 
 # get pgweb
-RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.11/pgweb_linux_amd64.zip \
+RUN wget -O pgweb.zip https://github.com/sosedoff/pgweb/releases/download/v0.11.11/pgweb_linux_arm64_v7.zip \
   && unzip pgweb.zip -d pgweb_dir \
   && rm pgweb.zip \
   && mv pgweb_dir/* /usr/local/bin/pgweb \

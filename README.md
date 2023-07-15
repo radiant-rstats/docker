@@ -24,17 +24,17 @@ Docker version 20.10.13, build a224086
 * For detailed install instructions on Linux see [install/rsm-msba-linux.md](install/rsm-msba-linux.md)
 * For detailed install instructions on ChromeOS see [install/rsm-msba-chromeos.md](install/rsm-msba-chromeos.md)
 
-## rsm-jupyter and rsm-jupyter-rs
+## rsm-msba-arm and rsm-msba-intel
 
-`rsm-jupyter` is built for M1, ARM based macOS computers. `rsm-jupyter-rs` is built for AMD based computers and includes Rstudio Server. To build a new image based on `rsm-jupter-rs` add the following at the top of your Dockerfile
+`rsm-msba-arm` is built for M1, ARM based macOS computers. `rsm-msba-intel` is built for AMD based computers and includes Rstudio Server. To build a new image based on `rsm-jupter-rs` add the following at the top of your Dockerfile
 
 ```
-FROM vnijs/rsm-jupyter-rs:latest
+FROM vnijs/rsm-msba-intel:latest
 ```
 
-## rsm-jupyterhub
+## rsm-msba-intel-jupyterhub
 
-This image builds on rsm-jupyter-rs and is set up to be accessible from a server running jupyter hub.
+This image builds on rsm-msba-intel and is set up to be accessible from a server running jupyter hub.
 
 ## Trouble shooting
 

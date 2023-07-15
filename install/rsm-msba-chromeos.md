@@ -1,7 +1,7 @@
 # Contents
 
-- [Installing the RSM-JUPTER-RS computing environment on ChromeOS](#installing-the-rsm-jupyter-rs-computing-environment-on-chromeos)
-- [Updating the RSM-JUPYTER-RS computing environment on ChromeOS](#updating-the-rsm-msba-computing-environment-on-chromeos)
+- [Installing the RSM-JUPTER-RS computing environment on ChromeOS](#installing-the-rsm-msba-intel-computing-environment-on-chromeos)
+- [Updating the RSM-MSBA-INTEL computing environment on ChromeOS](#updating-the-rsm-msba-computing-environment-on-chromeos)
 - [Using VS Code](#using-vs-code)
 - [Connecting to postgresql](#connecting-to-postgresql)
 - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
@@ -10,7 +10,7 @@
 - [Getting help](#getting-help)
 - [Trouble shooting](#trouble-shooting)
 
-## Installing the RSM-JUPYTER-RS computing environment on ChromeOS
+## Installing the RSM-MSBA-INTEL computing environment on ChromeOS
 
 Your first step will be to activate linux (beta) on your Chromebook. See the link below for setup instructions. You will run additional commands from the linux terminal so it will be convenient to "pin" the terminal app to the app "shelf" in ChromeOS.
 
@@ -18,7 +18,7 @@ https://support.google.com/chromebook/answer/9145439?hl=en
 
 > Note: This installation guide for ChromeOS is a work in progress. Please report successes or failures to https://github.com/radiant-rstats/docker/issues
 
-Please follow the instructions below to install the rsm-jupyter-rs computing environment. It has R, Radiant, Rstudio, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
+Please follow the instructions below to install the rsm-msba-intel computing environment. It has R, Radiant, Rstudio, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
 **Step 1**: Install docker on ChromeOS
 
@@ -43,7 +43,7 @@ Optional: If you are interested, the linked video gives a brief intro to what Do
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-~/git/docker/launch-rsm-jupyter-rs-chromeos.sh -v ~;
+~/git/docker/launch-rsm-msba-intel-chromeos.sh -v ~;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
@@ -64,7 +64,7 @@ You will know that the installation was successful if you can start Rstudio and 
 
 **Jupyter**:
 
-<img src="figures/rsm-jupyter.png" width="500px">
+<img src="figures/rsm-msba-arm.png" width="500px">
 
 To finalize the setup, open a terminal in Jupyter lab, press `q` and `Enter` if prompted, and then run the code below in the same terminal:
 
@@ -77,7 +77,7 @@ Now open a new terminal and you should see icons in the terminal
 
 <img src="figures/ohmyzsh-icons.png" width="400px">
 
-## Updating the RSM-JUPYTER-RS computing environment on ChromeOS
+## Updating the RSM-MSBA-INTEL computing environment on ChromeOS
 
 To update the container use the launch script and press 6 (+ Enter). To update the launch script itself, press 7 (+ Enter).
 
@@ -86,10 +86,10 @@ To update the container use the launch script and press 6 (+ Enter). To update t
 If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
 ```bash
-docker pull vnijs/rsm-jupyter-rs;
+docker pull vnijs/rsm-msba-intel;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-~/git/docker/launch-rsm-jupyter-rs-chromeos.sh -v ~;
+~/git/docker/launch-rsm-msba-intel-chromeos.sh -v ~;
 ```
 
 ## Using VS Code
@@ -130,7 +130,7 @@ You can even open and run Jupyter Notebooks in VS Code
 
 ## Connecting to postgresql
 
-The rsm-jupyter-rs container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
+The rsm-msba-intel container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
 
 ```bash
 postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker
@@ -305,7 +305,7 @@ After completing the step above you can install the `rgdal` R-package locally us
 
 `install.packages("rgdal", lib = Sys.getenv("R_LIBS_USER"))`
 
-To save (or commit) these changes so they *will* be present after a (container) restart type, for example, `c myimage` (+ Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-jupyter-myimage.sh` that you can use to launch your customized environment in the future.
+To save (or commit) these changes so they *will* be present after a (container) restart type, for example, `c myimage` (+ Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-msba-arm-myimage.sh` that you can use to launch your customized environment in the future.
 
 If you want to share your customized version of the container with others (e.g., team members) you can push it is to Docker Hub <a href="https://hub.docker.com" target="_blank">https://hub.docker.com</a> by following the menu dialog after typing, e.g., `c myimage` (+ Enter). To create an account on Docker Hub go to <a href="https://hub.docker.com/signup" target="_blank">https://hub.docker.com/signup</a>.
 
@@ -328,14 +328,14 @@ To remove any prior Rstudio sessions, and locally installed R-packages, press 8 
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
-You should always stop the `rsm-jupyter-rs` docker container using `q` (+ Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-jupyter-rs):
+You should always stop the `rsm-msba-intel` docker container using `q` (+ Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-intel):
 
 ```bash
 rm -rf ~/.rstudio;
 rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
-docker pull vnijs/rsm-jupyter-rs;
+docker pull vnijs/rsm-msba-intel;
 ```
 
 ## Getting help

@@ -36,7 +36,7 @@ To use fonts and icons in a iTerm2 terminal on macOS with ZSH, type `p10k config
 
 ## Setup OhMyZsh
 
-> Note: If you are using the RSM-JUPYTER or RSM-JUPYTER-RS computing platform and have run the `setup` command you can skip this step
+> Note: If you are using the RSM-MSBA-ARM or RSM-MSBA-INTEL computing platform and have run the `setup` command you can skip this step
 
 Start by setting `ZSH` as the default shell instead of `BASH`. On macOS, Linux, and Windows (WSL2) use the command below from a terminal and answer "y" if prompted.
 

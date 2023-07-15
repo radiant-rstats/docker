@@ -3,7 +3,7 @@ REF="vnijs/r-bionic"
 # REF="vnijs/radiant"
 # REF="vnijs/rsm-msba"
 # REF="vnijs/rsm-msba-spark"
-REF="vnijs/rsm-jupyterhub"
+REF="vnijs/rsm-msba-intel-jupyterhub"
 # REF="vnijs/rsm-vscode"
 TAG="2.2.0"
 

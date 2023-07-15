@@ -3,6 +3,31 @@
 # git pull
 docker login
 
+## moving to msba-arm and msba-intel tags
+# docker pull vnijs/rsm-msba-arm:2.7.0
+# docker tag vnijs/rsm-msba-arm:2.7.0 vnijs/rsm-msba-arm:2.7.0
+# docker push vnijs/rsm-msba-arm:2.7.0
+
+# docker tag vnijs/rsm-msba-arm:2.7.0 vnijs/rsm-msba-arm:latest
+# docker push vnijs/rsm-msba-arm:latest
+
+# docker pull vnijs/rsm-msba-intel:2.7.0
+# docker tag vnijs/rsm-msba-intel:2.7.0 vnijs/rsm-msba-intel:2.7.0
+# docker push vnijs/rsm-msba-intel:2.7.0
+
+# docker pull vnijs/rsm-msba-intel:2.7.0
+# docker tag vnijs/rsm-msba-intel:2.7.0 vnijs/rsm-msba-intel:latest
+# docker push vnijs/rsm-msba-intel:latest
+
+# docker pull vnijs/rsm-jupyterhub:2.7.0
+# docker tag vnijs/rsm-jupyterhub:2.7.0 vnijs/rsm-msba-intel-jupyterhub:2.7.0
+# docker tag vnijs/rsm-msba-intel-jupyterhub:2.7.0 vnijs/rsm-msba-intel-jupyterhub:latest
+# docker push vnijs/rsm-msba-intel-jupyterhub:2.7.0
+# docker push vnijs/rsm-msba-intel-jupyterhub:latest
+
+
+
+
 # mkdir -vp ~/.docker/cli-plugins/
 # # curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-amd64" > ~/.docker/cli-plugins/docker-buildx
 # curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-arm64" > ~/.docker/cli-plugins/docker-buildx
@@ -74,27 +99,26 @@ launcher () {
 }
 
 if [ "$(uname -m)" = "arm64" ]; then
-  LABEL=rsm-jupyter
+  LABEL=rsm-msba-arm
   build
 else
-  LABEL=rsm-jupyter-rs
+  LABEL=rsm-msba-intel
   build
 
   ## replace 127.0.0.1 by 0.0.0.0 for ChromeOS
-  cp -p ./launch-rsm-jupyter-rs.sh ./launch-rsm-jupyter-rs-chromeos.sh
-  sed_fun "s/127.0.0.1/0.0.0.0/g" ./launch-rsm-jupyter-rs-chromeos.sh
-  sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-jupyter-rs-chromeos.sh
+  cp -p ./launch-rsm-msba-intel.sh ./launch-rsm-msba-intel-chromeos.sh
+  sed_fun "s/127.0.0.1/0.0.0.0/g" ./launch-rsm-msba-intel-chromeos.sh
+  sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-intel-chromeos.sh
 
-  LABEL=rsm-jupyterhub
+  LABEL=rsm-msba-intel-jupyterhub
   build
 
   ## new containers should be launched using the newest version of the container
-  # docker tag vnijs/rsm-jupyterhub:latest jupyterhub-user
-  docker tag vnijs/rsm-jupyterhub:$JHUB_VERSION jupyterhub-user
+  docker tag vnijs/rsm-msba-intel-jupyterhub:$JHUB_VERSION jupyterhub-user
 
   ## new containers should be launched using the newest version of the container
-  #docker tag vnijs/rsm-jupyterhub:latest jupyterhub-test-user
+  #docker tag vnijs/rsm-msba-intel-jupyterhub:latest jupyterhub-test-user
 fi
 
 ## to connec on a server use
-# ssh -t vnijs@rsm-compute-01.ucsd.edu docker run -it -v ~:/home/jovyan vnijs/rsm-jupyterhub /bin/bash;
+# ssh -t vnijs@rsm-compute-01.ucsd.edu docker run -it -v ~:/home/jovyan vnijs/rsm-msba-intel-jupyterhub /bin/bash;

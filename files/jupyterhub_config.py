@@ -58,7 +58,7 @@ c.Authenticator.delete_invalid_users = True
 c.JupyterHub.spawner_class = MyDockerSpawner
 # Spawn containers from this image
 # c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
-c.DockerSpawner.image = "vnijs/rsm-jupyterhub"  # this line may be omitted
+c.DockerSpawner.image = "vnijs/rsm-msba-intel-jupyterhub"  # this line may be omitted
 # JupyterHub requires a single-user instance of the Notebook server, so we
 # default to using the `start-singleuser.sh` script included in the
 # jupyter/docker-stacks *-notebook images as the Docker run command when

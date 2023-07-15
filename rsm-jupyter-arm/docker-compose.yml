@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  rsm-jupyter:
-    image: "vnijs/rsm-jupyter-rs"
+  rsm-msba-arm:
+    image: "vnijs/rsm-msba-arm-arm"
     environment:
       USER: jovyan
       HOME: /home/jovyan

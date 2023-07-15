@@ -7,7 +7,7 @@ output:
 
 
 
-Starting the `rsm-msba-spark` (or `rsm-jupyter`) computing container also starts a postgresql server running on your machine. You can connect to the database from R using the code chunk below.
+Starting the `rsm-msba-spark` (or `rsm-msba-arm`) computing container also starts a postgresql server running on your machine. You can connect to the database from R using the code chunk below.
 
 
 ```r

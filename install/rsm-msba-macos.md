@@ -1,7 +1,7 @@
 # Contents
 
-- [Installing the RSM-JUPYTER-RS computing environment on macOS](#installing-the-rsm-jupyter-rs-computing-environment-on-macos)
-- [Updating the RSM-JUPYTER-RS computing environment on macOS](#updating-the-rsm-jupyter-rs-computing-environment-on-macos)
+- [Installing the RSM-MSBA-INTEL computing environment on macOS](#installing-the-rsm-msba-intel-computing-environment-on-macos)
+- [Updating the RSM-MSBA-INTEL computing environment on macOS](#updating-the-rsm-msba-intel-computing-environment-on-macos)
 - [Using VS Code](#using-vs-code)
 - [Connecting to postgresql](#connecting-to-postgresql)
 - [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
@@ -11,9 +11,9 @@
 - [Trouble shooting](#trouble-shooting)
 - [Optional](#optional)
 
-## Installing the RSM-JUPYTER-RS computing environment on macOS
+## Installing the RSM-MSBA-INTEL computing environment on macOS
 
-Please follow the instructions below to install the rsm-jupyter-rs computing environment. It has R, Radiant, Rstudio, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
+Please follow the instructions below to install the rsm-msba-intel computing environment. It has R, Radiant, Rstudio, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
 **Step 1**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below at the top-right of your screen. If the containers in the image are moving up and down docker hasn't finished starting up yet.
 
@@ -39,20 +39,20 @@ xcode-select --install;
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-jupyter-rs.sh ~/Desktop/launch-rsm-jupyter-rs.command;
-~/Desktop/launch-rsm-jupyter-rs.command;
+cp -p ~/git/docker/launch-rsm-msba-intel.sh ~/Desktop/launch-rsm-msba-intel.command;
+~/Desktop/launch-rsm-msba-intel.command;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
-<img src="figures/rsm-jupyter-menu-macos-m1.png" width="500px">
+<img src="figures/rsm-msba-arm-menu-macos-m1.png" width="500px">
 
-The code above also creates a copy of the file `launch-rsm-jupyter.command` on your Desktop that you can double-click to start the container again in the future.
+The code above also creates a copy of the file `launch-rsm-msba-arm.command` on your Desktop that you can double-click to start the container again in the future.
 
 Run the command below to launch the docker container from the command line.
 
 ```bash
-~/git/docker/launch-rsm-jupyter-rs.sh -v ~;
+~/git/docker/launch-rsm-msba-intel.sh -v ~;
 ```
 
 After running this command you will be able to start the docker container by typing `launch` from a terminal.
@@ -66,7 +66,7 @@ You will know that the installation was successful if you can start Jupyter Lab.
 
 **Jupyter**:
 
-<img src="figures/rsm-jupyter.png" width="500px">
+<img src="figures/rsm-msba-arm.png" width="500px">
 
 **Rstudio**:
 
@@ -83,19 +83,19 @@ Now open a new terminal in JupyterLab and you should see some icons
 
 <img src="figures/ohmyzsh-icons.png" width="400px">
 
-## Updating the RSM-JUPYTER-RS computing environment on macOS
+## Updating the RSM-MSBA-INTEL computing environment on macOS
 
 To update the container use the launch script and press 6 (+ Enter). To update the launch script itself, press 7 (+ Enter).
 
-<img src="figures/rsm-jupyter-menu-macos.png" width="500px">
+<img src="figures/rsm-msba-arm-menu-macos.png" width="500px">
 
 If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
 ```bash
-docker pull vnijs/rsm-jupyter-rs;
+docker pull vnijs/rsm-msba-intel;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-jupyter-rs.sh ~/Desktop/launch-rsm-jupyter-rs.command;
+cp -p ~/git/docker/launch-rsm-msba-intel.sh ~/Desktop/launch-rsm-msba-intel.command;
 ```
 
 ## Using VS Code
@@ -311,7 +311,7 @@ After completing the step above you can install the `rgdal` R-package locally us
 
 `install.packages("rgdal", lib = Sys.getenv("R_LIBS_USER"))`
 
-To save (or commit) these changes so they *will* be present after a (container) restart type, for example, `c myimage` (+ Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-jupyter-myimage.command` that you can use to launch your customized environment in the future.
+To save (or commit) these changes so they *will* be present after a (container) restart type, for example, `c myimage` (+ Enter). This creates a new docker image with your changes and also a new launch script on your Desktop with the name `launch-rsm-msba-arm-myimage.command` that you can use to launch your customized environment in the future.
 
 If you want to share your customized version of the container with others (e.g., team members) you can push it is to Docker Hub <a href="https://hub.docker.com" target="_blank">https://hub.docker.com</a> by following the menu dialog after typing, e.g., `c myimage` (+ Enter). To create an account on Docker Hub go to <a href="https://hub.docker.com/signup" target="_blank">https://hub.docker.com/signup</a>.
 
@@ -334,14 +334,14 @@ To remove any prior Rstudio sessions and locally installed R-packages, press 8 (
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
-You should always stop the `rsm-jupyter-rs` docker container using `q` (+ Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-jupyter-rs):
+You should always stop the `rsm-msba-intel` docker container using `q` (+ Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-intel):
 
 ```bash
 rm -rf ~/.rstudio;
 rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
-docker pull vnijs/rsm-jupyter-rs;
+docker pull vnijs/rsm-msba-intel;
 ```
 
 ## Getting help
