@@ -4,7 +4,7 @@
 - [Updating the RSM-MSBA-INTEL computing environment on Linux](#updating-the-rsm-msba-intel-computing-environment-on-linux)
 - [Using VS Code](#using-vs-code)
 - [Connecting to postgresql](#connecting-to-postgresql)
-- [Installing R and Python packages locally](#installing-r-and-python-packages-locally)
+- [Installing Python and R packages locally](#installing-python-and-r-packages-locally)
 - [Committing changes to the computing environment](#committing-changes-to-the-computing-environment)
 - [Cleanup](#cleanup)
 - [Getting help](#getting-help)
@@ -12,7 +12,7 @@
 
 ## Installing the RSM-MSBA-INTEL computing environment on Linux (Ubuntu 20.04)
 
-Please follow the instructions below to install the rsm-msba-intel computing environment. It has R, Radiant, Rstudio, Python, Jupyter Lab, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
+Please follow the instructions below to install the rsm-msba-intel computing environment. It has Python, Jupyter Lab, R, Radiant, Rstudio, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
 **Step 1**: Install docker on Ubuntu 20.04
 
@@ -101,9 +101,9 @@ cp -p ~/git/docker/launch-rsm-msba-intel.sh ~/Desktop;
 
 ## Using VS Code
 
-Microsoft's open-source integrated development environment (IDE), VS Code or Visual Studio Code, was the most popular development environment in according to a [Stack Overflow developer survey](https://insights.stackoverflow.com/survey/2018#development-environments-and-tools). VS Code is widely used by Google developers and is the [default development environment at Facebook](https://www.zdnet.com/article/facebook-microsofts-visual-studio-code-is-now-our-default-development-platform/).
+Microsoft's open-source integrated development environment (IDE), VS Code or Visual Studio Code, was the most popular development environment according to a [Stack Overflow developer survey](https://survey.stackoverflow.co/2022#section-most-popular-technologies-integrated-development-environment). VS Code is widely used by Google developers and is the [default development environment at Facebook](https://www.zdnet.com/article/facebook-microsofts-visual-studio-code-is-now-our-default-development-platform/).
 
-VS Code can be installed from the link below and is an excellent, and very popular, editor for python, R, and many other programming languages.
+VS Code can be installed from the link below and is an excellent, and very popular, editor for Python, R, and many other programming languages.
 
 <a href="https://code.visualstudio.com/download" target="_blank">https://code.visualstudio.com/download</a>
 
@@ -117,6 +117,7 @@ cd -;
 
 To learn more about using VS Code to write python code see the links and comments below.
 
+- <a href="https://code.visualstudio.com/docs/languages/python" target="_blank">Python in VS Code</a>
 - <a href="https://code.visualstudio.com/docs/python/python-tutorial#_create-a-python-hello-world-source-code-file" target="_blank">VS Code Python Tutorial</a>
 
 Note that you can use `Shift+Enter` to run the current line in a Python Interactive Window:
@@ -135,6 +136,12 @@ You can even open and run Jupyter Notebooks in VS Code
 
 - <a href="https://code.visualstudio.com/docs/datascience/jupyter-notebooks" target="_blank">Jupyter Notebooks in VS Code</a>
 
+A major new feature in VS Code is the ability to use AI to help you write code. For more information see the links below:
+
+- <a href="https://code.visualstudio.com/blogs/2023/03/30/vscode-copilot" target="_blank">VS Code Copilot</a>
+- <a href="https://code.visualstudio.com/docs/editor/artificial-intelligence" target="_blank">VS Code AI</a>
+
+#
 ## Connecting to postgresql
 
 The rsm-msba-intel container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
@@ -143,30 +150,11 @@ The rsm-msba-intel container comes with <a href="http://www.postgresqltutorial.c
 postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker
 ```
 
-You can access postgresql from R using the code below:
-
-```r
-## connect to database
-library(DBI)
-library(RPostgres)
-con <- dbConnect(
-  RPostgres::Postgres(),
-  user = "jovyan",
-  host = "127.0.0.1",
-  port = 8765,
-  dbname = "rsm-docker",
-  password = "postgres"
-)
-
-## show list of tables
-dbListTables(con)
-```
-
-For a more extensive example using R see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md" target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md</a>
+<img src="figures/postgresql-pgweb.png" width="500px">
 
 To access postgresql from Jupyter Lab use the code below:
 
-```py
+```python
 ## connect to database
 from sqlalchemy import create_engine, inspect
 engine = create_engine('postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker')
@@ -186,7 +174,7 @@ If you cannot connect to postgresql it is most likely due to an issue with the d
 docker volume rm pg_data
 ```
 
-## Installing R and Python packages locally
+## Installing Python and R packages locally
 
 To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into the Rstudio console.
 
@@ -213,21 +201,29 @@ install.packages("fortunes", lib = Sys.getenv("R_LIBS_USER"))
 
 To install Python modules that will **not** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
 
-`conda install pyasn1`
+```bash
+pip install pyasn1
+```
+
+Or ...
+
+```bash
+conda install pyasn1
+```
 
 After installing a module you will have to restart any running Python kernels to `import` the module in your code.
 
 ### Using pip to install python packages
 
-We recommand you use conda to install any additional packages you might need (see section below). However, it possible that no conda version of the package you want exists. In that case, you can use pip to install packages. For example, you can use the command below to install a new version of the `pyrsm` package. Note that adding `--user` is important to ensure the package is still available after you restart the docker container
+We recommend you use `pip` to install any additional packages you might need. For example, you can use the command below to install a new version of the `pyrsm` package that you will use regularly throughout the Rady MSBA program. Note that adding `--user` is important to ensure the package is still available after you restart the docker container
 
 ```
-pip install --user "pyrsm>=0.6.9"
+pip install --user "pyrsm>=0.9.0"
 ```
 
 ### Conda convenience functions
 
-To install Python modules that **will** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
+If you want to use a completely separate conda environment for a project you can use the `ccenv` function. To install Python modules that **will** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
 
 ```
 conda init zsh;
@@ -280,7 +276,7 @@ conda activate base
 ```
 
 Tips to avoid the python problems depicted in the comic linked below:
-- Stick with one tool to create environments (e.g., conda)
+- Stick with one or two tools to create environments (e.g., pip and conda)
 - Don't go overboard with the number conda environments you create
 
 <a href="https://xkcd.com/1987/" target="_blank">https://xkcd.com/1987/</a>
@@ -288,6 +284,10 @@ Tips to avoid the python problems depicted in the comic linked below:
 ### Removing locally installed packages
 
 To remove locally installed R packages press 8 (and Enter) in the launch menu and follow the prompts. To remove Python modules installed locally using `pip` press 9 (and Enter) in the launch menu
+
+```bash
+cr myenv
+```
 
 ## Committing changes to the computing environment
 
@@ -350,9 +350,9 @@ docker pull vnijs/rsm-msba-intel;
 
 Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (+ Enter) in the launch menu. Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
 
-* `launch -t 2.4.4` ensures a specific version of the docker container is used. Suppose you used version 2.4.4 for a project. Running the launch script with `-t 2.4.4` from the command line will ensure your code still runs, without modification, years after you last touched it!
+* `launch -t 2.7.0` ensures a specific version of the docker container is used. Suppose you used version 2.7.0 for a project. Running the launch script with `-t 2.7.0` from the command line will ensure your code still runs, without modification, years after you last touched it!
+* `launch -v ~/rsm-msba` will treat the `~/rsm-msba` directory on the host system (i.e., your Windows computer) as the home directory in the docker container. This can be useful if you want to setup a particular directory that will house multiple projects
 * `launch -d ~/project_1` will treat the `project_1` directory on the host system (i.e., your Linux computer) as the project home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
-* `launch -v ~/rsm-msba` will treat the `~/rsm-msba` directory on the host system (i.e., your Linux computer) as the home directory in the docker container. This can be useful if you want to setup a particular directory that will house multiple projects
 * `launch -s` show additional output in the terminal that can be useful to debug any problems
 * `launch -h` prints the help shown in the screenshot below
 
@@ -382,7 +382,7 @@ For more on miniconda visit the page below:
 Once you have completed the install, open a new terminal if you want to install python packages. For example:
 
 ```
-conda install -c conda-forge pandas ipykernel black
+conda install -c conda-forge pandas polars duckdb ipykernel black
 ```
 
 If you want to make your terminal look nicer and add syntax highlighting, auto-completion, etc. consider following the install instructions linked below:
