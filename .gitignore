@@ -9,7 +9,11 @@
 files/ca.sh
 files/ccr.sh
 build-images.out
+rsm-code-interpreter/
+rsm-code-interpreter-working/
 rsm-shiny/
 rsm-test/
 rsm-mgta495/
 rsm-mgta453/
+files/chatgpt_requirements.txt
+rsm-code-interpreter/Dockerfile

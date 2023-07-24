@@ -109,7 +109,7 @@ VS Code can be installed from the link below and is an excellent, and very popul
 
 Run the code below from a terminal after installing VS Code to install relevant extensions:
 
-```
+```bash
 cd ~/git/docker/vscode;
 ./extension-install.sh;
 cd -;
@@ -141,7 +141,6 @@ A major new feature in VS Code is the ability to use AI to help you write code. 
 - <a href="https://code.visualstudio.com/blogs/2023/03/30/vscode-copilot" target="_blank">VS Code Copilot</a>
 - <a href="https://code.visualstudio.com/docs/editor/artificial-intelligence" target="_blank">VS Code AI</a>
 
-#
 ## Connecting to postgresql
 
 The rsm-msba-intel container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
@@ -170,7 +169,7 @@ For a more extensive example using Python see: <a href="https://github.com/radia
 
 If you cannot connect to postgresql it is most likely due to an issue with the docker volume that contains the data. The volume can become corrupted if the container is not properly stopped using `q + Enter` in the launch menu. To create a clean volume for postgres (1) stop the running container using `q + Enter`, (2) run the code below in a terminal, and (3) restart the container. If you are still having issues connecting to the postgresql server, please reach out for support through Piazza.
 
-```
+```bash
 docker volume rm pg_data
 ```
 
@@ -178,17 +177,14 @@ docker volume rm pg_data
 
 To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into the Rstudio console.
 
-```
+```r
 if (Sys.info()["sysname"] == "Linux") {
   options(repos = c(
-    RSPM = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest",
+    RSPM = "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
     CRAN = "https://cloud.r-project.org"
   ))
 } else {
-  options(repos = c(
-    RSM = "https://radiant-rstats.github.io/minicran",
-    CRAN = "https://cloud.r-project.org"
-  ))
+  options(repos = c(CRAN = "https://cloud.r-project.org"))
 }
 ```
 
@@ -208,7 +204,7 @@ pip install pyasn1
 Or ...
 
 ```bash
-conda install pyasn1
+conda install -c conda-forge pyasn1
 ```
 
 After installing a module you will have to restart any running Python kernels to `import` the module in your code.
@@ -217,21 +213,21 @@ After installing a module you will have to restart any running Python kernels to
 
 We recommend you use `pip` to install any additional packages you might need. For example, you can use the command below to install a new version of the `pyrsm` package that you will use regularly throughout the Rady MSBA program. Note that adding `--user` is important to ensure the package is still available after you restart the docker container
 
-```
-pip install --user "pyrsm0.9.1"
+```bash
+pip install --user "pyrsm>=0.9.1"
 ```
 
 ### Conda convenience functions
 
 If you want to use a completely separate conda environment for a project you can use the `ccenv` function. To install Python modules that **will** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
 
-```
+```bash
 conda init zsh;
 exit;
 ```
 Reopen a terminal and run the below. Here `myenv` if a new conda environment and `pyasn1` is a package to install.
 
-```
+```bash
 ccenv myenv pyasn1
 ```
 
@@ -239,7 +235,7 @@ After refreshing your browser window showing JupyterLab you should see a new ico
 
 You can also use the `ccenv` function to add more python package to a specific environment:
 
-```
+```bash
 ccenv myenv package_a package_b package_c
 ```
 
@@ -247,7 +243,7 @@ To list all available conda environments, use the `cl` command from a terminal i
 
 If you want to see the code included in these functions, run the code below:
 
-```
+```bash
 cat /usr/local/bin/ccenv;
 cat /usr/local/bin/cl;
 cat /usr/local/bin/cr;
@@ -362,7 +358,7 @@ Please bookmark this page in your browser for easy access in the future. You can
 
 The only issues we have seen on Linux so far can be "fixed" by restarting docker and/or rebooting. To restart the docker service use:
 
-```{r}
+```bash
 sudo service docker stop
 sudo service docker start
 ```
@@ -371,7 +367,7 @@ sudo service docker start
 
 To install python3 from conda on macOS run the command below and follow the prompts to accept the defaults settings.
 
-```
+```bash
 sh <(curl -s https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh);
 ```
 
@@ -381,7 +377,7 @@ For more on miniconda visit the page below:
 
 Once you have completed the install, open a new terminal if you want to install python packages. For example:
 
-```
+```bash
 conda install -c conda-forge pandas polars duckdb ipykernel black
 ```
 
