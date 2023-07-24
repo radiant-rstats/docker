@@ -38,7 +38,7 @@ JHUB_VERSION=2.7.0
 # JHUB_VERSION=2.6.5
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 if [ "$(uname -m)" = "arm64" ]; then
   ARCH="linux/arm64"
@@ -97,6 +97,11 @@ launcher () {
     sed_fun "s/$2/$3/" ./launch-${LABEL}.sh
   fi
 }
+
+LABEL=rsm-code-interpreter
+build
+
+exit 0
 
 if [ "$(uname -m)" = "arm64" ]; then
   LABEL=rsm-msba-arm

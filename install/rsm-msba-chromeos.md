@@ -373,7 +373,7 @@ For more on minicoda visit the page below:
 Once you have completed the install, open a new terminal if you want to install python packages. For example:
 
 ```
-conda install -c conda-forge pandas ipykernel black
+conda install -c conda-forge pandas polars duckdb ipykernel black
 ```
 
 If you want to make your terminal look nicer and add syntax highlighting, auto-completion, etc. consider following the install instructions linked below:

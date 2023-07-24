@@ -249,36 +249,18 @@ The rsm-msba-intel container comes with <a href="http://www.postgresqltutorial.c
 postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker
 ```
 
-You can access postgresql from R using the code below:
-
-```r
-## connect to database
-library(DBI)
-library(RPostgres)
-con <- dbConnect(
-  RPostgres::Postgres(),
-  user = "jovyan",
-  host = "127.0.0.1",
-  port = 8765,
-  dbname = "rsm-docker",
-  password = "postgres"
-)
-
-## show list of tables
-dbListTables(con)
-```
-
-For a more extensive example using R see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md" target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.md</a>
+<img src="figures/postgresql-pgweb.png" width="500px">
 
 To access postgresql from Jupyter Lab use the code below:
 
-```py
+```python
 ## connect to database
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 engine = create_engine('postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker')
 
 ## show list of tables
-engine.table_names()
+inspector = inspect(engine)
+inspector.get_table_names()
 ```
 
 For a more extensive example using Python see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb" target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb</a>

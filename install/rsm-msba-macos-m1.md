@@ -65,7 +65,7 @@ You will know that the installation was successful if you can start Jupyter Lab.
 
 **Jupyter**:
 
-<img src="figures/rsm-msba-arm.png" width="500px">
+<img src="figures/rsm-jupyter.png" width="500px">
 
 To finalize the setup, open a terminal in Jupyter lab, press `q` and `Enter` if prompted, and then run the code below in the same terminal:
 
@@ -375,7 +375,7 @@ For more on minicoda visit the page below:
 Once you have completed the install, open a new terminal if you want to install python packages. For example:
 
 ```
-conda install -c conda-forge pandas ipykernel black
+conda install -c conda-forge pandas polars duckdb ipykernel black
 ```
 
 If you want to make your terminal look nicer and add syntax highlighting, auto-completion, etc. follow the install instructions linked below:
