@@ -177,7 +177,7 @@ To install the latest version of R-packages you need, add the lines of code show
 ```r
 if (Sys.info()["sysname"] == "Linux") {
   options(repos = c(
-    RSPM = "https://packagemanager.rstudio.com/all/__linux__/jammy/latest",
+    RSPM = "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
     CRAN = "https://cloud.r-project.org"
   ))
 } else {
