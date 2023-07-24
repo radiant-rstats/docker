@@ -215,7 +215,7 @@ After installing a module you will have to restart any running Python kernels to
 We recommend you use `pip` to install any additional packages you might need. For example, you can use the command below to install a new version of the `pyrsm` package that you will use regularly throughout the Rady MSBA program. Note that adding `--user` is important to ensure the package is still available after you restart the docker container
 
 ```
-pip install --user "pyrsm>=0.9.0"
+pip install --user "pyrsm0.9.1"
 ```
 ### Conda convenience functions
 

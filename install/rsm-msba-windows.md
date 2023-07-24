@@ -73,7 +73,7 @@ If Ubuntu is not set as the default linux distribution, update the default setti
 
 ```bash
 wsl --setdefault Ubuntu-22.04
-wsl --list --online
+wsl --list
 ```
 
 **Step 3**: Install Windows Tools
@@ -138,15 +138,15 @@ If you do **not** backup your Desktop to OneDrive, please copy-and-paste the cod
 
 ```bash
 DTOP="/Desktop";
-echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-intel.bat;
-chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-intel.bat;
+echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
+chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
 cd ~;
 ln -s /mnt/c/Users/"$USERNAME$DTOP"/ ./Desktop;
 ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
 ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
 ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
 ln -s /mnt/c/Users/"$USERNAME" ./win_home;
-/mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba-intel.bat;
+/mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
 ```
 
 The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the image to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
@@ -155,7 +155,7 @@ The created and launched script will finalize the installation of the computing 
 
 **Trouble shooting**
 
-If you do **not** have a file called `launch-rsm-msba-intel.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open VS Code or notepad, copy-and-paste the code below into the editor, and save the file as `launch-rsm-msba-intel.bat`. After saving, double-click the file to start the docker container.
+If you do **not** have a file called `launch-rsm-msba.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open VS Code or notepad, copy-and-paste the code below into the editor, and save the file as `launch-rsm-msba.bat`. After saving, double-click the file to start the docker container.
 
 ```bash
 wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~
@@ -170,7 +170,7 @@ You will know that the installation was successful if you can start JupyterLab a
 
 **Jupyter**:
 
-<img src="figures/rsm-msba-arm.png" width="500px">
+<img src="figures/rsm-jupyter.png" width="500px">
 
 **Rstudio**:
 
@@ -317,7 +317,7 @@ After installing a module you will have to restart any running Python kernels to
 We recommend you use `pip` to install any additional packages you might need. For example, you can use the command below to install a new version of the `pyrsm` package that you will use regularly throughout the Rady MSBA program. Note that adding `--user` is important to ensure the package is still available after you restart the docker container
 
 ```
-pip install --user "pyrsm>=0.9.0"
+pip install --user "pyrsm>=0.9.1"
 ```
 ### Conda convenience functions
 
@@ -450,7 +450,7 @@ docker pull vnijs/rsm-msba-intel;
 
 Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (and Enter) in the launch menu. Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
 
-* `launch -t 2.3.0` ensures a specific version of the docker container is used. Suppose you used version 2.3.0 for a project. Running the launch script with `-t 2.3.0` from the command line will ensure your code still runs, without modification, years after you last touched it!
+* `launch -t 2.7.0` ensures a specific version of the docker container is used. Suppose you used version 2.7.0 for a project. Running the launch script with `-t 2.7.0` from the command line will ensure your code still runs, without modification, years after you last touched it!
 * `launch -v ~/rsm-msba` will treat the `~/rsm-msba` directory on the host system (i.e., your macOS computer) as the home directory in the docker container. This can be useful if you want to setup a particular directory that will house multiple projects
 * `launch -d ~/project_1` will treat the `project_1` directory on the host system (i.e., your Windows computer) as the project home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
 * `launch -s` show additional output in the terminal that can be useful to debug any problems
