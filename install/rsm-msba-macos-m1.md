@@ -25,6 +25,10 @@ You should change the (maximum) resources docker is allowed to use on your syste
 
 <img src="figures/docker-resources-mac.png" width="500px">
 
+You should also go to the "Advanced" tab and configure the installation of the Command Line Interface (CLI). Set it to "System" as shown in the screenshot below and click on the "Apply & Restart".
+
+<img src="figures/docker-system-mac.png" width="500px">
+
 Optional: If you are interested, the linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
 **Step 2**: Open a terminal and copy-and-paste the code below
@@ -59,7 +63,7 @@ After running this command you will be able to start the docker container by typ
 
 **Step 4**: Check that you can launch Jupyter
 
-You will know that the installation was successful if you can start Jupyter Lab. When you press 1 (+ Enter) in the terminal, Jupyter Lab should start up in your default web browser. If you are asked for login credentials, the username is "jovyan" and the password is "jupyter". Have your browser remember the username and password so you won't be asked for it again. 
+You will know that the installation was successful if you can start Jupyter Lab. When you press 1 (+ Enter) in the terminal, Jupyter Lab should start up in your default web browser. If you are asked for login credentials, the username is "jovyan" and the password is "jupyter". Have your browser remember the username and password so you won't be asked for it again.
 
 > Important: Always use q (+ Enter) to shutdown the computing environment
 
