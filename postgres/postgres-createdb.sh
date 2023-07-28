@@ -5,19 +5,28 @@
 cd ~
 mkdir sql_data
 
+## check if Postgres is running and ready to accept connections
+{
+    pg_isready -h 127.0.0.1 -p 8765 -U jovyan
+} || {
+    echo "Postgres is not running or is not ready to accept connections"
+}
 
 ## get Northwind DB
 wget -O ~/sql_data/Northwind_DB_Dump.sql https://www.dropbox.com/s/s3bn7mkmpo391s3/Northwind_DB_Dump.sql
 
-createdb -p 8765  -U jovyan Northwind
+## add the Northwind DB to Postgres
+createdb -h 127.0.0.1 -p 8765 -U jovyan Northwind
 psql -p 8765 Northwind -U jovyan < ~/sql_data/Northwind_DB_Dump.sql
 
 ## get WestCoastImporters DB
 wget -O ~/sql_data/WestCoastImporters_Full_Dump.sql https://www.dropbox.com/s/gqnhvhhxyjrslmb/WestCoastImporters_Full_Dump.sql
 
-createdb -p 8765  -U jovyan WestCoastImporters
+## add the WestCoastImporters DB to Postgres
+createdb -h 127.0.0.1 -p 8765 -U jovyan WestCoastImporters
 psql -p 8765 WestCoastImporters -U jovyan < ~/sql_data/WestCoastImporters_Full_Dump.sql
 
+## clean up
 printf "\n\nDo you want to delete the directory with the raw data (y/n)? "
 read del_sql_data
 if [ ${del_sql_data} = "y" ]; then
