@@ -17,14 +17,28 @@ wget -O ~/sql_data/Northwind_DB_Dump.sql https://www.dropbox.com/s/s3bn7mkmpo391
 
 ## add the Northwind DB to Postgres
 createdb -h 127.0.0.1 -p 8765 -U jovyan Northwind
-psql -p 8765 Northwind -U jovyan < ~/sql_data/Northwind_DB_Dump.sql
+psql -h 127.0.0.1 -p 8765 Northwind -U jovyan < ~/sql_data/Northwind_DB_Dump.sql
 
 ## get WestCoastImporters DB
 wget -O ~/sql_data/WestCoastImporters_Full_Dump.sql https://www.dropbox.com/s/gqnhvhhxyjrslmb/WestCoastImporters_Full_Dump.sql
 
 ## add the WestCoastImporters DB to Postgres
 createdb -h 127.0.0.1 -p 8765 -U jovyan WestCoastImporters
-psql -p 8765 WestCoastImporters -U jovyan < ~/sql_data/WestCoastImporters_Full_Dump.sql
+psql -h 127.0.0.1 -p 8765 WestCoastImporters -U jovyan < ~/sql_data/WestCoastImporters_Full_Dump.sql
+
+# Check if data exists in Northwind DB
+{
+    psql -h 127.0.0.1 -p 8765 -U jovyan -d Northwind -c "\dt"
+} || {
+    echo "Failed to fetch tables from Northwind database"
+}
+
+# Check if data exists in WestCoastImporters DB
+{
+    psql -h 127.0.0.1 -p 8765 -U jovyan -d WestCoastImporters -c "\dt"
+} || {
+    echo "Failed to fetch tables from WestCoastImporters database"
+}
 
 ## clean up
 printf "\n\nDo you want to delete the directory with the raw data (y/n)? "
@@ -38,6 +52,7 @@ if [ ${del_sql_data} = "y" ]; then
         echo "Please remove it manually"
     }
 fi
+
 
 # to connect to the database from pgweb in the docker container
 # use the below as the "Scheme"
