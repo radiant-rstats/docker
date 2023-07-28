@@ -38,7 +38,10 @@ JHUB_VERSION=2.7.0
 # JHUB_VERSION=2.6.5
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-# UPLOAD="YES"
+UPLOAD="YES"
+
+DUAL="NO"
+# DUAL="YES"
 
 if [ "$(uname -m)" = "arm64" ]; then
   ARCH="linux/arm64"
@@ -55,13 +58,24 @@ build () {
     # docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     # docker buildx rm builder
     # docker buildx create --name builder --driver docker-container --use
+
+    # from Code Interpreter - May not need the above anymore
+    # docker buildx create --name mybuilder --driver docker-container --use
     # docker buildx inspect --bootstrap
     if [[ "$1" == "NO" ]]; then
-      # docker buildx build --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-      docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION .
+      if [ "${DUAL}" == "YES" ]; then
+        ARCH="linux/amd64,linux/arm64"
+        docker buildx build --platform ${ARCH} --file "${LABEL}/Dockerfile" --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . --push
+      else
+        docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION .
+      fi
     else
-      # docker buildx build --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION ./${LABEL}
-      docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION .
+      if [ "${DUAL}" == "YES" ]; then
+        ARCH="linux/amd64,linux/arm64"
+        docker buildx build --platform ${ARCH} --file "${LABEL}/Dockerfile" --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . --push
+      else
+        docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION .
+      fi
     fi
   } || {
     echo "-----------------------------------------------------------------------"
@@ -97,6 +111,11 @@ launcher () {
     sed_fun "s/$2/$3/" ./launch-${LABEL}.sh
   fi
 }
+
+LABEL=rsm-ssh
+build
+
+exit 0
 
 LABEL=rsm-code-interpreter
 build
