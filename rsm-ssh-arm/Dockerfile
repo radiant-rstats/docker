@@ -53,6 +53,13 @@ ENV PYTHONUSERBASE=${PYBASE} \
     SHELL=/bin/zsh \
     ZDOTDIR=/home/${NB_USER}/.rsm-msba/zsh 
 
+# Activate Conda environment in all new shells
+RUN echo "source /opt/conda/etc/profile.d/conda.sh" >> /etc/zkel/.zshrc \
+    && echo "conda activate base" >> /etc/zkel/.zshrc
+
+# Change default shell to zsh
+RUN chsh -s $(which zsh)
+
 # for Jupyter and the notebook_config file
 COPY files/condarc /opt/conda/.condarc
 COPY files/setup.sh /usr/local/bin/setup
