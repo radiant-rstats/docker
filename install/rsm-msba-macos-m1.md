@@ -1,7 +1,7 @@
 # Contents
 
-- [Installing the RSM-MSBA-ARM computing environment on macOS M1](#installing-the-rsm-msba-arm-computing-environment-on-macos-M1)
-- [Updating the RSM-MSBA-ARM computing environment on macOS M1](#updating-the-rsm-msba-arm-computing-environment-on-macos-M1)
+- [Installing the RSM-MSBA-ARM computing environment on macOS M1 or M2](#installing-the-rsm-msba-arm-computing-environment-on-macos-M1-or-M2)
+- [Updating the RSM-MSBA-ARM computing environment on macOS M1 or M2](#updating-the-rsm-msba-arm-computing-environment-on-macos-M1-or-M2)
 - [Using VS Code](#using-vs-code)
 - [Connecting to postgresql](#connecting-to-postgresql)
 - [Installing Python and R packages locally](#installing-python-and-r-packages-locally)
@@ -11,7 +11,7 @@
 - [Trouble shooting](#trouble-shooting)
 - [Optional](#optional)
 
-## Installing the RSM-MSBA-ARM computing environment on macOS M1
+## Installing the RSM-MSBA-ARM computing environment on macOS M1 or M2
 
 Please follow the instructions below to install the rsm-msba-intel computing environment. It has Python, Jupyter Lab, R, Radiant, Rstudio, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
@@ -19,7 +19,7 @@ Please follow the instructions below to install the rsm-msba-intel computing env
 
 ![docker](figures/docker-icon.png)
 
-[download docker for macOS with an M1 (ARM) chip](https://desktop.docker.com/mac/stable/arm64/Docker.dmg)
+[download docker for macOS with an M1 or M2 (ARM) chip](https://desktop.docker.com/mac/stable/arm64/Docker.dmg)
 
 You should change the (maximum) resources docker is allowed to use on your system. We recommend you set this to approximately 50% of the maximum available on your system.
 
@@ -82,7 +82,7 @@ Now open a new terminal in JupyterLab and you should see some icons
 
 <img src="figures/ohmyzsh-icons.png" width="400px">
 
-## Updating the RSM-MSBA-ARM computing environment on macOS M1
+## Updating the RSM-MSBA-ARM computing environment on macOS M1 or M2
 
 To update the container use the launch script and press 6 (+ Enter). To update the launch script itself, press 7 (+ Enter).
 
