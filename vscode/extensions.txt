@@ -31,3 +31,5 @@ RDebugger.r-debugger
 streetsidesoftware.code-spell-checker
 tomoki1207.pdf
 Posit.shiny-python
+GitHub.vscode-pull-request-github
+GitHub.remotehub
