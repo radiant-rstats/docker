@@ -138,11 +138,12 @@ The code below will try to determine if you have a Desktop folder that is Backed
 
 ```bash
 if [ -d "/mnt/c/Users/$USERNAME/OneDrive/Desktop/" ]; then
+  echo "Using Desktop backed up in OneDrive" >&2
   DTOP="/OneDrive/Desktop";
 elif [ -d "/mnt/c/Users/$USERNAME/Desktop/" ]; then
+  echo "Using Desktop folder in user home directory" >&2
   DTOP="/Desktop";
 else
-  echo "Error: Something went wrong" >&2
   echo "Unable to determine Desktop folder location" >&2
   exit 1
 fi
