@@ -134,15 +134,24 @@ echo $USERNAME;
 
 Finally, we will create and launch a script `launch-rsm-msba-intel.bat` on your Desktop that you can double-click to start the container in the future. 
 
-If you do **not** backup your Desktop to OneDrive, please copy-and-paste the code below as-is into an Ubuntu terminal. If you **do** backup your Desktop to OneDrive, you will need to adjust the `DTOP` variable in the section below to something like `DTOP="/OneDrive/Desktop"`
+The code below will try to determine if you have a Desktop folder that is Backed-Up to OneDrive. 
 
 ```bash
-DTOP="/Desktop";
+if [ -d "/mnt/c/Users/$USERNAME/OneDrive/Desktop/" ]; then
+  DTOP="/OneDrive/Desktop";
+elif [ -d "/mnt/c/Users/$USERNAME/Desktop/" ]; then
+  DTOP="/Desktop";
+else
+  echo "Error: Something went wrong" >&2
+  echo "Unable to determine Desktop folder location" >&2
+  exit 1
+fi
 echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
 chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
 cd ~;
 ln -s /mnt/c/Users/"$USERNAME$DTOP"/ ./Desktop;
 ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
+ln -s /mnt/c/Users/"$USERNAME"/Downloads ./Downloads;
 ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
 ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
 ln -s /mnt/c/Users/"$USERNAME" ./win_home;
