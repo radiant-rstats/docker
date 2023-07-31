@@ -285,6 +285,9 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
+# install latest version of gitgadget
+RUN R -e 'remotes::install_github("vnijs/gitgadget", upgrade = "never")'
+
 EXPOSE 8181 8282 8765 8989 8501 8000 6006
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 

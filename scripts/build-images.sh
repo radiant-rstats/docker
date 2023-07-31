@@ -112,15 +112,15 @@ launcher () {
   fi
 }
 
-LABEL=rsm-ssh
-build
+# LABEL=rsm-ssh
+# build
 
-exit 0
+# exit 0
 
-LABEL=rsm-code-interpreter
-build
+# LABEL=rsm-code-interpreter
+# build
 
-exit 0
+# exit 0
 
 if [ "$(uname -m)" = "arm64" ]; then
   LABEL=rsm-msba-arm
