@@ -111,7 +111,10 @@ RUN mamba install --quiet --yes -c conda-forge \
   rpy2 \
   jupyterlab-variableinspector \
   jupyterlab_code_formatter \
-  && ln -s /opt/conda/bin/R /usr/local/bin/R
+  && ln -s /opt/conda/bin/R /usr/local/bin/R \
+  && ln -s /opt/conda/bin/Rscript /usr/local/bin/Rscript
+
+
 
 # not available through conda-forge for both arm and amd
 # or the conda version is causing issues
