@@ -47,6 +47,8 @@ wsl --install -d Ubuntu-22.04
 
 > Important: Make sure to enter the same username and password you use to login to your computer
 
+
+
 Check your username for Windows and Ubuntu by executing the command below in both (1) a Windows PowerShell and (2) an Ubuntu terminal. The output in both cases should be the same.
 
 ```bash
@@ -164,6 +166,29 @@ The created and launched script will finalize the installation of the computing 
 <img src="figures/rsm-msba-menu-windows.png" width="500px">
 
 **Trouble shooting**
+
+If you see `Base dir.: /root` as shown in the image below there was an issue creating a new user at the beginning of Step 4. 
+
+<img src="figures/ubuntu-root.png" width="500px">
+
+From an Ubuntu terminal run the below but replace “your-id” by the id you want to use.
+
+```bash
+adduser your-id
+sudo usermod -aG sudo your-id
+```
+
+Now, from a Powershell terminal run the below where, again, you should replace "your-id" by the appropriate id:
+
+```powershell
+ubuntu2204 config --default-user your-id
+```
+
+Next, re-run the code from Step 4 above, starting with the command:
+
+```bash
+git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
+```
 
 If you do **not** have a file called `launch-rsm-msba.bat` on your Desktop, you can create one by copy-and-pasting the code below in to a text file using notepad. The "pause" line can be removed later if all works well. Open VS Code or notepad, copy-and-paste the code below into the editor, and save the file as `launch-rsm-msba.bat`. After saving, double-click the file to start the docker container.
 
