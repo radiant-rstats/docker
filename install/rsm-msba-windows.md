@@ -146,19 +146,25 @@ elif [ -d "/mnt/c/Users/$USERNAME/Desktop/" ]; then
   echo "Using Desktop folder in user home directory" >&2
   DTOP="/Desktop";
 else
-  echo "Unable to determine Desktop folder location" >&2
-  exit 1
+  DTOP="";
 fi
-echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
-chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
-cd ~;
-ln -s /mnt/c/Users/"$USERNAME$DTOP"/ ./Desktop;
+if [ -n "$DTOP" ]; then
+  echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~" > /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
+  chmod 755 /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
+  cd ~;
+  ln -s /mnt/c/Users/"$USERNAME$DTOP"/ ./Desktop;
+  /mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
+else
+  echo "Unable to determine location of Desktop folder on your system" >&2
+  echo "The .bat file has been added to your home directory in Ubuntunu" >&2
+  echo "wt.exe wsl.exe ~/git/docker/launch-rsm-msba-intel.sh -v ~" > /mnt/c/Users/"$USERNAME"/launch-rsm-msba.bat;
+  chmod 755 /mnt/c/Users/"$USERNAME"/launch-rsm-msba.bat;
+fi
 ln -s /mnt/c/Users/"$USERNAME"/Dropbox ./Dropbox;
 ln -s /mnt/c/Users/"$USERNAME"/Downloads ./Downloads;
 ln -s "/mnt/c/Users/$USERNAME/Google Drive" "./Google Drive";
 ln -s /mnt/c/Users/"$USERNAME"/OneDrive ./OneDrive;
 ln -s /mnt/c/Users/"$USERNAME" ./win_home;
-/mnt/c/Users/"$USERNAME$DTOP"/launch-rsm-msba.bat;
 ```
 
 The created and launched script will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the image to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
