@@ -3,7 +3,9 @@
 # python 3.11 version posted on 6-13-2023 (arm64)
 # FROM jupyter/pyspark-notebook@sha256:c05345a6d72b5a12ba38a77e07681eb704a027fdbe7fc622a36fb2cc801db11c
 # python 3.11 version posted on 6-25-2023 (amd64)
-FROM jupyter/pyspark-notebook@sha256:cc4e4a6d19b0e05124e6340473346acfcd9bafb27bfcba153644810041a99c4d
+# FROM jupyter/pyspark-notebook@sha256:cc4e4a6d19b0e05124e6340473346acfcd9bafb27bfcba153644810041a99c4d
+# 2023-09-18 version (amd64)
+FROM jupyter/pyspark-notebook@sha256:a66f0b98a323c274097fbbf4fbbacb3b90edcffea1aa279579b17b6f1003798c
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -29,11 +31,12 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   rsync \
   lsb-release \
   libcurl4-openssl-dev \
-  git
+  git \
+  netcat
 
-ENV CMDSTAN_VERSION="2.32.2"
-ENV PANDAS_VERSION="2.0.2"
-ENV PYARROW_VERSION="12.0.0"
+ENV CMDSTAN_VERSION="2.33.1"
+ENV PANDAS_VERSION="2.1.1"
+ENV PYARROW_VERSION="13.0.0"
 RUN mamba install --quiet --yes -c conda-forge \
   pandas=${PANDAS_VERSION} \
   cmdstan=${CMDSTAN_VERSION} \
@@ -65,11 +68,8 @@ RUN mamba install --quiet --yes -c conda-forge \
   black \
   isort \
   nltk \
-  jupyterlab-git \
-  jupyterlab-spellchecker \
   jupyter-server-proxy \
   jupyter-rsession-proxy \
-  jupyterlab-system-monitor \
   streamlit \
   xlrd \
   openpyxl \
@@ -90,8 +90,8 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-# ENV R_VERSION=4.3.0
-ENV R_VERSION=4.2.3
+ENV R_VERSION=4.3.1
+# ENV R_VERSION=4.2.3
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV PATH="/usr/local/bin:$PATH"
@@ -114,8 +114,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   && ln -s /opt/conda/bin/R /usr/local/bin/R \
   && ln -s /opt/conda/bin/Rscript /usr/local/bin/Rscript
 
-
-
 # not available through conda-forge for both arm and amd
 # or the conda version is causing issues
 RUN pip install \
@@ -127,6 +125,8 @@ RUN pip install \
   jupysql \
   shiny \
   pyrsm
+
+# catboost # not available for arm64
 
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
@@ -143,10 +143,10 @@ RUN chmod +x setup.sh \
   && rm setup.sh
 
 # tooling for Bayesian Machine Learning class
-COPY files/setup-bml.sh setup.sh
-RUN chmod +x setup.sh \
-  && ./setup.sh \
-  && rm setup.sh
+# COPY files/setup-bml.sh setup.sh
+# RUN chmod +x setup.sh \
+#   && ./setup.sh \
+#   && rm setup.sh
 
 # adding postgres
 # mostly from https://docs.docker.com/engine/examples/postgresql_service/
@@ -194,6 +194,10 @@ RUN addgroup ${NB_USER} postgres \
   && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
   && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
 
+# from https://github.com/ucsd-ets/rsm-msba-datahub/blob/master/Dockerfile
+# RUN chmod -R 777 /etc/postgresql/${POSTGRES_VERSION}
+# RUN chmod -R 777 /var/lib/postgresql/
+
 # oh-my-zsh (need to install wget and curl again ...)
 RUN apt-get update -qq && apt-get -y --no-install-recommends install wget curl \
   && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
@@ -209,7 +213,7 @@ COPY files/p10k.zsh /etc/skel/.p10k.zsh
 COPY files/usethis /usr/local/bin/usethis
 COPY files/clean.sh /usr/local/bin/clean
 
-# settings for local install of python packages 
+# settings for local install of python packages
 ARG PYBASE=/home/${NB_USER}/.rsm-msba
 ENV PYBASE=${PYBASE}
 ENV PYTHONUSERBASE=${PYBASE} \
@@ -286,7 +290,16 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-EXPOSE 8181 8282 8765 8989 8501 8000 6006
+# SSH login fix, otherwise user gets kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd \
+  && mkdir -p /var/run/sshd \
+  && ssh-keygen -A \
+  && echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config \
+  && echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
+
+# && echo 'jovyan:rady-msba' | chpasswd \
+
+EXPOSE 22 8181 8282 8765 8989 8501 8000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root

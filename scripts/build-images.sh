@@ -33,9 +33,8 @@ docker login
 # curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-arm64" > ~/.docker/cli-plugins/docker-buildx
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
-DOCKERHUB_VERSION=2.7.0
-JHUB_VERSION=2.7.0
-# JHUB_VERSION=2.6.5
+DOCKERHUB_VERSION=2.8.0
+JHUB_VERSION=2.8.0
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
 UPLOAD="YES"
