@@ -290,12 +290,13 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-# SSH login fix, otherwise user gets kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd \
-  && mkdir -p /var/run/sshd \
+# setting up ssh connection
+RUN mkdir -p /var/run/sshd \
   && ssh-keygen -A \
   && echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config \
-  && echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
+  && echo 'PermitRootLogin no' >> /etc/ssh/sshd_config \
+  && echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config \
+  && chsh -s $(which zsh) ${NB_USER}
 
 EXPOSE 22 8181 8282 8765 8989 8501 8000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
