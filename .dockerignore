@@ -1,0 +1,2 @@
+# Ignore all files and dirs starting with a dot, e.g. ".git", ".idea", etc.
+.*

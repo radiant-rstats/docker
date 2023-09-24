@@ -6,7 +6,7 @@ set -e
 
 ## starting up postgres
 exec sudo -u postgres /usr/lib/postgresql/${POSTGRES_VERSION}/bin/postgres -c config_file=/etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf &
-exec sudo /usr/sbin/sshd -D
+exec sudo /usr/sbin/sshd -D &
 
 # set default ip to 0.0.0.0
 if [[ "$NOTEBOOK_ARGS $@" != *"--ip="* ]]; then

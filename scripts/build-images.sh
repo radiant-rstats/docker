@@ -4,25 +4,25 @@
 docker login
 
 ## moving to msba-arm and msba-intel tags
-# docker pull vnijs/rsm-msba-arm:2.7.0
-# docker tag vnijs/rsm-msba-arm:2.7.0 vnijs/rsm-msba-arm:2.7.0
-# docker push vnijs/rsm-msba-arm:2.7.0
+# docker pull vnijs/rsm-msba-arm:2.8.0
+# docker tag vnijs/rsm-msba-arm:2.8.0 vnijs/rsm-msba-arm:2.8.0
+# docker push vnijs/rsm-msba-arm:2.8.0
 
-# docker tag vnijs/rsm-msba-arm:2.7.0 vnijs/rsm-msba-arm:latest
+# docker tag vnijs/rsm-msba-arm:2.8.0 vnijs/rsm-msba-arm:latest
 # docker push vnijs/rsm-msba-arm:latest
 
-# docker pull vnijs/rsm-msba-intel:2.7.0
-# docker tag vnijs/rsm-msba-intel:2.7.0 vnijs/rsm-msba-intel:2.7.0
-# docker push vnijs/rsm-msba-intel:2.7.0
+# docker pull vnijs/rsm-msba-intel:2.8.0
+# docker tag vnijs/rsm-msba-intel:2.8.0 vnijs/rsm-msba-intel:2.8.0
+# docker push vnijs/rsm-msba-intel:2.8.0
 
-# docker pull vnijs/rsm-msba-intel:2.7.0
-# docker tag vnijs/rsm-msba-intel:2.7.0 vnijs/rsm-msba-intel:latest
+# docker pull vnijs/rsm-msba-intel:2.8.0
+# docker tag vnijs/rsm-msba-intel:2.8.0 vnijs/rsm-msba-intel:latest
 # docker push vnijs/rsm-msba-intel:latest
 
-# docker pull vnijs/rsm-jupyterhub:2.7.0
-# docker tag vnijs/rsm-jupyterhub:2.7.0 vnijs/rsm-msba-intel-jupyterhub:2.7.0
-# docker tag vnijs/rsm-msba-intel-jupyterhub:2.7.0 vnijs/rsm-msba-intel-jupyterhub:latest
-# docker push vnijs/rsm-msba-intel-jupyterhub:2.7.0
+# docker pull vnijs/rsm-jupyterhub:2.8.0
+# docker tag vnijs/rsm-jupyterhub:2.8.0 vnijs/rsm-msba-intel-jupyterhub:2.8.0
+# docker tag vnijs/rsm-msba-intel-jupyterhub:2.8.0 vnijs/rsm-msba-intel-jupyterhub:latest
+# docker push vnijs/rsm-msba-intel-jupyterhub:2.8.0
 # docker push vnijs/rsm-msba-intel-jupyterhub:latest
 
 
@@ -73,6 +73,7 @@ build () {
         ARCH="linux/amd64,linux/arm64"
         docker buildx build --platform ${ARCH} --file "${LABEL}/Dockerfile" --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . --push
       else
+        # added a .dockerignore file so it ignores all . files (e.g., .git, .DS_Store, etc.)
         docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION .
       fi
     fi

@@ -21,7 +21,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.7.0 --volume ~/project_1"
+  echo "Example: $0 --tag 2.8.0 --volume ~/project_1"
   echo ""
   exit 1
 }
