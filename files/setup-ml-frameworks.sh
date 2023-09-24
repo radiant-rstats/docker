@@ -4,7 +4,8 @@ set -e
 if [ "$(uname -m)" != "aarch64" ]; then
   # has to be conda for some reason
   # conda install -y pytorch torchvision cpuonly -c pytorch
-  pip install -y pytorch torchvision
+  # pip install pytorch torchvision
+  mamba install -y pytorch torchvision -c pytorch
   # pip install jaxlib==0.3.7
   # pip install jaxlib==0.3.22
   # pip install jaxlib==0.3.24 numpyro

@@ -56,6 +56,7 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
+  -e "remotes::install_version('shiny', '1.7.4.1')" \
   -e "install.packages('duckdb', repo='${CRAN}', Ncpus=${NCPUS})"
 
 rm -rf /tmp/downloaded_packages

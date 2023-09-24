@@ -371,7 +371,7 @@ else
   fi
   {
     docker run --name ${LABEL} --net ${NETWORK} -d \
-      -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 -p 0.0.0.0:8181:8181 -p 0.0.0.0:8282:8282 -p 0.0.0.0:8501:8501 -p 0.0.0.0:8000:8000 -p 0.0.0.0:6006:6006 \
+      -p 127.0.0.1:2222:22 -p 0.0.0.0:8989:8989 -p 0.0.0.0:8765:8765 -p 0.0.0.0:8181:8181 -p 0.0.0.0:8282:8282 -p 0.0.0.0:8501:8501 -p 0.0.0.0:8000:8000 -p 0.0.0.0:6006:6006 \
       -e TZ=${TIMEZONE} \
       -v "${HOMEDIR}":/home/${NB_USER} $MNT \
       -v pg_data:/var/lib/postgresql/${POSTGRES_VERSION}/main \
@@ -673,8 +673,8 @@ else
         docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 0.0.0.0:${selenium_port}:4444 selenium/standalone-firefox
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
-      echo "${LABEL} container (selenium_${selenium_nr}:4444) and ip: 127.0.0.1," 
-      echo "port: ${selenium_port} (http://127.0.0.1:${selenium_port}) from the host OS"
+      echo "${LABEL} container (selenium_${selenium_nr}:4444) and ip: 0.0.0.0," 
+      echo "port: ${selenium_port} (http://0.0.0.0:${selenium_port}) from the host OS"
       echo "Press any key to continue"
       echo $BOUNDARY
       read continue

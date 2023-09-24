@@ -44,15 +44,17 @@ else
     gdal-bin \
     libgeos-dev \
     libproj-dev \
+    libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
   R -e "install.packages('rgdal', repo='${CRAN}', Ncpus=${NCPUS})"
 fi
 
-R -e "install.packages(c('magick', 'leaflet', 'devtools'), repo='${CRAN}', Ncpus=${NCPUS})" \
+R -e "install.packages(c('magick', 'leaflet', 'stringi', 'profvis'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('simmer', 'simmer.plot', 'EnvStats', 'matrixStats'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('highcharter', 'viridis'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('tidytext', 'wordcloud'), repo='${CRAN}', Ncpus=${NCPUS})" \
+R -e "install.packages('devtools', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('vnijs/webshot', upgrade = 'never')" \
   -e "webshot::install_phantomjs()"
 
