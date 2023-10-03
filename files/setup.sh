@@ -157,6 +157,18 @@ else
   fi
 fi
 
+if [ ! -f "${HOMEDIR}/.lintr" ]; then
+  echo "---------------------------------------------------"
+  echo "Adding a .lintr file to set linting preferences for"
+  echo "R in VS Code"
+  echo "---------------------------------------------------"
+  echo 'linters: linters_with_defaults(
+  object_name_linter = NULL,
+  commented_code_linter = NULL,
+  line_length_linter(120))
+' > "${HOMEDIR}/.lintr"
+fi
+
 if [ ! -d "${HOMEDIR}/.rsm-msba/TinyTex" ]; then
   echo "---------------------------------------------------"
   echo "To create PDFs you will need to install a recent"
