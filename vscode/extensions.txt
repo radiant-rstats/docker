@@ -4,10 +4,8 @@ christian-kohler.path-intellisense
 ckolkman.vscode-postgres
 RandomFractalsInc.duckdb-sql-tools
 eamodio.gitlens
-GitHub.classroom
 GitHub.copilot
 GitHub.copilot-chat
-GitHub.copilot-labs
 mechatroner.rainbow-csv
 medo64.render-crlf
 ms-azuretools.vscode-docker

@@ -20,7 +20,8 @@ NCPUS=${NCPUS:--1}
 # R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE, ARROW_USE_PKG_CONFIG=TRUE); install.packages('arrow', repo='${CRAN}', Ncpus=${NCPUS})"
 # R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); devtools::install_version('arrow', version='10.0.1', repos='${CRAN}', Ncpus=${NCPUS})"
 # R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); devtools::install_version('arrow', version='11.0.0.3', repos='${CRAN}', Ncpus=${NCPUS})"
-R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); devtools::install_version('arrow', version='${PYARROW_VERSION}', repos='${CRAN}', Ncpus=${NCPUS})"
+# R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); remotes::install_version('arrow', version='${PYARROW_VERSION}', repos='${CRAN}', Ncpus=${NCPUS})"
+R -e "Sys.setenv(ARROW_PARQUET = 'ON', ARROW_WITH_SNAPPY = 'ON', ARROW_R_DEV = TRUE); install.packages('arrow', version='${PYARROW_VERSION}', repos='${CRAN}', Ncpus=${NCPUS})"
 
 # these run into issues earlier in the install process so we install them here
 R -e "install.packages(c('systemfonts', 'textshaping', 'ragg', 'httpgd', 'tidyverse', 'svglite'), repos='${CRAN}', Ncpus=${NCPUS})"

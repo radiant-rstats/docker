@@ -45,15 +45,15 @@ wsl --set-default-version 2
 wsl --install -d Ubuntu-22.04
 ```
 
-> Important: Make sure to enter the same username and password you use to login to your computer
-
-
+> Important: Make sure to enter the same username and password you use to login to your computer. The username should **not** have any spaces or special characters.
 
 Check your username for Windows and Ubuntu by executing the command below in both (1) a Windows PowerShell and (2) an Ubuntu terminal. The output in both cases should be the same.
 
 ```bash
 whoami
 ```
+
+> Important: If you see `root` as the username please review the discussion in **step 4** below. You will need to reset your username for WSL2.
 
 Next, restart your computer and re-open PowerShell to check that Ubuntu is set as the default linux distribution:
 
@@ -307,6 +307,8 @@ inspector.get_table_names()
 For a more extensive example using Python see: <a href="https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb" target="_blank">https://github.com/radiant-rstats/docker/blob/master/postgres/postgres-connect.ipynb</a>
 
 ### Trouble shooting
+
+If you see `root` as the username when you type `whoami` in an Ubuntu terminal you will need to reset your username for WSL2. Please review step 4 in the install process for more guidance.
 
 If you cannot connect to postgresql it is most likely due to an issue with the docker volume that contains the data. The volume can become corrupted if the container is not properly stopped using `q + Enter` in the launch menu. To create a clean volume for postgres (1) stop the running container using `q + Enter`, (2) run the code below in a terminal, and (3) restart the container. If you are still having issues connecting to the postgresql server, please reach out for support through Piazza.
 

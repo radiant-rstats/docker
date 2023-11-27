@@ -11,18 +11,19 @@ NCPUS=${NCPUS:--1}
 UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}
 CRAN=${CRAN:-https://cran.r-project.org}
 CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
+QUARTO_VERSION="1.4.506"
 
 if [ "$(uname -m)" != "aarch64" ]; then
     # ln -fs /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin
     # need pre-release for inline python
     sudo apt-get update -qq && apt-get -y install gdebi-core
-    wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.4.376/quarto-1.4.376-linux-amd64.deb -O quarto.deb
+    wget https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb -O quarto.deb
     sudo gdebi -n quarto.deb # adding -n to run non-interactively
 
 else
     # need pre-release for inline python
     sudo apt-get update -qq && apt-get -y install gdebi-core
-    wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.4.376/quarto-1.4.376-linux-arm64.deb -O quarto.deb
+    wget https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-arm64.deb -O quarto.deb
     sudo gdebi -n quarto.deb # adding -n to run non-interactively
     CRAN=$CRAN_SOURCE
 fi

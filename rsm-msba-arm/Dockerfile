@@ -5,7 +5,8 @@
 # python 3.11 version posted on 6-25-2023 (arm64)
 # FROM jupyter/pyspark-notebook@sha256:b18721c3abe68c5316aa71c1d783c459a18968b29154ab235ca33cef374c3b9a
 # 2023-09-18 version (arm64)
-FROM jupyter/pyspark-notebook@sha256:8b143afc893bb1838c608e6b3bc863d2a07e79c1ebac8a12c2f59b64bbeb195c
+# FROM jupyter/pyspark-notebook@sha256:8b143afc893bb1838c608e6b3bc863d2a07e79c1ebac8a12c2f59b64bbeb195c
+FROM quay.io/jupyter/pyspark-notebook@sha256:c6d64565bfd40b04ad649e31cea2d6a0c06cbed9b5c763b31e9d5523c8e28174
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -32,11 +33,13 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   lsb-release \
   libcurl4-openssl-dev \
   git \
-  netcat
+  netcat \
+  htop
 
 ENV CMDSTAN_VERSION="2.33.1"
 ENV PANDAS_VERSION="2.1.1"
-ENV PYARROW_VERSION="13.0.0"
+# ENV PANDAS_VERSION="2.0.3" # pyspark image still using 2.0.3
+ENV PYARROW_VERSION="14.0.1"
 RUN mamba install --quiet --yes -c conda-forge \
   pandas=${PANDAS_VERSION} \
   cmdstan=${CMDSTAN_VERSION} \
@@ -79,6 +82,12 @@ RUN mamba install --quiet --yes -c conda-forge \
   bash_kernel \
   sympy \
   simpy \
+  awscli \
+  bokeh \
+  dask-kubernetes \
+  dask-ml \
+  findspark \
+  plotly \
   && python -m bash_kernel.install
 
 # causing issues with 1/12/2023 update
@@ -90,7 +99,7 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-ENV R_VERSION=4.3.1
+ENV R_VERSION=4.3.2
 # ENV R_VERSION=4.2.3
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
@@ -124,6 +133,7 @@ RUN pip install \
   xlsx2csv \
   jupysql \
   shiny \
+  shinywidgets \
   pyrsm
 
 # catboost # not available for arm64
@@ -290,6 +300,28 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
+# setup hadoop
+ENV JAVA_HOME "/usr/lib/jvm/java-17-openjdk-arm64/"
+ENV HADOOP_VERSION 3.3.4
+ENV HADOOP_HOME /opt/hadoop
+ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+COPY files/setup-hadoop.sh setup.sh
+RUN chmod +x setup.sh \
+  && ./setup.sh \
+  && rm setup.sh
+
+# hadoop configuration
+ADD files/scalable_analytics/core-site.xml $HADOOP_HOME/etc/hadoop/
+ADD files/scalable_analytics/hdfs-site.xml $HADOOP_HOME/etc/hadoop/
+ADD files/scalable_analytics/init-dfs.sh /opt/hadoop/
+ADD files/scalable_analytics/start-dfs.sh /opt/hadoop/
+ADD files/scalable_analytics/stop-dfs.sh /opt/hadoop/
+ADD files/scalable_analytics/hadoop.sh /usr/bin/hadoop
+RUN chown -R ${NB_USER} ${HADOOP_HOME} \
+  && chmod 755 ${HADOOP_HOME}/*.sh \
+  && chmod 755 /usr/bin/hadoop
+ENV PATH $PATH:$HADOOP_HOME/bin
+
 # setting up ssh connection
 RUN mkdir -p /var/run/sshd \
   && ssh-keygen -A \
@@ -298,7 +330,7 @@ RUN mkdir -p /var/run/sshd \
   && echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config \
   && chsh -s $(which zsh) ${NB_USER}
 
-EXPOSE 22 8181 8282 8765 8989 8501 8000
+EXPOSE 22 4040 4041 8181 8282 8765 8989 8501 8000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root
