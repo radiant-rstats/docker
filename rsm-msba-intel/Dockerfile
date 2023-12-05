@@ -5,7 +5,7 @@
 # python 3.11 version posted on 6-25-2023 (amd64)
 # FROM jupyter/pyspark-notebook@sha256:cc4e4a6d19b0e05124e6340473346acfcd9bafb27bfcba153644810041a99c4d
 # 2023-09-18 version (amd64)
-FROM jupyter/pyspark-notebook@sha256:a66f0b98a323c274097fbbf4fbbacb3b90edcffea1aa279579b17b6f1003798c
+# FROM jupyter/pyspark-notebook@sha256:a66f0b98a323c274097fbbf4fbbacb3b90edcffea1aa279579b17b6f1003798c
 # same sha256 for amd64 and arm64
 FROM quay.io/jupyter/pyspark-notebook@sha256:c6d64565bfd40b04ad649e31cea2d6a0c06cbed9b5c763b31e9d5523c8e28174
 
@@ -302,7 +302,7 @@ RUN chmod +x setup.sh \
   && rm setup.sh
 
 # setup hadoop
-ENV JAVA_HOME "/usr/lib/jvm/java-17-openjdk-arm64/"
+ENV JAVA_HOME "/usr/lib/jvm/java-17-openjdk-amd64/"
 ENV HADOOP_VERSION 3.3.4
 ENV HADOOP_HOME /opt/hadoop
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
