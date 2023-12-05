@@ -35,7 +35,12 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libcurl4-openssl-dev \
   git \
   netcat \
-  htop
+  htop \
+  openjdk-17-jdk-headless \
+  ant \
+  ca-certificates-java \
+  && apt-get clean \
+  && update-ca-certificates -f;
 
 ENV CMDSTAN_VERSION="2.33.1"
 ENV PANDAS_VERSION="2.1.1"
@@ -302,6 +307,7 @@ RUN chmod +x setup.sh \
   && rm setup.sh
 
 # setup hadoop
+
 ENV JAVA_HOME "/usr/lib/jvm/java-17-openjdk-amd64/"
 ENV HADOOP_VERSION 3.3.4
 ENV HADOOP_HOME /opt/hadoop
