@@ -1,11 +1,4 @@
-# python 3.10.8 version posted on 1-8-2023 (arm64)
-# FROM jupyter/pyspark-notebook@sha256:30431a60056648ae0a0d0e9ab51a2772102e5d22e9de3b1fc418ee54ac00579c
-# python 3.11 version posted on 6-13-2023 (arm64)
-# FROM jupyter/pyspark-notebook@sha256:0b3cd3dadce9e1b088b4c987cf1b71ff9deaa1bbe90d89b095c757cb2badec13
-# python 3.11 version posted on 6-25-2023 (arm64)
-# FROM jupyter/pyspark-notebook@sha256:b18721c3abe68c5316aa71c1d783c459a18968b29154ab235ca33cef374c3b9a
-# 2023-09-18 version (arm64)
-# FROM jupyter/pyspark-notebook@sha256:8b143afc893bb1838c608e6b3bc863d2a07e79c1ebac8a12c2f59b64bbeb195c
+# same sha256 for amd64 and arm64
 FROM quay.io/jupyter/pyspark-notebook@sha256:c6d64565bfd40b04ad649e31cea2d6a0c06cbed9b5c763b31e9d5523c8e28174
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
@@ -34,7 +27,12 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libcurl4-openssl-dev \
   git \
   netcat \
-  htop
+  htop \
+  openjdk-17-jdk-headless \
+  ant \
+  ca-certificates-java \
+  && apt-get clean \
+  && update-ca-certificates -f;
 
 ENV CMDSTAN_VERSION="2.33.1"
 ENV PANDAS_VERSION="2.1.1"
@@ -301,7 +299,7 @@ RUN chmod +x setup.sh \
   && rm setup.sh
 
 # setup hadoop
-ENV JAVA_HOME "/usr/lib/jvm/java-17-openjdk-arm64/"
+ENV JAVA_HOME "/usr/lib/jvm/java-17-openjdk-amd64/"
 ENV HADOOP_VERSION 3.3.4
 ENV HADOOP_HOME /opt/hadoop
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
