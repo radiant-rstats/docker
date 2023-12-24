@@ -1,6 +1,9 @@
 #!/bin/bash
 
-$HADOOP_HOME/sbin/hadoop-daemon.sh stop namenode
-$HADOOP_HOME/sbin/hadoop-daemon.sh stop datanode
-$HADOOP_HOME/sbin/hadoop-daemon.sh stop secondarynamenode
+echo "Stopping HDFS ..."
+
+hdfs --daemon stop namenode
+hdfs --daemon stop datanode
+hdfs --daemon stop secondarynamenode
+
 

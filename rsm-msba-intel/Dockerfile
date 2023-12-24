@@ -1,5 +1,6 @@
 # same sha256 for amd64 and arm64
-FROM quay.io/jupyter/pyspark-notebook@sha256:c6d64565bfd40b04ad649e31cea2d6a0c06cbed9b5c763b31e9d5523c8e28174
+# FROM quay.io/jupyter/pyspark-notebook@sha256:c6d64565bfd40b04ad649e31cea2d6a0c06cbed9b5c763b31e9d5523c8e28174
+FROM quay.io/jupyter/pyspark-notebook@sha256:cf5439e2d08d72171af6464f4db71c94bb91bbb18db7ab8290fa2a72594d0eb0
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -18,13 +19,13 @@ RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   supervisor \
   openssh-server \
+  libcurl4-openssl-dev \
   zsh \
   vim \
   vifm \
   wget \
   rsync \
   lsb-release \
-  libcurl4-openssl-dev \
   git \
   netcat \
   htop \
@@ -35,7 +36,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   && update-ca-certificates -f;
 
 ENV CMDSTAN_VERSION="2.33.1"
-ENV PANDAS_VERSION="2.1.1"
+ENV PANDAS_VERSION="2.1.4"
 # ENV PANDAS_VERSION="2.0.3" # pyspark image still using 2.0.3
 ENV PYARROW_VERSION="14.0.1"
 RUN mamba install --quiet --yes -c conda-forge \
@@ -85,6 +86,7 @@ RUN mamba install --quiet --yes -c conda-forge \
   dask-kubernetes \
   dask-ml \
   findspark \
+  pyspark \
   plotly \
   && python -m bash_kernel.install
 
@@ -98,9 +100,9 @@ RUN chmod 755 setup.sh \
 
 # make system (conda) R the first choice
 ENV R_VERSION=4.3.2
-# ENV R_VERSION=4.2.3
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
+ENV LD_LIBRARY_PATH=/opt/conda/lib
 ENV PATH="/usr/local/bin:$PATH"
 
 RUN mamba install --quiet --yes -c conda-forge \
@@ -118,6 +120,8 @@ RUN mamba install --quiet --yes -c conda-forge \
   rpy2 \
   jupyterlab-variableinspector \
   jupyterlab_code_formatter \
+  openssh \
+  git \
   && ln -s /opt/conda/bin/R /usr/local/bin/R \
   && ln -s /opt/conda/bin/Rscript /usr/local/bin/Rscript
 

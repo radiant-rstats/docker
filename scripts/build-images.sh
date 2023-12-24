@@ -8,11 +8,11 @@ docker login
 # curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-arm64" > ~/.docker/cli-plugins/docker-buildx
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
-DOCKERHUB_VERSION=2.9.0
-JHUB_VERSION=2.9.0
+DOCKERHUB_VERSION=2.9.1
+JHUB_VERSION=2.9.1
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 DUAL="NO"
 # DUAL="YES"
@@ -91,8 +91,8 @@ if [ "$(uname -m)" = "arm64" ]; then
   LABEL=rsm-msba-arm
   build
 else
-  # LABEL=rsm-msba-intel
-  # build
+  LABEL=rsm-msba-intel
+  build
 
   # ## replace 127.0.0.1 by 0.0.0.0 for ChromeOS
   # cp -p ./launch-rsm-msba-intel.sh ./launch-rsm-msba-intel-chromeos.sh

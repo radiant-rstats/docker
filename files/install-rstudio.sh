@@ -48,10 +48,14 @@ fi
 
 if [ "$(uname -m)" != "aarch64" ]; then
   # wget "https://s3.amazonaws.com/rstudio-ide-build/server/$UBUNTU_VERSION/amd64/rstudio-server-2023.12.0-daily-330-amd64.deb" -O "$DOWNLOAD_FILE"
+  # wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/amd64/rstudio-server-2023.12.0-daily-330-amd64.deb" -O "$DOWNLOAD_FILE"
   wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/amd64/rstudio-server-2023.12.0-daily-330-amd64.deb" -O "$DOWNLOAD_FILE"
+  # wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/amd64/rstudio-server-2023.12.0-369-amd64.deb"  -O "$DOWNLOAD_FILE"
 else
   # wget "https://s3.amazonaws.com/rstudio-ide-build/server/$UBUNTU_VERSION/arm64/rstudio-server-2023.05.0-daily-293-arm64.deb" -O "$DOWNLOAD_FILE"
   wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2023.12.0-daily-330-arm64.deb" -O "$DOWNLOAD_FILE"
+  # wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2023.12.0-daily-330-arm64.deb" -O "$DOWNLOAD_FILE"
+  # wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2023.12.0-369-arm64.deb" -O "$DOWNLOAD_FILE"
 fi
 
 dpkg -i "$DOWNLOAD_FILE"
