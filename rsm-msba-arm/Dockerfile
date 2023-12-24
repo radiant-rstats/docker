@@ -102,7 +102,7 @@ RUN chmod 755 setup.sh \
 ENV R_VERSION=4.3.2
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
-ENV LD_LIBRARY_PATH=/opt/conda/lib
+ENV LD_LIBRARY_PATH="/opt/conda/lib:/usr/local/lib:${LD_LIBRARY_PATH}"
 ENV PATH="/usr/local/bin:$PATH"
 
 RUN mamba install --quiet --yes -c conda-forge \
