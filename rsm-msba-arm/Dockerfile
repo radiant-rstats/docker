@@ -140,6 +140,13 @@ RUN pip install \
 
 # catboost # not available for arm64
 
+# connectorx is default for sql stuff in polars but is not built for aarch64
+# had to do that manually with a docker file
+# see https://github.com/sfu-db/connector-x/issues/386
+ENV wheel_name=connectorx-0.3.2-cp311-cp311-manylinux_2_34_aarch64.whl 
+COPY files/connectorx/${wheel_name} ${wheel_name}
+RUN pip install ${wheel_name}
+
 RUN echo "R_LIBS_USER='~/.rsm-msba/R/${R_VERSION}'" >> ${R_HOME}/etc/Renviron.site
 RUN echo '.libPaths(unique(c(Sys.getenv("R_LIBS_USER"), .libPaths())))' >> ${R_HOME}/etc/Rprofile.site
 

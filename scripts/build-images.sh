@@ -88,6 +88,12 @@ launcher () {
 }
 
 if [ "$(uname -m)" = "arm64" ]; then
+
+  # re-run as needed for arm, polars with sql files
+  # LABEL=connectorx
+  # build NO
+  # exit
+
   LABEL=rsm-msba-arm
   build
 else
