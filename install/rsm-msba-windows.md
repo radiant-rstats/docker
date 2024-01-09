@@ -511,39 +511,6 @@ Alternative "fixes" that have worked, are to restart docker by right-clicking on
 
 ## Optional
 
-To install python3 from conda on macOS run the command below from PowerShell follow the prompts. The defaults are generally good.
-
-```powershell
-winget install -e --id Anaconda.Miniconda3
-```
-
-For more on minicoda visit the page below:
-
-<https://docs.conda.io/en/latest/miniconda.html>
-
-Once you have completed the install, open a new Anaconda Terminal from Windows terminal if you want to install python packages. For example:
-
-```bash
-conda install -c conda-forge pandas polars duckdb ipykernel black
-```
-
-If you want to add the Miniconda terminal to the dropdown menu in the Windows Terminal, open Windows Terminal and press `Ctrl + ,`. Then press the settings icon to open up the settings.json file in VS Code. Scroll down until you see "profiles" and then add the below to the "list" section. Save the file, open a new Windows Terminal, and you should see the option to open a Miniconda terminal. You can see a full version of the settings.json file at the link below.
-
-<https://github.com/radiant-rstats/docker/blob/master/vscode/settings.json>
-
-```yaml
-        ,{
-            // Miniconda Powershell prompt for local user install (non-admin install)
-            "guid": "{1caa0dad-35be-5f56-a812-afceeeaa1234}",
-            "name": "Miniconda",
-            "commandline": "%windir%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -ExecutionPolicy ByPass -NoExit -Command \"& '%USERPROFILE%\\Miniconda3\\shell\\condabin\\conda-hook.ps1' ; conda activate '%USERPROFILE%\\Miniconda3' \"",
-            "icon": "%USERPROFILE%\\Miniconda3\\Menu\\Iconleak-Atrous-PSConsole.ico",
-            "hidden": false,
-            "startingDirectory": "%HOMEPATH%"
-        }
-```
-
-
 If you want to make your terminal look nicer and add syntax highlighting, auto-completion, etc. consider following the install instructions linked below:
 
 <https://github.com/radiant-rstats/docker/blob/master/install/setup-ohmyzsh.md>

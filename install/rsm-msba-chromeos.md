@@ -359,22 +359,6 @@ sudo service docker start
 
 ## Optional
 
-To install python3 from conda on ChromeOS run the command below and follow the prompts to accept the defaults settings.
-
-```bash
-sh <(curl -s https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh);
-```
-
-For more on minicoda visit the page below:
-
-<https://docs.conda.io/en/latest/miniconda.html>
-
-Once you have completed the install, open a new terminal if you want to install python packages. For example:
-
-```bash
-conda install -c conda-forge pandas polars duckdb ipykernel black
-```
-
 If you want to make your terminal look nicer and add syntax highlighting, auto-completion, etc. consider following the install instructions linked below:
 
 <https://github.com/radiant-rstats/docker/blob/master/install/setup-ohmyzsh.md>
