@@ -11,4 +11,4 @@ curl -sL --retry 3 \
   | tar -x --strip-components=1 -C $HADOOP_HOME \
   && rm -rf $HADOOP_HOME/share/doc \
   && chown -R ${NB_USER} $HADOOP_HOME \
-  && mkdir "${HADOOP_HOME}/logs"
+  && mkdir -p "${HADOOP_HOME}/logs"
