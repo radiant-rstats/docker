@@ -21,9 +21,9 @@ if [ -f "/opt/conda/bin/R" ]; then
     mamba install --quiet --yes -c conda-forge \
       r-raster \
       imagemagick \
-      libgdal \
+      libgdal
 
-      R -e "install.packages('rgdal', repo='${CRAN}', Ncpus=${NCPUS})"
+      # R -e "install.packages('rgdal', repo='${CRAN}', Ncpus=${NCPUS})"
   else
     mamba install --quiet --yes -c conda-forge \
       r-raster \
@@ -47,16 +47,14 @@ else
     libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
-  R -e "install.packages('rgdal', repo='${CRAN}', Ncpus=${NCPUS})"
+  # R -e "install.packages('rgdal', repo='${CRAN}', Ncpus=${NCPUS})"
 fi
 
-R -e "install.packages(c('magick', 'leaflet', 'stringi', 'profvis'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('simmer', 'simmer.plot', 'EnvStats', 'matrixStats'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('highcharter', 'viridis'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('tidytext', 'wordcloud'), repo='${CRAN}', Ncpus=${NCPUS})" \
+# R -e "install.packages(c('magick', 'leaflet', 'stringi', 'profvis'), repo='${CRAN}', Ncpus=${NCPUS})"
 R -e "install.packages('devtools', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('vnijs/webshot', upgrade = 'never')" \
   -e "webshot::install_phantomjs()"
+  # -e "install.packages(c('tidytext', 'wordcloud'), repo='${CRAN}', Ncpus=${NCPUS})"
 
 # for Machine Learning with PyTorch and Scikit-Learn
 mamba install --quiet --yes -c conda-forge pytorch-lightning tensorboard zip

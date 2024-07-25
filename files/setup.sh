@@ -141,6 +141,18 @@ else
   fi
 fi
 
+if command -v poetry &> /dev/null; then
+  echo "Poetry is already installed"
+else
+  echo "Installing Poetry $POETRY_VERSION"
+  pipx install poetry==$POETRY_VERSION
+fi
+
+if [ ! -d "${HOMEDIR}/.rsm-msba/zsh/.oh-my-zsh/plugins/poetry" ]; then
+  mkdir "${HOMEDIR}/.rsm-msba/zsh/.oh-my-zsh/plugins/poetry" ]
+  poetry completions zsh > $ZSH_CUSTOM/plugins/poetry/_poetry
+fi
+
 if [ ! -f "${HOMEDIR}/.rsm-msba/zsh/.zshrc" ]; then
   cp /etc/skel/.zshrc "${HOMEDIR}/.rsm-msba/zsh/.zshrc"
   source ~/.rsm-msba/zsh/.zshrc 2>/dev/null

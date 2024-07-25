@@ -10,5 +10,6 @@ curl -sL --retry 3 \
   | gunzip \
   | tar -x --strip-components=1 -C $HADOOP_HOME \
   && rm -rf $HADOOP_HOME/share/doc \
+  && ln -s /opt/hadoop/bin/hadoop /usr/bin/hadoop \
   && chown -R ${NB_USER} $HADOOP_HOME \
   && mkdir -p "${HADOOP_HOME}/logs"

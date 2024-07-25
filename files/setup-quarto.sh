@@ -11,7 +11,6 @@ NCPUS=${NCPUS:--1}
 UBUNTU_VERSION=${UBUNTU_VERSION:-`lsb_release -sc`}
 CRAN=${CRAN:-https://cran.r-project.org}
 CRAN_SOURCE=${CRAN/"__linux__/$UBUNTU_VERSION/"/""}
-QUARTO_VERSION="1.4.506"
 
 if [ "$(uname -m)" != "aarch64" ]; then
     # ln -fs /usr/lib/rstudio-server/bin/quarto/bin/quarto /usr/local/bin

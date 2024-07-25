@@ -8,11 +8,11 @@ docker login
 # curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-arm64" > ~/.docker/cli-plugins/docker-buildx
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
-DOCKERHUB_VERSION=2.9.2
-JHUB_VERSION=2.9.2
+DOCKERHUB_VERSION=3.0.0
+JHUB_VERSION=3.0.0
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 DUAL="NO"
 # DUAL="YES"
@@ -95,7 +95,8 @@ if [ "$(uname -m)" = "arm64" ]; then
   # exit
 
   LABEL=rsm-msba-arm
-  build
+  # build
+  build NO
 else
   LABEL=rsm-msba-intel
   build

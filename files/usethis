@@ -1,218 +1,51 @@
-#!/usr/bin/env python
-import os
-import math
-import time
-import zipfile
+#!/usr/bin/env python3
+
 import requests
+import zipfile
+import os
+import shutil
 import argparse
-from datetime import timedelta
-from requests.adapters import HTTPAdapter
-from urllib.parse import urlparse, urlunparse
-from requests.packages.urllib3.util.retry import Retry
 
-# adapted from: https://github.com/numbBrain/dropbox-downloader
+def download_zip(url, output_folder, file_or_folder_name):
+    local_filename = "__temp_download__.zip"
+    local_filepath = os.path.join(output_folder, local_filename)
 
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(local_filepath, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
 
-def calcETA(startTime, currentTime, zipFileSize, currentSize):
-    """Return ETA"""
-    if currentSize == 0:
-        return None
-    diff = currentTime - startTime
-    rate = currentSize / diff
-    eta = int(float((zipFileSize) - float(currentSize)) / rate)
-    return timedelta(seconds=eta)
+    temp_extract_path = os.path.join(output_folder, "temp_extracted")
+    with zipfile.ZipFile(local_filepath, 'r') as zip_ref:
+        zip_ref.extractall(temp_extract_path)
 
-
-def calcPercent(zipFileSize, currentSize):
-    """Retrn progress percentage"""
-    if currentSize == 0:
-        return None
-    return round((currentSize / zipFileSize) * 100.0, 2)
-
-
-def calcElaspedTime(startTime, currentTime):
-    """Return taken time"""
-    return timedelta(seconds=currentTime - startTime)
-
-
-def calcSpeed(startTime, currentTime, currentSize):
-    """Return download speed"""
-    if currentSize == 0:
-        return None
-    diff = currentTime - startTime
-    rate = currentSize / diff
-    return formatBytes(rate)
-
-
-def formatBytes(bytes):
-    """Takes bytes and returns formatted string"""
-    if bytes == 0:
-        return "0B"
-    suffixes = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
-    index = int(math.floor(math.log(bytes, 1024)))
-    formatted = round(float(bytes) / (1024**index), 2)
-    return f"{formatted} {suffixes[index]}"
-
-
-def default_dest():
-    """Use ~/Desktop as the default destination"""
-    dtop = os.path.expanduser("~/Desktop")
-    if os.path.isdir(dtop):
-        return dtop
+    extracted_content = os.listdir(temp_extract_path)
+    if len(extracted_content) == 1:
+        extracted_path = os.path.join(temp_extract_path, extracted_content[0])
     else:
-        return os.getcwd()
+        extracted_path = temp_extract_path
 
+    final_destination = os.path.join(output_folder, file_or_folder_name)
+    if os.path.exists(final_destination):
+        shutil.rmtree(final_destination)
 
-# variable declarations
-DOMAIN = "www.dropbox.com"
-WGET_AGENT = "Wget/1.19.4 (linux-gnu)"
-RETRIES = Retry(total=10, backoff_factor=2)
-ERASE = "\033[2K"
+    shutil.move(extracted_path, final_destination)
+    os.remove(local_filepath)
+    if os.path.exists(temp_extract_path):
+        shutil.rmtree(temp_extract_path)
 
-# argument parser
-argsParser = argparse.ArgumentParser(
-    description="Python script to download dropbox public folders as zip files. Adapted from: https://github.com/numbBrain/dropbox-downloader"
-)
-groupArgsParser = argsParser.add_mutually_exclusive_group()
-groupArgsParser.add_argument(
-    "--links", type=str, nargs="+", const=None, help="Read links from standard input"
-)
-groupArgsParser.add_argument(
-    "--read",
-    metavar="file.txt",
-    type=argparse.FileType("r", encoding="UTF-8"),
-    const=None,
-    help="Read links from file",
-)
-argsParser.add_argument(
-    "--dest", type=str, default=default_dest(), help="Specify download directory"
-)
-argsParser.add_argument(
-    "--retain_zip",
-    action="store_true",
-    help="Don't delete zipfiles after unzipping when --unzip is used",
-)
-argsParser.add_argument(
-    "unnamed",
-    nargs=argparse.REMAINDER,
-    help="Unnamed arguments are assumed to be links",
-)
-arguments = argsParser.parse_args()  # use this to access supplied arguments
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Download and extract a ZIP file (e.g., from Dropbox).')
+    parser.add_argument('file_or_folder_name', type=str, help='The name to assign to the extracted file or folder.')
+    parser.add_argument('--dest', type=str, default=os.getcwd(), help='The output folder for extraction. Defaults to the current directory.')
+    parser.add_argument('url', type=str, help='The URL of the ZIP file to download.')
 
-# check if argument is supplied, if not, exit
-if not (arguments.read or arguments.links or arguments.unnamed):
-    print("[-] No options specified, use --help for available options")
-    exit()
-else:
-    if arguments.unnamed:
-        # convert the supplied links into list
-        suppliedLinks = list(dict.fromkeys(arguments.unnamed))
-    elif arguments.links:
-        # convert the supplied links into list
-        suppliedLinks = list(dict.fromkeys(arguments.links))
-    else:
-        # read given file and add each line to list
-        suppliedLinks = list(dict.fromkeys(list(arguments.read.read().splitlines())))
-        arguments.read.close()
+    args = parser.parse_args()
 
-# destination folder supplied by the user
-destination = arguments.dest
-print(f"\n[location] Specified download location: {destination}")
+    output_folder = args.dest
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-# check if retain_zip argument is supplied
-if arguments.retain_zip:
-    print(f"[info] zipfiles will not be deleted after unzipping")
-elif not arguments.retain_zip:
-    print(f"[info] zipfiles will be deleted after unzipping")
-
-# iterate thru' links in the list
-for suppliedLink in suppliedLinks:
-    parsedURL = urlparse(suppliedLink)
-    # check if link belongs to www.dropbox.com
-    if not parsedURL.netloc == DOMAIN:
-        print(f"[ERROR] {suppliedLink} does not belong to {DOMAIN}, skipping it ")
-        continue
-
-    # add query to make link downloadable as zip
-    zippedDownloadURL = urlunparse(parsedURL._replace(query="dl=1"))
-    print(f"[url] Downloading from URL : {suppliedLink}")
-
-    with requests.Session() as session:
-        session.mount("https://", HTTPAdapter(max_retries=RETRIES))
-        try:
-            zipFileResp = session.get(
-                zippedDownloadURL,
-                headers={"User-Agent": WGET_AGENT},
-                timeout=60,
-                stream=True,
-            )
-            startTime = time.time()
-            zipFileResp.raise_for_status()
-
-        except requests.exceptions.ConnectionError:
-            print(f"[ERROR] Unable to retrieve {suppliedLink}, due to network error")
-            continue
-
-        except requests.exceptions.Timeout:
-            print(f"[ERROR] Unable to retrieve {suppliedLink}, connection timed out")
-            continue
-
-        except requests.exceptions.HTTPError as err:
-            print(f"[ERROR] {err}")
-            continue
-
-        zipFilename = (
-            zipFileResp.headers["content-disposition"].split(";")[1].split('"')[1]
-        )  # get filename from response headers
-        zipFileSize = float(
-            zipFileResp.headers["Original-Content-Length"]
-        )  # get file size from response headers
-        formattedZipFileSize = formatBytes(zipFileSize)
-        filePath = os.path.join(destination, zipFilename)  # path to store the file
-        tempFilePath = os.path.join(
-            destination, f"{zipFilename}.part"
-        )  # path to store file with temporary filename
-
-        print(f"[file] Downloading file : {zipFilename}")
-
-        currentSize = 0
-        try:
-            with open(tempFilePath, "wb") as zipFile:  # write file to disk
-                for chunk in zipFileResp.iter_content(chunk_size=2**20):
-                    if chunk:
-                        currentSize += len(chunk)
-                        zipFile.write(chunk)
-                        zipFile.flush()
-                        os.fsync(zipFile.fileno())
-                        progress = calcPercent(zipFileSize, currentSize)
-                        eta = calcETA(startTime, time.time(), zipFileSize, currentSize)
-                        speed = calcSpeed(startTime, time.time(), currentSize)
-                        print(
-                            f"[downloading] {progress}% of {formattedZipFileSize} at {speed}ps ETA {eta}",
-                            end="\r",
-                            flush=True,
-                        )
-        except KeyboardInterrupt:
-            print(
-                f"[downloaded] {progress}% of {formattedZipFileSize} at {speed} ps ETA {eta}"
-            )
-            print("[ERROR]: Interrupted by user")
-            exit()
-
-        # print messaage when download is over
-        if os.stat(tempFilePath).st_size == zipFileSize:
-            os.rename(tempFilePath, filePath)
-            print(ERASE, end="\r", flush=True)
-            print(
-                f"[downloaded] 100% of {formattedZipFileSize} in {calcElaspedTime(startTime, time.time())}"
-            )
-
-    with zipfile.ZipFile(filePath, "r") as zipFile:
-        directoryName = zipFilename.replace(".zip", "")
-        directoryPath = os.path.join(destination, directoryName)
-        os.makedirs(directoryPath, exist_ok=True)
-        zipFile.extractall(directoryPath)
-
-        # check if zip files should be deleted
-        if not arguments.retain_zip:
-            os.remove(filePath)
+    download_zip(args.url, output_folder, args.file_or_folder_name)
+    print(f"Downloaded and extracted ZIP file from {args.url} to {os.path.join(output_folder, args.file_or_folder_name)}")

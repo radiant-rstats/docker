@@ -34,7 +34,7 @@ RUN pip3.11 install poetry
 # Cloning the connectorx repo and switching to the 0.3.1 tag
 RUN git clone https://github.com/sfu-db/connector-x.git
 WORKDIR /wheeler/connector-x
-RUN git checkout tags/v0.3.2
+RUN git checkout tags/v0.3.3
 
 # Installing maturin
 RUN pip3.11 install maturin[patchelf]==0.14.15
@@ -46,7 +46,7 @@ RUN maturin build -m connectorx-python/Cargo.toml -i python3.11 --release
 # the below didn't work for me
 # COPY /wheeler/connector-x/connectorx-python/target/wheels/connectorx-* .
 
-# use the below to access the wheel in /wheeler/connector-x/connectorx-python/target/wheels/ 
+# use the below to access the wheel in /wheeler/connector-x/connectorx-python/target/wheels/
 # docker run -it -v ./:/root your_user_name/connectorx /bin/bash
 
 # then navigate to the directory below and copy the wheel to the home directory
