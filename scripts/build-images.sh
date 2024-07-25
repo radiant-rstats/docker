@@ -95,8 +95,7 @@ if [ "$(uname -m)" = "arm64" ]; then
   # exit
 
   LABEL=rsm-msba-arm
-  # build
-  build NO
+  build
 else
   LABEL=rsm-msba-intel
   build
