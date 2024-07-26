@@ -106,7 +106,7 @@ if [ "${has_docker}" == "" ]; then
     if [[ "$is_wsl" != "" ]]; then
       echo "https://hub.docker.com/editions/community/docker-ce-desktop-windows"
     else
-      echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
+      echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-22-04"
     fi
   elif [[ "$ostype" == "Darwin" ]]; then
     echo "https://hub.docker.com/editions/community/docker-ce-desktop-mac"

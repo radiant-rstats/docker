@@ -7,9 +7,10 @@ This repo contains information to setup a docker image with R, Rstudio, Shiny, [
 
 To use the docker images you first need to install Docker
 
-* For Mac (M1): https://desktop.docker.com/mac/stable/arm64/Docker.dmg
+* For Mac (M1, M2, or M3): https://desktop.docker.com/mac/stable/arm64/Docker.dmg
 * For Mac (Intel): https://desktop.docker.com/mac/stable/amd64/Docker.dmg
-* For Windows: https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
+* For Windows (Intel): https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
+* For Windows (ARM): https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
 
 After installing Docker, check that it is running by typing `docker --version` in a terminal. This should return something like the below:
 
@@ -18,8 +19,9 @@ docker --version
 Docker version 20.10.13, build a224086
 ```
 
-* For detailed install instructions on Windows see [install/rsm-msba-windows.md](install/rsm-msba-windows.md)
-* For detailed install instructions on macOS (M1) see [install/rsm-msba-macos-m1.md](install/rsm-msba-macos-m1.md)
+* For detailed install instructions on Windows (Intel) see [install/rsm-msba-windows.md](install/rsm-msba-windows.md)
+* For detailed install instructions on Windows (ARM) see [install/rsm-msba-windows-arm.md](install/rsm-msba-windows-arm.md)
+* For detailed install instructions on macOS (M1, M2, or M3) see [install/rsm-msba-macos-m1.md](install/rsm-msba-macos-m1.md)
 * For detailed install instructions on macOS (Intel) see [install/rsm-msba-macos.md](install/rsm-msba-macos.md)
 * For detailed install instructions on Linux see [install/rsm-msba-linux.md](install/rsm-msba-linux.md)
 * For detailed install instructions on ChromeOS see [install/rsm-msba-chromeos.md](install/rsm-msba-chromeos.md)

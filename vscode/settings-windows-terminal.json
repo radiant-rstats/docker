@@ -66,9 +66,9 @@
                 },
                 "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
                 "hidden": false,
-                "name": "Ubuntu-20.04",
+                "name": "Ubuntu-22.04",
                 "source": "Windows.Terminal.Wsl",
-                "startingDirectory": "\\\\wsl$\\Ubuntu-20.04\\home\\vnijs"
+                "startingDirectory": "\\\\wsl$\\Ubuntu-22.04\\home\\vnijs"
             },
             {
                 "commandline": "%windir%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -ExecutionPolicy ByPass -NoExit -Command \"& '%USERPROFILE%\\Miniconda3\\shell\\condabin\\conda-hook.ps1' ; conda activate '%USERPROFILE%\\Miniconda3' \"",

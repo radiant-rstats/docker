@@ -98,7 +98,7 @@ if [ "${has_docker}" == "" ]; then
     if [[ "$is_wsl" != "" ]]; then
       echo "https://hub.docker.com/editions/community/docker-ce-desktop-windows"
     else
-      echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04"
+      echo "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-22-04"
     fi
   elif [[ "$ostype" == "Darwin" ]]; then
     echo "https://hub.docker.com/editions/community/docker-ce-desktop-mac"
@@ -205,7 +205,7 @@ else
   else
     archtype=`arch`
     ostype="Windows"
-    if [[ "$archtype" == "arm64" ]]; then
+    if [[ "$archtype" == "aarch64" ]]; then
       chip="(ARM64)"
     else
       chip="(Intel)"
@@ -695,7 +695,7 @@ else
       elif [[ "$ostype" == "Windows" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md
       elif [[ "$ostype" == "WSL2" ]]; then
-        if [[ "$archtype" == "arm64" ]]; then
+        if [[ "$archtype" == "aarch64" ]]; then
           open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-arm.md
         else
           open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
