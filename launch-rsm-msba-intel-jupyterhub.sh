@@ -184,7 +184,13 @@ else
 
     is_wsl=$(which explorer.exe)
     if [[ "$is_wsl" != "" ]]; then
+      archtype=`arch`
       ostype="WSL2"
+      if [[ "$archtype" == "aarch64" ]]; then
+        chip="(ARM64)"
+      else
+        chip="(Intel)"
+      fi
       HOMEDIR="/mnt/c/Users/$USER"
       if [ -d "/mnt/c" ]; then
         MNT="$MNT -v /mnt/c:/mnt/c"
