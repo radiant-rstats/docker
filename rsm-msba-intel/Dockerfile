@@ -30,8 +30,9 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   htop \
   openjdk-17-jdk-headless \
   ant \
-  pipx \
   ca-certificates-java \
+  lsof \
+  pipx \
   && apt-get clean \
   && update-ca-certificates -f;
 
@@ -334,6 +335,10 @@ RUN mkdir -p /var/run/sshd \
   && echo 'PermitRootLogin no' >> /etc/ssh/sshd_config \
   && echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config \
   && chsh -s $(which zsh) ${NB_USER}
+
+# cleanup
+RUN rm -rf ~/work/ \
+  && rm -f ~/*.*
 
 EXPOSE 22 4040 4041 8181 8282 8765 8989 8501 8000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
