@@ -1,7 +1,7 @@
 # Contents
 
-- [Installing the RSM-MSBA-INTEL computing environment on macOS](#installing-the-rsm-msba-intel-computing-environment-on-macos)
-- [Updating the RSM-MSBA-INTEL computing environment on macOS](#updating-the-rsm-msba-intel-computing-environment-on-macos)
+- [Installing the RSM-MSBA-ARM computing environment on Windows](#installing-the-rsm-msba-arm-computing-environment-on-Windows)
+- [Updating the RSM-MSBA-ARM computing environment on Windows](#updating-the-rsm-msba-arm-computing-environment-on-Windows)
 - [Using VS Code](#using-vs-code)
 - [Connecting to postgresql](#connecting-to-postgresql)
 - [Installing Python and R packages locally](#installing-python-and-r-packages-locally)
@@ -11,19 +11,19 @@
 - [Trouble shooting](#trouble-shooting)
 - [Optional](#optional)
 
-## Installing the RSM-MSBA-INTEL computing environment on macOS
+## Installing the RSM-MSBA-ARM computing environment on Windows
 
-Please follow the instructions below to install the rsm-msba-intel computing environment. It has Python, Jupyter Lab, R, Radiant, Rstudio, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
+Please follow the instructions below to install the rsm-msba-arm computing environment. It has Python, Jupyter Lab, R, Radiant, Rstudio, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
 **Step 1**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below at the top-right of your screen. If the containers in the image are moving up and down docker hasn't finished starting up yet.
 
 ![docker](figures/docker-icon.png)
 
-[download docker for macOS with and Intel chip](https://desktop.docker.com/mac/stable/amd64/Docker.dmg)
+[download docker for Windows (ARM) chip](https://desktop.docker.com/win/main/arm64/Docker%20Desktop%20Installer.exe)
 
-You should change the (maximum) resources docker is allowed to use on your system. We recommend you set this to approximately 50% of the maximum available on your system.
+You should also go to the "Advanced" tab and configure the installation of the Command Line Interface (CLI). Set it to "System" as shown in the screenshot below and click on the "Apply & Restart".
 
-<img src="figures/docker-resources-mac.png" width="500px">
+<img src="figures/docker-system-mac.png" width="500px">
 
 Optional: If you are interested, the linked video gives a brief intro to what Docker is: https://www.youtube.com/watch?v=YFl2mCHdv24
 
@@ -39,37 +39,33 @@ xcode-select --install;
 
 ```bash
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-msba-intel.sh ~/Desktop/launch-rsm-msba.command;
-~/Desktop/launch-rsm-msba.command;
+cp -p ~/git/docker/launch-rsm-msba-arm.sh ~/Desktop/launch-rsm-msba.bat;
+~/Desktop/launch-rsm-msba.bat;
 ```
 
 This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
 
 <img src="figures/rsm-msba-arm-menu-macos-m1.png" width="500px">
 
-The code above also copies the file `launch-rsm-msba-intel.sh` to `launch-rsm-msba.command` on your Desktop. You will be able to double-click this file to start the container again in the future.
+The code above also copies the file `launch-rsm-msba-arm.sh` to `launch-rsm-msba.bat` on your Desktop. You will be able to double-click this file to start the container again in the future.
 
 Run the command below to launch the docker container from the command line.
 
 ```bash
-~/git/docker/launch-rsm-msba-intel.sh -v ~;
+~/git/docker/launch-rsm-msba-arm.sh -v ~;
 ```
 
 After running this command you will be able to start the docker container by typing `launch` from a terminal.
 
-**Step 4**: Check that you can launch Jupyter and Rstudio
+**Step 4**: Check that you can launch Jupyter
 
-You will know that the installation was successful if you can start Jupyter Lab. When you press 1 (+ Enter) in the terminal, Jupyter Lab should start up in your default web browser. If you are asked for login credentials, the username is "jovyan" and the password is "jupyter". Have your browser remember the username and password so you won't be asked for it again. When you press 2 (+ Enter) in the terminal, Rstudio should start up in a new tab in your web browser.
+You will know that the installation was successful if you can start Jupyter Lab. When you press 1 (+ Enter) in the terminal, Jupyter Lab should start up in your default web browser. If you are asked for login credentials, the username is "jovyan" and the password is "jupyter". Have your browser remember the username and password so you won't be asked for it again.
 
 > Important: Always use q (+ Enter) to shutdown the computing environment
 
 **Jupyter**:
 
-<img src="figures/rsm-msba-arm.png" width="500px">
-
-**Rstudio**:
-
-<img src="figures/rsm-rstudio.png" width="500px">
+<img src="figures/rsm-jupyter.png" width="500px">
 
 To finalize the setup, open a terminal in Jupyter lab, press `q` and `Enter` if prompted, and then run the code below in the same terminal:
 
@@ -82,19 +78,19 @@ Now open a new terminal in JupyterLab and you should see some icons
 
 <img src="figures/ohmyzsh-icons.png" width="400px">
 
-## Updating the RSM-MSBA-INTEL computing environment on macOS
+## Updating the RSM-MSBA-ARM computing environment on Windows
 
 To update the container use the launch script and press 6 (+ Enter). To update the launch script itself, press 7 (+ Enter).
 
-<img src="figures/rsm-msba-arm-menu-macos.png" width="500px">
+<img src="figures/rsm-msba-arm-menu-macos-m1.png" width="500px">
 
 If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
 ```bash
-docker pull vnijs/rsm-msba-intel;
+docker pull vnijs/rsm-msba-arm;
 rm -rf ~/git/docker;
 git clone https://github.com/radiant-rstats/docker.git ~/git/docker;
-cp -p ~/git/docker/launch-rsm-msba-intel.sh ~/Desktop/launch-rsm-msba.command;
+cp -p ~/git/docker/launch-rsm-msba-arm.sh ~/Desktop/launch-rsm-msba.bat;
 ```
 
 ## Using VS Code
@@ -112,6 +108,10 @@ cd ~/git/docker/vscode;
 ./extension-install.sh;
 cd -;
 ```
+
+If you get a "code: command not found" error when trying to launch VS Code from a terminal, follow the instructions below to add VS Code to your path:
+
+<https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line>
 
 To learn more about using VS Code to write python code see the links and comments below.
 
@@ -170,9 +170,10 @@ If you cannot connect to postgresql it is most likely due to an issue with the d
 ```bash
 docker volume rm pg_data
 ```
+
 ## Installing Python and R packages locally
 
-To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into the Rstudio console.
+To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into an R notebook.
 
 ```r
 if (Sys.info()["sysname"] == "Linux") {
@@ -181,13 +182,11 @@ if (Sys.info()["sysname"] == "Linux") {
     CRAN = "https://cloud.r-project.org"
   ))
 } else {
-  options(repos = c(
-    CRAN = "https://cloud.r-project.org"
-  ))
+  options(repos = c(CRAN = "https://cloud.r-project.org"))
 }
 ```
 
-This will be done for you automatically if you run the `setup` command from a terminal inside the docker container. To install R packages that will persist after restarting the docker container, enter code like the below in Rstudio and follow any prompts. After doing this once, you can use `install.packages("some-other-package")` in the future.
+This will be done for you automatically if you run the `setup` command from a terminal inside the docker container. To install R packages that will persist after restarting the docker container, enter code like the below in R and follow any prompts. After doing this once, you can use `install.packages("some-other-package")` in the future.
 
 ```r
 fs::dir_create(Sys.getenv("R_LIBS_USER"), recurse = TRUE)
@@ -215,7 +214,6 @@ We recommend you use `pip` to install any additional packages you might need. Fo
 ```bash
 pip install --user --upgrade pyrsm
 ```
-
 ### Conda convenience functions
 
 If you want to use a completely separate conda environment for a project you can use the `ccenv` function. To install Python modules that **will** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
@@ -249,7 +247,6 @@ cat /usr/local/bin/cr;
 cat /usr/local/bin/ce;
 cat /usr/local/bin/ci;
 ```
-
 ### Switching conda environments in the terminal
 
 If you want to change the conda environment used in a terminal you can use the command below:
@@ -271,6 +268,7 @@ conda activate base
 ```
 
 Tips to avoid the python problems depicted in the comic linked below:
+
 - Stick with one or two tools to create environments (e.g., pip and conda)
 - Don't go overboard with the number conda environments you create
 
@@ -306,7 +304,7 @@ sudo apt update;
 sudo apt install libgdal-dev libproj-dev;
 ```
 
-After completing the step above you can install the `rgdal` R-package locally using the following from Rstudio:
+After completing the step above you can install the `rgdal` R-package locally using the following from R:
 
 `install.packages("rgdal", lib = Sys.getenv("R_LIBS_USER"))`
 
@@ -329,18 +327,17 @@ For additional resources on developing docker images see the links below:
 
 ## Cleanup
 
-To remove any prior Rstudio sessions and locally installed R-packages, press 8 (+ Enter) in the launch menu. To remove locally installed Python modules press 9 (+ Enter) in the launch menu.
+To remove locally installed R-packages, press 8 (+ Enter) in the launch menu. To remove locally installed Python modules press 9 (+ Enter) in the launch menu.
 
-> Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
+> Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
-You should always stop the `rsm-msba-intel` docker container using `q` (+ Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-intel):
+You should always stop the `rsm-msba-arm` docker container using `q` (+ Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-arm):
 
 ```bash
-rm -rf ~/.rstudio;
 rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
-docker pull vnijs/rsm-msba-intel;
+docker pull vnijs/rsm-msba-arm;
 ```
 
 ## Getting help

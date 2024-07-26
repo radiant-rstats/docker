@@ -13,7 +13,7 @@
 
 ## Installing the RSM-MSBA-ARM computing environment on macOS M1 or M2
 
-Please follow the instructions below to install the rsm-msba-intel computing environment. It has Python, Jupyter Lab, R, Radiant, Rstudio, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
+Please follow the instructions below to install the rsm-msba-arm computing environment. It has Python, Jupyter Lab, R, Radiant, Rstudio, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
 **Step 1**: Install docker from the link below and make sure it is running. You will know it is running if you see the icon below at the top-right of your screen. If the containers in the image are moving up and down docker hasn't finished starting up yet.
 
@@ -145,7 +145,7 @@ A major new feature in VS Code is the ability to use AI to help you write code. 
 
 ## Connecting to postgresql
 
-The rsm-msba-intel container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
+The rsm-msba-arm container comes with <a href="http://www.postgresqltutorial.com" target="_blank">postgresql</a> installed. Once the container has been started, you can access postgresql in different ways. The easiest is to use `pgweb`. Start `pgweb` and enter the code below in the "Scheme" tab:
 
 ```bash
 postgresql://jovyan:postgres@127.0.0.1:8765/rsm-docker
@@ -216,7 +216,7 @@ After installing a module you will have to restart any running Python kernels to
 We recommend you use `pip` to install any additional packages you might need. For example, you can use the command below to install a new version of the `pyrsm` package that you will use regularly throughout the Rady MSBA program. Note that adding `--user` is important to ensure the package is still available after you restart the docker container
 
 ```bash
-pip install --user "pyrsm>=0.9.1"
+pip install --user --upgrade pyrsm
 ```
 ### Conda convenience functions
 

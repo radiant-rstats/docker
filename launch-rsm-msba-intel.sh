@@ -21,7 +21,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.8.0 --volume ~/project_1"
+  echo "Example: $0 --tag 3.0.0 --volume ~/project_1"
   echo ""
   exit 1
 }
@@ -203,7 +203,13 @@ else
     }
     MNT="-v /Volumes:/media/Volumes"
   else
+    archtype=`arch`
     ostype="Windows"
+    if [[ "$archtype" == "arm64" ]]; then
+      chip="(ARM64)"
+    else
+      chip="(Intel)"
+    fi
     HOMEDIR="C:/Users/$USERNAME"
     ID=$USERNAME
     open_browser () {
@@ -673,7 +679,7 @@ else
         docker run --name="selenium_${selenium_nr}" --net ${NETWORK} -d -p 127.0.0.1:${selenium_port}:4444 selenium/standalone-firefox
       fi
       echo "You can access selenium at ip: selenium_${selenium_nr}, port: 4444 from the"
-      echo "${LABEL} container (selenium_${selenium_nr}:4444) and ip: 127.0.0.1," 
+      echo "${LABEL} container (selenium_${selenium_nr}:4444) and ip: 127.0.0.1,"
       echo "port: ${selenium_port} (http://127.0.0.1:${selenium_port}) from the host OS"
       echo "Press any key to continue"
       echo $BOUNDARY
@@ -692,7 +698,11 @@ else
       elif [[ "$ostype" == "Windows" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-1909.md
       elif [[ "$ostype" == "WSL2" ]]; then
-        open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
+        if [[ "$archtype" == "arm64" ]]; then
+          open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows-arm.md
+        else
+          open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-windows.md
+        fi
       elif [[ "$ostype" == "ChromeOS" ]]; then
         open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-chromeos.md
       else

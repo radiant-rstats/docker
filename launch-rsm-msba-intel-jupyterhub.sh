@@ -21,7 +21,7 @@ function launch_usage() {
   echo "  -s, --show        Show all output generated on launch"
   echo "  -h, --help        Print help and exit"
   echo ""
-  echo "Example: $0 --tag 2.8.0 --volume ~/project_1"
+  echo "Example: $0 --tag 3.0.0 --volume ~/project_1"
   echo ""
   exit 1
 }
@@ -211,7 +211,13 @@ else
     }
     MNT="-v /Volumes:/media/Volumes"
   else
+    archtype=`arch`
     ostype="Windows"
+    if [[ "$archtype" == "arm64" ]]; then
+      chip="(ARM64)"
+    else
+      chip="(Intel)"
+    fi
     HOMEDIR="C:/Users/$USERNAME"
     ID=$USERNAME
     open_browser () {
