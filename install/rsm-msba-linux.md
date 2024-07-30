@@ -10,11 +10,11 @@
 - [Getting help](#getting-help)
 - [Trouble shooting](#trouble-shooting)
 
-## Installing the RSM-MSBA-INTEL computing environment on Linux (Ubuntu 20.04)
+## Installing the RSM-MSBA-INTEL computing environment on Linux (Ubuntu 22.04)
 
 Please follow the instructions below to install the rsm-msba-intel computing environment. It has Python, Jupyter Lab, R, Radiant, Rstudio, Postgres, Spark and various required packages pre-installed. The computing environment will be consistent across all students and faculty, easy to update, and also easy to remove if desired (i.e., there will *not* be dozens of pieces of software littered all over your computer).
 
-**Step 1**: Install docker on Ubuntu 20.04
+**Step 1**: Install docker on Ubuntu 22.04
 
 Run the following code in a terminal and provide your (sudo) password when requested:
 
@@ -65,13 +65,13 @@ You will know that the installation was successful if you can start Rstudio and 
 
 > Important: Always use q (+ Enter) to shutdown the computing environment
 
+**Jupyter**:
+
+<img src="figures/rsm-jupyter.png" width="500px">
+
 **Rstudio**:
 
 <img src="figures/rsm-rstudio.png" width="500px">
-
-**Jupyter**:
-
-<img src="figures/rsm-msba-arm.png" width="500px">
 
 To finalize the setup, open a terminal in Jupyter lab, press `q` and `Enter` if prompted, and then run the code below in the same terminal:
 
@@ -201,12 +201,6 @@ To install Python modules that will **not** persist after restarting the docker 
 pip install pyasn1
 ```
 
-Or ...
-
-```bash
-conda install -c conda-forge pyasn1
-```
-
 After installing a module you will have to restart any running Python kernels to `import` the module in your code.
 
 ### Using pip to install python packages
@@ -217,73 +211,9 @@ We recommend you use `pip` to install any additional packages you might need. Fo
 pip install --user --upgrade pyrsm
 ```
 
-### Conda convenience functions
-
-If you want to use a completely separate conda environment for a project you can use the `ccenv` function. To install Python modules that **will** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
-
-```bash
-conda init zsh;
-exit;
-```
-Reopen a terminal and run the below. Here `myenv` if a new conda environment and `pyasn1` is a package to install.
-
-```bash
-ccenv myenv pyasn1
-```
-
-After refreshing your browser window showing JupyterLab you should see a new icon `myenv`. Click on this icon and run `import pyasn1`. If you do not see an error message you will have successfully created a new conda environment. You can now create your own conda environments with whatever packages you need.
-
-You can also use the `ccenv` function to add more python package to a specific environment:
-
-```bash
-ccenv myenv package_a package_b package_c
-```
-
-To list all available conda environments, use the `cl` command from a terminal in JuyterLab. To remove a conda environment use `cr myenv` where `myenv` is the environment you want to remove. To export an environment to share with others, use `ce myenv`. This will create a `myenv.yaml` file with information on all packages used in the `myenv` environment. To import a new environment from an existing `some_env.yaml` file use `ci some_env.yaml`. This will create a new environment called `some_env`.
-
-If you want to see the code included in these functions, run the code below:
-
-```bash
-cat /usr/local/bin/ccenv;
-cat /usr/local/bin/cl;
-cat /usr/local/bin/cr;
-cat /usr/local/bin/ce;
-cat /usr/local/bin/ci;
-```
-
-### Switching conda environments in the terminal
-
-If you want to change the conda environment used in a terminal you can use the command below:
-
-```bash
-conda activate myenv
-```
-
-To deactivate a conda environment use:
-
-```bash
-conda deactivate
-```
-
-When leaving a custom environment you will most likely want to switch to the `base` environment so instead of `conda deactivate` you can also use:
-
-```bash
-conda activate base
-```
-
-Tips to avoid the python problems depicted in the comic linked below:
-- Stick with one or two tools to create environments (e.g., pip and conda)
-- Don't go overboard with the number conda environments you create
-
-<a href="https://xkcd.com/1987/" target="_blank">https://xkcd.com/1987/</a>
-
 ### Removing locally installed packages
 
 To remove locally installed R packages press 8 (and Enter) in the launch menu and follow the prompts. To remove Python modules installed locally using `pip` press 9 (and Enter) in the launch menu
-
-```bash
-cr myenv
-```
 
 ## Committing changes to the computing environment
 
@@ -328,7 +258,7 @@ For additional resources on developing docker images see the links below:
 
 ## Cleanup
 
-To remove any prior Rstudio sessions, and locally installed R-packages, press 8 (+ Enter) in the launch menu. To remove locally installed Python modules press 9 (+ Enter) in the launch menu.
+To remove any prior Rstudio sessions and locally installed R-packages, press 8 (+ Enter) in the launch menu. To remove locally installed Python modules press 9 (+ Enter) in the launch menu.
 
 > Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
@@ -346,8 +276,8 @@ docker pull vnijs/rsm-msba-intel;
 
 Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (+ Enter) in the launch menu. Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
 
-* `launch -t 2.8.0` ensures a specific version of the docker container is used. Suppose you used version 2.8.0 for a project. Running the launch script with `-t 2.8.0` from the command line will ensure your code still runs, without modification, years after you last touched it!
-* `launch -v ~/rsm-msba` will treat the `~/rsm-msba` directory on the host system (i.e., your Windows computer) as the home directory in the docker container. This can be useful if you want to setup a particular directory that will house multiple projects
+* `launch -t 3.0.0` ensures a specific version of the docker container is used. Suppose you used version 3.0.0 for a project. Running the launch script with `-t 3.0.0` from the command line will ensure your code still runs, without modification, years after you last touched it!
+* `launch -v ~/rsm-msba` will treat the `~/rsm-msba` directory on the host system (i.e., your Linux computer) as the home directory in the docker container. This can be useful if you want to setup a particular directory that will house multiple projects
 * `launch -d ~/project_1` will treat the `project_1` directory on the host system (i.e., your Linux computer) as the project home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
 * `launch -s` show additional output in the terminal that can be useful to debug any problems
 * `launch -h` prints the help shown in the screenshot below

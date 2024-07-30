@@ -47,9 +47,9 @@ cp -p ~/git/docker/launch-rsm-msba-arm.sh ~/Desktop/launch-rsm-msba.command;
 ~/Desktop/launch-rsm-msba.command;
 ```
 
-This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screen shot below.
+This step will clone and start up a script that will finalize the installation of the computing environment. The first time you run this script it will download the latest version of the computing environment which can take some time. Wait for the container to download and follow any prompts. Once the download is complete you should see a menu as in the screenshot below.
 
-<img src="figures/rsm-msba-arm-menu-macos-m1.png" width="500px">
+<img src="figures/rsm-launch-menu-macos-arm.png" width="500px">
 
 The code above also copies the file `launch-rsm-msba-arm.sh` to `launch-rsm-msba.command` on your Desktop. You will be able to double-click this file to start the container again in the future.
 
@@ -86,7 +86,7 @@ Now open a new terminal in JupyterLab and you should see some icons
 
 To update the container use the launch script and press 6 (+ Enter). To update the launch script itself, press 7 (+ Enter).
 
-<img src="figures/rsm-msba-arm-menu-macos-m1.png" width="500px">
+<img src="figures/rsm-launch-menu-macos-arm.png" width="500px">
 
 If for some reason you are having trouble updating either the container or the launch script open a terminal and copy-and-paste the code below. These commands will update the docker container, replace the old docker related scripts, and copy the latest version of the launch script to your Desktop.
 
@@ -177,7 +177,7 @@ docker volume rm pg_data
 
 ## Installing Python and R packages locally
 
-To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into an R notebook.
+To install the latest version of R-packages you need, add the lines of code shown below to `~/.Rprofile` or copy-and-paste the lines into the Rstudio console.
 
 ```r
 if (Sys.info()["sysname"] == "Linux") {
@@ -186,11 +186,13 @@ if (Sys.info()["sysname"] == "Linux") {
     CRAN = "https://cloud.r-project.org"
   ))
 } else {
-  options(repos = c(CRAN = "https://cloud.r-project.org"))
+  options(repos = c(
+    CRAN = "https://cloud.r-project.org"
+  ))
 }
 ```
 
-This will be done for you automatically if you run the `setup` command from a terminal inside the docker container. To install R packages that will persist after restarting the docker container, enter code like the below in R and follow any prompts. After doing this once, you can use `install.packages("some-other-package")` in the future.
+This will be done for you automatically if you run the `setup` command from a terminal inside the docker container. To install R packages that will persist after restarting the docker container, enter code like the below in Rstudio and follow any prompts. After doing this once, you can use `install.packages("some-other-package")` in the future.
 
 ```r
 fs::dir_create(Sys.getenv("R_LIBS_USER"), recurse = TRUE)
@@ -203,12 +205,6 @@ To install Python modules that will **not** persist after restarting the docker 
 pip install pyasn1
 ```
 
-Or ...
-
-```bash
-conda install -c conda-forge pyasn1
-```
-
 After installing a module you will have to restart any running Python kernels to `import` the module in your code.
 
 ### Using pip to install python packages
@@ -218,75 +214,10 @@ We recommend you use `pip` to install any additional packages you might need. Fo
 ```bash
 pip install --user --upgrade pyrsm
 ```
-### Conda convenience functions
-
-If you want to use a completely separate conda environment for a project you can use the `ccenv` function. To install Python modules that **will** persist after restarting the docker container, enter code like the below from the terminal in Jupyter Lab:
-
-```bash
-conda init zsh;
-exit;
-```
-Reopen a terminal and run the below. Here `myenv` if a new conda environment and `pyasn1` is a package to install.
-
-```bash
-ccenv myenv pyasn1
-```
-
-After refreshing your browser window showing JupyterLab you should see a new icon `myenv`. Click on this icon and run `import pyasn1`. If you do not see an error message you will have successfully created a new conda environment. You can now create your own conda environments with whatever packages you need.
-
-You can also use the `ccenv` function to add more python package to a specific environment:
-
-```bash
-ccenv myenv package_a package_b package_c
-```
-
-To list all available conda environments, use the `cl` command from a terminal in JuyterLab. To remove a conda environment use `cr myenv` where `myenv` is the environment you want to remove. To export an environment to share with others, use `ce myenv`. This will create a `myenv.yaml` file with information on all packages used in the `myenv` environment. To import a new environment from an existing `some_env.yaml` file use `ci some_env.yaml`. This will create a new environment called `some_env`.
-
-If you want to see the code included in these functions, run the code below:
-
-```bash
-cat /usr/local/bin/ccenv;
-cat /usr/local/bin/cl;
-cat /usr/local/bin/cr;
-cat /usr/local/bin/ce;
-cat /usr/local/bin/ci;
-```
-### Switching conda environments in the terminal
-
-If you want to change the conda environment used in a terminal you can use the command below:
-
-```bash
-conda activate myenv
-```
-
-To deactivate a conda environment use:
-
-```bash
-conda deactivate
-```
-
-When leaving a custom environment you will most likely want to switch to the `base` environment so instead of `conda deactivate` you can also use:
-
-```bash
-conda activate base
-```
-
-Tips to avoid the python problems depicted in the comic linked below:
-
-- Stick with one or two tools to create environments (e.g., pip and conda)
-- Don't go overboard with the number conda environments you create
-
-<a href="https://xkcd.com/1987/" target="_blank">https://xkcd.com/1987/</a>
 
 ### Removing locally installed packages
 
 To remove locally installed R packages press 8 (and Enter) in the launch menu and follow the prompts. To remove Python modules installed locally using `pip` press 9 (and Enter) in the launch menu
-
-To remove any new conda environments you created, run the code below from a terminal in Jupyter Lab:
-
-```bash
-cr myenv
-```
 
 ## Committing changes to the computing environment
 
@@ -308,7 +239,7 @@ sudo apt update;
 sudo apt install libgdal-dev libproj-dev;
 ```
 
-After completing the step above you can install the `rgdal` R-package locally using the following from R:
+After completing the step above you can install the `rgdal` R-package locally using the following from Rstudio:
 
 `install.packages("rgdal", lib = Sys.getenv("R_LIBS_USER"))`
 
@@ -331,13 +262,14 @@ For additional resources on developing docker images see the links below:
 
 ## Cleanup
 
-To remove locally installed R-packages, press 8 (+ Enter) in the launch menu. To remove locally installed Python modules press 9 (+ Enter) in the launch menu.
+To remove any prior Rstudio sessions and locally installed R-packages, press 8 (+ Enter) in the launch menu. To remove locally installed Python modules press 9 (+ Enter) in the launch menu.
 
-> Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab and type `clean`. Then follow the prompts to indicate what needs to be removed.
+> Note: It is also possible initiate the process of removing locally installed packages and settings from within the container. Open a terminal in Jupyter Lab or Rstudio and type `clean`. Then follow the prompts to indicate what needs to be removed.
 
-You should always stop the `rsm-msba-arm` docker container using `q` (+ Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-arm):
+You should always stop the `rsm-msba-arm` docker container using `q` (+ Enter) in the launch menu. If you want a full cleanup and reset of the computational environment on your system, however, execute the following commands from a (bash) terminal to (1) remove prior R(studio) and Python packages, (2) remove all docker images, networks, and (data) volumes, and (3) 'pull' only the docker image you need (e.g., rsm-msba-arm):
 
 ```bash
+rm -rf ~/.rstudio;
 rm -rf ~/.rsm-msba;
 rm -rf ~/.local/share/jupyter
 docker system prune --all --volumes --force;
@@ -348,7 +280,7 @@ docker pull vnijs/rsm-msba-arm;
 
 Please bookmark this page in your browser for easy access in the future. You can also access the documentation page for your OS by typing h (+ Enter) in the launch menu. Note that the launch script can also be started from the command line (i.e., a bash terminal) and has several important arguments:
 
-* `launch -t 2.8.0` ensures a specific version of the docker container is used. Suppose you used version 2.8.0 for a project. Running the launch script with `-t 2.8.0` from the command line will ensure your code still runs, without modification, years after you last touched it!
+* `launch -t 3.0.0` ensures a specific version of the docker container is used. Suppose you used version 3.0.0 for a project. Running the launch script with `-t 3.0.0` from the command line will ensure your code still runs, without modification, years after you last touched it!
 * `launch -v ~/rsm-msba` will treat the `~/rsm-msba` directory on the host system (i.e., your macOS computer) as the home directory in the docker container. This can be useful if you want to setup a particular directory that will house multiple projects
 * `launch -d ~/project_1` will treat the `project_1` directory on the host system (i.e., your macOS computer) as the project home directory in the docker container. This is an additional level of isolation that can help ensure your work is reproducible in the future. This can be particularly useful in combination with the `-t` option as this will make a copy of the launch script with the appropriate `tag` or `version` already set. Simply double-click the script in the `project_1` directory and you will be back in the development environment you used when you completed the project
 * `launch -s` show additional output in the terminal that can be useful to debug any problems
