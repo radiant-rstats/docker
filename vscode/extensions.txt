@@ -23,6 +23,7 @@ ms-vscode-remote.remote-ssh-edit
 ms-vscode-remote.remote-wsl
 ms-vscode.remote-explorer
 ms-vscode.live-server
+ms-vscode.vscode-speech
 ms-vsliveshare.vsliveshare
 quarto.quarto
 REditorSupport.r
