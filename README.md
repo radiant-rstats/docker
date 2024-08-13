@@ -21,14 +21,14 @@ Docker version 20.10.13, build a224086
 
 * For detailed install instructions on Windows (Intel) see [install/rsm-msba-windows.md](install/rsm-msba-windows.md)
 * For detailed install instructions on Windows (ARM) see [install/rsm-msba-windows-arm.md](install/rsm-msba-windows-arm.md)
-* For detailed install instructions on macOS (M1, M2, or M3) see [install/rsm-msba-macos-m1.md](install/rsm-msba-macos-m1.md)
+* For detailed install instructions on macOS (M1, M2, M3, etc.) see [install/rsm-msba-macos-arm.md](install/rsm-msba-macos-arm.md)
 * For detailed install instructions on macOS (Intel) see [install/rsm-msba-macos.md](install/rsm-msba-macos.md)
 * For detailed install instructions on Linux see [install/rsm-msba-linux.md](install/rsm-msba-linux.md)
 * For detailed install instructions on ChromeOS see [install/rsm-msba-chromeos.md](install/rsm-msba-chromeos.md)
 
 ## rsm-msba-arm and rsm-msba-intel
 
-`rsm-msba-arm` is built for M1, ARM based macOS computers. `rsm-msba-intel` is built for AMD based computers and includes Rstudio Server. To build a new image based on `rsm-jupter-rs` add the following at the top of your Dockerfile
+`rsm-msba-arm` is built for M1, M2, etc., ARM based macOS computers. `rsm-msba-intel` is built for AMD based computers and includes Rstudio Server. To build a new image based on `rsm-msba_intel` add the following at the top of your Dockerfile
 
 ```
 FROM vnijs/rsm-msba-intel:latest
@@ -93,7 +93,3 @@ To see the documentation and configuration files for versions prior to 2.0 see <
 Shiny is registered trademarks of RStudio, Inc. The use of the trademarked terms Shiny through the images hosted on hub.docker.com has been granted by explicit permission of RStudio. Please review RStudio's trademark use policy and address inquiries about further distribution or other questions to permissions@rstudio.com.
 
 Jupyter is distributed under the BSD 3-Clause license (Copyright (c) 2017, Project Jupyter Contributors)
-
-## Acknowledgements
-
-Thanks to Ajar Vashisth for helping me get started with Docker and Docker Compose. Thanks also to Raghav Prasad for setting up the > 2.0.0 versions of the docker images to start from <a href="https://github.com/jupyter/docker-stacks" target="_blank">Jupyter</a> docker images.

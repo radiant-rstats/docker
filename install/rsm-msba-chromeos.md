@@ -51,8 +51,6 @@ This step will clone and start up a script that will finalize the installation o
 
 <img src="figures/rsm-msba-menu-linux.png" width="500px">
 
-After running this command you will be able to start the docker container by typing `launch` from a terminal.
-
 **Step 3**: Check that you can launch Jupyter and Rstudio
 
 You will know that the installation was successful if you can start Rstudio and Jupyter Lab. If you press 1 (+ Enter) Jupyter Lab should start up in your default web browser. If you are asked for login credentials, the **username is "jovyan"** and the **password is "jupyter"**. Have your browser remember the username and password so you won't be asked for it again.When you press 2 (+ Enter) in the terminal, Rstudio should start up in a new tab in your web browser.  

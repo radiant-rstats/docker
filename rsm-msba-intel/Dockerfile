@@ -32,6 +32,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   ant \
   ca-certificates-java \
   lsof \
+  rename \
   pipx \
   && apt-get clean \
   && update-ca-certificates -f;

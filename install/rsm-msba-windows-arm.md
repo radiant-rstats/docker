@@ -165,6 +165,25 @@ The created and launched script will finalize the installation of the computing 
 
 <img src="figures/rsm-launch-menu-wsl2.png" width="500px">
 
+<!--
+**Trouble shooting 1**
+
+If you see a several "permission" related message when you run the code above, you might have an issue.  
+
+```bash
+cd ~;
+ls;
+```
+
+The fix should be as follow:
+
+```bash
+sudo su
+chown -R jovyan /home/jovyan
+exit
+```
+-->
+
 **Trouble shooting**
 
 If you see `Base dir.: /root` as shown in the image below there was an issue creating a new user at the beginning of Step 4. 
