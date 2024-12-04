@@ -35,14 +35,14 @@ else
       libtiff5-dev \
       libjpeg-dev \
       libcurl4-openssl-dev \
-      && rm -rf /var/lib/apt/lists/*
+     && rm -rf /var/lib/apt/lists/*
 fi
 
 # removed reticulate due to issue compiling RcppTOML
 R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('radiant', 'png', 'bslib', 'gitgadget', 'miniUI', 'webshot', 'tinytex', 'svglite'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('remotes', 'formatR', 'styler', 'renv'), repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('fs', 'janitor', 'dm', 'palmerpenguins', 'stringr', 'tictoc'), repo='${CRAN}', Ncpus=${NCPUS})" \
+  -e "install.packages(c('fs', 'janitor', 'dm', 'stringr'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "install.packages(c('httpgd', 'languageserver'), repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
   -e "remotes::install_github('vnijs/gitgadget', upgrade = 'never')" \
@@ -52,8 +52,6 @@ R -e "install.packages('igraph', repo='${CRAN}', Ncpus=${NCPUS})" \
   -e "remotes::install_github('radiant-rstats/radiant.model', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant.multivariate', upgrade = 'never')" \
   -e "remotes::install_github('radiant-rstats/radiant', upgrade = 'never')" \
-  -e "remotes::install_github('radiant-rstats/radiant.update', upgrade = 'never')" \
-  -e "install.packages('duckdb', repo='${CRAN}', Ncpus=${NCPUS})" \
-  -e "install.packages(c('dbplyr', 'DBI', 'dtplyr', 'RPostgres', 'RSQLite', 'pool', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})"
+  -e "install.packages(c('dbplyr', 'DBI', 'RPostgres', 'RSQLite', 'pool', 'usethis'), repo='${CRAN}', Ncpus=${NCPUS})"
 
 rm -rf /tmp/downloaded_packages

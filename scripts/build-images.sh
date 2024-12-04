@@ -8,11 +8,11 @@ docker login
 # curl --silent -L "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-arm64" > ~/.docker/cli-plugins/docker-buildx
 # chmod a+x ~/.docker/cli-plugins/docker-buildx
 
-DOCKERHUB_VERSION=3.0.0
-JHUB_VERSION=3.0.0
+DOCKERHUB_VERSION=3.1.0
+JHUB_VERSION=3.1.0
 DOCKERHUB_USERNAME=vnijs
 UPLOAD="NO"
-UPLOAD="YES"
+# UPLOAD="YES"
 
 DUAL="NO"
 # DUAL="YES"
@@ -36,20 +36,25 @@ build () {
     # from Code Interpreter - May not need the above anymore
     # docker buildx create --name mybuilder --driver docker-container --use
     # docker buildx inspect --bootstrap
+
+    # docker buildx create --name mybuilder --use --driver-opt network=host --driver-opt storage-opt=size=100GB
+
+    docker buildx create --use --name larger_log --driver-opt env.BUILDKIT_STEP_LOG_MAX_SIZE=90000000
+
     if [[ "$1" == "NO" ]]; then
       if [ "${DUAL}" == "YES" ]; then
         ARCH="linux/amd64,linux/arm64"
-        docker buildx build --platform ${ARCH} --file "${LABEL}/Dockerfile" --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . --push
+        docker buildx build --platform ${ARCH} --file "${LABEL}/Dockerfile" --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . --push > build.log 2>&1
       else
-        docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION .
+        docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --no-cache --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . > build.log 2>&1
       fi
     else
       if [ "${DUAL}" == "YES" ]; then
         ARCH="linux/amd64,linux/arm64"
-        docker buildx build --platform ${ARCH} --file "${LABEL}/Dockerfile" --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . --push
+        docker buildx build --platform ${ARCH} --file "${LABEL}/Dockerfile" --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . --push > build.log 2>&1
       else
         # added a .dockerignore file so it ignores all . files (e.g., .git, .DS_Store, etc.)
-        docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION .
+        docker buildx build -f "${LABEL}/Dockerfile" --progress=plain --load --platform ${ARCH} --build-arg DOCKERHUB_VERSION_UPDATE=${DOCKERHUB_VERSION} --tag $DOCKERHUB_USERNAME/${LABEL}:latest --tag $DOCKERHUB_USERNAME/${LABEL}:$DOCKERHUB_VERSION . > build.log 2>&1
       fi
     fi
   } || {

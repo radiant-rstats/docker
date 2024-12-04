@@ -17,3 +17,5 @@ rsm-mgta495/
 rsm-mgta453/
 files/chatgpt_requirements.txt
 rsm-code-interpreter/Dockerfile
+.bash_history
+build.log

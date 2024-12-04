@@ -1,5 +1,7 @@
 # x86_64-ubuntu-22.04	7/25/2024
-FROM quay.io/jupyter/pyspark-notebook@sha256:fb5e83562d196ead71f31e4ae1e37c6fe13e1c13c3cbf55d64ffc6166f0aedb7
+# FROM quay.io/jupyter/pyspark-notebook@sha256:fb5e83562d196ead71f31e4ae1e37c6fe13e1c13c3cbf55d64ffc6166f0aedb7
+# x86_64-11.06.2024
+FROM quay.io/jupyter/pyspark-notebook@sha256:99103a4ac1e581f215e683f58418113035b34417887efd87aeff01f9a45651fb
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -26,7 +28,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   rsync \
   lsb-release \
   git \
-  netcat \
+  netcat-traditional \
   htop \
   openjdk-17-jdk-headless \
   ant \
@@ -110,7 +112,7 @@ RUN chmod 755 setup.sh \
   && rm setup.sh
 
 # make system (conda) R the first choice
-ENV R_VERSION=4.4.1
+ENV R_VERSION=4.4.2
 ENV TERM=xterm
 ENV R_HOME=/opt/conda/lib/R
 ENV LD_LIBRARY_PATH="/opt/conda/lib:/usr/local/lib:${LD_LIBRARY_PATH}"
@@ -121,9 +123,11 @@ RUN mamba install --quiet --yes -c conda-forge \
   "r-base>=${R_VERSION}" \
   r-curl \
   r-matrix \
+  r-systemfonts \
   binutils \
   libgit2 \
   freetype \
+  fontconfig \
   libpng \
   libtiff \
   libjpeg-turbo \
@@ -141,6 +145,7 @@ RUN mamba install --quiet --yes -c conda-forge \
 RUN pip install \
   jupyterlab-skip-traceback \
   radian \
+  fastexcel \
   polars \
   connectorx \
   xlsx2csv \
@@ -167,7 +172,6 @@ RUN chmod +x setup.sh \
 # adding postgres
 # mostly from https://docs.docker.com/engine/examples/postgresql_service/
 ENV POSTGRES_VERSION=14
-
 # upgrade to postgres 14
 RUN apt -y update && \
   apt -y upgrade && \
@@ -185,13 +189,16 @@ RUN addgroup ${NB_USER} postgres \
   && addgroup postgres users \
   && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/ \
   && chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
-  && chmod -R u=rwX,go= /var/lib/postgresql/${POSTGRES_VERSION}/
+  && chmod -R u=rwX,go= /var/lib/postgresql/${POSTGRES_VERSION}/ \
+  && mkdir -p /var/run/postgresql \
+  && chown postgres:postgres /var/run/postgresql \
+  && chmod 2777 /var/run/postgresql \
+  && mkdir -p /var/log/postgresql \
+  && chown postgres:postgres /var/log/postgresql
 
 USER postgres
-
 ARG PGPASSWORD=${PGPASSWORD:-postgres}
 ENV PGPASSWORD=${PGPASSWORD}
-
 # create a postgres role for ${NB_USER} with "postgres" as the password
 # create a database "rsm-docker" owned by the ${NB_USER} role.
 RUN /etc/init.d/postgresql start \
@@ -202,17 +209,11 @@ COPY files/postgresql.conf /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.c
 COPY files/pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 
 USER root
-
 # populate version number in conf file
 RUN sed -i 's/__version__/'"$POSTGRES_VERSION"'/g' /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
-
 RUN addgroup ${NB_USER} postgres \
   && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
   && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
-
-# from https://github.com/ucsd-ets/rsm-msba-datahub/blob/master/Dockerfile
-# RUN chmod -R 777 /etc/postgresql/${POSTGRES_VERSION}
-# RUN chmod -R 777 /var/lib/postgresql/
 
 # oh-my-zsh (need to install wget and curl again ...)
 RUN apt-get update -qq && apt-get -y --no-install-recommends install wget curl \
@@ -335,6 +336,8 @@ RUN mkdir -p /var/run/sshd \
   && echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config \
   && echo 'PermitRootLogin no' >> /etc/ssh/sshd_config \
   && echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config \
+  && echo "AllowUsers ${NB_USER}" >> /etc/ssh/sshd_config \
+  && chmod 0755 /var/run/sshd \
   && chsh -s $(which zsh) ${NB_USER}
 
 # cleanup
