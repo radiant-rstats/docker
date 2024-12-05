@@ -35,6 +35,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   lsof \
   rename \
   pipx \
+  liblzma* \
+  liblzma-dev \
   && apt-get clean \
   && update-ca-certificates -f;
 
