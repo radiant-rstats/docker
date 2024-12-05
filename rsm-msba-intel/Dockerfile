@@ -6,7 +6,6 @@
 # x86_64-ubuntu-22.04	7/25/2024
 FROM quay.io/jupyter/pyspark-notebook@sha256:fb5e83562d196ead71f31e4ae1e37c6fe13e1c13c3cbf55d64ffc6166f0aedb7
 
-
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
 ARG DOCKERHUB_VERSION_UPDATE
@@ -186,8 +185,8 @@ RUN chmod +x setup.sh \
   && rm setup.sh
 
 # Run the rest of the commands as the postgres user
-RUN addgroup ${NB_USER} postgres \
-  && addgroup postgres users \
+RUN usermod -aG postgres ${NB_USER} \
+  && usermod -aG users postgres \
   && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/ \
   && chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
   && chmod -R u=rwX,go= /var/lib/postgresql/${POSTGRES_VERSION}/ \
@@ -212,8 +211,7 @@ COPY files/pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 USER root
 # populate version number in conf file
 RUN sed -i 's/__version__/'"$POSTGRES_VERSION"'/g' /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
-RUN addgroup ${NB_USER} postgres \
-  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
+RUN chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
   && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
 
 # oh-my-zsh (need to install wget and curl again ...)
