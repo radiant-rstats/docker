@@ -1,17 +1,23 @@
 # find all here: https://quay.io/repository/jupyter/pyspark-notebook?tab=tags
 # x86_64-10.22.2024
-FROM quay.io/jupyter/pyspark-notebook@sha256:49678762ef988f83f22681b6086ffa56a6a27b35ad5a4adb8aede7bb3032b8db
+FROM quay.io/jupyter/pyspark-notebook@sha256:a16447608f176d372e1e84893dbd489a1a524c0b35c509ca8c341a80715affc7
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 ENV DOCKERHUB_NAME=rsm-msba-intel
+# ENV PANDAS_VERSION="2.0.3" # pyspark image still using 2.0.3
+ENV PANDAS_VERSION="2.2.2"
+ENV PYARROW_VERSION="16.1.0"
+# needed to install gensim
+ENV SCIPY_VERSION="1.12.0"
 
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
+ENV POSTGRES_VERSION=14
 
 # fixes the issue where sudo requires terminal for password when starting postgres
 RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -37,14 +43,19 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   pipx \
   liblzma* \
   liblzma-dev \
+  gnupg* \
+  gpgv \
+  dirmngr && \
+  sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
+  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+  apt -y update && \
+  apt-get install -y \
+  postgresql-${POSTGRES_VERSION} \
+  postgresql-client-${POSTGRES_VERSION} \
+  postgresql-contrib-${POSTGRES_VERSION} \
   && apt-get clean \
   && update-ca-certificates -f;
 
-# ENV PANDAS_VERSION="2.0.3" # pyspark image still using 2.0.3
-ENV PANDAS_VERSION="2.2.2"
-ENV PYARROW_VERSION="16.1.0"
-# needed to install gensim
-ENV SCIPY_VERSION="1.12.0"
 # all the ipy and jupter versions are fixed below due to various errors
 # related to async
 RUN mamba install --quiet --yes -c conda-forge \
@@ -176,7 +187,6 @@ ENV POSTGRES_VERSION=14
 # upgrade to postgres 14
 RUN apt -y update && \
   apt -y upgrade && \
-  apt -y install gpgv dirmngr wget vim && \
   sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
   wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
   apt -y update && \
