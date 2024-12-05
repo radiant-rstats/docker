@@ -1,17 +1,27 @@
 # find all here: https://quay.io/repository/jupyter/pyspark-notebook?tab=tags
-# aarch64-10.22.2024
-FROM quay.io/jupyter/pyspark-notebook@sha256:49678762ef988f83f22681b6086ffa56a6a27b35ad5a4adb8aede7bb3032b8db
+# aarch64-10.22.2024 problems running dpkg for some reason
+# impacts installs that need to find OS stuff but gets blocked by conda paths
+# FROM quay.io/jupyter/pyspark-notebook@sha256:49678762ef988f83f22681b6086ffa56a6a27b35ad5a4adb8aede7bb3032b8db
+
+# aarch64-ubuntu-22.04	7/25/2024
+FROM quay.io/jupyter/pyspark-notebook@sha256:319eae80d974242c03a3f744a63f373d35b17e4b9d1203c2a0175660f7b0ad0e
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
 ARG DOCKERHUB_VERSION_UPDATE
 ENV DOCKERHUB_VERSION=${DOCKERHUB_VERSION_UPDATE}
 ENV DOCKERHUB_NAME=rsm-msba-arm
+# ENV PANDAS_VERSION="2.0.3" # pyspark image still using 2.0.3
+ENV PANDAS_VERSION="2.2.2"
+ENV PYARROW_VERSION="16.1.0"
+# needed to install gensim
+ENV SCIPY_VERSION="1.12.0"
 
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
+ENV POSTGRES_VERSION=14
 
 # fixes the issue where sudo requires terminal for password when starting postgres
 RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -37,14 +47,19 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   pipx \
   liblzma* \
   liblzma-dev \
+  gnupg* \
+  gpgv \
+  dirmngr && \
+  sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
+  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+  apt -y update && \
+  apt-get install -y \
+  postgresql-${POSTGRES_VERSION} \
+  postgresql-client-${POSTGRES_VERSION} \
+  postgresql-contrib-${POSTGRES_VERSION} \
   && apt-get clean \
   && update-ca-certificates -f;
 
-# ENV PANDAS_VERSION="2.0.3" # pyspark image still using 2.0.3
-ENV PANDAS_VERSION="2.2.2"
-ENV PYARROW_VERSION="16.1.0"
-# needed to install gensim
-ENV SCIPY_VERSION="1.12.0"
 # all the ipy and jupter versions are fixed below due to various errors
 # related to async
 RUN mamba install --quiet --yes -c conda-forge \
@@ -176,25 +191,9 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-# adding postgres
-# mostly from https://docs.docker.com/engine/examples/postgresql_service/
-ENV POSTGRES_VERSION=14
-
-# upgrade to postgres 14
-RUN apt -y update && \
-  apt -y upgrade && \
-  apt -y install gpgv dirmngr wget vim && \
-  sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
-  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-  apt -y update && \
-  apt-get install -y \
-  postgresql-${POSTGRES_VERSION} \
-  postgresql-client-${POSTGRES_VERSION} \
-  postgresql-contrib-${POSTGRES_VERSION}
-
 # Run the rest of the commands as the postgres user
-RUN addgroup ${NB_USER} postgres \
-  && addgroup postgres users \
+RUN usermod -aG postgres ${NB_USER} \
+  && usermod -aG users postgres \
   && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/ \
   && chown -R postgres:postgres /var/lib/postgresql/${POSTGRES_VERSION}/ \
   && chmod -R u=rwX,go= /var/lib/postgresql/${POSTGRES_VERSION}/ \
@@ -219,8 +218,7 @@ COPY files/pg_hba.conf /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
 USER root
 # populate version number in conf file
 RUN sed -i 's/__version__/'"$POSTGRES_VERSION"'/g' /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
-RUN addgroup ${NB_USER} postgres \
-  && chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
+RUN chown -R postgres:postgres /etc/postgresql/${POSTGRES_VERSION}/main/ \
   && fix-permissions /etc/postgresql/${POSTGRES_VERSION}/main/
 
 # oh-my-zsh (need to install wget and curl again ...)

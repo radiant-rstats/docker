@@ -1,6 +1,10 @@
 # find all here: https://quay.io/repository/jupyter/pyspark-notebook?tab=tags
-# x86_64-10.22.2024
-FROM quay.io/jupyter/pyspark-notebook@sha256:a16447608f176d372e1e84893dbd489a1a524c0b35c509ca8c341a80715affc7
+# x86_64-10.22.2024 problems running dpkg for some reason
+# impacts installs that need to find OS stuff but gets blocked by conda paths
+# FROM quay.io/jupyter/pyspark-notebook@sha256:a16447608f176d372e1e84893dbd489a1a524c0b35c509ca8c341a80715affc7
+
+# x86_64-ubuntu-22.04	7/25/2024
+FROM quay.io/jupyter/pyspark-notebook@sha256:fb5e83562d196ead71f31e4ae1e37c6fe13e1c13c3cbf55d64ffc6166f0aedb7
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
