@@ -180,21 +180,6 @@ RUN chmod +x setup.sh \
   && ./setup.sh \
   && rm setup.sh
 
-# adding postgres
-# mostly from https://docs.docker.com/engine/examples/postgresql_service/
-ENV POSTGRES_VERSION=14
-
-# upgrade to postgres 14
-RUN apt -y update && \
-  apt -y upgrade && \
-  sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
-  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-  apt -y update && \
-  apt-get install -y \
-  postgresql-${POSTGRES_VERSION} \
-  postgresql-client-${POSTGRES_VERSION} \
-  postgresql-contrib-${POSTGRES_VERSION}
-
 # Run the rest of the commands as the postgres user
 RUN addgroup ${NB_USER} postgres \
   && addgroup postgres users \
