@@ -1,4 +1,4 @@
-FROM python:3.11-slim AS builder
+FROM python:3.12-slim AS builder
 
 RUN apt-get update
 RUN apt-get install -y curl
@@ -23,7 +23,7 @@ RUN pip install maturin[patchelf]==0.14.15
 # Install the dependencies
 RUN apt-get install -y clang build-essential libkrb5-dev
 
-RUN maturin build -m connectorx-python/Cargo.toml -i python3.11 --release
+RUN maturin build -m connectorx-python/Cargo.toml -i python3.12 --release
 
 FROM builder AS base
 

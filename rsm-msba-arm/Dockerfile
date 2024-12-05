@@ -1,7 +1,6 @@
 # find all here: https://quay.io/repository/jupyter/pyspark-notebook?tab=tags
-# aarch64-ubuntu-22.04	7/25/2024
-#FROM quay.io/jupyter/pyspark-notebook@sha256:319eae80d974242c03a3f744a63f373d35b17e4b9d1203c2a0175660f7b0ad0e
-FROM quay.io/jupyter/pyspark-notebook@sha256:5eb0910c90e89c1e5453f76281521343ab2840bf0858119cb23c35f5fe33f6a1
+# aarch64-10.22.2024
+FROM quay.io/jupyter/pyspark-notebook@sha256:49678762ef988f83f22681b6086ffa56a6a27b35ad5a4adb8aede7bb3032b8db
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -127,7 +126,6 @@ RUN mamba install --quiet --yes -c conda-forge \
   binutils \
   libgit2 \
   freetype \
-  fontconfig \
   libpng \
   libtiff \
   libjpeg-turbo \
@@ -179,6 +177,7 @@ RUN chmod +x setup.sh \
 # adding postgres
 # mostly from https://docs.docker.com/engine/examples/postgresql_service/
 ENV POSTGRES_VERSION=14
+
 # upgrade to postgres 14
 RUN apt -y update && \
   apt -y upgrade && \
