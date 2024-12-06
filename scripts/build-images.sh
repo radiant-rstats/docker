@@ -110,11 +110,11 @@ else
   # sed_fun "s/127.0.0.1/0.0.0.0/g" ./launch-rsm-msba-intel-chromeos.sh
   # sed_fun "s/ostype=\"Linux\"/ostype=\"ChromeOS\"/" ./launch-rsm-msba-intel-chromeos.sh
 
-  LABEL=rsm-msba-intel-jupyterhub
-  build
+  # LABEL=rsm-msba-intel-jupyterhub
+  # build
 
   ## new containers should be launched using the newest version of the container
-  docker tag vnijs/rsm-msba-intel-jupyterhub:$JHUB_VERSION jupyterhub-user
+  # docker tag vnijs/rsm-msba-intel-jupyterhub:$JHUB_VERSION jupyterhub-user
 
   ## new containers should be launched using the newest version of the container
   # docker tag vnijs/rsm-msba-intel-jupyterhub:latest jupyterhub-test-user
