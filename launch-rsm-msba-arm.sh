@@ -619,7 +619,7 @@ else
         "${SCRIPT_DOWNLOAD}/launch-${LABEL}.${EXT}"
         exit 1
       else
-        echo "launch-rsm-msba-arm.sh used on $ostype. This script is only intended for macOS with M1 or higher"
+        echo "launch-rsm-msba-arm.sh used on $ostype. This script is only intended for macOS systems with an ARM chip (e.g., M3)"
         sleep 5
       fi
     elif [ ${menu_exec} == 8 ]; then
@@ -694,7 +694,7 @@ else
       echo ""
       if [[ "$ostype" == "macOS" ]]; then
         if [[ "$archtype" == "arm64" ]]; then
-          open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos-m1.md
+          open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos-arm.md
         else
           open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
         fi

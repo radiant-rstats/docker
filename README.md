@@ -7,7 +7,7 @@ This repo contains information to setup a docker image with R, Rstudio, Shiny, [
 
 To use the docker images you first need to install Docker
 
-* For Mac (M1, M2, etc.): https://desktop.docker.com/mac/stable/arm64/Docker.dmg
+* For Mac (ARM): https://desktop.docker.com/mac/stable/arm64/Docker.dmg
 * For Mac (Intel): https://desktop.docker.com/mac/stable/amd64/Docker.dmg
 * For Windows (Intel): https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
 * For Windows (ARM): https://desktop.docker.com/win/main/arm64/Docker%20Desktop%20Installer.exe
@@ -21,14 +21,14 @@ Docker version 24.0.7, build afdd53b
 
 * For detailed install instructions on Windows (Intel) see [install/rsm-msba-windows.md](install/rsm-msba-windows.md)
 * For detailed install instructions on Windows (ARM) see [install/rsm-msba-windows-arm.md](install/rsm-msba-windows-arm.md)
-* For detailed install instructions on macOS (M1, M2, M3, etc.) see [install/rsm-msba-macos-arm.md](install/rsm-msba-macos-arm.md)
+* For detailed install instructions on macOS (ARM) see [install/rsm-msba-macos-arm.md](install/rsm-msba-macos-arm.md)
 * For detailed install instructions on macOS (Intel) see [install/rsm-msba-macos.md](install/rsm-msba-macos.md)
 * For detailed install instructions on Linux see [install/rsm-msba-linux.md](install/rsm-msba-linux.md)
 * For detailed install instructions on ChromeOS see [install/rsm-msba-chromeos.md](install/rsm-msba-chromeos.md)
 
 ## rsm-msba-arm and rsm-msba-intel
 
-`rsm-msba-arm` is built for M1, M2, etc., ARM based macOS computers. `rsm-msba-intel` is built for Intel and AMD based computers. To build a new image based on `rsm-msba_intel` add the following at the top of your Dockerfile
+`rsm-msba-arm` is built for ARM based macOS computers (e.g., M3). `rsm-msba-intel` is built for Intel and AMD based computers. To build a new image based on `rsm-msba_intel` add the following at the top of your Dockerfile
 
 ```
 FROM vnijs/rsm-msba-intel:latest

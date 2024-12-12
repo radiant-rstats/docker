@@ -697,7 +697,7 @@ else
       echo ""
       if [[ "$ostype" == "macOS" ]]; then
         if [[ "$archtype" == "arm64" ]]; then
-          open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos-m1.md
+          open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos-arm.md
         else
           open_browser https://github.com/radiant-rstats/docker/blob/master/install/rsm-msba-macos.md
         fi
