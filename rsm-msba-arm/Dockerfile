@@ -346,6 +346,17 @@ RUN mkdir -p /var/run/sshd \
   && chmod 0755 /var/run/sshd \
   && chsh -s $(which zsh) ${NB_USER}
 
+# fixing version issue
+RUN apt-get update && \
+  apt-get install -y openssl=3.0.2* && \
+  apt-mark hold openssl && \
+  apt-get install -y openssh-server && \
+  rm -rf /var/lib/apt/lists/*
+
+# updating permissions
+RUN chown -R ${NB_USER} /var/log/ \
+  && chmod -R +x /var/log/
+
 # cleanup
 RUN rm -rf ~/work/ \
   && rm -f ~/*.*
