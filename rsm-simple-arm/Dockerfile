@@ -1,5 +1,7 @@
-# x86_64-ubuntu-22.04	7/25/2024
-FROM quay.io/jupyter/pyspark-notebook@sha256:fb5e83562d196ead71f31e4ae1e37c6fe13e1c13c3cbf55d64ffc6166f0aedb7
+# find all here: https://quay.io/repository/jupyter/pyspark-notebook?tab=tags
+# aarch64-10.22.2024 problems running dpkg for some reason
+# impacts installs that need to find OS stuff but gets blocked by conda paths
+FROM quay.io/jupyter/pyspark-notebook@sha256:319eae80d974242c03a3f744a63f373d35b17e4b9d1203c2a0175660f7b0ad0e
 
 LABEL Vincent Nijs "radiant@rady.ucsd.edu"
 
@@ -32,7 +34,7 @@ ENV HOME /home/${NB_USER}
 # WORKDIR "${HOME}"
 
 # not running any commands yet
-ENTRYPOINT []
-# CMD ["/usr/local/bin/start-services.sh"]
-CMD ["/bin/bash"]
+# ENTRYPOINT []
+CMD ["/usr/local/bin/start-services.sh"]
+# CMD ["/bin/bash"]
 

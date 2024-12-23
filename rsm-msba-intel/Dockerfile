@@ -339,14 +339,33 @@ RUN mkdir -p /var/run/sshd \
   && chmod 0755 /var/run/sshd \
   && chsh -s $(which zsh) ${NB_USER}
 
-# cleanup
-RUN rm -rf ~/work/ \
+# fixing version issue
+# RUN apt-get update && \
+#   apt-get install -y openssl=3.0.2* libssl1.1 && \
+#   apt-mark hold openssl && \
+#   apt-get install -y openssh-server && \
+#   rm -rf /var/lib/apt/lists/*
+
+# updating permissions
+RUN chown -R ${NB_USER} /var/log/ \
+  && chmod -R +w /var/log/ \
+  && chown -R ${NB_USER} /var/lib/ \
+  && chmod -R +x /var/lib/ \ 
+  && rm -rf ~/work/ \
   && rm -f ~/*.*
 
+COPY files/start-services.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start-services.sh
+
 EXPOSE 22 4040 4041 8181 8282 8765 8989 8501 8000
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER ${NB_UID}
 ENV HOME /home/${NB_USER}
 WORKDIR "${HOME}"
+
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+CMD ["/usr/local/bin/start-services.sh"]

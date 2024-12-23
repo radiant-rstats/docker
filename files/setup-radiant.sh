@@ -32,7 +32,8 @@ else
       libfribidi-dev \
       libfreetype6-dev \
       libpng-dev \
-      libtiff5-dev \
+      libcairo2-dev \
+      libtiff-dev \
       libjpeg-dev \
       libcurl4-openssl-dev \
      && rm -rf /var/lib/apt/lists/*
